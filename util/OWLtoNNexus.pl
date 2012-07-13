@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
-use Boost::Graph;
+use Graph;
 use Data::Dumper;
 use RDF::Simple::Parser;
 use DBI;
@@ -16,7 +16,7 @@ my $text = join ('', @data);
 my $parser = RDF::Simple::Parser->new();
 my @triples = $parser->parse_rdf($text);
 
-my $upg = new Boost::Graph( directed => 0 );
+my $upg = Graph::Undirected->new;
 foreach my $t ( @triples ) {
 	my $a = $t->[0];
 	my $b = $t->[2];
@@ -25,7 +25,7 @@ foreach my $t ( @triples ) {
 		$a =~ s/.*#/msc:/;
 		$b =~ s/.*#/msc:/;
                 #print "$a<---->$b\n";
-		$upg->add_edge( node1 => $a, node2 => $b );
+		$upg->add_edge( $a, $b );
 	}
 }
 
@@ -44,17 +44,17 @@ while ( @$vertex_queue ) {
   # 1. Visit
   next if $visited->{$current_vertex->[0]};
   $visited->{$current_vertex->[0]} = 1;
-  # 2. Push new neighbors to queue, increment level
-  my $neighbors = $upg->neighbors($current_vertex->[0]);
-  #print "NEIGHBBORS ".Dumper($neighbors);
-  foreach my $neighbor ( @$neighbors ) {
-    if ( ! defined ( $visited->{$neighbor} ) ) {
+  # 2. Push new neighbours to queue, increment level
+  my @neighbours = $upg->neighbours($current_vertex->[0]);
+  #print "NEIGHBBORS ".Dumper($neighbours);
+  foreach my $neighbour ( @neighbours ) {
+    if ( ! defined ( $visited->{$neighbour} ) ) {
       # 3. Add an edge for every neighbour if not visited,
       # to avoid adding twice (undirected graph)
       my $next_level = $current_vertex->[1]+1;
-      push @$edge_collection, [$neighbor, $current_vertex->[0] , 10**($next_level) ];
+      push @$edge_collection, [$neighbour, $current_vertex->[0] , 10**($next_level) ];
       # 4. Push the neighbour on the queue
-      push_if_new($vertex_queue, [$neighbor,$next_level]);
+      push_if_new($vertex_queue, [$neighbour,$next_level]);
     }
   }
 }
