@@ -14,4 +14,4 @@ use XML::SAX;
 use XML::Simple;
 use XML::Writer;
 use base qw(XML::SAX::Base);
-use Boost::Graph;
+use Graph;

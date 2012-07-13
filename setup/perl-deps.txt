@@ -1,4 +1,4 @@
-Boost::Graph
+Graph
 CGI
 Cwd
 DBI

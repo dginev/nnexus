@@ -3,13 +3,13 @@ package NNexus;
 use vars qw ( $dbh $config );
 
 
-use Boost::Graph;
+use Graph;
 use NNexus::DB;
-
+use Data::Dumper;
 use strict;
 
-#this is the global boost graph for determining classification distance
-my $classgraph = new Boost::Graph( directed=>0 );
+#this is the global graph for determining classification distance
+my $classgraph = Graph::Undirected->new();
 
 #this function assumes that the classification information has already been added
 # to the database. There are utility scripts to do this. In the future we may add
@@ -21,14 +21,14 @@ sub initClassificationModule{
 
 	while ( my $row = $sth->fetchrow_hashref() ) {
 #	print "adding edge $row->{'child'} $row->{'parent'}\n";
-		$classgraph->add_edge( node1 => $row->{'child'},
-				node2 => $row->{'parent'},
-				weight => $row->{'weight'} );
+		$classgraph->add_weighted_edge( $row->{'child'},
+				$row->{'parent'},
+				$row->{'weight'} );
 	}	
 
 # now precompute all pairs shortest path
-	my $d = $classgraph->all_pairs_shortest_paths_johnson( "97-XX", "root" );
-	print "$d\n";
+	#my $d = $classgraph->APSP_Floyd_Warshall;
+	#print Dumper($d),"\n";
 	print "Done\n";
 }
 
@@ -85,7 +85,9 @@ sub class_distance {
 		} elsif ( length( $class2 ) == 4 ) {
 			$class2 .= "X";	
 		}
-		$distance = $classgraph->all_pairs_shortest_paths_johnson( $class1, $class2 );
+		my @path = $classgraph->SP_Dijkstra( $class1, $class2 );
+		$distance = scalar(@path) if @path;
+
 #print "$class1 to $class2 distance is $distance\n"
 	} else {
 		$class1 =~ /(.*):/;
