@@ -1,0 +1,5 @@
+<config>
+	<!-- this is the socket port to connect to nnexus -->
+	<port>7071</port>
+	<host>localhost</host>
+</config>

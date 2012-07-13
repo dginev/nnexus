@@ -1,0 +1,178 @@
+-- MySQL dump 10.9
+--
+-- Host: localhost    Database: nnexus
+-- ------------------------------------------------------
+-- Server version	4.1.11-Debian_4-log
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `author`
+--
+
+DROP TABLE IF EXISTS `author`;
+CREATE TABLE `author` (
+  `name` varchar(50) NOT NULL default '',
+  `domainid` int(11) NOT NULL default '0',
+  `authorid` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`authorid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `categories`
+--
+
+DROP TABLE IF EXISTS `categories`;
+CREATE TABLE `categories` (
+  `categoryid` int(11) NOT NULL auto_increment,
+  `categoryname` varchar(100) NOT NULL default '',
+  `externalid` text,
+  `scheme` varchar(50) NOT NULL default '',
+  PRIMARY KEY  (`categoryid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `classification`
+--
+
+DROP TABLE IF EXISTS `classification`;
+CREATE TABLE `classification` (
+  `objectid` int(11) NOT NULL default '0',
+  `class` text,
+  `scheme` varchar(50) default NULL
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `concepthash`
+--
+
+DROP TABLE IF EXISTS `concepthash`;
+CREATE TABLE `concepthash` (
+  `firstword` varchar(255) NOT NULL default '',
+  `concept` varchar(255) NOT NULL default '',
+  `objectid` int(11) NOT NULL default '0',
+  KEY `firstword` (`firstword`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `domain`
+--
+
+DROP TABLE IF EXISTS `domain`;
+CREATE TABLE `domain` (
+  `domainid` int(11) NOT NULL auto_increment,
+  `name` varchar(30) NOT NULL default '',
+  `urltemplate` varchar(100) default NULL,
+  `code` varchar(2) default NULL,
+  `priority` varchar(30) default '',
+  `nickname` varchar(50) default NULL,
+  PRIMARY KEY  (`domainid`),
+  UNIQUE KEY `nameindex` (`name`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `inv_dfs`
+--
+
+DROP TABLE IF EXISTS `inv_dfs`;
+CREATE TABLE `inv_dfs` (
+  `id` int(11) default '0',
+  `word_or_phrase` tinyint(4) default '0',
+  `count` int(11) default '0',
+  KEY `ididx` (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `inv_idx`
+--
+
+DROP TABLE IF EXISTS `inv_idx`;
+CREATE TABLE `inv_idx` (
+  `id` int(11) default '0',
+  `word_or_phrase` tinyint(4) default '0',
+  `objectid` int(11) default '0',
+  KEY `ididx` (`id`),
+  KEY `objididx` (`objectid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `inv_phrases`
+--
+
+DROP TABLE IF EXISTS `inv_phrases`;
+CREATE TABLE `inv_phrases` (
+  `id` int(11) NOT NULL auto_increment,
+  `phrase` char(255) default '',
+  PRIMARY KEY  (`id`),
+  KEY `phrase_idx` (`phrase`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `inv_words`
+--
+
+DROP TABLE IF EXISTS `inv_words`;
+CREATE TABLE `inv_words` (
+  `id` int(11) NOT NULL auto_increment,
+  `word` char(128) default '',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `word_idx` (`word`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `links`
+--
+
+DROP TABLE IF EXISTS `links`;
+CREATE TABLE `links` (
+  `fromid` int(11) NOT NULL default '0',
+  `toid` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`fromid`,`toid`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `object`
+--
+
+DROP TABLE IF EXISTS `object`;
+CREATE TABLE `object` (
+  `objectid` int(11) NOT NULL auto_increment,
+  `identifier` varchar(255) NOT NULL default '',
+  `domainid` int(11) NOT NULL default '0',
+  `title` varchar(255) NOT NULL default '',
+  `linkpolicy` text,
+  `authorid` int(11) default '0',
+  `valid` tinyint(4) default '0',
+  `body` text,
+  `modified` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`objectid`),
+  UNIQUE KEY `domainid` (`domainid`,`identifier`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `ontology`
+--
+
+DROP TABLE IF EXISTS `ontology`;
+CREATE TABLE `ontology` (
+  `child` varchar(100) default NULL,
+  `parent` varchar(100) default NULL,
+  `weight` int(11) default NULL,
+  UNIQUE KEY `uniquetree` (`child`,`parent`,`weight`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+

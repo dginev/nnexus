@@ -1,0 +1,117 @@
+\documentclass[10pt]{article}
+\usepackage{fullpage}
+
+\begin{document}
+
+\title{NNexus Installation}
+\author{James Gardner}
+\date{\today}
+\maketitle
+
+
+{\bf This document outlines the installation and dependencies of NNexus.}
+
+
+NNexus (Noosphere Networked Entry eXtension and Unification System) is an abstraction and generalization of the automatic linking component of the Noosphere system, which is the platform of PlanetMath (planetmath.org), PlanetPhysics (planetphysics.org), and other Noosphere sites.
+
+Users of NNexus will apply the following basic functionality to their corpus.  When an entry is rendered for display (either at display time or during offline batch processing), the text is broken down into tokens and scanned for words that invoke concepts that have been defined already (in other entries).  These words (or word tuples) are ultimately turned into hyperlinks to the corresponding entries in the output rendering.  
+In addition, when the concepts are added to the collection (or the set of concept labels otherwise changes), entries containing potential invocation of these concept labels are \emph{invalidated} using a special inverted index called the \emph{invalidation index}.  This forces these entries to go through link analysis themselves by or before the next time they are displayed.
+
+This automatic system almost completely frees the author from having to ``think about links.''  It addresses the problems of both outgoing and incoming links, with respect to a new entry or new concepts.
+
+
+\section{Installation}
+This section outlines the installation of NNexus server.
+\subsection{Dependencies}
+NNexus was originally developed on Mac OSX with the following software installed:
+\begin{itemize}
+\item perl-5.8.8 with the following modules installed from CPAN:
+\begin{verbatim}
+Cwd; DBI; Data::Dumper; Encode; Switch; Time::HiRes;
+Unicode::String; XML::SAX; XML::Simple; XML::Writer;
+\end{verbatim}
+To install any of these modules run \texttt{perl -MCPAN -e shell}. In the shell type \texttt{install Module::Name}. This should install the latest versions of the modules. Note: It is very important to have the latest versions of the XML related modules as all information exchange with NNexus is performed using a strict XML syntax. In order for NNexus to understand all the XML the latest versions of the XML
+parsers must be installed.
+
+\item MySQL version 5.0.22 and later are recommended for installation.
+
+\end{itemize}
+NNexus can be run using some older versions of perl and mysql, but this is not guaranteed and may be a headache to get working. We have successfully installed NNexus on a Debian system running Perl version 5.x and MySQL version 4.0, but it wasn't pretty.
+
+\subsection{Quick and Dirty Install Process}
+Follow the steps below to get NNexus running.
+\begin{enumerate}
+\item Install and configure your MySQL server.
+\item Create the NNexus database and tables.
+Open up \texttt{mysql} as a user that has permissions to create a database. First create the nnexus database (Any of the values in the examples we provide can be changed by changing the NNexus configuration file -discussed later.)
+\begin{verbatim}
+create database nnexus;
+use nnexus;
+\end{verbatim}
+Now create the tables.
+\begin{verbatim}
+source /path/to/nnexus/database/nnexus_schema.sql
+\end{verbatim}
+
+We also recommend that you create a specific database user with access only to the NNexus database.
+To learn how to do this check out the documentation of MySQL.
+
+\item It is now time to modify the NNexus configuration files. Copy 
+\texttt{baseconf-example.xml} to \texttt{baseconf.xml}.
+The example looks like this:
+\begin{verbatim}
+<!-- this is the baseconfig file for NNexus -->
+<config>
+<domains>
+<domain>
+<name>planetmath.org</name>
+<link>http://link.to/xml/config/file/withpriorities</link>
+<urltemplate>http://planetmath.org/?op=getobj&amp;from=objects&amp;id=</urltemplate>
+<defaultscheme>msc</defaultscheme>
+</domain>
+<domain>
+<name>wikipedia.org</name>
+<link>http://link.to/xml/config/file/withpriorities</link>
+<urltemplate>http://wikipedia.org/encyclopedia/</urltemplate>
+<defaultscheme>msc</defaultscheme>
+</domain>
+</domains>
+
+<!-- Database configuration -->
+<database>
+	<dbms>mysql</dbms>
+	<dbname>nnexus</dbname>
+	<dbuser>nnexus</dbuser>
+	<dbpass>nnexus</dbpass>
+	<dbhost>localhost</dbhost>
+</database>
+
+<server>
+	<port>7070</port>
+	<supported>
+		<scheme>msc</scheme>
+		<scheme>mw</scheme>
+	</supported>
+</server>
+
+</config>
+
+
+\end{verbatim}
+
+Modify the \texttt{dbname}, \texttt{dbuser}, \texttt{dbpass}, and \texttt{dbhost} to match the configuration of your MySQL server before you forget.
+
+You can now modify the domain configuration. We now present a description of the XML fields.
+\begin{itemize}
+\item name - This just gives a name to the domain. All the domains must have different names.
+\item link - This tag allows a user to specify configurations that are local
+to a specific domain. E.g. you can supply a listing of the domains you wish to
+link to and also the priority of those domains.
+\item urltemplate - Every document that is stored by NNexus is provided with a unique external (domain) 
+identifier. When a link is made to an object the urltemplate is appended at the beginning to the external identifier.
+\item defaultscheme - This is the default classification scheme for the documents for the domain. When an object is added to NNexus it needs to be given a classification like scheme:3A123. If scheme is not provided when adding the object the defaultscheme is appended to the beginning of the class.
+\end{itemize}
+\end{enumerate}
+
+Now NNexus should be ready to run. Type \texttt{perl nnexuserver.pl} and let her rip. By default NNexus runs on port 7070 and can be modified in the server section of \verb#baseconf.xml#.
+\end{document}

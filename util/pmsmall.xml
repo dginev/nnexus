@@ -1,0 +1,2027 @@
+<addobject><entry><title>Jordan's totient function</title><domain>planetmath.org</domain><body>Let $p$ be a prime, $k$ and $n$ natural numbers.  Then
+
+$$
+  J_k(n) = n^k \prod_{p|n} ( 1-p^{-k})
+$$
+
+where the product is over divisors of $n$. 
+
+This is a generalization of Euler's Totient Function.</body><objid>10</objid><author>2</author><linkpolicy></linkpolicy><class>msc:11-00</class><class>msc:46M15</class><class>msc:18C15</class><defines><synonym>Jordan's totient function</synonym></defines></entry><entry><title>Wilson's theorem</title><domain>planetmath.org</domain><body>Wilson's theorem states that
+$$ (p-1)! \equiv -1 \pmod{p} $$
+iff $p$ is prime (note that it must be positive).</body><objid>11</objid><author>2</author><linkpolicy></linkpolicy><class>msc:11A25</class><class>msc:37-01</class><class>msc:11-00</class><defines><synonym>Wilson's theorem</synonym></defines></entry><entry><title>quadratic reciprocity rule</title><domain>planetmath.org</domain><body>\begin{thm}[Law of Quadratic Reciprocity]
+Let $p$ and $q$ be two distinct odd primes. Then:
+
+$$ \left(\frac{q}{p}\right)\left(\frac{p}{q}\right)=(-1)^{(p-1)(q-1)/4} $$
+
+where $\left(\frac{\cdot}{\cdot}\right)$ is the \PMlinkname{Jacobi}{JacobiSymbol}  symbol (or Legendre symbol).
+\end{thm}
+
+The following is an equivalent formulation of the Law of Quadratic Reciprocity: 
+
+\begin{thm}[Quadratic Reciprocity (second form)]
+Let $p,q$ be distinct odd primes. Then:
+\begin{enumerate}
+\item $\displaystyle \left(\frac{p}{q}\right) = \left(\frac{q}{p}\right)$ if one of $p$ or $q$ is congruent to $1$ modulo $4$;
+
+\item $\displaystyle \left(\frac{p}{q}\right) = - \left(\frac{q}{p}\right)$ if both $p$ and $q$ are congruent to $3$ modulo $4$.
+\end{enumerate}
+\end{thm}</body><objid>12</objid><author>2414</author><linkpolicy></linkpolicy><class>msc:11A15</class><defines><synonym>quadratic reciprocity rule</synonym><synonym>quadratic reciprocity</synonym></defines></entry><entry><title>Jordan's inequality</title><domain>planetmath.org</domain><body>\PMlinkescapeword{states}
+
+\emph{Jordan's Inequality} states that
+$$ \frac{2}{\pi}x\leq\sin(x)\leq x $$ 
+for all $x\in [0,\frac{\pi}{2}]$.</body><objid>13</objid><author>127</author><linkpolicy></linkpolicy><class>msc:00A99</class><class>msc:26D05</class><defines><synonym>Jordan's inequality</synonym></defines></entry><entry><title>arithmetic-geometric-harmonic means inequality</title><domain>planetmath.org</domain><body>Let $x_1,x_2,\ldots,x_n$ be positive numbers. 
+Then
+\begin{eqnarray*}
+\max\{x_1,x_2,\ldots,x_n\} &amp;\ge&amp; \frac{x_1+x_2+\cdots+x_n}{n}\\
+&amp;\ge&amp; \sqrt[n]{x_1 x_2\cdots x_n} \\
+&amp;\ge&amp; \frac{n}{\frac{1}{x_1}+\frac{1}{x_2}+\cdots+\frac{1}{x_n}}\\
+&amp;\ge&amp; \min\{x_1,x_2,\ldots,x_n\}
+\end{eqnarray*}
+
+The equality is obtained if and only if $x_1=x_2=\cdots = x_n$.
+
+There are several generalizations to this inequality using power means and weighted power means.</body><objid>25</objid><author>3</author><linkpolicy></linkpolicy><class>msc:00A05</class><class>msc:20-XX</class><class>msc:26D15</class><defines><synonym>arithmetic-geometric-harmonic means inequality</synonym><synonym>harmonic-geometric-arithmetic means inequality</synonym><synonym>arithmetic-geometric means inequality</synonym><synonym>AGM inequality</synonym><synonym>AGMH inequality</synonym></defines></entry><entry><title>cosines law</title><domain>planetmath.org</domain><body>\textbf{Cosines Law.}\\
+Let $a,b,c$ be the sides of a triangle, and let $A$ the angle opposite to $a$. Then $$a^2=b^2+c^2-2bc \cos A.$$
+
+\begin{center}
+\includegraphics{coslaw}
+\end{center}</body><objid>27</objid><author>3</author><linkpolicy></linkpolicy><class>msc:51-00</class><class>msc:05A15</class><class>msc:05A10</class><class>msc:05A16</class><defines><synonym>cosines law</synonym><synonym>law of cosines</synonym></defines></entry><entry><title>sines law</title><domain>planetmath.org</domain><body>\textbf{Sines Law.}\\
+Let $ABC$ be a triangle where $a,b,c$ are the sides opposite to $A,B,C$ respectively, and let $R$ be the radius of the circumcircle. Then the following relation holds:
+$$\frac{a}{\sin A}=\frac{b}{\sin B}=\frac{c}{\sin C}=2R.$$
+\medskip
+\begin{center}
+\includegraphics[scale=0.5]{SinesLaw}
+\end{center}</body><objid>28</objid><author>3</author><linkpolicy></linkpolicy><class>msc:51-00</class><class>msc:97-01</class><defines><synonym>sines law</synonym><synonym>law of sines</synonym></defines></entry><entry><title>Collatz problem</title><domain>planetmath.org</domain><body>We define the function $f : \mathbb{N} \longrightarrow \mathbb{N} $ (where $\mathbb{N}$ excludes zero) such that
+
+$$ f(a) =  \left\{
+\begin{array}{rl}
+3a+1  &amp; \text{ if } a \text{ is odd }   \\
+ a/2  &amp; \text{ if } a \text{ is even.}  
+\end{array}
+\right. $$
+
+Then let the sequence $c_n$ be defined as $c_i = f(c_{i-1})$, with $c_0$ an arbitrary natural seed value.
+
+It is conjectured that the sequence $c_0, c_1, c_2, \ldots$ will always end in  $1,4,2$, repeating infinitely.  This has been verified by computer up to very large values of $c_0$, but is unproven in general. It is also not known whether this problem is decideable.  This is generally called the \emph{Collatz problem}.
+
+The sequence $c_n$ is sometimes called the ``hailstone sequence''.  This is because it behaves analogously to a hailstone in a cloud which falls by gravity and is tossed up again repeatedly.  The sequence similarly ends in an eternal oscillation.</body><objid>29</objid><author>2</author><linkpolicy></linkpolicy><class>msc:11B37</class><defines><synonym>Collatz problem</synonym><synonym>Ulam's Problem</synonym><synonym>1-4-2 Problem</synonym><synonym>Syracuse problem</synonym><synonym>Thwaites conjecture</synonym><synonym>Kakutani's problem</synonym><synonym>3n+1 problem</synonym></defines></entry><entry><title>Fermat numbers</title><domain>planetmath.org</domain><body>The $n$-th \emph{Fermat number} is defined as:
+\[
+  F_n=2^{2^n}+1.
+\]
+
+Fermat incorrectly conjectured that all these numbers were primes,
+although he had no proof. 
+The first 5 Fermat numbers: $3, 5, 17,257,65537$ (corresponding to $n=0,1,2,3,4$) are all primes (so called Fermat primes)
+Euler was the first to point out the falsity of Fermat's conjecture 
+by proving that $641$ is a divisor of $F_5$. (In fact, $F_5=641\times6700417$).
+Moreover, no other Fermat number is known to be prime for $n&gt;4$, so now it is conjectured that those are all prime Fermat numbers. It is also unknown whether there are infinitely many composite Fermat numbers or not.
+
+One of the famous achievements of Gauss was to prove that the regular polygon of $m$ sides can be constructed with ruler and compass if and only if $m$ can be written as
+$$m=2^k F_{r_1}F_{r_2}\cdots F_{r_t}$$
+where $k\ge 0$ and the other factors are distinct primes of the form $F_n$ (of course, $t$ may be $0$ here, i.e. $m=2^k$ is allowed).
+
+There are many interesting properties involving Fermat numbers. For instance:
+\[
+F_m = F_0F_1\cdots F_{m-1}+2
+\]
+for any $m\geq 1$, which implies that $F_m-2$ is divisible by all smaller Fermat numbers.
+
+The previous formula holds because
+\[
+F_m -2 = (2^{2^m}+1)-2 = 2^{2^m}-1 = (2^{2^{m-1}}-1)(2^{2^{m-1}}+1) =  (2^{2^{m-1}}-1) F_{m-1}
+\]
+and expanding recursively the left factor in the last expression gives the desired result.
+
+\bigskip
+\textbf{References.}\\
+Kr\'\i zek, Luca, Somer. \emph{17 Lectures on Fermat Numbers.} CMS Books in Mathematics.</body><objid>68</objid><author>3</author><linkpolicy></linkpolicy><class>msc:81T45</class><class>msc:81T13</class><class>msc:11A51</class><defines><synonym>Fermat numbers</synonym><synonym>Fermat prime</synonym></defines></entry><entry><title>sigma derivation</title><domain>planetmath.org</domain><body>If $\sigma$ is a ring endomorphism on a ring $R$, 
+then a {\it (left) $\sigma$-derivation}
+is an additive map $\delta$ on $R$ such that 
+$\delta(x \cdot y)=\sigma(x) \cdot \delta(y) + \delta(x) \cdot y$
+for all $x,y$ in $R$.</body><objid>72</objid><author>11</author><linkpolicy></linkpolicy><class>msc:16S36</class><class>msc:81S40</class><class>msc:81Txx</class><defines><synonym>sigma derivation</synonym></defines></entry><entry><title>group</title><domain>planetmath.org</domain><body>\textbf{Group.}\\
+A group is a pair $(G,\,*)$, where $G$ is a non-empty set and ``$*$''
+is a binary operation on $G$, such that the following conditions hold:
+
+\begin{itemize}
+\item For any $a,b$ in $G$, \,$a*b$\, belongs to $G$. (The operation
+``$*$'' is closed).
+
+\item For any \,$a,b,c\in G$, \,$(a*b)*c=a*(b*c)$. \,(Associativity of
+the operation).
+
+\item There is an element $e\in G$ such that \,$g*e=e*g=g$\, for any
+\,$g\in G$. (Existence of identity element).
+
+\item For any \,$g\in G$\, there exists an element $h$ such that
+\,$g*h=h*g=e$. \,(Existence of inverses).
+\end{itemize}
+
+If $G$ is a group under *, then * is referred to as the \emph{group
+operation} of $G$.
+
+Usually, the symbol ``$*$'' is omitted and we write \,$ab$\, for
+$a*b$. \,Sometimes, the symbol ``$+$'' is used to represent the
+operation, especially when the group is \emph{abelian}.
+
+It can be proved that there is only one identity element, and that for
+every element there is only one inverse. \,Because of this we usually
+denote the inverse of $a$ as $a^{-1}$ or $-a$ when we are using
+additive notation. \,The identity element is also called \emph{neutral
+element} due to its behavior with respect to the operation, and thus
+$a^{-1}$ is sometimes (although uncommonly) called the {\em
+neutralizing element} of $a$.  An element of a group besides the
+identity element is sometimes called a \emph{non-trivial element}.
+
+Groups often arise as the symmetry groups of other mathematical objects; the study of such situations uses group actions. \,In fact, much of the study of groups themselves is conducted using group actions.</body><objid>78</objid><author>3</author><linkpolicy></linkpolicy><class>msc:14F99</class><class>msc:08A99</class><class>msc:20A05</class><class>msc:20-00</class><defines><synonym>group</synonym><synonym>identity</synonym><synonym>inverse</synonym><synonym>neutralizing element</synonym><synonym>non-trivial element</synonym><synonym>nontrivial element</synonym><synonym>group operation</synonym></defines></entry><entry><title>Landau notation</title><domain>planetmath.org</domain><body>\PMlinkescapeword{group}
+Given two functions $f$ and $g$ from $\mathbb{R}^+$ to $\mathbb{R}^+$,
+the notation
+$$f=O(g)$$
+means that the ratio $\displaystyle \frac{f(x)}{g(x)}$
+stays bounded as $x\to\infty$. If moreover that ratio approaches zero,
+we write
+$$f=o(g).$$
+
+It is legitimate to write, say, $2x=O(x)=O(x^2)$, with the understanding
+that we are using the equality sign in an unsymmetric (and informal) way,
+in that we do not have, for example, $O(x^2)=O(x)$.
+
+The notation
+$$f=\Omega(g)$$
+means that the ratio $\displaystyle \frac{f(x)}{g(x)}$
+is bounded away from zero as $x\to\infty$, or equivalently $g=O(f)$.
+
+If both $f=O(g)$ and $f=\Omega(g)$, we write $f=\Theta(g)$.
+
+One more notational convention in this group is $$f(x)\sim g(x),$$
+meaning $\displaystyle \lim_{x\to\infty}\frac{f(x)}{g(x)}=1$.
+
+In analysis, such notation is useful in describing error \PMlinkname{estimates}{AsymptoticEstimate}.
+For example, the Riemann hypothesis is equivalent to the conjecture
+$$\pi(x)=\operatorname{li} x+O(\sqrt{x}\log x),$$ where $\operatorname{li} x$ denotes the logarithmic integral.
+
+Landau notation is also handy in applied mathematics, e.g. in describing
+the time complexity of an algorithm. It is common to say that an algorithm
+requires $O(x^3)$ steps, for example, without needing to specify exactly what
+is a step; for if $f=O(x^3)$, then $f=O(Ax^3)$ for any positive constant
+$A$.</body><objid>90</objid><author>13753</author><linkpolicy></linkpolicy><class>msc:26A12</class><defines><synonym>Landau notation</synonym><synonym>O notation</synonym><synonym>omega notation</synonym><synonym>theta notation</synonym><synonym>big-O notation</synonym><synonym>big-o</synonym><synonym>small-o</synonym><synonym>small-omega</synonym></defines></entry><entry><title>vector norm</title><domain>planetmath.org</domain><body>A vector norm on the real vector space $V$ is a function $f : V \to \mathbb{R}$ that satisfies the following properties:
+
+\begin{eqnarray*}
+    f(x) = 0 \iff x = 0 &amp;&amp; \\
+    f(x) \ge 0          &amp;&amp; x \in V \\
+    f(x+y) \leq f(x)+f(y) &amp;&amp; x,y \in V \\
+    f(\alpha x) = |\alpha|f(x) &amp;&amp; \alpha \in \mathbb{R},x\in V
+\end{eqnarray*}
+
+Such a function is denoted as $||\,x\,||$.  Particular norms are distinguished by subscripts, such
+as $||\,x\,||_V$, when referring to a norm in the space $V$.  A \emph{unit vector} with respect to the norm $||\,\cdot\,||$ is a vector $x$ satisfying
+$||\,x\,|| = 1$.\\
+
+A vector norm on a complex vector space is defined similarly.
+
+A common (and useful) example of a real norm is the Euclidean norm given by $||x||=(x_1^2 + x_2^2 +  \cdots + x_n^2)^{1/2}$ defined on $V=\mathbb{R}^n$.
+Note, however, that there exists vector spaces which are metric, but upon which it is not possible to define a norm. If it possible, the space is called a {\em normed vector space}. Given a metric on the vector space, a necessary and sufficient condition for this space to be a normed space, is
+\begin{eqnarray*}
+     d(x+a,y+a)=&amp;d(x,y) &amp; \forall x,y,a \in V\\
+     d(\alpha x,\alpha y)=&amp;|\alpha|d(x,y) &amp;\forall x,y \in V, \alpha \in \mathbb{R}\\
+\end{eqnarray*}
+But given a norm, a metric can always be defined by the equation $ d(x,y)=||x-y||$. Hence every normed space is a metric space.</body><objid>91</objid><author>2826</author><linkpolicy></linkpolicy><class>msc:46B20</class><class>msc:18-01</class><defines><synonym>vector norm</synonym><synonym>normed vector space</synonym></defines></entry><entry><title>vector p-norm</title><domain>planetmath.org</domain><body>A class of vector norms, called a $p$-norm and denoted $||\cdot||_p$, is defined as
+
+\begin{displaymath}
+    ||\,x\,||_p = (|x_1|^p + \cdots + |x_n|^p)^\frac{1}{p}\qquad p\geq1, x\in\R^n
+\end{displaymath}
+
+The most widely used are the 1-norm, 2-norm, and $\infty$-norm:
+
+\begin{eqnarray*}
+    ||\,x\,||_1 &amp; =&amp; |x_1| + \cdots + |x_n| \\
+    ||\,x\,||_2 &amp; =&amp; \sqrt{|x_1|^2 + \cdots + |x_n|^2} = \sqrt{x^Tx} \\
+    ||\,x\,||_\infty &amp; =&amp; \displaystyle\max_{1\leq i\leq n}|x_i|
+\end{eqnarray*}
+
+The 2-norm is sometimes called the Euclidean vector norm, because
+$||\,x-y\,||_2$ yields the Euclidean distance between any two vectors $x,y\in \R^n$. The 1-norm is also called the taxicab metric (sometimes Manhattan metric) since the distance of two points can be viewed as the distance a taxi would travel on a city (horizontal and vertical movements).
+
+A useful fact is that for finite dimensional spaces (like $\R^n$) the three mentioned norms are \PMlinkid{equivalent}{4312}. Moreover, all $p$-norms are equivalent. This can be proved using that any norm  has to be continuous in the $2$-norm and working in the unit circle.
+
+The \PMlinkname{$L^p$-norm}{LpSpace} in function spaces is a generalization of these norms by using counting measure.</body><objid>92</objid><author>7332</author><linkpolicy></linkpolicy><class>msc:46B20</class><class>msc:05Cxx</class><class>msc:05-01</class><defines><synonym>vector p-norm</synonym><synonym>Minkowski norm</synonym><synonym>Euclidean vector norm</synonym><synonym>vector Euclidean norm</synonym><synonym>vector 1-norm</synonym><synonym>vector 2-norm</synonym><synonym>vector infinity-norm</synonym><synonym>L^p metric</synonym><synonym>L^p</synonym><synonym>Manhattan metric</synonym><synonym>Taxicab</synonym><synonym>L^1 norm</synonym><synonym>L^1 metric</synonym><synonym>L^2 metric</synonym><synonym>L^2 norm</synonym><synonym>L^\infty norm</synonym></defines></entry><entry><title>H\"older inequality</title><domain>planetmath.org</domain><body>The \emph{H\"older inequality} concerns \emph{vector p-norms}: given $1 \leq p$, $q \leq \infty$,
+
+\begin{displaymath}
+    \mbox{If }\frac{1}{p}+\frac{1}{q}=1\mbox{ then }|x^Ty| \leq ||\,x\,||_p||\,y\,||_q
+\end{displaymath}
+
+An important instance of a H\"older inequality is the \emph{Cauchy-Schwarz inequality}.
+
+There is a version of this result for the \PMlinkname{$L^p$ spaces}{LpSpace}.
+If a function $f$ is in $L^p(X)$, then the $L^p$-norm of $f$ is denoted
+$||\,f\,||_p$.
+Let $(X,\mathfrak{B},\mu)$ be a measure space.
+If $f$ is in $L^p(X)$ and $g$ is in $L^q(X)$ (with $1/p + 1/q = 1$), then
+the H\"older inequality becomes
+
+\begin{eqnarray*}
+\Vert fg\Vert_1 = \int_X \vert fg\vert \mathrm{d}\mu 
+                      &amp; \le &amp; 
+\left(\int_X|f|^p\mathrm{d}\mu\right)^{\frac{1}{p}}
+\left(\int_X|g|^q\mathrm{d}\mu\right)^{\frac{1}{q}}\\
+&amp; = &amp; \Vert f\Vert_p\,\Vert g \Vert_q 
+\end{eqnarray*}</body><objid>94</objid><author>12996</author><linkpolicy></linkpolicy><class>msc:15A60</class><class>msc:55-XX</class><class>msc:46E30</class><defines><synonym>H\"older inequality</synonym><synonym>Holder inequality</synonym><synonym>Hoelder inequality</synonym></defines></entry><entry><title>Pythagorean theorem</title><domain>planetmath.org</domain><body>\textbf{Pythagorean theorem} states:
+
+If $\triangle ABC$ is a right triangle, then the \PMlinkid{square}{1087} of the length of the hypothenuse
+is equal to the sum of the squares of the two legs. In the following picture, the purple squares add up to the same area as the orange one.
+\begin{center}
+\includegraphics{pyth.eps}
+\end{center}
+$$AC^2=AB^2+BC^2.$$
+
+Cosines law is a generalization of Pythagorean theorem for any triangle.
+It implies that the converse of  Pythagorean theorem  also holds: if
+the sides of a triangle satisfy $a^2+b^2=c^2$ then the triangle is a 
+right triangle.</body><objid>98</objid><author>3</author><linkpolicy></linkpolicy><class>msc:51-00</class><defines><synonym>Pythagorean theorem</synonym><synonym>Pythagoreas' theorem</synonym><synonym>Pythagoras theorem</synonym></defines></entry><entry><title>Ptolemy's theorem</title><domain>planetmath.org</domain><body>If $ABCD$ is a cyclic quadrilateral, then the product of the two diagonals is equal to the sum of the products of opposite sides.
+\begin{center}
+\includegraphics{ptolemy}
+\end{center}
+
+\[AC\cdot BD = AB\cdot CD + AD \cdot BC.\]
+
+When the quadrilateral is not cyclic we have the following inequality
+\[AB\cdot CD+BC\cdot AD&gt;AC\cdot BD\]
+
+An interesting particular case is when both $AC$ and $BD$ are diameters, since we get another proof of Pythagoras' theorem.</body><objid>100</objid><author>3</author><linkpolicy></linkpolicy><class>msc:51-00</class><class>msc:60K25</class><defines><synonym>Ptolemy's theorem</synonym></defines></entry><entry><title>congruence</title><domain>planetmath.org</domain><body>Let $a$, $b$ be integers and $m$ a non-zero integer.\, We say that \emph{$a$ is congruent to $b$ modulo $m$}, if $m$ divides $b-a$ (the word {\em modulo} is the dative case of the Latin noun \PMlinkescapetext{{\em modulus}} meaning the 'module').\, We write this {\em number congruence} or shortly {\em congruence} as
+                         $$a\equiv b\pmod{m}.$$
+
+If $a$ and $b$ are congruent modulo $m$, it means that both numbers leave the same residue when divided by $m$.
+
+Congruence with a fixed module is an equivalence relation on $\mathbb{Z}$.\, The set of equivalence classes, the so-called {\em residue classes}, is a cyclic group of order $m$ (assuming it positive) with respect to addition and a ring if we consider also the multiplication modulo $m$.\, This ring is usually denoted as 
+$$\frac{\mathbb{Z}}{m\mathbb{Z}}$$
+and called the {\em residue class ring} modulo $m$.
+This ring is also commonly denoted as\, $\mathbb{Z}_m$,\, $\mathbb{Z}/m$.\, However, when\, $m=p$\, is a prime number, notation $\mathbb{Z}_p$ is also used to denote $p$-adic numbers.
+
+\textbf{\PMlinkescapetext{Properties} of congruences}
+\begin{enumerate}
+\item If\, $a\equiv b\pmod{m}$,\, then\, $a\!+\!c\equiv b\!+\!c\pmod{m}$\, and 
+$ac\equiv bc\pmod{m}$.
+\item If\, $ac\equiv bc\pmod{m}$\, and\, $\gcd(c,\,m) = 1$,\, then\, 
+$a\equiv b\pmod{m}$.
+\item If\, $a\equiv b\pmod{m}$\, and\, $c\equiv d\pmod{m}$,\, then\,
+$a\!\pm\!c\equiv b\!\pm\!d\pmod{m}$\, and\, $ac\equiv bd\pmod{m}$.
+\item If\, $a\equiv b\pmod{m}$\, and $f$ is a polynomial with integer coefficients, then\, $f(a)\equiv f(b)\pmod{m}$.
+\end{enumerate}</body><objid>101</objid><author>6075</author><linkpolicy></linkpolicy><class>msc:11-00</class><class>msc:18C10</class><defines><synonym>congruence</synonym><synonym>congruent</synonym><synonym>number congruence</synonym><synonym>residue class</synonym><synonym>residue class ring</synonym></defines></entry><entry><title>matrix norm</title><domain>planetmath.org</domain><body>A \PMlinkescapetext{\emph{matrix norm}} is a norm on the set
+$M_{m\times n}(R)$ of $m\times n$ matrices over a ring $R$, and is 
+usually denoted by $||\cdot||$.
+
+The Frobenius matrix norm $||\cdot||_F$ and the \PMlinkname{matrix $p$-norm}{MatrixPNorm} $||\cdot||_p$
+are the most frequently used matrix norms.
+
+A vector norm is a matrix norm for which the ring $R$ is a field.</body><objid>106</objid><author>2727</author><linkpolicy></linkpolicy><class>msc:65F35</class><class>msc:43-02</class><defines><synonym>matrix norm</synonym></defines></entry><entry><title>matrix p-norm</title><domain>planetmath.org</domain><body>A class of matrix norms, denoted $\Vert\cdot\Vert_p$, is defined as
+
+\begin{displaymath}
+    \Vert\,A\,\Vert_p = \sup_{x\neq0}\frac{\Vert\,Ax\,\Vert_p}{\Vert\,x\,\Vert_p}
+\qquad{}x\in\mathbb{R}^n,A\in\mathbb{R}^{m\times n}.
+\end{displaymath}
+
+The matrix $p$-norms are defined in terms of the \emph{\PMlinkname{vector $p$-norms}{VectorPNorm}}.
+
+An alternate definition is
+
+\begin{displaymath}
+    \Vert\,A\,\Vert_p = \max_{\Vert\,x\,\Vert_p=1}\Vert\,Ax\,\Vert_p.
+\end{displaymath}
+
+As with vector $p$-norms, the most important are the 1, 2, and $\infty$ norms.
+The 1 and $\infty$ norms are very easy to calculate for an arbitrary matrix:
+
+\begin{displaymath}
+\begin{array}{ll}
+    \Vert\,A\,\Vert_1 &amp; = \displaystyle\max_{1\leq j\leq n}\sum_{i=1}^m|a_{ij}| \\
+    \Vert\,A\,\Vert_\infty &amp; = \displaystyle\max_{1\leq i\leq m}\sum_{j=1}^n|a_{ij}|.
+\end{array}
+\end{displaymath}
+
+It directly follows from this that $\Vert\,A\,\Vert_1 = \Vert\,A^T\,\Vert_\infty$.
+
+The calculation of the $2$-norm is more complicated.  However, it can be shown that
+the 2-norm of $A$ is the square root of the largest \emph{eigenvalue} of $A^TA$.
+There are also various inequalities that allow one to make estimates on the value
+of $\Vert\,A\,\Vert_2$:
+
+\begin{equation*}
+    \frac{1}{\sqrt{n}}\Vert\,A\,\Vert_\infty \leq \Vert\,A\,\Vert_2 \leq \sqrt{m}\Vert\,A\,\Vert_\infty.
+\end{equation*}
+
+\begin{equation*}
+    \frac{1}{\sqrt{m}}\Vert\,A\,\Vert_1 \leq \Vert\,A\,\Vert_2 \leq \sqrt{n}\Vert\,A\,\Vert_1 .
+\end{equation*}
+
+\begin{equation*}
+   \Vert\,A\,\Vert_2^2\leq\Vert\,A\,\Vert_\infty\cdot\Vert\,A\,\Vert_1.
+\end{equation*}
+
+\begin{equation*}
+    \Vert\,A\,\Vert_2 \leq \Vert\,A\,\Vert_F\leq\sqrt{n}\Vert\,A\,\Vert_2.
+\end{equation*}
+
+($\Vert\,A\,\Vert_F$ is the \emph{Frobenius matrix norm})</body><objid>108</objid><author>2727</author><linkpolicy></linkpolicy><class>msc:15A60</class><defines><synonym>matrix p-norm</synonym></defines></entry><entry><title>Frobenius matrix norm</title><domain>planetmath.org</domain><body>Let $R$ be a ring with a valuation $|\cdot|$ and let $M(R)$ denote the set of matrices over $R$.  The \emph{Frobenius norm function} or \emph{Euclidean matrix norm} is the norm function $||\,\cdot\,||_F:M(R)\ra\R$ given by
+\begin{align*}
+||\,A\,||_F = \sqrt{\sum_{i=1}^m\sum_{j=1}^n|a_{ij}|^2},
+\end{align*}
+where $m$ and $n$ respectively denote the number of rows and columns of $A$.  Note $A$ need not be square for this definition.  A more concise (though \PMlinkescapetext{equivalent}) definition, in the case that $R=\mathbb{R}$ or $\mathbb{C}$, is
+\begin{align*}
+||\,A\,||_F = \sqrt{\textrm{trace}(A^*A)},
+\end{align*}
+where $A^*$ denotes the conjugate transpose of $A$.
+
+Some \PMlinkescapetext{properties}:
+\begin{itemize}
+\item 
+Denote the columns of $A$ by $A_i$.  A nice property of the norm is that
+\begin{align*}
+||A||_F^2=||A_1||_2^2+||A_2||_2^2+\cdots+||A_n||_2^2.
+\end{align*}
+\item Let $A$ be a square matrix and let $U$ be a unitary matrix
+ of same size as $A$. Then $||\,A\,||_F = ||\,U^\ast A U\,||_F$
+ where $U^\ast$ is the conjugate transpose of $U$. 
+\item If $AB$ is defined, then $||\,A B\,||_F \le ||\,A\,||_F\ ||\,B\,||_F$.
+\end{itemize}</body><objid>109</objid><author>2727</author><linkpolicy></linkpolicy><class>msc:65F35</class><class>msc:15A60</class><defines><synonym>Frobenius matrix norm</synonym><synonym>Euclidean matrix norm</synonym><synonym>matrix F-norm</synonym><synonym>Hilbert-Schmidt norm</synonym></defines></entry><entry><title>relation</title><domain>planetmath.org</domain><body>\PMlinkescapeword{mean}
+
+A \emph{binary relation} is a subset of the \PMlinkname{Cartesian product}{CartesianProduct} of two sets $A$ and $B$.
+That is, any $R\subseteq A\times B$ is a binary relation.
+One may write $aRb$ to indicate that the ordered pair $(a, b)$ is an element of $R$.
+A subset of $A\times A$ is simply called a binary relation on $A$.
+
+Given a binary relation $R\subseteq A\times B$, the \emph{domain} $\operatorname{dom}(R)$ of $R$ is the set $$\lbrace x\in A\mid (x,y)\in R \mbox{ for some }y \in B \rbrace$$ and the \emph{range} $\operatorname{ran}(R)$ of $R$ is the set $$\lbrace y\in B\mid (x,y)\in R \mbox{ for some }x\in A \rbrace.$$
+
+An example of a binary relation is the less-than relation on the integers, i.e.,
+$&lt;$ $\subseteq\Z\times\Z$.  $(1, 2) \in$ $&lt;$, but $(2, 1) \notin$ $&lt;$.
+
+More generally, an \emph{$n$-ary relation} is a subset of the \PMlinkname{Cartesian product}{GeneralizedCartesianProduct} of $n$ sets $A_1,\dots,A_n$.
+That is, any $R\subseteq\prod_{i=1}^n A_i$ is an $n$-ary relation.
+One may write $R(a_1,\dots,a_n)$ to indicate that the $n$-tuple $(a_1,\dots,a_n)$ is an element of $R$. 
+A subset of $\prod_{i=1}^n A$ is simply called an $n$-ary relation on $A$.  Every $n$-ary relation where $n&gt;2$ can be viewed as a binary relation in two different ways, either as a subset of $A_1\times \prod_{i=2}^n A_i$ or as a subset of $\prod_{i=1}^{n-1} A_i \times A_n$.
+
+Besides the binary relation, we call a $3$-ary relation a \emph{ternary relation}, and a $1$-ary relation a \emph{unary relation}, which is nothing but a subset of a set.
+
+\textbf{Remark}.  It may be possible to define a relation over a class.  For example, if $\mathcal{C}$ is the class of all sets, then $\in$ can be thought of as a binary relation on $\mathcal{C}$.</body><objid>122</objid><author>3771</author><linkpolicy></linkpolicy><class>msc:03E20</class><class>msc:08A02</class><defines><synonym>relation</synonym><synonym>unary relation</synonym><synonym>binary relation</synonym><synonym>ternary relation</synonym><synonym>$n$-ary relation</synonym><synonym>domain</synonym><synonym>range</synonym></defines></entry><entry><title>partial order</title><domain>planetmath.org</domain><body>A \emph{partial order} (often simply referred to as an \emph{order} or \emph{ordering}) is a relation $\leq\:\subset A\times A$ that satisfies the following three properties:
+
+\begin{enumerate}
+    \item Reflexivity: $a \leq a$ for all $a\in A$
+    \item Antisymmetry: If $a \leq b$ and $b \leq a$ for any $a, b\in A$, then $a = b$
+    \item Transitivity: If $a \leq b$ and $b \leq c$ for any $a, b, c\in A$, then $a \leq c$
+\end{enumerate}
+
+A \emph{total order} is a partial order that satisfies a fourth property known as \emph{comparability}:
+
+\begin{itemize}
+\item Comparability:  For any $a,b\in A$, either $a\leq b$ or $b\leq a$.
+\end{itemize}
+
+A set and a partial order on that set define a poset.</body><objid>123</objid><author>2727</author><linkpolicy></linkpolicy><class>msc:06A06</class><class>msc:35C10</class><class>msc:35C15</class><defines><synonym>partial order</synonym><synonym>order</synonym><synonym>partial ordering</synonym><synonym>ordering</synonym></defines></entry><entry><title>total order</title><domain>planetmath.org</domain><body>\PMlinkescapeword{between}
+\PMlinkescapeword{equivalent}
+\PMlinkescapeword{property}
+\PMlinkescapeword{transitive}
+\PMlinkescapeword{words}
+
+A \emph{totally ordered set} (or \emph{linearly ordered set}) is a poset $(T,\leq)$ which has the property of \emph{comparability}:
+\begin{itemize}
+\item for all $x,y\in T$, either $x\leq y$ or $y \leq x$.
+\end{itemize}
+In other words, a totally ordered set is a set $T$ with a binary relation $\leq$ on it
+such that the following hold for all $x,y,z\in T$:
+\begin{itemize}
+\item $x\leq x$. ({\it reflexivity})
+\item If $x\leq y$ and $y\leq x$, then $x=y$. ({\it antisymmetry})
+\item If $x\leq y$ and $y\leq z$, then $x\leq z$. ({\it transitivity})
+\item Either $x\leq y$ or $y \leq x$. ({\it comparability})
+\end{itemize}
+
+The binary relation $\leq$ is then called a \emph{total order} or a \emph{linear order} (or \emph{total ordering} or \emph{linear ordering}).
+A totally ordered set is also sometimes called a \emph{chain}, especially when it is considered as a subset of some other poset.
+If every nonempty subset of $T$ has a least element, then the total order is called a \PMlinkname{well-order}{WellOrderedSet}.
+
+Some people prefer to define the binary relation $&lt;$ as a total order, rather than $\leq$.
+In this case, $&lt;$ is required to be \PMlinkname{transitive}{Transitive3} and to obey the law of trichotomy.
+It is straightforward to check that this is equivalent to the above definition, with the usual relationship between $&lt;$ and $\leq$
+(that is, $x\leq y$ if and only if either $x&lt;y$ or $x=y$).
+
+A totally ordered set can also be defined as a lattice $(T,\lor,\land)$ in which the following property holds:
+\begin{itemize}
+\item for all $x,y\in T$, either $x\land y=x$ or $x\land y=y$.
+\end{itemize}
+Then totally ordered sets are \PMlinkname{distributive lattices}{DistributiveLattice}.</body><objid>124</objid><author>2760</author><linkpolicy>priority 50</linkpolicy><class>msc:06A05</class><class>msc:91B12</class><defines><synonym>total order</synonym><synonym>linear order</synonym><synonym>total ordering</synonym><synonym>linear ordering</synonym><synonym>totally ordered set</synonym><synonym>linearly ordered set</synonym><synonym>comparability</synonym><synonym>totally ordered</synonym><synonym>linearly ordered</synonym><synonym>chain</synonym><synonym>totally-ordered set</synonym><synonym>linearly-ordered set</synonym><synonym>totally-ordered</synonym><synonym>linearly-ordered</synonym></defines></entry><entry><title>sorting problem</title><domain>planetmath.org</domain><body>Let $\leq$ be a \emph{total ordering} on the set $S$.
+Given a sequence of $n$ elements, $x_1, x_2, \dots, x_n \in S$, find a sequence
+of distinct indices $1 \leq i_1, i_2, \dots, i_n \leq n$ such that $x_{i_1} \leq x_{i_2} \leq \dots \leq x_{i_n}$.
+\\
+\\
+The sorting problem is a heavily studied area of computer science, and many \emph{sorting algorithms} exist to
+solve it.  The most general algorithms depend only upon the relation $\leq$, and are called \emph{comparison-based sorts}.
+It can be proved that the lower bound for sorting by any comparison-based sorting algorithm is $\Omega(n\log{n})$.
+\\
+\\
+A few other specialized sort algorithms rely on particular properties of the values of elements in $S$ (such as their structure) in order
+to achieve lower time complexity for sorting certain sets of elements.  Examples of such a sorting algorithm are
+the \emph{bucket sort} and the \emph{radix sort}.</body><objid>127</objid><author>6</author><linkpolicy></linkpolicy><class>msc:68P10</class><defines><synonym>sorting problem</synonym></defines></entry><entry><title>poset</title><domain>planetmath.org</domain><body>\PMlinkescapeword{implies}
+\PMlinkescapeword{structure}
+\PMlinkescapeword{represents}
+\PMlinkescapeword{satisfies}
+\PMlinkescapeword{properties}
+\PMlinkescapeword{property}
+\PMlinkescapeword{associate}
+\PMlinkescapeword{weaker}
+\PMlinkescapeword{satisfy}
+\PMlinkescapeword{equality}
+\PMlinkescapeword{transitive closure}
+\PMlinkescapeword{completes}
+\PMlinkescapeword{graph}
+
+A \emph{poset}, or \emph{partially ordered set}, consists of a set $P$
+and a binary relation $\le$ on $P$ which satisfies the following
+properties:
+\begin{itemize}
+\item
+$\le$ is \PMlinkname{\emph{reflexive}}{Reflexive}, so $a\le a$ always
+holds;
+
+\item
+$\le$ is \emph{antisymmetric}, so if $a\le b$ and $b\le a$ hold, then
+$a=b$; and
+
+\item
+$\le$ is \PMlinkname{\emph{transitive}}{Transitive3}, so if $a\le b$
+and $b\le c$ hold, then $a\le c$ also holds.
+
+\end{itemize}
+
+The relation $\le$ is called a \emph{partial order} on $P$.  In
+practice, $(P,\le)$ is usually conflated with $P$; if a distinction is
+needed, $P$ is called the \emph{ground set} or \emph{underlying set} of $(P,\le)$.  
+The binary relation $&lt;$ defined by removing the diagonal from $\le$ 
+(i.e.\, $a&lt;b$ iff $a\leq b$ and $a\neq b$) satisfies the following properties:
+\begin{itemize}
+\item
+$&lt;$ is \emph{irreflexive}, so if $a&lt;b$ holds, then $b&lt;a$ does not
+hold; and
+
+\item
+$&lt;$ is \emph{transitive}.
+\end{itemize}
+Since $\le$ is reflexive, it can be uniquely recovered from $&lt;$ by adding 
+the diagonal.  For this reason, an irreflexive and transitive binary
+relation $&lt;$ (called a \emph{strict partial order}) also defines a poset, by means
+of the associated relation $\le$ described above (which is called \emph{weak partial order}).
+
+Since every partial order is reflexive and transitive, every poset is
+a preorder.  The notion of partial order is stricter than that of
+preorder, Let $Q$ be the structure with ground set $Q=\{a,b\}$ and
+binary relation $\preceq\, = \{(a,a),(a,b),(b,a),(b,b)\}$.  A diagram
+of this structure, omitting loops, is displayed below.
+\[\xymatrix{
+b\ar@/^/[d] \\
+a\ar@/^/[u]
+}\]
+Observe that the binary relation on $Q$ is reflexive and transitive,
+so $Q$ is a preorder.  On the other hand, $a\preceq b$ and $b\preceq
+a$, while $a\ne b$.  So the binary relation on $Q$ is not
+antisymmetric, implying that $Q$ is not a poset.
+
+Since every total order is reflexive, antisymmetric, and transitive,
+every total order is a poset.  The notion of partial order is weaker
+than that of total order.  A total order must obey the trichotomy law,
+which states that for any $a$ and $b$ in the order, either $a\le b$ or
+$b\le a$.  Let $P$ be the structure with ground set $\{a,b,c\}$ and
+binary relation $\le\, = \{(a,a),(a,b),(a,c),(b,b),(c,c)\}$.  A
+diagram of this structure, omitting loops, is displayed below.
+\[\xymatrix{
+b &amp;                 &amp; c \\
+  &amp; a\ar[ul]\ar[ur] &amp;
+}\]
+Observe that the binary relation on $P$ is reflexive, antisymmetric,
+and transitive, so $P$ is a poset.  On the other hand, neither $b\le
+c$ nor $c\le b$ holds in $P$.  Thus $P$ fails to satisfy the
+trichotomy law and is not a total order.
+
+The failure of the trichotomy law for posets motivates the following
+terminology.  Let $P$ be a poset.  If $a\le b$ or $b\le a$ holds in
+$P$, we say that $a$ and $b$ are \emph{comparable}; otherwise, we say
+they are \emph{incomparable}.  We use the notation $a\shortparallel b$
+to indicate that $a$ and $b$ are incomparable.
+
+If $(P,\le_P)$ and $(Q,\le_Q)$ are posets, then a function
+$\varphi\colon P\to Q$ is said to be \emph{order-preserving}, or
+\emph{monotone}, provided that it preserves inequalities.  That is,
+$\varphi$ is order-preserving if whenever $a\le_P b$ holds, it follows
+that $\varphi(a)\le_Q\varphi(b)$ also holds.  The identity function on
+the ground set of a poset is order-preserving.  If $(P,\le_P)$,
+$(Q,\le_Q)$, and $(R,\le_R)$ are posets and $\varphi\colon P\to Q$ and
+$\psi\colon Q\to R$ are order-preserving functions, then the
+composition $\psi\circ\varphi\colon P\to R$ is also order-preserving.
+
+Posets together with order-preserving functions form a category, which
+we denoted by $\mathbf{Poset}$.  Thus an order-preserving function
+between the ground sets of two posets is sometimes also called a
+\emph{morphism of posets}.  The category of posets has
+\PMlinkname{arbitrary products}{ProductofPosets}.  Moreover, every
+poset can itself be viewed as a category, and it turns out that a
+morphism of posets is the same as a functor between the two posets.
+% We discuss this in more detail below.
+
+\section*{Examples of posets}
+
+The two extreme posets are the chain, in which any two elements are
+comparable, and the antichain, in which no two elements are
+comparable.  A poset with a singleton underlying set is necessarily
+both a chain and an antichain, but a poset with a larger underlying
+set cannot be both.
+
+\begin{example} 
+Let $\mathbb{N}$ be the set of natural numbers.  Inductively define a
+binary relation $\le$ on $\mathbb{N}$ by the following rules:
+\begin{itemize} 
+\item 
+for any $n\in\mathbb{N}$, the relation $0\le n$ holds; and
+
+\item
+whenever $m\le n$, the relation $m+1\le n+1$ also holds.
+\end{itemize}
+Then $(\mathbb{N},\le)$ is a chain, hence a poset.  This structure can
+be naturally embedded in the larger chains of the integers, the
+rational numbers, and the real numbers.  
+\end{example}
+
+The next example shows that nontrivial antichains exist.
+
+\begin{example}
+Let $P$ be a set with cardinality greater than $1$.  Let $\le$ be the
+diagonal of $P$.  Thus $\le$ represents equality, which is trivially a
+partial order relation (which is also the intersection of all partial
+orderings on $P$).  By construction, $a\le b$ in $P$ if and only
+$a=b$.  Thus no two elements of $P$ are comparable.
+\end{example}
+
+So far the only posets we have seen are chains and antichains.  Most
+posets are neither.  The following construction gives many such
+examples.
+
+\begin{example}
+If $X$ is any set, the powerset $P=P(X)$ of $X$ is partially ordered
+by inclusion, that is, by the relation $A\le B$ if and only if
+$A\subseteq B$.
+\end{example}
+
+There are important structure theorems for posets concerning chains
+and antichains.  One of the foundational results is Dilworth's
+theorem.  This theorem was massively generalized by Greene and
+Kleitman.
+
+A final example shows that one can manufacture a poset from an existing one.
+
+\begin{example}
+Let $P$ be a poset ordered by $\le$.   The \emph{dual poset} of $P$ is defined as 
+follows: it has the same underlying set as $P$, whose order is defined by $a\le'b$ 
+iff $b\le a$.  It is easy to see that $\le'$ is a partial order.  The dual of $P$ 
+is usually denoted by $P^{\partial}$.
+\end{example}
+
+\section*{Graph-theoretical view of posets}
+
+Let $P$ be a poset with strict partial order $&lt;$.  Then $P$ can be
+viewed as a directed graph with vertex set the ground set of $P$ and
+edge set $&lt;$.  For example, the following diagram displays the Boolean
+algebra $B_2$ as a directed graph.
+\[\xymatrix{
+             &amp; \{0,1\}                        &amp;              \\
+\{0\}\ar[ur] &amp;                                &amp; \{1\}\ar[ul] \\
+             &amp; \emptyset\ar[ul]\ar[uu]\ar[ur] &amp;
+}\]
+If $P$ is a sufficiently complicated poset, then drawing all of the
+edges of $P$ can obscure rather than reveal the structure of $P$.  For
+this reason it is convenient to restrict attention to a subrelation of
+$&lt;$ from which $&lt;$ can be uniquely recovered.  
+
+We describe a method of constructing a canonical subgraph of $P$ from
+which the partial order can be recovered as long as every interval of
+$P$ has finite height.  If $a$ and $b$ are elements of $P$, then we
+say that $b$ \emph{covers} $a$ if $a&lt;b$ and there are no elements of
+$P$ strictly larger than $a$ but strictly smaller than $b$, that is, if
+$[a,b]=\{a,b\}$.  Two elements are said to be \emph{consecutive} if 
+one covers another.  Define a binary relation $&lt;:$ on $P$ by
+\[
+a &lt;: b \text{\ if and only if $b$ covers $a$.}
+\]
+By construction, the binary relation $&lt;:$ is a subset of $&lt;$.  Since
+$&lt;$ is transitive, the \PMlinkname{transitive
+closure}{ClosureOfASetViaRelations} of $&lt;:$ is also contained in $&lt;$.
+
+\begin{proposition*}
+Suppose every interval of $P$ has finite height.  Then $&lt;$ is the
+transitive closure of $&lt;:$.
+\end{proposition*}
+
+\begin{proof}
+We prove this by induction on height.  By definition of $&lt;:$, if $a&lt;b$
+and the height of $[a,b]$ is 1, then $a&lt;:b$.
+
+Assume for induction that whenever $a&lt;b$ and the height of $[a,b]$ is
+at most $n$, then $(a,b)$ is in the transitive closure of $&lt;:$.
+Suppose that $a&lt;b$ and that the height of $[a,b]$ is $n+1$.  Since
+every chain in $[a,b]$ is finite, it contains an element $c$ which is
+strictly larger than $a$ and \PMlinkname{minimal}{MaximalElement} with
+respect to this property.  Therefore $[a,c]=\{a,c\}$, from which we
+conclude that $a&lt;:c$.  Since the interval $[c,b]$ is a proper
+subinterval of $[a,b]$, it has height at most $n$, so by the induction
+assumption we conclude that $(c,b)$ is in the transitive closure of
+$&lt;:$.  Since $(a,c)$ and $(c,b)$ are in the transitive closure of
+$&lt;:$, so is $(a,b)$.  Hence whenever $a&lt;b$ and the height of $[a,b]$
+is at most $n+1$, then $(a,b)$ is in the transitive closure of $&lt;:$.
+
+This completes the proof.
+\end{proof}
+
+In the same way we associated a graph to $&lt;$ we can associate a graph
+to $&lt;:$.  The graph is usually called the Hasse diagram of the poset.
+Below we display the graph associated to the cover relation $&lt;:$ of
+$B_2$.
+\[\xymatrix{
+             &amp; \{0,1\}                 &amp;              \\
+\{0\}\ar[ur] &amp;                         &amp; \{1\}\ar[ul] \\
+             &amp; \emptyset\ar[ul]\ar[ur] &amp;              
+}\]
+For simplicity, the Hasse diagram of a poset is usually drawn as an
+undirected graph.  Elements which are higher in the partial order
+relation are drawn physically higher.  Since a strict partial order is
+acyclic, this can be done uniquely and the partial order can be
+recovered from the drawing.
+
+\begin{thebibliography}{1}
+\bibitem{Gr1998}
+Gr\"atzer, G., \emph{General lattice theory}, 2nd ed., Birkh\"auser, 1998.
+
+\bibitem{St1996}
+Stanley, R., \emph{Enumerative Combinatorics}, vol. 1, 2nd ed., Cambridge
+University Press, Cambridge, 1996.
+\end{thebibliography}
+</body><objid>132</objid><author>409</author><linkpolicy></linkpolicy><class>msc:06A99</class><defines><synonym>poset</synonym><synonym>partially ordered set</synonym><synonym>comparable</synonym><synonym>incomparable</synonym><synonym>cover</synonym><synonym>covering</synonym><synonym>order-preserving function</synonym><synonym>monotone</synonym><synonym>monotonic</synonym><synonym>order morphism</synonym><synonym>morphism of posets</synonym><synonym>dual poset</synonym><synonym>consecutive</synonym></defines></entry><entry><title>power set</title><domain>planetmath.org</domain><body>\PMlinkescapeword{states}
+\PMlinkescapeword{property}
+{\bf Definition}
+If $X$ is a set, then the \emph{power set of $X$}, denoted by  $\powset{X}$, is the
+set whose elements are the subsets of $X$. 
+
+\subsubsection*{Properties}
+\begin{enumerate}
+\item If $X$ is finite, then $|\powset{X}|=2^{|X|}$.
+\item The above property also holds when $X$ is not finite. 
+For a set $X$, let $|X|$ be the cardinality of $X$. 
+Then $|\powset{X}|=2^{|X|}=|2^X|$,
+where $2^X$ is the set of all functions from $X$ to $\{0,1\}$.
+\item For an arbitrary set $X$, Cantor's theorem states:
+a) there is no bijection between $X$ and $\powset{X}$, and
+b) the cardinality of $\powset{X}$ is greater than the cardinality of $X$.
+\end{enumerate}
+
+\subsubsection*{Example}
+Suppose $S=\{a,b\}$. Then $\powset{S}=\{\emptyset, \{a\}, \{b\}, S\}$.
+In particular, $|\powset{S}|=2^{|S|}=4$. 
+
+\subsubsection*{Related definition}
+If $X$ is a set, then the \emph{finite power set of $X$}, denoted by  $\mathcal{F}(X)$, is the
+set whose elements are the {\bf finite} subsets of $X$. 
+
+\subsubsection*{Remark}
+Due to the canonical correspondence between elements of $\powset{X}$ and elements of $2^X$, the power set is sometimes also denoted by $2^X$.</body><objid>136</objid><author>1858</author><linkpolicy></linkpolicy><class>msc:03E99</class><class>msc:03E10</class><class>msc:37-01</class><defines><synonym>power set</synonym><synonym>powerset</synonym><synonym>finite power set</synonym><synonym>finite powerset</synonym></defines></entry><entry><title>Pythagorean triplet</title><domain>planetmath.org</domain><body>A \emph{Pythagorean triplet} is a set $\{a, b, c\}$ of three positive 
+integers such that
+\[ 
+   a^2 + b^2 = c^2.  
+\]
+
+That is, $\{a, b, c\}$ is a Pythagorean triplet if there exists a
+right triangle whose sides have lengths $a$, $b$, and $c$,
+respectively.  For example, $\{3, 4, 5\}$ is a Pythagorean triplet.
+Given one Pythagorean triplet $\{a, b, c\}$, we can produce another by
+multiplying $a$, $b$, and $c$ by the same factor $k$.  It follows that
+there are countably many Pythagorean triplets.
+
+\subsubsection*{Primitive Pythagorean triplets}
+
+A Pythagorean triplet is \emph{primitive} if its elements are
+coprimes.  All primitive Pythagorean triplets are given by
+\begin{eqnarray*}
+a &amp;=&amp; 2mn,\\
+b &amp;=&amp; m^2\!-\!n^2,\\
+c &amp;=&amp; m^2\!+\!n^2,
+\end{eqnarray*}
+
+where the \emph{seed numbers} $m$ and $n$ are any two coprime positive
+integers, one odd and one even, such that $m &gt; n$.
+
+\textbf{Note.}\, One can form the sequence (Sloane's A100686)
+\[
+  1,\,2,\,3,\,4,\,7,\,24,\,527,\,336,\,164833,\,354144,\,...
+\]
+taking first the seed numbers 1 and 2 which give the legs 3 and 4,
+taking these as new seed numbers which give the legs 7 and 24, and
+so on.
+
+% related: PythagoreanTriplesAndRationalPointsOnAUnitHyperbola
+</body><objid>138</objid><author>3</author><linkpolicy></linkpolicy><class>msc:11-00</class><class>msc:01A20</class><class>msc:11A05</class><class>msc:11-03</class><class>msc:11-01</class><class>msc:51M05</class><class>msc:51M04</class><class>msc:51-03</class><class>msc:51-01</class><class>msc:01-01</class><defines><synonym>Pythagorean triplet</synonym><synonym>Pythagorean triple</synonym><synonym>seed number</synonym><synonym>primitive Pythagorean triple</synonym><synonym>primitive Pythagorean triplet</synonym></defines></entry><entry><title>triangle</title><domain>planetmath.org</domain><body>A \emph{triangle} is a \PMlinkescapetext{bounded} planar region delimited by 3 \PMlinkescapetext{straight} lines.
+\begin{center}
+\includegraphics{triangulo}
+\end{center}
+
+In Euclidean geometry, the angle sum of a triangle is always equal to $180^\circ$. In the figure: $A+B+C=180^\circ$.
+
+In hyperbolic geometry, the angle sum of a triangle is always strictly positive and strictly less than $180^\circ$.  In the figure: $0^\circ&lt;A+B+C&lt;180^\circ$.
+
+In spherical geometry, the angle sum of a triangle is always strictly greater than $180^\circ$ and strictly less than $540^\circ$.  In the figure:  $180^\circ&lt;A+B+C&lt;540^\circ$.
+
+Also in spherical geometry, a triangle has these additional requirements:  It must be strictly contained in a hemisphere of the sphere that is serving as the model for spherical geometry, and all of its angles must have a measure strictly less that $180^{\circ}$.
+
+Triangles can be classified according to the number of their equal sides. So, a triangle with 3 equal sides is called \PMlinkname{\emph{equilateral}}{RegularTriangle}, a triangle with 2 equal sides is called \emph{isosceles}, and finally a triangle with no equal sides is called \emph{scalene}. Notice that an \PMlinkescapetext{equilateral triangle} is also isosceles, but there are isosceles triangles that are not equilateral.
+
+\begin{center}
+\includegraphics{trianglebyside}
+\end{center}
+
+In Euclidean geometry, triangles can also be classified according to the \PMlinkescapetext{size} of the greatest of its three (inner) angles. If the greatest of these is acute (and therefore all three are acute), the triangle is called an \emph{acute triangle}. If the triangle has a right angle, it is a \emph{right triangle}. If the triangle has an obtuse angle, it is an \emph{obtuse triangle}.
+
+\begin{center}
+\includegraphics{trianglebyangle}
+\end{center}
+
+\subsubsection*{Area of a triangle}
+There are several ways to \PMlinkescapetext{calculate} a triangle's area.
+
+In hyperbolic and spherical \PMlinkescapetext{geometry}, the area of a triangle is equal to its defect (measured in radians).
+
+For the rest of this entry, only Euclidean geometry will be considered.
+
+Many \PMlinkescapetext{formulas} for the area of a triangle exist.  The most basic one is $\displaystyle A=\frac{1}{2}bh$, where $b$ is its base and $h$ is its height.  Following is a \PMlinkescapetext{derivation} of another \PMlinkescapetext{formula} for the area of a triangle.
+ 
+Let $a,b,c$ be the sides and $A,B,C$ the interior angles \PMlinkescapetext{opposite} to them. Let $h_a,h_b,h_c $ be the heights drawn upon $a,b,c$ respectively, $r$ the inradius and $R$ the circumradius. Finally, let $\displaystyle s=\frac{a+b+c}{2}$ be the semiperimeter. Then
+
+\begin{eqnarray*}
+\text{Area} &amp;=&amp; \frac{a h_a}{2}=\frac{b h_b}{2}=\frac{c h_c}{2}\\
+&amp;=&amp; \frac{ab\sin C}{2}=\frac{bc\sin A}{2}=\frac{ca\sin B}{2}\\
+&amp;=&amp; \frac{abc}{4R}\\
+&amp;=&amp; sr\\
+&amp;=&amp; \sqrt{s(s-a)(s-b)(s-c)}
+\end{eqnarray*}
+The last \PMlinkescapetext{formula} is known as Heron's formula.
+
+Inequalities for the area are Weizenbock's inequality and the Hadwiger-Finsler inequality.
+
+\subsubsection*{Angles in a triangle}
+\begin{enumerate}
+\item the sum of the angles in a triangle is $\pi$ radians ($180^\circ$)
+\item sines law 
+\item cosines law 
+\item Mollweide's equations 
+\end{enumerate}
+
+\subsubsection*{Special geometric objects for a triangle}
+\begin{enumerate}
+\item incenter 
+\item inscribed circle
+\item circumcenter
+\item circumscribed circle 
+\item centroid
+\item orthocenter
+\item Lemoine point, Lemoine circle  
+\item Gergonne point, Gergonne triangle 
+\item orthic triangle 
+\item pedal triangle 
+\item medial triangle 
+\item Euler Line 
+\end{enumerate}</body><objid>139</objid><author>1863</author><linkpolicy></linkpolicy><class>msc:51M10</class><class>msc:51M05</class><class>msc:51-00</class><class>msc:00A05</class><defines><synonym>triangle</synonym><synonym>acute triangle</synonym><synonym>right triangle</synonym><synonym>obtuse triangle</synonym></defines></entry><entry><title>Heron's formula</title><domain>planetmath.org</domain><body>The area of a triangle with side lengths $a,b,c$ is 
+$$\triangle=\sqrt{s(s-a)(s-b)(s-c)}$$
+where $s=\frac{a+b+c}{2}$ (the semiperimeter).
+
+\begin{center}
+\includegraphics{triangulo}
+\end{center}</body><objid>140</objid><author>3</author><linkpolicy></linkpolicy><class>msc:51-00</class><class>msc:11A51</class><defines><synonym>Heron's formula</synonym></defines></entry><entry><title>Morley's theorem</title><domain>planetmath.org</domain><body>\begin{thm}[Morley's Theorem]
+The points of intersections of the adjacent trisectors in any triangle, are the vertices of an equilateral triangle.
+\end{thm}
+
+\begin{center}\includegraphics{morley}\end{center}</body><objid>141</objid><author>3</author><linkpolicy></linkpolicy><class>msc:51-00</class><defines><synonym>Morley's theorem</synonym></defines></entry><entry><title>median</title><domain>planetmath.org</domain><body>The \emph{median} of a triangle is a line segment joining a vertex with the midpoint of the opposite side.
+
+In the next figure, $AA'$ is a median. That is, $BA'=A'C$, or equivalently, $A'$ is the midpoint of $BC$.
+
+\begin{center}
+\includegraphics[scale=0.5]{median}
+\end{center}
+
+If the length of the three sides of the triangle are known, the length of the medians can be found by means of Apollonius theorem.</body><objid>142</objid><author>3771</author><linkpolicy></linkpolicy><class>msc:51-00</class><defines><synonym>median</synonym></defines></entry><entry><title>equilateral triangle</title><domain>planetmath.org</domain><body>An \emph{equilateral triangle} is one for which all 3  sides are congruent.
+
+
+\begin{center}
+\begin{pspicture}(-0.2,-0.2)(5.2,5.2)
+\pspolygon(0,0)(5,0)(2.5,4.33)
+\rput[b](2.5,4.5){A}
+\rput[a](0,-0.2){B}
+\rput[a](5,-0.2){C}
+\psline(2.5,-0.2)(2.5,0.2)
+\psline(1.15,2.2)(1.35,2.1)
+\psline(3.65,2.1)(3.85,2.2)
+\end{pspicture}
+\end{center}
+
+
+
+The following statements hold in Euclidean geometry for an equilateral triangle.
+
+\begin{itemize}
+\item
+It is a regular polygon.
+\item
+The  bisector of any angle coincides with the height, the median and the perpendicular bisector of the \PMlinkescapetext{opposite side}.
+\item 
+If $r$ is the length of the side, then the height is equal to $\displaystyle \frac{r\sqrt{3}}{2}$.
+\item
+If $r$ is the length of the side, then the area is equal to  $\displaystyle \frac{r^2\sqrt{3}}{4}$.
+\end{itemize}</body><objid>143</objid><author>13753</author><linkpolicy></linkpolicy><class>msc:51-00</class><defines><synonym>equilateral triangle</synonym></defines></entry><entry><title>Stewart's theorem</title><domain>planetmath.org</domain><body>Let be given a triangle $\triangle ABC$ with $AB=c$, $BC=a$, $CA=b$, and a point $X$ on $BC$ such that $BX=m$ and $XC=n$. Denote with $p$ the length of $AX$.
+\figura{stewart}
+Then $$a(p^2+mn)=b^2m+c^2n.$$</body><objid>145</objid><author>3</author><linkpolicy></linkpolicy><class>msc:51-00</class><defines><synonym>Stewart's theorem</synonym></defines></entry><entry><title>Apollonius theorem</title><domain>planetmath.org</domain><body>\PMlinkescapeword{length}
+\PMlinkescapeword{theorem}
+
+Let $a,b,c$ the sides of a triangle and $m$ the length of the median to the side with length $a$.
+Then $b^2+c^2=2m^2+\frac{a^2}{2}$.
+\begin{center}
+\includegraphics{apollonius}
+\end{center}
+
+If $b=c$ (the triangle is isosceles), then the theorem reduces to the
+Pythagorean theorem,
+$$
+   m^2 + (a/2)^2 = b^2.
+$$</body><objid>146</objid><author>2760</author><linkpolicy></linkpolicy><class>msc:51-00</class><defines><synonym>Apollonius theorem</synonym></defines></entry><entry><title>isosceles triangle</title><domain>planetmath.org</domain><body>An \emph{isosceles triangle} is a triangle with two congruent sides.  The angles opposite these two sides are the {\em base angles} and the angle between those sides is the {\em vertex angle} of the triangle.
+
+This definition implies that any equilateral triangle is isosceles
+too, but there are isosceles triangles that are not equilateral.
+
+In any isosceles triangle, the angles opposite to the congruent sides
+are also congruent.  In fact, this condition could be used to give an
+alternate definition of isosceles, since a triangle is isosceles if
+and only if it has two congruent angles.
+
+In an equilateral triangle, the height, the median and the bisector to
+the third side are the same line.
+
+\includegraphics{trianglebyside}
+
+\PMlinkescapeword{opposite}
+</body><objid>149</objid><author>3</author><linkpolicy></linkpolicy><class>msc:51-00</class><defines><synonym>isosceles triangle</synonym><synonym>isosceles</synonym><synonym>base angle</synonym><synonym>vertex angle</synonym></defines></entry><entry><title>cyclic quadrilateral</title><domain>planetmath.org</domain><body>\textbf{Cyclic quadrilateral.}\\
+A quadrilateral is cyclic when its four vertices lie on a circle.
+
+\begin{center}
+\includegraphics{quadcyclic}
+\end{center}
+
+A necessary and sufficient condition for a quadrilateral to be cyclic, is that the sum of a pair of opposite angles be equal to $180^\circ$.
+
+One of the main results about these quadrilaterals is Ptolemy's theorem.
+
+Also, from all the quadrilaterals with given sides $p,q,r,s$, the one that is cyclic has the greatest area. If the four sides of a cyclic quadrilateral are known, the area can be found using Brahmagupta's formula</body><objid>150</objid><author>3</author><linkpolicy></linkpolicy><class>msc:51-00</class><defines><synonym>cyclic quadrilateral</synonym><synonym>cyclic</synonym></defines></entry><entry><title>Brahmagupta's formula</title><domain>planetmath.org</domain><body>If a cyclic quadrilateral has sides $p,q,r,s$ then its area is given by
+$$\sqrt{(T-p)(T-q)(T-r)(T-s)}$$
+where $T=\frac{p+q+r+s}{2}$.
+
+Note that if $s\to 0$, Heron's formula is recovered.
+
+\begin{center}
+\includegraphics{quadcyclic}
+\end{center}</body><objid>153</objid><author>3</author><linkpolicy></linkpolicy><class>msc:51-00</class><defines><synonym>Brahmagupta's formula</synonym><synonym></synonym></defines></entry><entry><title>Apollonius' circle</title><domain>planetmath.org</domain><body>\textbf{Apollonius' circle}.
+The locus of a point moving so that the ratio of its distances from two fixed points is fixed, is a circle.
+\medskip
+
+
+If two circles $C_1$ and $C_2$ are fixed with radii $r_1$ and $r_2$, then the circle of Apollonius of the two centers with ratio $r_1/r_2$ is the circle whose diameter is the segment that \PMlinkescapetext{joins} the two homothety centers of the circles.</body><objid>154</objid><author>3</author><linkpolicy></linkpolicy><class>msc:51-00</class><defines><synonym>Apollonius' circle</synonym></defines></entry><entry><title>Euler line</title><domain>planetmath.org</domain><body>In any triangle, the orthocenter $H$, the centroid $G$ and the circumcenter $O$ are collinear, and $OG/GH=1/2$. The line passing by these points is known as the \emph{Euler line} of the triangle. 
+\medskip
+
+This line also passes by the center of the nine-point circle (or Feuerbach circle) $N$, and $N$ is the midpoint of $OH$.\smallskip
+
+\begin{center}
+\includegraphics{eulin}
+\end{center}</body><objid>155</objid><author>3</author><linkpolicy></linkpolicy><class>msc:51-00</class><defines><synonym>Euler line</synonym></defines></entry><entry><title>Euler line proof</title><domain>planetmath.org</domain><body>Let $O$ the circumcenter of $\triangle ABC$ and $G$ its centroid. Extend $OG$ until  a point $P$ such that $OG/GP=1/2$. We'll prove that $P$ is the orthocenter $H$.
+\medskip
+
+Draw the median $AA'$ where $A'$ is the midpoint of $BC$. Triangles $OGA'$ and $PAO$ are similar, since $GP=2OG$, $AG=2GA'$ and $\angle OGA'=\angle PGA$. Then $\angle OA'G =\angle GAP$ and $OA'\parallel AP$. But $OA'\perp BC$ so $AP\perp BC$, that is, $AP$ is a height of the triangle.\smallskip
+
+Repeating the same argument for the other medians proves that $H$ lies on the three heights and therefore it must be the orthocenter.\smallskip
+
+The ratio is $OG/GH=1/2$ since we constructed it that way.\medskip
+
+</body><objid>156</objid><author>3</author><linkpolicy></linkpolicy><class>msc:51M99</class><defines><synonym>Euler line proof</synonym></defines></entry><entry><title>in-place sorting algorithm</title><domain>planetmath.org</domain><body>A sorting algorithm is said to be \emph{in-place} if it requires very little additional space besides the initial array holding the elements that are to be sorted.  Normally ``very little'' is taken to mean that for sorting $n$ elements, $O(\log n)$ extra space is required.\footnote{In fact, one should really allow any polynomial in $\log n$ in order for \PMlinkescapetext{Quicksort} to qualify.  So perhaps the condition should be expressed as $O(n^\epsilon)$ for every $\epsilon&gt;0$.  These are distinctions in complexity that are almost always ignored since they are dwarfed in practical problems by implementation differences.}  This is reasonable because in a purely mathematical analysis of the algorithms, \emph{any} sorting algorithm that operates on a contiguous array requires $O(\log n)$ extra space, since this is the number of bite required to represent an index into the array.  Normally one ignores this as in most algorithms one treats integers as a data type requiring constant space and constant time for basic operations.  An exception are number theoretic algorithms often encountered in \PMlinkname{cryptography}{NumberTheoryAndCryptography}.
+
+Of course, the efficiency of any algorithm will depend on how the data is stored; usually, the elementary discussion of sorting algorithms focuses on sorting elements stored in a contiguous array (which has constant-time access and swap operations but takes a long time to do shifts).  In this context, Heapsort is an in-place sorting algorithm, since it requires constant additional space. Quicksort is also considered in-place, although it requires an amount of extra space logarithmic in the size of the array.  Most implementations of Quicksort are recursive, and each recursive call needs to store some local variables on the stack; the depth of the recursion is usually $O(\log n)$, but can be $O(n)$ in degenerate cases.  If you try to convert Quicksort to a non-recursive algorithm, you will find that it is necessary to store some intermediatde indexes on a stack, which usually grows up to size $O(\log n)$ but may grow up to size $O(n)$.  Mergesort is a sorting algorithm with running time $O(n\log n)$ which is not in-place when dealing with arrays. 
+
+On the other hand, if one is sorting linked lists, looking up a general element by index requires $O(n)$ steps, so Quicksort and Heapsort need to be drastically modified to run in even $O(n^2)$; this is not a natural context to use these algorithms.  Mergesort, on the other hand, retains its $O(n\log n)$ time complexity and requires only $O(\log n)$ extra space. 
+
+In-place sorting is often useful when dealing with truly enormous data sets, where $O(n)$ extra space is truly difficult to work with.  In-place sorting algorithms may or may not have better locality of reference than other sorting algorithms.  Truly enormous data sets are usually stored on media where random access of data is very expensive but extra storage space is realtively inexpensive (such as disks); in these cases, whether an algorithm is in-place is less relevant.  In fact, even when dealing with data stored as arrays Mergesort is much more efficient for disk-based sorting than the other algorithms because of its better locality of reference. 
+
+It should be pointed out in any analysis of the standard sorting algorithms that they are based on an assumption that is almost never true: they assume that the only operation possible on keys is comparison.  Sorting methods taking advantage of the structure of keys (say, they are strings) can be much faster both asymptotically and in practice; they are generally not in-place, but the extra space is often worth the time advantage.</body><objid>163</objid><author>4430</author><linkpolicy></linkpolicy><class>msc:68P10</class><defines><synonym>in-place sorting algorithm</synonym><synonym>in-situ sorting algorithm</synonym></defines></entry><entry><title>binary search</title><domain>planetmath.org</domain><body>\PMlinkescapeword{entire}
+\PMlinkescapeword{relation}
+
+\subsection*{The Problem}
+
+Let $\leq$ be a total ordering on the set $S$.  Given a sequence of $n$ elements,
+$L = \left\{ x_1 \leq x_2 \leq \dots \leq x_n \right\}$, and a value $y \in S$,
+locate the position of any elements in $L$ that are equal to $y$, or determine that
+none exist.
+
+\subsection*{The Algorithm}
+
+The \emph{binary search} technique is a fundamental method for locating an element of
+a particular value within a sequence of sorted elements (see Sorting Problem).
+The idea is to eliminate half of the search space with each comparison.
+
+First, the
+middle element of the sequence is compared to the value we are searching for.  If this
+element matches the value we are searching for, we are done.  If, however, the middle
+element is ``less than'' the value we are chosen for (as specified by the \PMlinkname{relation}{Relation} used
+to specify a total order over the set of elements), then we know that, if the value exists
+in the sequence, it must exist somewhere \emph{after} the middle element.  Therefore we
+can eliminate the first half of the sequence from our search and simply repeat the search
+in the exact same manner on the remaining half of the sequence.  If, however, the value we
+are searching for comes before the middle element, then we repeat the search on the first half
+of the sequence.
+
+\subsection*{Pseudocode}
+
+%\begin{lstlisting}{}
+\begin{Lalgorithm}{Binary\_Search}{L, n, key}{A list $L$ of $n$ elements, and $key$ (the search key)}{$Position$ (such that $X[Position] = key$)}
+\Lgroup{
+    $Position \gets Find(L, 1, n, key);$
+}\\
+\textbf{function} $Find(L, bottom, top, key)$ \\
+\Lgroup{
+    \Lif{$bottom = top$}{
+        \Lif{$L[bottom] = key$}{$Find \gets bottom$}
+        \Lelse{$Find \gets 0$}}
+    \Lelse{
+    \Lgroup{
+        $middle \gets (bottom + top) / 2;$ \\
+        \Lif{$key &lt; L[middle]$}{
+            $Find \gets Find(L, bottom, middle - 1, key)$}
+        \Lelse{
+            $Find \gets Find(L, middle + 1, top, key)$}
+    }}
+}
+\end{Lalgorithm}
+%\end{lstlisting}
+
+\subsection*{Analysis}
+
+We can specify the runtime complexity of this binary search algorithm by counting the number
+of comparisons required to locate some element $y$ in $L$.  Since half of the list is eliminated
+with each comparison, there can be no more than $\log_2{n}$ comparisons before either the positions
+of all the $y$ elements are found or the entire list is eliminated and $y$ is determined to not exist
+in $L$.
+Thus the worst-case runtime complexity of the binary search is $\mathcal{O}(\log{n})$.
+It can also be shown that the average-case runtime complexity of the binary search is approximately
+$\log_2{n}-1$ comparisons.
+This means that any single entry in a phone book containing one million entries can be located
+with at most 20 comparisons (and on average 19).</body><objid>165</objid><author>2727</author><linkpolicy></linkpolicy><class>msc:68P10</class><defines><synonym>binary search</synonym></defines></entry><entry><title>insertion sort</title><domain>planetmath.org</domain><body>\newcommand{\Lindent}{0.4in}
+\newenvironment{Lalgorithm}[4]{
+    \textbf{Algorithm} \textsc{#1}\texttt{(#2)}\newline
+    \textit{Input}: #3\newline
+    \textit{Output}: #4\newline
+
+}{}
+\newenvironment{Lfloatalgorithm}[6][h]{
+    \begin{figure}[#1]
+    \caption{#2}
+    \begin{Lalgorithm}{#3}{#4}{#5}{#6}
+}{
+    \end{Lalgorithm}
+    \end{figure}
+}
+\newcommand{\Lgets}{\ensuremath{\gets}}
+\newcommand{\Lgroup}[1]{\textbf{begin}\\\hspace*{\Lindent}\parbox{\textwidth}{#1}\\\textbf{end}}
+\newcommand{\Lif}[2]{\textbf{if} #1 \textbf{then}\\\hspace*{\Lindent}\parbox{\textwidth}{#2}} 
+\newcommand{\Lelse}[1]{\textbf{else}\\\hspace*{\Lindent}\parbox{\textwidth}{#1}}
+\newcommand{\Lelseif}[2]{\textbf{else if} #1 \textbf{then}\\\hspace*{\Lindent}\parbox{\textwidth}{#2}}
+\newcommand{\Lfor}[2]{\textbf{for} #1 \textbf{do}\\\hspace*{\Lindent}\parbox{\textwidth}{#2}}
+
+
+
+\subsection*{The Problem}
+
+See the sorting problem.
+
+\subsection*{The Algorithm}
+
+Suppose $L = \left\{ x_1, x_2, \dots, x_n\right\}$ is the initial list of unsorted elements.
+The \emph{insertion sort} algorithm will construct a new list, containing the
+elements of $L$ in order, which we will call $L'$.  The algorithm constructs this list one element at a time.
+
+Initially $L'$ is empty.  We then take the first element of $L$ and put it in $L'$.
+We then take the second element of $L$ and also add it to $L'$, placing it before any elements in $L'$ that should
+come after it.  This is done one element at a time until all $n$ elements of $L$ are in $L'$, in sorted order.
+Thus, each step $i$ consists of looking up the position in $L'$ where the element $x_i$ should be placed
+and inserting it there (hence the name of the algorithm).
+This requires a search, and then the shifting of all the elements in $L'$
+that come after $x_i$ (if $L'$ is stored in an array).  If storage is in an array, then the binary search algorithm
+can be used to quickly find $x_i$'s new position in $L'$.
+
+Since at step $i$, the length of list $L'$ is $i$ and the length of list $L$ is $n - i$, we can implement this
+algorithm as an in-place sorting algorithm.  Each step $i$ results in $L[1..i]$ becoming fully sorted.
+
+\subsection*{Pseudocode}
+
+This algorithm uses a modified binary search algorithm to find the position in $L$ where an element $key$
+should be placed to maintain ordering.
+                                                                                                           
+\begin{Lalgorithm}{Insertion\_Sort}{L, n}{A list $L$ of $n$ elements}{The list $L$ in sorted order}        
+\Lgroup{
+    \Lfor{$i \gets -2\mbox{ to }n$}{\Lgroup{
+        $value \gets L[i]$ \\
+        $position \gets Binary\_Search(L, 1, i , value)$ \\
+        \Lfor{$j \gets i\mbox{ downto }position$}{$L[j] \gets L[j - 1]$} \\
+        $L[position] \gets value$
+    }}
+} \\
+\\
+\textbf{function} Binary\_Search(L, bottom, top, key) \\
+\Lgroup{
+    \Lif{$first &gt;= last$}{$Binary\_Search \gets bottom$}
+    \Lelse{\Lgroup{
+        $middle \gets (bottom + top) / 2$ \\
+        \Lif{$key &lt; L[middle]$}{$Binary\_Search \gets Binary\_Search(L, bottom, middle - 1, key)$}
+        \Lelse{$Binary\_Search \gets Binary\_Search(L, middle + 1, top, key)$}
+    }}
+}
+\end{Lalgorithm}
+
+\subsection*{Analysis}
+
+In the worst case, each step $i$ requires a shift of $i - 1$ elements for the insertion (consider an input
+list that is sorted in reverse order).  Thus the runtime complexity is $\mathcal{O}(n^2)$.  Even the optimization
+of using a binary search does not help us here, because the deciding factor in this case is the insertion.
+It is possible to use a data type with $\mathcal{O}(\log{n})$ insertion time, giving $\mathcal{O}(n\log{n})$ runtime,
+but then the algorithm can no longer be done as an in-place sorting algorithm.  Such data structures are also quite
+complicated.
+
+A similar algorithm to the insertion sort is the selection sort, which requires fewer data movements than the insertion
+sort, but requires more comparisons.
+
+\PMlinkescapeword{type}
+\PMlinkescapeword{order}
+\PMlinkescapeword{structure}
+\PMlinkescapeword{factor}</body><objid>181</objid><author>2727</author><linkpolicy></linkpolicy><class>msc:68P10</class><defines><synonym>insertion sort</synonym></defines></entry><entry><title>selection sort</title><domain>planetmath.org</domain><body>\newcommand{\Lindent}{0.4in}
+\newenvironment{Lalgorithm}[4]{
+    \textbf{Algorithm} \textsc{#1}\texttt{(#2)}\newline
+    \textit{Input}: #3\newline
+    \textit{Output}: #4\newline
+
+}{}
+\newenvironment{Lfloatalgorithm}[6][h]{
+    \begin{figure}[#1]
+    \caption{#2}
+    \begin{Lalgorithm}{#3}{#4}{#5}{#6}
+}{
+    \end{Lalgorithm}
+    \end{figure}
+}
+\newcommand{\Lgets}{\ensuremath{\gets}}
+\newcommand{\Lgroup}[1]{\textbf{begin}\\\hspace*{\Lindent}\parbox{\textwidth}{#1}\\\textbf{end}}
+\newcommand{\Lif}[2]{\textbf{if} #1 \textbf{then}\\\hspace*{\Lindent}\parbox{\textwidth}{#2}} 
+\newcommand{\Lelse}[1]{\textbf{else}\\\hspace*{\Lindent}\parbox{\textwidth}{#1}}
+\newcommand{\Lelseif}[2]{\textbf{else if} #1 \textbf{then}\\\hspace*{\Lindent}\parbox{\textwidth}{#2}}
+\newcommand{\Lfor}[2]{\textbf{for} #1 \textbf{do}\\\hspace*{\Lindent}\parbox{\textwidth}{#2}}
+
+
+\subsection*{The Problem}
+
+See the Sorting Problem.
+    
+\subsection*{The Algorithm}
+
+Suppose $L = \left\{ x_1, x_2, \dots, x_n\right\}$ is the initial list of unsorted elements.
+The \emph{selection sort} algorithm sorts this list in $n$ steps.  At each step $i$, find the largest
+element $L[j]$ such that $j &lt; n - i + 1$, and swap it with the element at $L[n - i + 1]$.
+So, for the first step, find the largest value in the list and swap it with the last element in the list.
+For the second step, find the largest value in the list up to (but not including) the last element, and swap it
+with the next to last element.  This is continued for $n - 1$ steps.  Thus the selection sort algorithm is a
+very simple, in-place sorting algorithm.
+
+\subsection*{Pseudocode}
+
+\begin{Lalgorithm}{Selection\_Sort}{L, n}{A list $L$ of $n$ elements}{The list $L$ in sorted order}
+\Lgroup{
+    \Lfor{$i \gets n\mbox{ downto }2$}{\Lgroup{
+        $temp \gets L[i]$ \\
+        $max \gets 1$ \\
+        \Lfor{$j \gets 2\mbox{ to }i$}{\Lif{$L[j] &gt; L[max]$}{$max \gets j$}} \\
+        $L[i] \gets L[max]$ \\
+        $L[max] \gets temp$
+    }
+}}
+\end{Lalgorithm}
+
+\subsection*{Analysis}
+
+The selection sort algorithm has the same runtime for any set of $n$ elements, no matter
+what the values or order of those elements are.  Finding the maximum element of a list of
+$i$ elements requires $i - 1$ comparisons.  Thus $T(n)$, the number of comparisons required to
+sort a list of $n$ elements with the selection sort, can be found:
+
+\begin{eqnarray*}
+    T(n) &amp; = &amp; \sum_{i=2}^n(i-1) \\
+         &amp; = &amp; \sum_{i=1}^ni-n-2 \\
+         &amp; = &amp; \frac{(n^2-n-4)}{2} \\
+         &amp; = &amp; \mathcal{O}(n^2)
+\end{eqnarray*}
+
+However, the number of data movements is the number of swaps required, which is $n-1$.  This
+algorithm is very similar to the insertion sort algorithm.  It requires fewer data movements,
+but requires more comparisons.</body><objid>182</objid><author>2727</author><linkpolicy></linkpolicy><class>msc:68P10</class><defines><synonym>selection sort</synonym></defines></entry><entry><title>Legendre symbol</title><domain>planetmath.org</domain><body>\textbf{Legendre Symbol.}\\
+Let $p$ be an odd prime. The \emph{Legendre symbol} $\left(\frac{a}{p}\right)$ or $(a\mid p)$ is defined as:
+\[
+\left(\frac{a}{p}\right) =
+\begin{cases}
+1 &amp;\text{if }a \text{ is a quadratic residue }\pmod{p}\\
+-1 &amp;\text{if }a \text{ is a non-quadratic residue }\pmod{p}\\
+0 &amp; \text{if } p \text{ divides }a
+\end{cases}
+\]
+
+The Legendre symbol can be computed by means of Euler's criterion or Gauss' lemma.
+
+A generalization of this symbol is the Jacobi Symbol.</body><objid>183</objid><author>2414</author><linkpolicy></linkpolicy><class>msc:11-00</class><defines><synonym>Legendre symbol</synonym></defines></entry><entry><title>sphere</title><domain>planetmath.org</domain><body>\section{Sphere}
+
+A \emph{sphere} is defined as the locus of the points in three dimensions that are equidistant from a particular point called the \emph{center}.  Note that the center of a sphere is unique.
+
+It is generally assumed that the sphere is embedded in real-valued space ($\mathbb{R}^3$) unless otherwise stated.
+
+The equation for a sphere centered at the origin is 
+
+\[ x^2+y^2+z^2=r^2 \]
+
+where $r$ is the length of the \PMlinkescapetext{\emph{radius}}.
+
+A \emph{unit sphere} is a sphere with radius 1.
+
+The formula for the volume of a sphere with radius $r$ is
+
+\[ V = \frac{4}{3} \pi r^3. \]
+
+The formula for the surface area of a sphere with radius $r$ is
+
+\[ A = 4 \pi r^2. \]
+
+\section{Generalization}
+
+A sphere can be generalized to $n$ dimensions.  For $n &gt; 3$, a generalized sphere is called a \emph{hypersphere} (when no value of $n$ is given, one can generally assume that ``hypersphere'' means $n = 4$).  In the same manner, the definitions of center, radius, and unit sphere can also be generalized to $n$ dimensions.
+
+The formula for an $n$-dimensional sphere is
+
+\[ {x_1}^2 + {x_2}^2 + \dots + {x_n}^2 = r^2 \]
+
+where $r$ is the length of the radius.  Note that when $n=2$, the formula reduces to the formula for a circle, so a circle is a 2-dimensional ``sphere''.  A one dimensional sphere is a pair of points (filled-in, it would be a line)!
+
+The volume of an $n$-dimensional sphere with radius $r$ is
+
+\[ V(n,r) = \frac{\pi^{\frac{n}{2}}r^n}{\Gamma(\frac{n}{2}+1)} \]
+
+where $\Gamma(n)$ is the gamma function. Curiously, for any fixed $r$, the volume of the $n$-d sphere approaches zero as $n$ approaches infinity.    Contrast this to the volume of an $n$-d box, which always has a volume in proportion to $s^n$ (with $s$ the side length of the box) which increases without bound when $s \ge 1$. Note that, for any positive integer $n$ and for any radius $r$, $V(n,r)=V(n,1)r^n$. Also note that the volume of the $n$-d unit sphere $V(n,1)$ has a maximum precisely at $n=5$.
+
+To illustrate how to use the formula for $V(n,r)$ and to provide some evidence of the claims made about $V(n,r)$, the values $V(4,1)$, $V(5,1)$, and $V(6,1)$ will be calculated here.
+
+\begin{center}
+$\begin{array}{lll|lll|ll}
+V(4,1) &amp; = \displaystyle \frac{\pi^{\frac{4}{2}}1^4}{\Gamma(\frac{4}{2}+1)} &amp; &amp; V(5,1) &amp; = \displaystyle \frac{\pi^{\frac{5}{2}}1^5}{\Gamma(\frac{5}{2}+1)} &amp; &amp; V(6,1) &amp; = \displaystyle \frac{\pi^{\frac{6}{2}}1^6}{\Gamma(\frac{6}{2}+1)} \\
+&amp; &amp; &amp; &amp; &amp; &amp; &amp; \\
+&amp; = \displaystyle \frac{\pi^2}{\Gamma(3)} &amp; &amp; &amp; = \displaystyle \frac{\pi^2 \sqrt{\pi}}{\Gamma(\frac{7}{2})} &amp; &amp; &amp; = \displaystyle \frac{\pi^3}{\Gamma(4)} \\
+&amp; &amp; &amp; &amp; &amp; &amp; &amp; \\
+&amp; = \displaystyle \frac{\pi^2}{2} &amp; &amp; &amp; = \displaystyle \frac{\pi^2 \sqrt{\pi}}{\frac{5}{2}\Gamma(\frac{5}{2})} &amp; &amp; &amp; = \displaystyle \frac{\pi^3}{6} \\
+&amp; &amp; &amp; &amp; &amp; &amp; &amp; \\
+&amp; \approx 4.9348 &amp; &amp; &amp; = \displaystyle \frac{\pi^2 \sqrt{\pi}}{\left( \frac{5}{2} \right) \left( \frac{3}{2} \right) \Gamma(\frac{3}{2})} &amp; &amp; &amp; \approx 5.1677 \\
+&amp; &amp; &amp; &amp; &amp; &amp; &amp; \\
+&amp; &amp; &amp; &amp; = \displaystyle \frac{\pi^2 \sqrt{\pi}}{\left( \frac{5}{2} \right) \left( \frac{3}{2} \right) \left( \frac{1}{2} \right) \Gamma(\frac{1}{2})} &amp; &amp; &amp; \\
+&amp; &amp; &amp; &amp; &amp; &amp; &amp; \\
+&amp; &amp; &amp; &amp; = \displaystyle \frac{\pi^2 \sqrt{\pi}}{\frac{15}{8} \sqrt{\pi}} &amp; &amp; &amp; \\
+&amp; &amp; &amp; &amp; &amp; &amp; &amp; \\
+&amp; &amp; &amp; &amp; = \displaystyle \frac{8\pi^2}{15} &amp; &amp; &amp; \\
+&amp; &amp; &amp; &amp; &amp; &amp; &amp; \\
+&amp; &amp; &amp; &amp; \approx 5.2638 &amp; &amp; &amp; \end{array}$
+\end{center}
+
+\section{Topological Treatment}
+
+In topology and other contexts, spheres are treated slightly differently.  Let the $n$-\emph{sphere} be the set
+
+\[ S^n = \{ x \in \RR^{n+1} : ||x|| = 1 \} \]
+
+where $|| \cdot ||$ can be any norm, usually the Euclidean norm.  Notice that $S^n$ is defined here as a subset of $\RR^{n+1}$.
+
+Thus, $S^0$ is two points on the real line:
+
+\begin{center}
+\begin{pspicture}(-1.5,-0.8)(1.5,0.5)
+\psline{&lt;-&gt;}(-1.21,0)(1.21,0)
+\psdots(-1,0)(1,0)
+\rput[t](-1,0){$-1$}
+\rput[t](1,0){$1$}
+\end{pspicture}
+\end{center}
+
+$S^1$ is the unit circle:
+
+\begin{center}
+\begin{pspicture}(-1.2,-1.2)(1.2,1.2)
+\psaxes{&lt;-&gt;}(0,0)(-1.2,-1.2)(1.2,1.2)
+\rput[b](1.2,0){$x$}
+\rput[l](0,1.2){$y$}
+\pscircle(0,0){1}
+\end{pspicture}
+\end{center}
+
+$S^2$ is the unit sphere in the everyday sense of the \PMlinkescapetext{word}.  It might seem like a strange naming convention to say, for instance, that the $2$-sphere is in three-dimensional space.  The explanation is that $2$ refers to the sphere's ``intrinsic'' dimension as a manifold, not the dimension to whatever space in which it happens to be immersed.
+
+Sometimes this definition is generalized \PMlinkescapetext{even} more.  In topology we usually fail to distinguish homeomorphic spaces, so all homeomorphic images of $S^n$ into any topological space are also called $S^n$.  It is usually clear from context whether $S^n$ denotes the specific unit sphere in $\RR^{n+1}$ or some arbitrary homeomorphic image.</body><objid>186</objid><author>2</author><linkpolicy></linkpolicy><class>msc:51M05</class><defines><synonym>sphere</synonym><synonym>center</synonym><synonym>radius</synonym><synonym>unit sphere</synonym><synonym>hypersphere</synonym><synonym>n-sphere</synonym><synonym>$n$-sphere</synonym></defines></entry><entry><title>noetherian ring</title><domain>planetmath.org</domain><body>\PMlinkescapeword{property}
+\PMlinkescapeword{simple}
+\PMlinkescapeword{natural}
+\PMlinkescapeword{extension}
+A ring $R$ is \emph{right noetherian} if it is a \PMlinkname{right noetherian module}{NoetherianModule}, considered as a right module over itself in the natural way (that is, an element $r$ acts by $x\mapsto xr$).  Similarly, $R$ is \emph{left noetherian} if it is a left noetherian module over itself (equivalently, if the opposite ring of $R$ is right noetherian). We say that $R$ is \emph{noetherian} if it is both left noetherian and right noetherian. 
+
+Examining the definition, it is relatively easy to show that $R$ is right noetherian if and only if the three equivalent conditions hold:
+\begin{enumerate}
+\item right ideals are finitely generated,
+\item the ascending chain condition holds on right ideals, or
+\item every nonempty family of right ideals has a maximal element.
+\end{enumerate}
+
+Examples of Noetherian rings include:
+\begin{itemize}
+\item any field (as the only ideals are 0 and the whole ring),
+\item the ring $\mathbb{Z}$ of integers (each ideal is generated by a single integer, the greatest common divisor of the elements of the ideal),
+\item the \PMlinkname{$p$-adic integers}{PAdicIntegers}, $\mathbb{Z}_p$ for any prime $p$, where every ideal is generated by a multiple of $p$, and
+\item the ring of complex polynomials in two variables, where some ideals (the ideal generated by $X$ and $Y$, for example) are not principal, but all ideals are finitely generated.
+\end{itemize}
+The Hilbert Basis Theorem says that a ring $R$ is noetherian if and only if the polynomial ring $R[x]$ is.
+
+A ring can be right noetherian but not left noetherian.
+
+The word noetherian is used in a number of other places.  A topology can be \PMlinkname{noetherian}{NoetherianTopologicalSpace}; although this is not related in a simple way to the property for rings, the definition is based on an ascending chain condition.  A site can also be noetherian; this is a generalization of the notion of noetherian for topological space.
+
+Noetherian rings (and by extension most other uses of the word noetherian) are named after Emmy Noether (see \PMlinkexternal{Wikipedia}{http://en.wikipedia.org/wiki/Emmy_Noether} for a short biography) who made many contributions to algebra.  Older references tend to capitalize the word (Noetherian) but in some fields, such as algebraic geometry, the word has come into such common use that the capitalization is dropped (noetherian).  A few other objects with proper names have undergone this process (abelian, for example) while others have not (Galois groups, for example).  Any particular work should of course choose one convention and use it consistently.</body><objid>187</objid><author>4430</author><linkpolicy></linkpolicy><class>msc:16P40</class><defines><synonym>noetherian ring</synonym><synonym>noetherian</synonym><synonym>left noetherian</synonym><synonym>right noetherian</synonym><synonym>left noetherian ring</synonym><synonym>right noetherian ring</synonym></defines></entry><entry><title>Hilbert basis theorem</title><domain>planetmath.org</domain><body>Let $R$ be a right (left) Noetherian ring. Then $R[x]$ is also right (left) Noetherian.</body><objid>188</objid><author>5</author><linkpolicy></linkpolicy><class>msc:13E05</class><class>msc:16P40</class><defines><synonym>Hilbert basis theorem</synonym></defines></entry><entry><title>Noetherian module</title><domain>planetmath.org</domain><body>\PMlinkescapeword{equivalent}
+\PMlinkescapephrase{generated by}
+\PMlinkescapeword{left}
+\PMlinkescapephrase{left noetherian}
+\PMlinkescapeword{property}
+\PMlinkescapeword{right}
+\PMlinkescapephrase{right noetherian}
+\PMlinkescapeword{similar}
+\PMlinkescapeword{simple}
+
+A (left or right) module $M$ over a ring $R$ is said to be \emph{Noetherian}
+if the following equivalent conditions hold:
+\begin{enumerate}
+\item Every submodule of $M$ is finitely generated over $R$.
+\item The ascending chain condition holds on submodules.
+\item Every nonempty family of submodules has a maximal element.
+\end{enumerate}
+
+For example, the $\mathbb{Z}$-module $\mathbb{Q}$ is not Noetherian,
+as it is not finitely generated,
+but the $\mathbb{Z}$-module $\mathbb{Z}$ is Noetherian,
+as every submodule is generated by a single element.
+
+Observe that changing the ring can change whether a module is Noetherian or not:
+for example, the $\mathbb{Q}$-module $\mathbb{Q}$ is Noetherian,
+since it is \PMlinkname{simple}{SimpleModule}
+(has no nontrivial submodules). 
+
+There is also a notion of \PMlinkname{Noetherian for rings}{Noetherian}:
+a ring is left Noetherian if it is Noetherian as a left module over itself,
+and right Noetherian if it is Noetherian as a right module over itself.
+For non-commutative rings, these two notions can differ.
+
+The corresponding property for groups is usually called the maximal condition.
+
+Finally, there is the somewhat related notion of a
+\PMlinkname{Noetherian topological space}{NoetherianTopologicalSpace}.
+</body><objid>189</objid><author>2760</author><linkpolicy>priority 10</linkpolicy><class>msc:13E05</class><defines><synonym>Noetherian module</synonym><synonym>Noetherian</synonym><synonym>Noetherian left module</synonym><synonym>Noetherian right module</synonym><synonym>left Noetherian module</synonym><synonym>right Noetherian module</synonym></defines></entry><entry><title>homogeneous ideal</title><domain>planetmath.org</domain><body>Let $R = \oplus_{g\in G} R_g$ be a graded ring.  Then an element $r$ of $R$ is said to be \emph{homogeneous} if it is an element of some $R_g$.  An ideal $I$ of $R$ is said to be homogeneous if it can be generated by a set of homogeneous elements, or equivalently if it is the ideal generated by the set of elements $\bigcup_{g\in G} I\cap R_g$.
+
+One observes that if $I$ is a homogeneous ideal and $r=\sum_i r_{g_i}$ is the sum of homogeneous elements $r_{g_i}$ for distinct $g_i$, then each $r_{g_i}$ must be in $I$. 
+
+To see some examples, let $k$ be a field, and take $R=k[X_1,X_2,X_3]$ with the usual grading by total degree.  Then the ideal generated by $X_1^n+X_2^n-X_3^n$ is a homogeneous ideal.  It is also a radical ideal.  One reason homogeneous ideals in $k[X_1,\ldots,X_n]$ are of interest is because (if they are radical) they define projective varieties; in this case the projective variety is the \PMlinkname{Fermat}{FermatsLastTheorem} curve.  For contrast, the ideal generated by $X_1+X_2^2$ is not homogeneous.</body><objid>190</objid><author>4430</author><linkpolicy></linkpolicy><class>msc:13A15</class><defines><synonym>homogeneous ideal</synonym><synonym>homogeneous</synonym><synonym>homogeneous element</synonym></defines></entry><entry><title>graded ring</title><domain>planetmath.org</domain><body>Let $S$ be a groupoid (semigroup,group) and let $R$ be a ring (not necessarily with unity) which can be expressed as a \PMlinkescapetext{direct sum} $R = {\bigoplus}_{s \in S} R_{s}$ of additive subgroups $R_{s}$ of $R$ with $s \in S$.  If $R_{s} R_{t} \subseteq R_{st}$ for all $s,t \in S$ then we say that $R$ is {\em groupoid graded} (semigroup-graded, group-graded) ring.
+
+We refer to $R = \bigoplus_{s\in S} R_{s}$ as an $S$-grading of
+$R$ and the subgroups $R_{s}$ as the
+$s$-components of $R$. If we have the stronger
+condition that $R_{s}R_{t} = R_{st}$ for all $s,t \in S$, then we say that the ring $R$ is {\em
+strongly} graded by
+$S$. 
+
+Any element $r_{s}$ in $R_{s}$ (where $s\in S$) is said to be {\em homogeneous of degree
+$s$}. Each element $r \in R$ can be expressed as a unique and finite sum $r =
+\sum_{s \in S} r_{s}$ of homogeneous elements $r_{s} \in R_{s}$. 
+
+%%We define the {\em
+%%support} of $r$ to be the set $\supp(r) = \{ s \in S \st
+%%r_{s} \neq 0 \}$. We can extend this definition to 
+%%$\supp(R) = \bigcup \supp(r) = \{ s \in S \st
+%%R_{s} \neq 0 \}$.  If $\supp(R)$ is a finite set then we say that the ring 
+%%$R$ has {\em finite
+%%support}.
+
+For any subset $G \subseteq S$ we have $R_{G} = \sum_{g \in G} R_{g}$.
+Similarly $r_{G} = \sum_{g \in G} r_{g}$.  If $G$ is a subsemigroup of $S$ then
+$R_{G}$ is a subring of $R$.  If $G$ is a left (right, two-sided) ideal of $S$
+then $R_{G}$ is a left (right, two-sided) ideal of $R$.
+
+Some examples of graded rings include:\\
+Polynomial rings\\
+Ring of symmetric functions\\
+Generalised matrix rings\\
+Morita contexts\\
+Ring of Hirota derivatives\\
+group rings\\
+filtered algebras\\
+
+</body><objid>192</objid><author>12431</author><linkpolicy></linkpolicy><class>msc:13A02</class><defines><synonym>graded ring</synonym><synonym>S-graded ring</synonym><synonym>G-graded ring</synonym><synonym>groupoid graded ring</synonym><synonym>semigroup graded ring</synonym><synonym>group graded ring</synonym><synonym>homogeneous element</synonym><synonym>strongly graded</synonym></defines></entry><entry><title>graded module</title><domain>planetmath.org</domain><body>It is a well-known fact that a polynomial (over, say, $\mathbb{Z}$) can be written as a sum of monomials in a unique way.  A monomial is a special kind of a polynomial.  Unlike polynomials, the monomials can be partitioned so that the sum of any two monomial within a partition, and the product of any two monomials, are again monomials.  As one may have guessed, one would partition the monomials by their degree.  The above notion can be generalized, and the general notion is that of a graded ring (and a graded module).
+
+\subsubsection*{Definition}
+
+Let $R = R_0 \oplus R_1 \oplus \cdots$ be a graded ring.  A module $M$ over $R$ is said to be a \emph{graded module} if 
+$$M = M_0 \oplus M_1 \oplus \cdots$$
+where $M_i$ are abelian subgroups of $M$, such that $R_i M_j \subseteq M_{i+j}$ for all $i,j$.  An element of $M$ is said to be \emph{homogeneous of degree} $i$ if it is in $M_i$.  The set of $M_i$ is called a \emph{grading} of $M$.
+
+Whenever we speak of a graded module, the module is always assumed to be over a graded ring.  As any ring $R$ is trivially a graded ring (where $R_i=R$ if $i=0$ and $R_i=0$ otherwise), every module $M$ is trivially a graded module with $M_i=M$ if $i=0$ and $M_i=0$ otherwise.  However, it is customary to regard a graded module (or a graded ring) non-trivially.
+
+If $R$ is a graded ring, then clearly it is a graded module over itself, by setting $M_i=R_i$ ($M=R$ in this case).  Furthermore, if $M$ is graded over $R$, then so is $Mz$ for any indeterminate $z$.
+
+\textbf{Example}.  To see a concrete example of a graded module, let us first construct a graded ring.  For convenience, take any ring $R$, the polynomial ring $S=R[x]$  is a graded ring, as $$S=S_0\oplus S_1 \oplus S_2 \oplus \cdots \oplus S_n \oplus \cdots,$$ with $S_i:=Rx^i$.  Then $S_iS_j=(Rx^m)(Rx^n)\subseteq Rx^{m+n}=S_{i+j}$.
+
+Therefore, $S$ is a graded module over $S$.  Similarly, the submodules $Sx^i$ of $S$ are also graded over $S$.
+
+It is possible for a module over a graded ring to be graded in more than one way.  Let $S$ be defined as in the example above.  Then $S[y]$ is graded over $S$.  One way to grade $S[y]$ is the following:
+$$S[y]=\bigoplus_{k=0}^{\infty} A_k,\quad\textrm{ where }A_k=R[y]x^k,$$
+since $S_pA_q=(Rx^p)(R[y]x^q)\subseteq R[y]x^{p+q}=A_{p+q}$.  Another way to grade $S[y]$ is:
+$$S[y]=\bigoplus_{k=0}^{\infty} B_k,\quad\textrm{ where }B_k=\sum_{i+j=k}Rx^iy^j,$$
+since $$S_pB_q=(Rx^p)(\sum_{i+j=q}Rx^iy^j)=\sum_{i+j=q}Rx^{i+p}y^j\subseteq \sum_{i+j=p+q}Rx^iy^j=B_{p+q}.$$
+
+\subsubsection*{Graded homomorphisms and graded submodules}
+
+Let $M,N$ be graded modules over a (graded) ring $R$.  A module homomorphism $f:M\to N$ is said to be \emph{graded} if $f(M_i)\subseteq N_i$.  $f$ is a \emph{graded isomorphism} if it is a graded module homomorphism and an isomorphism.  If $f$ is a graded isomorphism $M\to N$, then 
+\begin{enumerate}
+\item $f(M_i)=N_i$.  Suppose $a\in N_i$ and $f(b)=a$.  Write $b=\sum b_j$ where $b_j\in M_i$, and $b_j=0$ for all but finitely many $j$.  Then each $f(b_j)\in N_j$.  Since $N_j\cap N_i=0$ if $i\ne j$, $f(b_j)=0$ if $j\ne i$.  Therefore $b=b_i\in N_i$.
+\item $f^{-1}$ is graded.  If $a\in f^{-1}(N_i)$, then $f(a)\in N_i=f(M_i)$ by the previous fact.  Then $f(a)=f(c)$ for some $c\in M_i$, so $a=c\in M_i$ since $f$ is one-to-one.
+\end{enumerate}
+Suppose a graded module $M$ has two gradings: $M=\oplus A_i=\oplus B_i$.  The two gradings on $M$ are said to be \emph{isomorphic} if there is a graded isomorphism $f$ on $M$ with $f(A_j)=B_j$.  In the example above, we see that the two gradings of $S[j]$ are non-isomorphic.
+
+Let $N$ be a submodule of a graded module $M$ (over $R$).  We can turn $N$ into a graded module by defining $N_i=N\cap M_i$.  Of course, $N$ may already be a graded module in the first place.  But the two gradings on $N$ may not be isomorphic.  A submodule $N$ of a graded module $M$ (over $R$) is said to be a \emph{graded submodule} of $M$ if its grading is defined by $N_i=N\cap M_i$.  If $N$ is a graded submodule of $M$, then the injection $N\mapsto M$ is a graded homomorphism.
+
+\subsubsection*{Generalization}
+
+The above definition can be generalized, and the generalization comes from the subscripts.  The set of subscripts in the definition above is just the set of all non-negative integers (sometimes denoted $\mathbb{N}$) with a binary operation $+$.  It is reasonable to extend the set of subscripts from $\mathbb{N}$ to an arbitrary set $S$ with a binary operation $*$.  Normally, we require that $*$ is associative so that $S$ is a semigroup.  An $R$-module $M$ is said to be $S$-graded if $$M=\bigoplus_{s\in S}M_s\textrm{ such that }R_sM_t\subseteq M_{s*t}.$$
+Examples of $S$-graded modules are mainly found in modules over a semigroup ring $R[S]$.
+
+\textbf{Remark}.  Graded modules, and in general the concept of grading in algebra, are an essential tool in the study of homological algebraic aspect of rings.</body><objid>193</objid><author>3771</author><linkpolicy></linkpolicy><class>msc:16W50</class><defines><synonym>graded module</synonym><synonym>graded homomorphism</synonym><synonym>homogeneous submodule</synonym><synonym>graded module homomorphism</synonym><synonym>homogeneous of degree</synonym><synonym>graded submodule</synonym><synonym>grading</synonym></defines></entry><entry><title>Fermat's little theorem</title><domain>planetmath.org</domain><body>If $a, p \in \mathbb{Z}$ with $p$ a prime and $p \nmid a$, then $a^{p-1} \equiv 1 \pmod{p}$.</body><objid>195</objid><author>5</author><linkpolicy></linkpolicy><class>msc:11-00</class><defines><synonym>Fermat's little theorem</synonym><synonym>Fermat's theorem</synonym></defines></entry><entry><title>Euler phi-function</title><domain>planetmath.org</domain><body>For any positive integer $n$, $\phi(n)$ is the number of positive integers less than or equal to $n$ which are coprime to $n$. This is known as the Euler $\phi$-function.
+Among its useful properties are the facts that $\phi$ is multiplicative, meaning if $\text{gcd}(a,b) = 1$, then $\phi (ab) = \phi (a) \phi(b)$, and that $\phi (p^k) = p^{k-1} (p-1)$ if $p$ is prime. These two facts combined give a numeric computation of $\phi$ for all integers:
+\[ \phi (n) = n \prod_{p|n} \left( 1-\frac{1}{p} \right). \]
+For example, 
+\begin{eqnarray*}
+\phi (2000) &amp; = &amp; \phi (2^4 \cdot 5^3) \\
+&amp; = &amp; 2000 \left( 1 - \frac{1}{2} \right) \left( 1 - \frac{1}{5} \right) \\
+&amp; = &amp; 2000 \left( \frac{1}{2} \right) \left( \frac{4}{5} \right) \\
+&amp; = &amp; \frac{8000}{10} \\
+&amp; = &amp; 800.
+\end{eqnarray*}
+In addition,
+$$\sum_{d|n} \phi (d) = n$$
+where the sum extends over all positive divisors of $n$. Also, $\phi (n)$ is the number of units in the ring $\mathbb{Z} / n \mathbb{Z}$ of integers modulo $n$.</body><objid>196</objid><author>5</author><linkpolicy></linkpolicy><class>msc:11-00</class><defines><synonym>Euler phi-function</synonym><synonym>Euler totient function</synonym><synonym>Euler $phi$ function</synonym><synonym>Euler $phi$</synonym></defines></entry><entry><title>Euler-Fermat theorem</title><domain>planetmath.org</domain><body>If $a,n \in \mathbb{Z}$ such that $\gcd(a,n)=1$, then $a^{\varphi (n)} \equiv 1 \operatorname{mod} n$, where $\varphi$ is the Euler totient function.</body><objid>198</objid><author>1863</author><linkpolicy></linkpolicy><class>msc:20A05</class><class>msc:20-01</class><class>msc:11-00</class><defines><synonym>Euler-Fermat theorem</synonym><synonym>Euler's theorem</synonym></defines></entry><entry><title>prime number theorem</title><domain>planetmath.org</domain><body>\PMlinkescapeword{term}
+\PMlinkescapeword{behavior}
+
+Define $\pi (x)$ as the number of primes less than or equal to $x$. The prime number theorem asserts that \[ \pi (x) \sim \frac{x}{\log x} \] as $x \rightarrow \infty$, that is, $\pi(x) / \frac{x}{\log x}$ tends to 1 as $x$ increases. Here ${\log x}$ is the natural logarithm.
+
+There is a sharper statement that is also known as the prime number
+theorem:
+\begin{equation*}
+\pi(x)=\li x+R(x),
+\end{equation*}
+where $\li$ is the logarithmic integral defined as
+\begin{equation*}
+\li x=\int_2^x \frac{dt}{\log t}=\frac{x}{\log x}+\frac{1!x}{(\log
+x)^2}+\dotsb+\frac{(k-1)!x}{(\log x)^{k}}+O\left\{\frac{x}{(\log
+x)^{k+1}}\right\},\qquad\text{for any fixed $k$}
+\end{equation*}
+and $R(x)$ is the error term whose behavior is still not fully
+known. From the work of Korobov and Vinogradov on zeroes of
+Riemann zeta-function it is known that
+\begin{equation*}
+R(x)=O\left\{x \exp(-c(\theta)(\log x)^\theta)\right\}
+\end{equation*}
+for every $\theta&gt;\tfrac{3}{5}$. The unproven Riemann hypothesis
+is equivalent to the statement that $R(x)=O(x^{1/2}\log x)$.
+
+There exist a number of proofs of the prime number theorem. The
+original proofs by Hadamard \cite{cite:hadamard_pnt} and de~la
+Vall\'ee~Poussin\cite{cite:poussin_pnt} called on analysis of
+behavior of the Riemann zeta function $\zeta(s)$ near the line $\Re s=1$
+to deduce the estimates for $R(x)$. For a long time it was an open
+problem to find an elementary proof of the prime number theorem
+(``elementary'' meaning ``not involving complex analysis'').
+Finally Erd\H{o}s and Selberg
+\cite{cite:erdos_elempnt,cite:selberg_elempnt} found such a proof.
+Nowadays there are some very short proofs of the prime number
+theorem (for example, see~\cite{cite:newman_shortpnt}).
+
+\begin{thebibliography}{1}
+
+\bibitem{cite:apostol_introanalytic}
+Tom~M. Apostol.
+\newblock {\em Introduction to Analytic Number Theory}.
+\newblock Narosa Publishing House, second edition, 1990.
+\newblock \PMlinkexternal{Zbl
+  0335.10001}{http://www.emis.de/cgi-bin/zmen/ZMATH/en/quick.html?type=html&amp;an=0335.10001}.
+
+\bibitem{cite:davenport_multnumtheory}
+Harold Davenport.
+\newblock {\em Multiplicative Number Theory}.
+\newblock Markham Pub.\ Co., 1967.
+\newblock \PMlinkexternal{Zbl
+  0159.06303}{http://www.emis.de/cgi-bin/zmen/ZMATH/en/quick.html?type=html&amp;an=0159.06303}.
+
+\bibitem{cite:erdos_elempnt}
+Paul Erd{\H{o}}s.
+\newblock On a new method in elementary number theory.
+\newblock {\em Proc. Nat. Acad. Sci. U.S.A.}, 35:374--384, 1949.
+\newblock \PMlinkexternal{Zbl
+  0034.31403}{http://www.emis.de/cgi-bin/zmen/ZMATH/en/quick.html?type=html&amp;an=0034.31403}.
+
+\bibitem{cite:hadamard_pnt}
+Jacques Hadamard.
+\newblock Sur la distribution des z{\'e}ros de la fonction $\zeta(s)$ et ses
+  cons{\'e}quences arithm{\'e}tiques.
+\newblock {\em Bull. Soc. Math. France}, 24:199--220.
+\newblock 
+\PMlinkexternal{JFM 27.0154.01}{http://www.emis.de/cgi-bin/zmen/ZMATH/en/quick.html?type=html&amp;an=27.0154.01}.
+
+\bibitem{cite:newman_shortpnt}
+Donald~J. Newman.
+\newblock Simple analytic proof of the prime number theorem.
+\newblock {\em Amer. Math. Monthly}, 87:693--696, 1980.
+\newblock 
+\PMlinkexternal{Available online}{http://links.jstor.org/sici?sici=0002-9890\%28198011\%2987\%3A9\%3C693\%3ASAPOTP\%3E2.0.CO\%3B2-U}
+ at \PMlinkexternal{JSTOR}{http://www.jstor.org}.
+
+\bibitem{cite:selberg_elempnt}
+Atle Selberg.
+\newblock An elementary proof of the prime number theorem.
+\newblock {\em Ann. Math. (2)}, 50:305--311, 1949.
+\newblock \PMlinkexternal{Zbl
+  0036.30604}{http://www.emis.de/cgi-bin/zmen/ZMATH/en/quick.html?type=html&amp;an=0036.30604}.
+
+\bibitem{cite:poussin_pnt}
+Charles~{de~la} {Vall\'ee~Poussin}.
+\newblock Recherces analytiques sur la th{\'e}orie des nombres premiers.
+\newblock {\em Ann. Soc. Sci. Bruxells}, 1897.
+
+\end{thebibliography}</body><objid>199</objid><author>348</author><linkpolicy></linkpolicy><class>msc:11A41</class><defines><synonym>prime number theorem</synonym><synonym>pi(x)</synonym><synonym>logarithmic integral</synonym></defines></entry><entry><title>radical of an integer</title><domain>planetmath.org</domain><body>Given a natural number $n$, let $n = p_1^{{\alpha}_1} \cdots p_k^{{\alpha}_k}$ be its unique factorization as a product of distinct prime powers. Define the \PMlinkescapetext{radical} of $n$, denoted $\mbox{rad}(n)$, to be the product $p_1 \cdots p_k$. The radical of a square-free number is itself.</body><objid>200</objid><author>5</author><linkpolicy></linkpolicy><class>msc:13A10</class><defines><synonym>radical of an integer</synonym><synonym>square-free part</synonym><synonym>radical</synonym></defines></entry><entry><title>ABC conjecture</title><domain>planetmath.org</domain><body>The \emph{ABC conjecture} states that given any $\epsilon &gt; 0$,
+there is a constant $\kappa ( \epsilon )$ such that
+\[
+  \max(|A|,|B|,|C|) \leq \kappa ( \epsilon ) ( \rad (ABC))^{1 + \epsilon}
+\]
+for all mutually coprime integers $A$, $B$, $C$ with $A+B=C$,
+where $\rad$ is the radical of an integer.
+This conjecture was formulated by Masser and Oesterl\'{e} in 1980.
+
+The ABC conjecture is considered 
+one of the most important unsolved problems in number \PMlinkescapetext{theory},
+as many results would follow directly from this conjecture.
+For example, Fermat's Last Theorem could be proved (for sufficiently large exponents)
+with about one page worth of proof.
+
+\section*{Further Reading}
+
+\PMlinkexternal{The Amazing ABC Conjecture}{http://www.maa.org/mathland/mathtrek_12_8.html}
+--- an article on the ABC conjecture by Ivars Peterson.
+
+\PMlinkexternal{The ABC's of Number Theory}{http://www.hcs.harvard.edu/hcmr/issue1/elkies.pdf}
+--- an article on the ABC conjecture by Noam Elkies. (PDF file)
+</body><objid>201</objid><author>2760</author><linkpolicy></linkpolicy><class>msc:11A99</class><defines><synonym>ABC conjecture</synonym></defines></entry><entry><title>squarefull number</title><domain>planetmath.org</domain><body>A natural number $n$ is called squarefull (or powerful) if for every prime $p | n$ we have $p^2 | n$. In 1978 Erd\H{o}s conjectured that we cannot have three consecutive squarefull natural numbers. If we assume the ABC Conjecture, there are only finitely many such consecutive triples.</body><objid>204</objid><author>5</author><linkpolicy></linkpolicy><class>msc:11A51</class><defines><synonym>squarefull number</synonym><synonym>powerful number</synonym></defines></entry><entry><title>perfect number</title><domain>planetmath.org</domain><body>\PMlinkescapeword{forces}
+\PMlinkescapeword{formulas}
+\PMlinkescapeword{perfect}
+
+An positive integer $n$ is called \emph{perfect} if it is the sum of all positive divisors of $n$ less than $n$ itself.  It is not known if there are any odd perfect numbers, but all even perfect numbers have been classified according to the following lemma:
+
+\begin{lemma*}
+An even number is perfect if and only if it equals $2^{k-1}(2^k-1)$ for some integer $k&gt;1$ and $2^k-1$ is prime.\\
+\end{lemma*}
+
+\begin{proof}
+Let $\sigma$ denote the sum of divisors function.  Recall that this function is multiplicative.
+
+Necessity: Let $p=2^k-1$ be prime and $n=2^{k-1}p$.  We have that
+\begin{eqnarray*}
+\sigma(n) &amp; = &amp; \sigma(2^{k-1}p)\\
+&amp; = &amp; \sigma(2^{k-1}) \sigma(p)\\
+&amp; = &amp; (2^k-1)(p+1)\\
+&amp; = &amp; (2^k-1)2^k\\
+&amp; = &amp; 2n,
+\end{eqnarray*}
+which shows that $n$ is perfect.
+
+Sufficiency: Assume $n$ is an even perfect number.  Write $n=2^{k-1}m$ for some odd $m$ and some $k&gt;1$.  Then we have $\gcd(2^{k-1},m)=1$.  Thus,
+\[ \sigma(n)=\sigma(2^{k-1}m)=\sigma(2^{k-1})\sigma(m)=(2^k-1)\sigma(m). \]
+Since $n$ is perfect, $\sigma(n)=2n$ by definition.  Therefore, $\sigma(n)=2n=2^km$.  Piecing together the two formulas for $\sigma(n)$ yields
+\[ 2^km=(2^k-1)\sigma(m). \]
+Thus, $(2^k-1)\mid 2^km$, which forces $(2^k-1)\mid m$.  Write $m=(2^k-1)M$.  Note that $1\le M&lt;m$.  From above, we have:
+\begin{eqnarray*}
+2^km &amp; = &amp; (2^k-1)\sigma(m) \\
+2^k(2^k-1)M &amp; = &amp; (2^k-1)\sigma(m) \\
+2^kM &amp; = &amp; \sigma(m)
+\end{eqnarray*}
+Since $m\mid m$ by definition of \PMlinkname{divides}{Divides} and $M\mid m$ by assumption, we have
+\[ 2^kM=\sigma(m)\geq m+M=2^kM, \]
+which forces $\sigma(m)=m+M$. Therefore, $m$ has only two positive divisors, $m$ and $M$.  Hence, $m$ must be prime, $M=1$, and $m=(2^k-1)M=2^k-1$, from which the result follows.
+\end{proof}
+
+The lemma can be used to produce examples of (even) perfect numbers:
+
+\begin{itemize}
+\item If $k=2$, then $2^k-1=2^2-1=3$, which is prime.  According to the lemma, $2^{k-1}(2^k-1)=2^{2-1} \cdot 3=6$ is perfect.  Indeed, $1+2+3=6$.
+\item If $k=3$, then $2^k-1=2^3-1=7$, which is prime.  According to the lemma, $2^{k-1}(2^k-1)=2^{3-1} \cdot 7=28$ is perfect.  Indeed, $1+2+4+7+14=28$.
+\item If $k=5$, then $2^k-1=2^5-1=31$, which is prime.  According to the lemma, $2^{k-1}(2^k-1)=2^{5-1} \cdot 31=496$ is perfect.  Indeed, $1+2+4+8+16+31+62+124+248=496$.
+\end{itemize}
+
+Note that $k=4$ yields that $2^k-1=2^4-1=15$, which is not prime.
+
+The sequence of known perfect numbers appears in the OEIS as sequence \PMlinkexternal{A000396}{http://www.research.att.com/~njas/sequences/?q=A000396}.</body><objid>206</objid><author>1863</author><linkpolicy></linkpolicy><class>msc:11A05</class><defines><synonym>perfect number</synonym></defines></entry><entry><title>Gaussian integer</title><domain>planetmath.org</domain><body>\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\G}{\mathbb{Z}[i]}
+\PMlinkescapeword{principal}
+A complex number of the form $a+bi$, where $a,b\in\mathbb{Z}$, is called
+a Gaussian integer.
+
+It is easy to see that the set $S$ of all Gaussian integers is a subring
+of $\mathbb{C}$; specifically, $S$ is the smallest subring containing
+$\{1,i\}$, whence $S=\G$.
+
+$\G$ is a Euclidean ring, hence a principal ring, hence a
+unique factorization domain.
+
+There are four units (i.e. invertible elements)
+in the ring $\G$, namely $\pm 1$ and $\pm i$.
+Up to multiplication by units, the primes in $\G$ are
+\begin{itemize}
+\item ordinary prime numbers $\equiv 3\mod 4$
+\item elements of the form $a\pm bi$ where $a^2+b^2$ is an ordinary
+prime $\equiv 1\mod 4$ (see Thue's lemma)
+\item the element $1+i$.
+\end{itemize}
+
+Using the ring of Gaussian integers, it is not hard to show, for example,
+that the Diophantine equation $x^2+1=y^3$ has no solutions $(x,y)\in\Z\times\Z$
+except $(0,1)$.</body><objid>207</objid><author>40</author><linkpolicy></linkpolicy><class>msc:11R04</class><defines><synonym>Gaussian integer</synonym></defines></entry><entry><title>Eisenstein integers</title><domain>planetmath.org</domain><body>Let $\rho = (-1 + \sqrt{-3})/2$, where we arbitrarily choose $\sqrt{-3}$ to be either of the complex numbers whose square is $-3$. Note that ${\rho}^3=1$. The \emph{Eisenstein integers} are the ring $\mathbb{Z}[ \rho ] = \{ a + b \rho : a , b \in \mathbb{Z} \}$.</body><objid>208</objid><author>5</author><linkpolicy></linkpolicy><class>msc:11R04</class><defines><synonym>Eisenstein integers</synonym></defines></entry><entry><title>algebraic number</title><domain>planetmath.org</domain><body>A number $\alpha \in \mathbb{C}$ is called an \emph{algebraic number} if there exists a polynomial $f(x) = a_n x^n + \cdots + a_0$ such that $a_0, \ldots , a_n$, not all zero, are in $\mathbb{Q}$ and $f(\alpha )=0$.</body><objid>209</objid><author>5</author><linkpolicy></linkpolicy><class>msc:11R04</class><defines><synonym>algebraic number</synonym></defines></entry><entry><title>algebraic integer</title><domain>planetmath.org</domain><body>Let $K$ be an \PMlinkname{extension}{ExtensionField} of $\mathbb{Q}$ contained in $\mathbb{C}$.  A number $\alpha \in K$ is called an \emph{algebraic integer} of $K$ if it is the root of a monic polynomial with coefficients in $\mathbb{Z}$, i.e., an element of $K$ that is integral over $\mathbb{Z}$. Every algebraic integer is an algebraic number (with $K = \mathbb{C}$), but the converse is false.</body><objid>210</objid><author>5</author><linkpolicy></linkpolicy><class>msc:11R04</class><defines><synonym>algebraic integer</synonym></defines></entry><entry><title>Liouville approximation theorem</title><domain>planetmath.org</domain><body>Given $\alpha$, a real algebraic number of degree $n \neq 1$, there is a constant $c = c( \alpha ) &gt; 0$ such that for all rational numbers $p/q, (p,q)=1$, the inequality
+\[ \left| \alpha - \frac{p}{q} \right| &gt; \frac{c(\alpha )}{q^n} \] holds.
+
+Many mathematicians have worked at strengthening this theorem:
+\begin{itemize}
+\item Thue: If $\alpha$ is an algebraic number of degree $n \geq 3$, then there is a constant $c_0 = c_0( \alpha , \epsilon ) &gt; 0$ such that for all rational numbers $p/q$, the inequality
+\[ \left| \alpha - \frac{p}{q} \right| &gt; c_0 q^{-1- \epsilon - n/2} \] holds.
+
+\item Siegel: If $\alpha$ is an algebraic number of degree $n \geq 2$, then there is a constant $c_1 = c_1( \alpha , \epsilon ) &gt; 0$ such that for all rational numbers $p/q$, the inequality
+\[ \left| \alpha - \frac{p}{q} \right| &gt; c_1 q^{- \lambda}, \qquad \lambda = {\min}_{t=1,\ldots ,n} \left( \frac{n}{t+1} + t \right) + \epsilon \] holds.
+
+\item Dyson: If $\alpha$ is an algebraic number of degree $n &gt; 3$, then there is a constant $c_2 = c_2( \alpha , \epsilon ) &gt; 0$ such that for all rational numbers $p/q$ with $q &gt; c_2$, the inequality
+\[ \left| \alpha - \frac{p}{q} \right| &gt; q^{- \sqrt{2n}- \epsilon } \] holds.
+
+\item Roth: If $\alpha$ is an irrational algebraic number and $\epsilon &gt; 0$, then there is a constant $c_3 = c_3( \alpha , \epsilon ) &gt; 0$ such that for all rational numbers $p/q$, the inequality
+\[ \left| \alpha - \frac{p}{q} \right| &gt; c_3 q^{-2 - \epsilon } \] holds.
+
+\end{itemize}</body><objid>211</objid><author>5</author><linkpolicy></linkpolicy><class>msc:11J68</class><defines><synonym>Liouville approximation theorem</synonym></defines></entry><entry><title>primitive element theorem</title><domain>planetmath.org</domain><body>\begin{theorem}
+Let $F$ and $K$ be arbitrary fields, and let $K$ be an extension of $F$ of finite degree.  Then there exists an element $\alpha\in K$ such that $K=F(\alpha)$ if and only if there are finitely many fields $L$ with $F\subseteq L\subseteq K$.
+\end{theorem}
+
+Note that this implies that every finite separable extension is not only finitely generated, it is generated by a single element.  
+
+Let $X$ be an indeterminate.  Then $\mathbb{Q}(X,i)$ is not generated over $\mathbb{Q}$ by a single element (and there are infinitely many intermediate fields $\mathbb{Q}(X,i)/L/\mathbb{Q}$).  To see this, suppose it is generated by an element $\alpha$. Then clearly $\alpha$ must be transcendental, or it would generate an extension of finite degree.  But if $\alpha$ is transcendental, we know it is isomorphic to $\mathbb{Q}(X)$, and this field is not isomorphic to $\mathbb{Q}(X,i)$: for example, the polynomial $Y^2+1$ has no roots in the first but it has two roots in the second.  It is also clear that it is not sufficient for every element of $K$ to be algebraic over $F$: we know that the algebraic closure of $\mathbb{Q}$ has infinite degree over $\mathbb{Q}$, but if $\alpha$ is algebraic over $\mathbb{Q}$ then $[\mathbb{Q}(\alpha):\mathbb{Q}]$ will be finite.  
+
+This theorem has the corollary:
+\begin{cor}
+Let $F$ be a field, and let $[F(\beta,\gamma):F]$ be finite and separable.  Then there exists $\alpha \in F(\beta,\gamma)$ such that $F(\beta,\gamma)=F(\alpha)$. In fact, we can always take $\alpha$ to be an $F$-\PMlinkname{linear combination}{LinearCombination} of $\beta$ and $\gamma$. 
+\end{cor}
+
+To see this (in the case of characteristic $0$), we need only show that there are finitely many intermediate fields.  But any intermediate field is contained in the splitting field of the minimal polynomials of $\beta$ and $\gamma$, which is Galois with finite Galois group. The explicit form of $\alpha$ comes from the proof of the theorem.
+
+For more detail on this theorem and its proof see, for example, \emph{Field and Galois Theory}, by Patrick Morandi (Springer Graduate Texts in Mathematics 167, 1996).</body><objid>214</objid><author>2414</author><linkpolicy></linkpolicy><class>msc:12F05</class><defines><synonym>primitive element theorem</synonym></defines></entry><entry><title>Bernoulli polynomial</title><domain>planetmath.org</domain><body>The \emph{Bernoulli polynomials} are the sequence $\{ b_r(x) \} _{r=0}^{\infty}$ of polynomials defined on $[0,1]$ by the conditions:
+\begin{eqnarray*}
+b_0(x) &amp; = &amp; 1, \\
+b'_r(x) &amp; = &amp; r b_{r-1}(x), r \geq 1, \\
+\int_0^1 b_r(x)dx &amp; = &amp; 0, r \geq 1
+\end{eqnarray*}
+
+These assumptions imply the identity
+\[ \sum_{r=0}^{\infty} b_r(x) \frac{y^r}{r!} = \frac{ye^{xy}}{e^y-1} \]
+allowing us to calculate the $b_r$. We have
+
+\begin{eqnarray*}
+b_0(x) &amp; = &amp; 1 \\
+b_1(x) &amp; = &amp; x-\frac{1}{2} \\
+b_2(x) &amp; = &amp; x^2 - x + \frac{1}{6} \\
+b_3(x) &amp; = &amp; x^3 - \frac{3}{2}x^2 + \frac{1}{2}x \\
+b_4(x) &amp; = &amp; x^4 - 2x^3 + x^2 - \frac{1}{30} \\
+\vdots &amp; &amp;
+\end{eqnarray*}</body><objid>215</objid><author>5</author><linkpolicy></linkpolicy><class>msc:11B68</class><defines><synonym>Bernoulli polynomial</synonym></defines></entry><entry><title>Bernoulli periodic function</title><domain>planetmath.org</domain><body>Let $b_r $ be the $r\text{th}$ Bernoulli polynomial. Then the $r\mbox{th}$ Bernoulli periodic function $B_r(x)$ is defined as the periodic function of period 1 which coincides with $b_r$ on $[0,1]$.</body><objid>218</objid><author>5</author><linkpolicy></linkpolicy><class>msc:11B68</class><defines><synonym>Bernoulli periodic function</synonym></defines></entry><entry><title>Bernoulli number</title><domain>planetmath.org</domain><body>Let $B_r$ be the $r$th Bernoulli polynomial. Then the $r$th {\bf Bernoulli number} is
+\[ 
+B_r := B_r(0). 
+\]
+
+This means, in particular, that the Bernoulli numbers are given by an exponential generating function in the following way:
+\[
+\sum_{r=0}^{\infty} B_r \frac{y^r}{r!} = \frac{y}{e^y-1} 
+\]
+and, in fact, the Bernoulli numbers are usually defined as the coefficients that appear in such expansion.
+
+Observe that this generating function can be rewritten:
+\[
+\frac{y}{e^y-1} = \frac{y}{2}\frac{e^y+1}{e^y-1} - \frac{y}{2} = (y/2)(\operatorname{tanh}(y/2) -1).
+\]
+ Since $\operatorname{tanh}$ is an odd function, one can see that $B_{2r+1}=0$ for $r \geq 1$. Numerically, $B_0 = 1, B_1 = -\frac{1}{2}, B_2 = \frac{1}{6}, B_4 = -\frac{1}{30}, \cdots$
+
+These combinatorial numbers occur in a number of contexts; the most elementary is perhaps that they occur in the formulas for the \PMlinkname{sum of the $r$th powers of the first $n$ positive integers}{SumOfKthPowersOfTheFirstNPositiveIntegers}.  They also occur in the Maclaurin expansion for the tangent function and in the Euler-Maclaurin summation formula.</body><objid>219</objid><author>2414</author><linkpolicy></linkpolicy><class>msc:11B68</class><defines><synonym>Bernoulli number</synonym></defines></entry><entry><title>Euler-Maclaurin summation formula</title><domain>planetmath.org</domain><body>Let $B_r$ be the $r\mbox{th}$ Bernoulli number, and $B_r(x)$ be the $r\mbox{th}$ Bernoulli periodic function. For any integer $k \geq 0$ and for any function $f$ of class $C^{k+1}$ on $[a,b],a,b \in \mathbb{Z}$, we have
+\[
+\sum_{a &lt; n \leq b} f(n) = \int_a^b f(t)dt + \sum_{r=0}^k \frac{(-1)^{r+1}B_{r+1}}{(r+1)!}(f^{(r)}(b) - f^{(r)}(a)) + \frac{(-1)^k}{(k+1)!} \int_a^b B_{k+1}(t)f^{(k+1)}(t)dt. \]</body><objid>220</objid><author>5</author><linkpolicy></linkpolicy><class>msc:65B15</class><defines><synonym>Euler-Maclaurin summation formula</synonym></defines></entry><entry><title>fundamental theorem of arithmetic</title><domain>planetmath.org</domain><body>Each positive integer $n$ has a unique \PMlinkescapetext{decomposition} as a product
+\[
+n = \prod_{i=0}^{\ell} {p_i}^{a_i}
+\]
+of positive powers of its distinct positive {\it prime divisors} $p_i$.  The {\it prime divisor} of $n$ means a (rational) prime number \PMlinkname{dividing}{Divisibility} $n$.  A synonymous name is {\it prime factor}. 
+
+The \PMlinkescapetext{decomposition is unique up to the order} of the prime divisors and for\, $n=1$\, is an empty product.
+
+For some results it is useful to assume that 
+$p_i &lt; p_j$ whenever $i &lt; j$.</body><objid>221</objid><author>3771</author><linkpolicy></linkpolicy><class>msc:11A05</class><defines><synonym>fundamental theorem of arithmetic</synonym><synonym>prime divisor</synonym><synonym>prime factor</synonym></defines></entry><entry><title>Mertens' first theorem</title><domain>planetmath.org</domain><body>For any real number $x \geq 2$ we have
+\[ \sum_{p \leq x} \frac{\ln p}{p} = \ln x + O(1) \] for all prime integers $p$.
+
+Moreover, the term $O(1)$ arising in this formula lies in the open interval $(-1-\ln 4, \ln 4)$.</body><objid>222</objid><author>5</author><linkpolicy></linkpolicy><class>msc:11A25</class><defines><synonym>Mertens' first theorem</synonym></defines></entry><entry><title>Fermat's theorem proof</title><domain>planetmath.org</domain><body>Consider the sequence $a,2a,\ldots,(p-1)a$.
+
+They are all different (modulo p) because if $ma=na$ with $1\le m&lt;n\le p-1$ then
+$0=a(m-n)$ and since $p\not| a$ we get $p\mid (m-n)$ which is impossible.
+
+Now, since all these numbers are different, the set $\{a,2a,3a,\ldots,(p-1)a\}$ will have the $p-1$ possible congruence classes (although not necessarily in the same order) and therefore 
+$$a\cdot2a\cdot3a\cdots (p-1)a\equiv (p-1)!a^{p-1}\equiv (p-1)!\pmod{p}$$
+and using $\gcd((p-1)!,p)=1$ we get
+$$a^{p-1}\equiv 1\pmod{p}$$</body><objid>223</objid><author>3</author><linkpolicy></linkpolicy><class>msc:11-00</class><defines><synonym>Fermat's theorem proof</synonym></defines></entry><entry><title>coprime</title><domain>planetmath.org</domain><body>Two integers $a,b$ are \emph{coprime} if their greatest common divisor is $1$. It is also said that $a,b$ are \emph{relatively prime}.</body><objid>225</objid><author>3</author><linkpolicy></linkpolicy><class>msc:11-00</class><defines><synonym>coprime</synonym><synonym>relatively prime</synonym></defines></entry><entry><title>quadratic formula</title><domain>planetmath.org</domain><body>The roots of the quadratic equation
+\[
+  ax^2+bx+c=0\qquad{a,b,c\in\R,a\neq 0}
+\]
+are given by the formula
+\[
+  x=\frac{-b\pm\sqrt{b^2-4ac}}{2a}.
+\]
+
+The number $\Delta=b^2-4ac$ is called the \emph{discriminant} of the equation.
+If $\Delta&gt;0$, there are two different real roots,
+if $\Delta=0$ there is a single real root,
+and if $\Delta&lt;0$ there are no real roots (but two different complex roots).
+
+Let's work a few examples.
+
+First, consider $2x^2-14x+24=0$.
+Here $a=2$, $b=-14$, and $c=24$.
+Substituting in the formula gives us
+\[
+  x=\frac{14\pm \sqrt{(-14)^2-4\cdot2\cdot24}}{2\cdot 2}
+   =\frac{14\pm\sqrt{4}}{4}
+   =\frac{14\pm2}{4}
+   =\frac{7\pm1}{2}.
+\]
+So we have two solutions (depending on whether we take the sign $+$ or $-$):
+$x=\frac{8}{2}=4$ and $x=\frac{6}{2}=3$.
+
+Now we will solve $x^2-x-1=0$.
+Here $a=1$, $b=-1$, and $c=-1$, so
+\[
+  x=\frac{1\pm\sqrt{(-1)^2-4(1)(-1)}}{2}
+   =\frac{1\pm{\sqrt{5}}}{2},
+\]
+and the solutions are $x=\frac{1+\sqrt{5}}{2}$ and $x=\frac{1-\sqrt{5}}{2}$.</body><objid>227</objid><author>2760</author><linkpolicy></linkpolicy><class>msc:12D10</class><defines><synonym>quadratic formula</synonym></defines></entry><entry><title>rational root theorem</title><domain>planetmath.org</domain><body>\PMlinkescapeword{states}
+\PMlinkescapeword{domain}
+\PMlinkescapeword{base}
+Consider the polynomial
+$$p(x)=a_nx^n + a_{n-1}x^{n-1}+\cdots+a_1x+a_0$$
+where all the coefficients $a_i$ are integers.
+
+If $p(x)$ has a rational root $u/v$ where $\gcd(u,v)=1$, then
+$u| a_0$ and $v| a_n$.
+
+This theorem is related to the result about monic polynomials whose coefficients belong to a unique factorization domain. Such theorem then states that any root in the fraction field is also in the base domain.</body><objid>228</objid><author>3</author><linkpolicy></linkpolicy><class>msc:12D10</class><class>msc:12D05</class><defines><synonym>rational root theorem</synonym></defines></entry><entry><title>Lagrange interpolation formula</title><domain>planetmath.org</domain><body>Let $(x_1,y_1), (x_2,y_2),\dotsc,(x_n,y_n)$ be $n$ points in the plane ($x_i\neq x_j$ for $i\neq j$). Then there exists a unique polynomial $p(x)$ of degree at most $n-1$ such that $y_i=p(x_i)$ for $i=1,\ldots,n$.
+
+Such polynomial can be found using \emph{Lagrange's interpolation formula}:
+
+\[
+p(x)=\frac{f(x)}{(x-x_1)f'(x_1)}y_1+\frac{f(x)}{(x-x_2)f'(x_2)}y_2+\cdots+\frac{f(x)}{(x-x_n)f'(x_n)}y_n
+\]
+where $f(x)=(x-x_1)(x-x_2)\cdots(x-x_n)$.
+
+To see this, notice that the above formula is the same as
+
+\begin{align*}
+ p(x) &amp;=  y_1 \frac{(x-x_2)(x-x_3)\dots(x-x_n)}{(x_1-x_2)(x_1-x_3)\dots(x_1-x_n)} +
+y_2 \frac{(x-x_1)(x-x_3)\dots(x-x_n)}{(x_2-x_1)(x_2-x_3)\dots(x_2-x_n)}\\
+&amp;\phantom{=}\qquad+\dots+y_n \frac{(x-x_1)(x-x_2)\dots(x-x_{n-1})}{(x_n-x_1)(x_n-x_2)\dots(x_n-x_{n-1})}
+\end{align*}
+
+and that for all $x_i$, every numerator except one vanishes, and this numerator will be identical to the denominator, making the overall quotient equal to 1.  Therefore, each $p(x_i)$ equals $y_i$.</body><objid>229</objid><author>3</author><linkpolicy></linkpolicy><class>msc:65D05</class><class>msc:41A05</class><defines><synonym>Lagrange interpolation formula</synonym><synonym>Lagrange's Interpolation formula</synonym><synonym>Lagrange polynomial</synonym></defines></entry><entry><title>Minkowski inequality</title><domain>planetmath.org</domain><body>If $p \geq 1$ and $a_k, b_k$ are real numbers for $k = 1,\ldots$, then
+$$\left( \sum_{k=1}^n |a_k+b_k|^p\right)^{1/p} \le \left(\sum_{k=1}^n |a_k|^p\right)^{1/p} + \left(\sum_{k=1}^n |b_k|^p\right)^{1/p}$$
+
+The Minkowski inequality is in fact valid for all $L^p$ norms with $p\ge1$ on arbitrary measure spaces. This covers the case of $\R^n$ listed here as well as spaces of sequences and spaces of functions, and also complex $L^p$ spaces.</body><objid>230</objid><author>3</author><linkpolicy></linkpolicy><class>msc:26D15</class><defines><synonym>Minkowski inequality</synonym></defines></entry><entry><title>convex function</title><domain>planetmath.org</domain><body>{\bf Definition} Suppose $\Omega$ is a convex set in a vector space over $\sR$
+(or $\sC$), and suppose $f$ is a function $f:\Omega\to \sR$.
+If for any $x,y\in \Omega$, $x\neq y$ and any $\lambda \in (0,1)$, we have
+ $$f\Big( \lambda x + (1-\lambda)y\Big)\leq \lambda f(x)+(1-\lambda)f(y),$$
+we say that $f$ is a \emph{convex function}.
+If for any $x,y\in \Omega$ and any $\lambda \in (0,1)$, we have
+ $$f\Big( \lambda x + (1-\lambda)y\Big)\geq \lambda f(x)+(1-\lambda)f(y),$$
+we say that $f$ is a \emph{concave function}. If either of the  inequalities
+are strict, then we say that $f$ is a \emph{strictly convex function},
+or a \emph{strictly concave function}, respectively.
+
+\subsubsection*{Properties}
+ \begin{itemize}
+\item A function $f$ is a (strictly) convex function if and only if $-f$ is
+a (strictly) concave function. For this reason, most of the below discussion only 
+focuses on convex functions. Analogous result holds for concave functions. 
+ \item On $\sR$, a continuous function is convex 
+if and only if for all $x,y\in \sR$, we have
+ $$f\left(\frac{x+y}{2}\right)\le\frac{f(x)+f(y)}{2}.$$
+\item  On $\sR$, a once differentiable function is convex if and only if $f'$
+is monotone increasing. 
+ \item Suppose $f$ is twice continuously differentiable function on $\sR$.
+Then $f$ is convex if and only if $f'' \ge 0$. 
+If $f''&gt;0$, then $f$ is strictly convex.
+\item A local minimum of a convex function is a global minimum.
+See \PMlinkname{this page}{ExtremalValueOfConvexconcaveFunctions}.
+ \end{itemize}
+
+
+\subsubsection*{Examples}
+\begin{itemize}
+\item $e^x$,$e^{-x}$, and $x^2$ are convex functions on $\sR$. Also, $x^4$ is strictly
+convex, but $12x^2$ vanishes at $x=0$. 
+\item A \PMlinkname{norm}{NormedVectorSpace} is a convex function.
+\end{itemize}
+
+\subsubsection*{Remark.}  
+We may generalize the above definition of a convex function to an that of an extended real-valued function whose domain is not necessarily a convex set.  First, we define what an \emph{epigraph} of a function is.
+
+Let $\Omega$ be a subset of a vector space over the reals, and $f$ an extended real-valued function defined on $\Omega$.  The \emph{epigraph} of $f$, denoted by $\operatorname{epi}(f)$, is the set 
+$$\lbrace (x,r)\mid x\in \Omega,\mbox{ } r\ge f(x)\rbrace.$$
+An extended real-valued function $f$ defined on a subset $\Omega$ of a vector space $V$ over the reals is said to be \emph{convex} if its \emph{epigraph} is a convex subset of $V\times\mathbb{R}$.  With this definition, the domain $\Omega$ of $f$ need not be convex.  However, its subset $\lbrace x\in \Omega\mid f(x) &lt; \infty\rbrace$, called the \emph{effective domain} and denoted by $\operatorname{eff.dom}(f)$, is convex.  To see this, suppose $x,y\in \operatorname{eff.dom}(f)$ and $z=\lambda x+(1-\lambda) y$ with $0\le \lambda \le 0$.  Then $ (z,\overline{z})=\lambda(x,f(x))+(1-\lambda)(y,f(y))\in \operatorname{epi}(f)$, where $\overline{z}=\lambda f(x)+(1-\lambda)f(y)$, since $\operatorname{epi}(f)$ is convex by definition.  Therefore, $z\in \operatorname{dom}(f)$.  In fact, $f(z)\le \overline{z}=\lambda f(x)+(1-\lambda)f(y)&lt;\infty$, which implies that $z\in \operatorname{eff.dom}(f)$.</body><objid>231</objid><author>1858</author><linkpolicy></linkpolicy><class>msc:52A41</class><class>msc:26A51</class><class>msc:26B25</class><defines><synonym>convex function</synonym><synonym>concave function</synonym><synonym>strictly convex function</synonym><synonym>strictly concave function</synonym><synonym>strictly convex</synonym><synonym>strictly concave</synonym><synonym>epigraph</synonym><synonym>effective domain</synonym><synonym>concave</synonym></defines></entry><entry><title>Jensen's inequality</title><domain>planetmath.org</domain><body>If $f$ is a convex function on the interval $[a,b]$, for each $\left\{x_k\right\}_{k=1}^n \in[a,b]$ and each $\left\{\mu_k\right\}_{k=1}^n$ with $\mu_{k}\geq0$ one has:
+$$f\left(\frac{\sum_{k=1}^{n}\mu_{k}x_{k}}{\sum_{k}^{n}\mu_{k}}\right)\leq\frac{\sum_{k=1}^{n}\mu_{k}f\left(x_{k}\right)}{\sum_{k}^{n}\mu_{k}}.$$
+
+A common situation occurs when $\mu_1+\mu_2+\cdots+\mu_n=1$; in this case, the inequality simplifies to:
+
+$$f\left(\sum_{k=1}^n \mu_k x_k\right)\leq \sum_{k=1}^n \mu_k f(x_k)$$
+where $0\le \mu_k\le 1$.
+
+If $f$ is a concave function, the inequality is reversed.
+\medskip
+
+\textbf{Example:}\\
+$f(x)=x^2$ is a convex function on $[0,10]$. 
+Then 
+$$(0.2\cdot4+ 0.5\cdot3+0.3\cdot7)^2 \leq 0.2(4^2) + 0.5(3^2)+0.3(7^2).$$
+\bigskip
+
+A very special case of this inequality is when $\mu_k=\frac{1}{n}$ because then
+$$f\left(\frac{1}{n}\sum_{k=1}^n x_k\right)\le\frac{1}{n}\sum_{k=1}^n f(x_k)$$
+that is, the value of the function at the mean of the $x_k$ is less or equal than the mean of the values of the function at each $x_k$.
+
+There is another formulation of Jensen's inequality used in probability:\\
+Let $X$ be some random variable, and let $f(x)$ be a convex function (defined at least on a segment containing the range of $X$).  Then the expected value of $f(X)$ is at least the value of $f$ at the mean of $X$:
+\[
+\mathrm{E}[f(X)] \ge f(\mathrm{E}[ X]).
+\]
+With this approach, the weights of the first form can be seen as probabilities.</body><objid>234</objid><author>7332</author><linkpolicy></linkpolicy><class>msc:81Q30</class><class>msc:26D15</class><class>msc:39B62</class><defines><synonym>Jensen's inequality</synonym></defines></entry><entry><title>dot product</title><domain>planetmath.org</domain><body>Let $u=(u_1,u_2,\ldots,u_n)$ and $v=(v_1,v_2,\ldots,v_n)$ two vectors on $k^n$ where $k$ is a field (like $\mathbb{R}$ or $\mathbb{C}$).
+Then we define the \emph{dot product} of the two vectors as:
+$$u\cdot v=u_1v_1+u_2v_2+\cdots+u_nv_n.$$
+
+Notice that $u\cdot v$ is NOT a vector but a scalar (an element from the field $k$).
+
+If $u,v$ are vectors in $\mathbb{R}^n$ and $\vartheta$ is the angle between them, then we also have
+$$u\cdot v=\Vert u\Vert\Vert v\Vert \cos\vartheta.$$
+Thus, in this case, $u\perp v$ if and only if $u\cdot v=0$.
+
+The special case\, $u \cdot u$\, of scalar product is the {\em scalar square} of the vector $u$.\, In $\mathbb{R}^n$ it equals to the square of the length of $u$:
+        $$u \cdot u = \Vert u \Vert^2$$</body><objid>239</objid><author>3</author><linkpolicy></linkpolicy><class>msc:83C05</class><class>msc:15A63</class><defines><synonym>dot product</synonym><synonym>scalar product</synonym><synonym>scalar square</synonym></defines></entry><entry><title>convex set</title><domain>planetmath.org</domain><body>Let $S$ a subset of $\mathbb{R}^n$. We say that $S$ is \emph{convex} when, for any pair of points $A,B$ in $S$, the segment $\overline{AB}$ lies entirely inside $S$.\smallskip
+
+The former statement is equivalent to saying that for any pair of vectors $u,v$ in $S$, the vector $(1-t)u+tv$ is in $S$ for all $t\in[0,1]$.\smallskip
+
+If $S$ is a convex set, for any $u_1,u_2,\ldots,u_r$ in $S$, and any positive numbers $\lambda_1,\lambda_2,\ldots,\lambda_r$ such that $\lambda_1+\lambda_2+\cdots+\lambda_r=1$ the vector
+$$\sum_{k=1}^r\lambda_k u_k$$
+is in $S$.\medskip
+
+Examples of convex sets in the plane are circles, triangles, and ellipses.
+The definition given above can be generalized to any real vector space:
+
+Let $V$ be  a vector space (over $\R$ or $\C$). A subset $S$ of $V$ 
+is \emph{convex} if for all points $x,y$ in $S$, the line segment
+$\{\alpha x + (1-\alpha) y \mid  \alpha\in(0,1)\} $ is also in $S$.
+
+More generally, the same definition works for any vector space over an
+ordered field.
+
+A \emph{polyconvex set} is a finite union of compact, convex sets.</body><objid>243</objid><author>3</author><linkpolicy></linkpolicy><class>msc:37-02</class><class>msc:52A99</class><defines><synonym>convex set</synonym><synonym>convex</synonym><synonym>polyconvex set</synonym><synonym>polyconvex</synonym></defines></entry><entry><title>well-ordering principle for natural numbers</title><domain>planetmath.org</domain><body>\PMlinkescapeword{equivalent}
+Every nonempty set $S$ of natural numbers contains a least element; that is, there is some number $a$ in $S$ such that $a \leq b$ for all $b$ belonging to $S$.\\
+
+Beware that there is another statement (which is equivalent to the axiom of choice) called the \emph{well-ordering principle}. It asserts that every set can be well-ordered.
+
+Note that the well-ordering principle for natural numbers is equivalent to the principle of mathematical induction (or, the principle of finite induction).</body><objid>244</objid><author>9137</author><linkpolicy></linkpolicy><class>msc:06F25</class><defines><synonym>well-ordering principle for natural numbers</synonym></defines></entry><entry><title>principle of finite induction</title><domain>planetmath.org</domain><body>\PMlinkescapeword{moment's}
+\PMlinkescapeword{complete}
+\PMlinkescapeword{equivalent}
+\PMlinkescapeword{term}
+\PMlinkescapeword{base}
+\PMlinkescapeword{hypothesis}
+\PMlinkescapeword{range}
+
+
+The principal of finite induction, also known as \emph{mathematical induction}, is commonly formulated in two ways. Both are equivalent. The first formulation is known as \emph{weak} induction. It asserts that if a statement $P(n)$ holds for $n=0$ and if $P(n)\Rightarrow P(n+1)$, then $P(n)$ holds for all natural numbers $n$. The case $n=0$ is called the \emph{base case} and the implication $P(n)\Rightarrow P(n+1)$ is called the \emph{inductive step}. In an inductive proof, one uses the term \emph{induction hypothesis} or \emph{inductive hypothesis} to refer back to the statement $P(n)$ when one is trying to prove $P(n+1)$ from it.
+
+The second formulation is known as \emph{strong}, or \emph{complete} induction. It asserts that if the implication $\forall n((\forall m &lt; n P(m))\Rightarrow P(n))$ is true, then $P(n)$ is true for all natural numbers $n$. (Here, the quantifiers range over all natural numbers.) As we have formulated it, strong induction does not require a separate base case. Note that the implication $\forall n((\forall m &lt; n P(m))\Rightarrow P(n)$ already entails $P(0)$ since the statement $\forall m&lt;0 P(m)$ holds vacuously (there are no natural numbers less that zero). 
+
+A moment's thought will show that the first formulation (weak induction) is equivalent to the following:
+\begin{quote}
+Let $S$ be a set natural numbers such that
+\begin{enumerate}
+\item $0$ belongs to $S$, and
+\item if $n$ belongs to $S$, so does $n+1$.
+\end{enumerate}
+Then $S$ is the set of all natural numbers.
+\end{quote}
+
+Similarly, strong induction can be stated:
+\begin{quote}
+If $S$ is a set of natural numbers such that $n$ belongs to $S$ whenever all numbers less than $n$ belong to $S$, then $S$ is the set of all natural numbers.
+\end{quote}
+
+The principle of finite induction can be derived from the fact that every nonempty set of natural numbers has a smallest element. This fact is known as the \emph{well-ordering principle for natural numbers}. (Note that this is not the same thing as the \emph{well-ordering principle}, which is equivalent to the axiom of choice and has nothing to do with induction.)</body><objid>245</objid><author>9137</author><linkpolicy></linkpolicy><class>msc:03E25</class><defines><synonym>principle of finite induction</synonym><synonym>induction hypothesis</synonym><synonym>inductive hypothesis</synonym></defines></entry><entry><title>Pascal's rule</title><domain>planetmath.org</domain><body>Pascal's rule is the binomial identity
+\[ \binom{n}{k} + \binom{n}{k-1} = \binom{n+1}{k} \]
+where $1 \leq k \leq n$ and $\binom{n}{k}$ is the binomial coefficient.</body><objid>246</objid><author>5</author><linkpolicy></linkpolicy><class>msc:05A19</class><defines><synonym>Pascal's rule</synonym></defines></entry><entry><title>binomial theorem</title><domain>planetmath.org</domain><body>The binomial theorem is a formula for the expansion of $(a+b)^n$, for $n$ a positive integer and $a$ and $b$ any two real (or complex) numbers, into a sum of powers of $a$ and $b$. More precisely,
+$$(a+b)^n  = a^n + \binom{n}{1} a^{n-1}b + \binom{n}{2} a^{n-2}b^2 + \cdots + b^n .
+$$
+For example, if $n$ is 3 or 4, we have:
+\begin{eqnarray*}
+(a+b)^3 &amp;= a^3 + 3 a^2 b + 3 a b^2 + b^3 \\
+(a+b)^4 &amp;= a^4 + 4 a^3 b + 6 a^2 b^2 + 4 a b^3 + b^4 .
+\end{eqnarray*}
+
+This result actually holds more generally if $a$ and $b$ belong to a commutative \PMlinkname{rig}{Rig}.</body><objid>247</objid><author>5</author><linkpolicy></linkpolicy><class>msc:11B65</class><defines><synonym>binomial theorem</synonym></defines></entry><entry><title>greatest common divisor</title><domain>planetmath.org</domain><body>Let $a$ and $b$ be given integers, with at least one of them different from zero. The \emph{greatest common divisor} of $a$ and $b$, denoted by $\gcd(a,b)$, is the positive integer $d$ satisfying
+\begin{enumerate}
+\item $d\mid a$ and $d\mid b$,
+\item if $c\mid a$ and $c\mid b$, then $c\mid d$.
+\end{enumerate}
+More intuitively, the greatest common divisor is the largest integer dividing both $a$ and $b$.
+
+For example, $\gcd(345,135)=15$, $\gcd(-7,-21)=7$, $\gcd(18,0)=18$, and $\gcd(44,97)=1$
+
+Given two (rational) integers, one can construct their gcd via Euclidean algorithm.  Once the gcd is found, it can be written as a linear combination of the two integers.  That is, for any two integers $a$ and $b$, we have $\operatorname{gcd}(a,b)=ra+sb$ for some integers $r$ and $s$.  This expression is known as the Bezout identity.
+
+One can generalize the notion of a gcd of two integers into a gcd of two elements in a commutative ring.  However, given two elements in a general commutative ring, even an integral domain, a gcd may not exist.  For example, in $\mathbb{Z}[x^2,x^3]$, a gcd for the elements $x^5$ and $x^6$ does not exist, for $x^2$ and $x^3$ are both common divisors of $x^5$ and $x^6$, but neither one divides another.
+
+The idea of the gcd of two integers can be generalized in another direction: to the gcd of a non-empty set of integers.  If $S$ is a non-empty set of integers, then the $\operatorname{gcd}$ of $S$, is a positive integer $d$ such that 
+\begin{enumerate}
+\item $d\mid a$ for all $a\in S$,
+\item if $c\mid a, \forall a\in S$, then $c\mid d$.
+\end{enumerate}
+We denote $d=\operatorname{gcd}(S)$.
+
+\textbf{Remarks}.
+\begin{itemize}
+\item $\gcd(a,b,c)=\gcd(\gcd(a,b),c)$.
+\item If $\varnothing\ne T\subseteq S\subseteq \mathbb{Z}$, then $\gcd(S)\mid \gcd(T)$.
+\item For any $\varnothing\ne S\subseteq\mathbb{Z}$, there is a finite subset $T\subseteq S$ such that $\gcd(T)=\gcd(S)$.
+\end{itemize}</body><objid>248</objid><author>3771</author><linkpolicy></linkpolicy><class>msc:11-00</class><defines><synonym>greatest common divisor</synonym><synonym>gcd</synonym><synonym>greatest common factor</synonym><synonym>highest common factor</synonym><synonym>hcf</synonym></defines></entry><entry><title>Euclid's lemma</title><domain>planetmath.org</domain><body>If $a$, $b$, and $c$ are integers (or, more generally, elements of a principal ideal domain) with $a | bc$ and $\mbox{gcd}(a,b)=1$, then $a | c$.</body><objid>249</objid><author>5</author><linkpolicy></linkpolicy><class>msc:11-02</class><class>msc:11A05</class><defines><synonym>Euclid's lemma</synonym></defines></entry><entry><title>Bertrand's conjecture</title><domain>planetmath.org</domain><body>Bertrand conjectured that for every positive integer $n &gt; 1$, there exists at least one prime $p$ satisfying $n &lt; p &lt; 2n$. This result was proven in 1850 by Chebyshev, but the phrase \PMlinkescapeword{name} ``Bertrand's Conjecture'' remains in the literature.</body><objid>251</objid><author>5</author><linkpolicy></linkpolicy><class>msc:03B05</class><class>msc:03B10</class><class>msc:11N05</class><defines><synonym>Bertrand's conjecture</synonym><synonym>Bertrand's postulate</synonym></defines></entry><entry><title>M\"obius inversion</title><domain>planetmath.org</domain><body>\PMlinkescapeword{proposition} \PMlinkescapeword{clearly}
+\PMlinkescapeword{fix} \PMlinkescapeword{connection}
+\PMlinkescapeword{inversion}
+
+\begin{Theo}[Moebius Inversion]
+Let $\mu$ be the Moebius function, and let $f$ and $g$ be two functions on the positive integers.  Then the following two conditions are equivalent:
+\begin{eqnarray}
+f(n)&amp;=&amp;\sum_{d|n}g(d)\textrm{ for all }n\in\Nstar \\
+g(n)&amp;=&amp;\sum_{d|n}\mu(d)f\left(\frac{n}{d}\right)\textrm{ for all }n\in\Nstar
+\end{eqnarray}
+\end{Theo}
+
+\noindent
+\textbf{Proof:} Fix some $n\in\Nstar$. Assuming (1), we have
+\begin{eqnarray*}
+\sum_{d|n}\mu(d)f\left(\frac{n}{d}\right)
+&amp;=&amp;\sum_{d|n}\mu(d)\sum_{e|n/d}g(e) \\
+&amp;=&amp;\sum_{k|n}\sum_{d|k}\mu(d)g\left(\frac{n}{k}\right) \\
+&amp;=&amp;\sum_{k|n}g\left(\frac{n}{k}\right)\sum_{d|k}\mu(d) \\
+&amp;=&amp;g(n),
+\end{eqnarray*}
+the last step following from the identity given in the Mobius function entry.
+
+Conversely, assuming (2), we get
+\begin{eqnarray*}
+\sum_{d|n}g(d)
+&amp;=&amp;\sum_{d|n}\sum_{e|d}\mu(e)f\left(\frac{d}{e}\right) \\
+&amp;=&amp;\sum_{k|n}f\left(\frac{n}{k}\right)\sum_{e|k}\mu\left(\frac{k}{e}\right) \\
+&amp;=&amp;f(n)\qquad\text{(by the same identity)}
+\end{eqnarray*}
+as claimed.
+
+\textbf{Definitions: }
+In the notation above, $f$ is called the M\"obius transform
+of $g$, and formula (2) is called the M\"obius inversion formula.
+
+\section*{M\"obius-Rota inversion}
+G.-C. Rota has described a generalization of the M\"obius formalism.
+In it, the set $\Nstar$, ordered by the relation $x|y$ between elements
+$x$ and $y$, is replaced by a more general ordered set, and $\mu$
+is replaced by a function of two variables.
+
+Let $(S,\le)$ be a locally finite ordered set, i.e. an ordered set such that
+$\{z\in S|x\le z\le y\}$ is a finite set for all $x,y\in S$. Let $A$ be the set
+of functions $\alpha:S\times S\to\Z$ such that
+\begin{eqnarray}
+\alpha(x,x)&amp;=&amp;1\textrm{ for all }x\in S \\
+\alpha(x,y)&amp;\neq&amp;0\textrm{ implies }x\leq y
+\end{eqnarray}
+$A$ becomes a monoid if we define the product of any two of its
+elements, say $\alpha$ and $\beta$, by
+$$(\alpha\beta)(x,y)=\sum_{t\in S}\alpha(x,t)\beta(t,y).$$
+The sum makes sense because $\alpha(x,t)\beta(t,y)$ is nonzero
+for only finitely many values of $t$.
+(Clearly this definition is akin to the definition of the product
+of two square matrices.)
+
+Consider the element $\iota$ of $A$ defined simply by
+\[\iota(x,y)=
+\begin{cases}
+1 &amp; \textrm{ if $x\le y$} \\ 0 &amp; \text{otherwise.}
+\end{cases}\]
+The function $\iota$, regarded as a matrix over $\Z$, has an inverse
+matrix, say $\nu$. That means
+\[
+\sum_{t\in S}\iota(x,t)\nu(t,y)=
+\begin{cases}
+1 &amp; \text{if $x=y$,} \\ 0 &amp; \text{otherwise.}
+\end{cases}
+\]
+Thus for any $f,g\in A$, the equations
+\begin{eqnarray}
+f&amp;=&amp;\iota g \\
+g&amp;=&amp;\nu f
+\end{eqnarray}
+are equivalent.
+
+Now let's sketch out how the traditional M\"obius inversion is a special
+case of Rota's notion. Let $S$ be the set $\Nstar$, ordered by the relation
+$x|y$ between elements $x$ and $y$. In this case, $\nu$ is essentially
+a function of only one variable:
+
+\textbf{Proposition 3:} With the above notation, $\nu(x,y)=\mu(y/x)$
+for all $x,y\in\Nstar$ such that $x|y$.
+
+The proof is fairly straightforward, by induction on the number
+of elements of the interval $\{z\in S|x\le z\le y\}$.
+
+Now let $g$ be a function from $\Nstar$ to some additive group,
+and write $\overline{g}(x,y)=g(y/x)$ for all pairs $(x,y)$ such
+that $x|y$. 
+
+\textbf{Example: }Let $E$ be a set, and let $S$ be the set of all
+finite subsets of $E$, ordered by inclusion. The ordered set $S$ is
+left-finite, and for any $x,y\in S$ such that $x\subset y$,
+we have $\nu(x,y)=(-1)^{|y-x|}$, where $|z|$ denotes the cardinal
+of the finite set $z$.
+
+A slightly more sophisticated example comes up in
+connection with the chromatic polynomial of a graph or matroid.
+
+\section*{An Additional Generalization}
+
+A final generalization of Moebius inversion occurs when the sum is taken over all integers less than some real value $x$ rather than over the divisors of an integer.  Specifically, let $f:\mathbb{R}\rightarrow\mathbb{C}$ and define $F:\mathbb{R}\rightarrow \mathbb{C}$ by $F(x)=\sum_{n\leq x} f(\frac{x}{n})$.  
+
+Then
+
+\begin{align*}
+f(x)=\sum_{n\leq x} \mu(n) F\left(\frac{x}{n}\right).
+\end{align*}</body><objid>252</objid><author>2727</author><linkpolicy></linkpolicy><class>msc:11A25</class><defines><synonym>M\"obius inversion</synonym><synonym>Moebius inversion</synonym><synonym>Mobius inversion formula</synonym><synonym>Mobius transform</synonym><synonym>Mobius function</synonym><synonym>Mobius-Rota inversion</synonym></defines></entry><entry><title>M\"obius function</title><domain>planetmath.org</domain><body>The {\em M\"obius function} of number theory is the function $\mu:\mathbb{Z}^+\to\{-1,0,1\}$ defined by
+\[
+\mu (n) = 
+\begin{cases}
+1, &amp;\text{if $n=1$}\\
+0, &amp;\text{if $p^2 | n$ for some prime $p$} \\
+(-1)^r, &amp;\text{if $n = p_1 p_2 \cdots p_r$, where the $p_i$ are distinct primes.}
+\end{cases}
+\]
+
+In other words, $\mu (n) = 0$ if $n$ is not a square-free integer, while $\mu (n) = (-1)^r$ if $n$ is square-free with $r$ prime factors. The function $\mu$ is a multiplicative function, and obeys the identity
+\[
+\sum_{d | n} \mu(d) = 
+\begin{cases}
+1 &amp; \text{if $n = 1$}\\
+0 &amp; \text{if $n &gt; 1$}
+\end{cases}
+\]
+where $d$ runs through the positive divisors of $n$.</body><objid>253</objid><author>409</author><linkpolicy></linkpolicy><class>msc:11A25</class><defines><synonym>M\"obius function</synonym><synonym>Moebius function</synonym></defines></entry><entry><title>Mangoldt function</title><domain>planetmath.org</domain><body>The Mangoldt function $\Lambda$ is defined by
+\[ \Lambda (n) = 
+\begin{cases}
+\ln p, &amp;\text{if $n=p^k$, where $p$ is a prime and $k$ is a natural number $\geq 1$}\\
+0, &amp;\text{otherwise}
+\end{cases}
+\]
+
+The Moebius Inversion Formula leads to the identity $\Lambda (n) = \sum_{d|n} \mu (n/d) \ln d = - \sum_{d|n} \mu (d) \ln d$.</body><objid>256</objid><author>5</author><linkpolicy></linkpolicy><class>msc:11A25</class><class>msc:18E30</class><defines><synonym>Mangoldt function</synonym><synonym>von Mangoldt function</synonym></defines></entry>
+</addobject>

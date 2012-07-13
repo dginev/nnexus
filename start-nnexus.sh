@@ -1,0 +1,1 @@
+nohup perl nnexusserver.pl &

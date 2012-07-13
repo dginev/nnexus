@@ -1,0 +1,17 @@
+--
+This file gives a list of all perl modules that need to be installed 
+(and up to date) for NNexus to work propery.
+--
+
+use Cwd;
+use DBI;
+use Data::Dumper;
+use Encode;
+use Switch;
+use Time::HiRes qw ( time alarm sleep );
+use Unicode::String qw(latin1 utf8 utf16);
+use XML::SAX;
+use XML::Simple;
+use XML::Writer;
+use base qw(XML::SAX::Base);
+use Boost::Graph;

@@ -1,0 +1,18 @@
+This directory contains all modules used by the NNexus server.
+
+Charset.pm
+Classification.pm
+Concepts.pm
+Config.pm
+Crossref.pm
+DB.pm
+Domain.pm
+Indexing.pm
+Latex.pm
+Linkpolicy.pm
+Morphology.pm
+NNexusSAXHandler.pm
+Object.pm
+README
+Response.pm
+Util.pm

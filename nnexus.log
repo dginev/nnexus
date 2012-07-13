@@ -1,0 +1,79 @@
+Starting NNexus with configuration:
+$VAR1 = [
+          {
+            'database' => {
+                          'dbhost' => 'localhost',
+                          'dbuser' => 'nnexus',
+                          'dbpass' => 'nnexus',
+                          'dbms' => 'mysql',
+                          'dbname' => 'nnexus'
+                        },
+            'menufile' => 'menucode.js',
+            'domains' => {
+                         'domain' => {
+                                     'pitman' => {
+                                                 'link' => 'http://planet.math.uwaterloo.ca:8080/nnexus.xml',
+                                                 'defaultscheme' => 'msc',
+                                                 'nickname' => 'Pitman',
+                                                 'urltemplate' => 'http://images.planetmath.org:8090/pitman/render/',
+                                                 'code' => 'pitman'
+                                               },
+                                     'stat.regier.ws' => {
+                                                         'link' => 'http://planet.math.uwaterloo.ca:8080/nnexus.xml',
+                                                         'defaultscheme' => 'msc',
+                                                         'nickname' => 'StatTopics',
+                                                         'urltemplate' => 'http://stat.regier.ws/topics/',
+                                                         'code' => 'ps'
+                                                       },
+                                     'MathWorld' => {
+                                                    'link' => 'http://planet.math.uwaterloo.ca:8080/nnexus.xml',
+                                                    'defaultscheme' => 'mw',
+                                                    'nickname' => 'MathWorld',
+                                                    'urltemplate' => {},
+                                                    'code' => 'mw'
+                                                  },
+                                     'Wikipedia' => {
+                                                    'link' => 'http://planet.math.uwaterloo.ca:8080/nnexus.xml',
+                                                    'defaultscheme' => 'wp',
+                                                    'nickname' => 'Wikipedia',
+                                                    'urltemplate' => 'http://en.wikipedia.org/wiki/',
+                                                    'code' => 'wp'
+                                                  },
+                                     'MathResources' => {
+                                                        'link' => 'http://planet.math.uwaterloo.ca:8080/nnexus.xml',
+                                                        'defaultscheme' => 'msc',
+                                                        'nickname' => 'MathResources',
+                                                        'urltemplate' => {},
+                                                        'code' => 'mr'
+                                                      },
+                                     'planet.math.uwaterloo.ca' => {
+                                                                   'link' => 'http://planet.math.uwaterloo.ca:8080/nnexus.xml',
+                                                                   'defaultscheme' => 'msc',
+                                                                   'nickname' => 'PlanetMath',
+                                                                   'urltemplate' => 'http://planet.math.uwaterloo.ca/?op=getobj&from=objects&id=',
+                                                                   'code' => 'pm'
+                                                                 }
+                                   }
+                       },
+            'server' => {
+                        'port' => '7070',
+                        'supported' => {
+                                       'scheme' => [
+                                                   'msc',
+                                                   'mw'
+                                                 ]
+                                     }
+                      },
+            'stylesheet' => 'http://planet.math.uwaterloo.ca/stylesheets/multilink.css'
+          }
+        ];
+updating domain pitman
+updating domain stat.regier.ws
+updating domain MathWorld
+updating domain Wikipedia
+updating domain MathResources
+updating domain planet.math.uwaterloo.ca
+Initializing Classification Distance Module
+100
+Done
+NNexus now accepting connections
