@@ -16,7 +16,8 @@ sub execute {
   my ($self) = @_;
   if ($self->{jobtype} eq 'linkentry') {
     $self->link_entry;
-    print STDERR $self->{result};
+  } else {
+    # ... TODO: Support ALL API methods
   }
 }
 
@@ -66,7 +67,7 @@ sub link_entry {
     }
     $syns = $self->{'synonyms'};
     push @$syns, $title;
-    print "There is no body so the linking is pointless\n" unless defined $body;
+    print STDERR "There is no body so the linking is pointless\n" unless defined $body;
 
     #TODO - make sure the class info passed is of form scheme:identifier 
     my @c = ();
@@ -82,7 +83,7 @@ sub link_entry {
   push @$syns, split( /'\s*,\s*'/, $nolink) if defined $nolink;
   #	print "***********************************not linking " . @$syns;
 
-  print "BODY BEFORE: $body\n";
+  #print "BODY BEFORE: $body\n";
   my $linkedbody = "";
   my $links = [];
   if ($body ne "") {
@@ -96,7 +97,7 @@ sub link_entry {
 					   detail=>$mode
 					  );
   } 
-  print "BODY LINKED: $linkedbody\n";
+  #print "BODY LINKED: $linkedbody\n";
   if ( $objid != -1 ) {
     validateobject($objid);	# set the object link stuff to valid
   }
@@ -104,8 +105,8 @@ sub link_entry {
   my $numlinks = $#{$links} + 1;
   my $end = time();
   my $total = $end - $start;
-  print "linked\t$objid\t$numlinks\t$total sec\t$title\n";
-  print "links=",join(', ', @{$links});
+  #print "linked\t$objid\t$numlinks\t$total sec\t$title\n";
+  #print "links=",join(', ', @{$links});
 
   $self->{result}=$linkedbody;
   $linkedbody;

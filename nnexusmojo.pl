@@ -45,8 +45,6 @@ post '/autolink' => sub {
     $post_params = ['body' , $post_params->[0].$post_params->[1]];
   }
   my $parameters = { @$get_params, @$post_params };
-  print "Parameters: ",Dumper($parameters),"\n\n";
-
   # Currently , we only support :
   my $payload = $parameters->{'body'};
   my $format = $parameters->{'format'};
