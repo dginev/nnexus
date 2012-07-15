@@ -24,10 +24,9 @@ our @EXPORT_OK = qw(getdomainid getdomainblacklist getdomainpriorities getdomain
 #
 sub getdomainid {
   my ($config,$domain) = @_;
-
   my $ref = $config->{'domains'}->{'domain'};
   foreach my $d (@$ref) {
-    if ( $d->{'name'} eq $domain ) {
+    if ($d->{name} && ( $d->{'name'} eq $domain )) {
       return $d->{'domainid'};
     }
   }
@@ -44,7 +43,7 @@ sub getdomainblacklist {
       my $content = get("$url");
       if ( $content ) {
 	my $ref = XMLin($content);
-	my @bl = split( /\s*,\s*/, $d->{'blacklist'} );
+	my @bl = split( /\s*,\s*/, $d->{'blacklist'} ) if defined $d->{blacklist};
 	foreach my $b ( @bl ) {
 	  $b = lc($b);
 	}
@@ -114,22 +113,16 @@ my %domaincache = ();
 sub getdomainhash {
   my ($db,$domid) = @_;
 
-  print "getting domain hash for domain $domid";
-
+  print "getting domain hash for domain $domid\n";
   if ( ! exists $domaincache{$domid} ) {
     my $sth = $db->cachedPrepare( "select * from domain where domainid = ?" );
     $sth->execute( $domid );
     if ( my $row = $sth->fetchrow_hashref() ) {
-      print "updating domaincache to\n";
       $domaincache{$domid} = $row;
-      print Dumper( \%domaincache );
     } else {
       print "ERROR: tried to update domaincache\n";
     }
   }
-
-  print "returning ";
-  print Dumper( $domaincache{$domid} );
   return $domaincache{$domid};
 }
 

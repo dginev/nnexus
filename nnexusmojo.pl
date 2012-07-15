@@ -19,15 +19,14 @@ use Mojo::ByteStream qw(b);
 
 use Encode;
 use strict;
-use vars qw($config $dbh $new_sock);
 
 use NNexus::Job;
-use NNexus::Util;
 use NNexus::Config;
 
 use Data::Dumper;
 
 our $version = '0.1';
+# Configuration is server-level
 our $config = NNexus::Config->new;
 
 $ENV{MOJO_HOME} = '.' unless defined $ENV{MOJO_HOME};
@@ -38,12 +37,23 @@ app->secret('NNexus auto-linking for the win!');
 
 post '/autolink' => sub {
   my $self = shift;
-  my $parameters = $self->req->body_params;
-  my $payload = $parameters->param('body');
-  my $format = $parameters->param('format');
-  my $operation = $parameters->param('function');
+  my $get_params = $self->req->url->query->params || [];
+  my $post_params = $self->req->body_params->params || [];
+  if (scalar(@$post_params) == 1) {
+    $post_params = ['body' , $post_params->[0]];
+  } elsif (scalar(@$post_params) == 2 && ($post_params->[0] ne 'body')) {
+    $post_params = ['body' , $post_params->[0].$post_params->[1]];
+  }
+  my $parameters = { @$get_params, @$post_params };
+  print "Parameters: ",Dumper($parameters),"\n\n";
 
-  my $job = NNexus::Job->new(config=>$config,payload=>$payload,format=>$format,jobtype=>$operation);
+  # Currently , we only support :
+  my $payload = $parameters->{'body'};
+  my $format = $parameters->{'format'};
+  my $operation = $parameters->{'function'};
+  my $domain = $parameters->{'domain'};
+  my $job = NNexus::Job->new(config=>$config,payload=>$payload,format=>$format,jobtype=>$operation,
+			    domain=>$domain);
   $job->execute;
   $self->render(json=>{result=>$job->result});
 };

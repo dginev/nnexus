@@ -29,13 +29,14 @@ our %LINKTAGS = (
 
 # This is irrelevant for HTML version ?
 sub crossReferenceLaTeX {
-  my ($config, $domain, $latex, $syns, $fromid, $class) = @_;
+  my (%opts) = @_;
+  my ($config,$domain,$latex,$syns,$fromid,$class) = map {$opts{$_}} qw(config domain text nolink fromid class);
   # $syns: synonyms, more things not to link to
   $fromid = -1 unless defined $fromid; # if this is null or -1, we dont touch links tbl
    # $class: classification array	
   # fix l2h stuff
   my $db = $config->get_DB;
-  $latex = l2hhacks($latex); 
+  $latex = l2hhacks($latex);
   # separate math from linkable text, and do some massaging
   my @user_escaped;
   my $escaped;
@@ -61,57 +62,15 @@ sub crossReferenceLaTeX {
   return (postprocessLaTeX($recombined),$links);
 }
 
-my @matches = (); #matches array for each text node in the HTML Tree.
-my @textref = (); #this is an array of references to the original text
-		  # of the HTML tree. allowing us to modify the tree directly.
-sub linkHTMLTree {
-  my ($config,$root,$domain,$syns,$fromid,$class) = @_;
-
-  #	print "HTMLTree domain = $domain\n";
-  foreach my $i ( $$root->content_refs_list() ) {
-    if ( ref $$i ) {
-      #			print $$i->tag() . "\n";
-      #			print $$i->attr('class') . "\n";
-      if ( !(	$$i->tag() eq 'title' || 
-		$$i->tag() eq 'a' || 
-		$$i->tag() eq 'script' || 
-		$$i->tag() eq 'style' ||
-		lc($$i->attr('class')||'') eq 'math' || 
-		lc($$i->attr('class')||'') eq 'nolink' ||
-		lc($$i->attr('class')||'') eq 'mathdisplay' )  
-	 ) {
-	#				print "Traversing down: " .  $$i->tag(). "class = " .$$i->attr('class'). "\n" ;
-	linkHTMLTree($config, $i, $domain, $syns, $fromid, $class );
-      }
-    } else {
-      #do the text substitution in here FOR EACH NODE
-      my $text = $$i;
-      print "Linking ";
-      #	print Dumper( $text );
-      #	$text = preprocessLaTeX( $text );
-      #	$$i = $text;
-      push @matches, doAutomaticLinking($config, $text, $syns, $class, $fromid );
-      push @textref, $i;
-    }
-  }
-
-  return \@matches, \@textref;
-}
-
 # I assume this should populate the <links /> 
 sub crossReferenceHTML {
-  my $config = shift;
+  my (%opts) = @_;
+  my ($config,$domain,$text,$syns,$fromid,$class) = map {$opts{$_}} qw(config domain text nolink fromid class);
   my $db = $config->get_DB;
-  my $domain = shift;
-  my $text = shift;
-  my $syns = shift;		# synonyms, more things not to link to
-  my $fromid = shift||-1; # from id - if this is null or -1, we dont touch links tbl
-  my $class = shift;	  # classification array
+  $fromid = -1 unless defined $fromid; # from id - if this is null or -1, we dont touch links tbl
 	
   # fix l2h stuff
-  #
   # separate math from linkable text, and do some massaging
-  #
   my @user_escaped;
   my $escaped;
   my $linkids;
@@ -119,154 +78,98 @@ sub crossReferenceHTML {
   #TODO - we need to figure out what kind of preprocessing we need to do for HTML.
 
   push @user_escaped, @$syns; #add synonyms to the user_esaped list for makeLaTeXLinks
-  #	$text = preprocessLaTeX( $text ); #TODO - make this HTML specific. It seems that the
-  # latex preprocessing works though.
 
-  #	print "crossReferenceHTML text = $text\n";
-  #	$text = decode_entities($text);
-  #	print "crossReferenceHTML unescaped text = $text\n";
-  my $root = HTML::TreeBuilder->new;
-  #	$root->ignore_ignorable_whitespace(0);
-  $root->no_space_compacting(1);
-  $root->p_strict(1);
-  #	$root->store_comments(1);
-  $root->parse( $text );
-  $root->eof;
-	
-  #im not sure if this code works with threads in perl. I think the NNexus server
-  # forks anyway.
-  @matches = (); 
-  @textref = ();
+  my $parser = HTML::Parser->new(
+			       'api_version' => 3,
+			       'default_h' => [sub { $_[0]->{annotated} .= $_[1]; }, 'self, text'],
+			       'text_h'      => [\&linkHTMLText, 'self,dtext']
+			      );
+  $parser->{annotated} = "";
+  $parser->{linkarray} = [];
+  $parser->{state_information}=\%opts; # Not pretty, but TODO: improve
+  $parser->unbroken_text;
+  $parser->xml_mode;
+  $parser->parse($text);
+  $parser->eof();
 
-  # call the other subroutine, storing stuff in root
-  linkHTMLTree($config, \$root, $domain, $syns, $fromid, $class );
-  # now loop through all the matches and remove matches that have already occured 
-  # earlier in the tree.
+  return ( $parser->{annotated}, $parser->{linkarray});
+}
+
+sub linkHTMLText {
+  my ($self,$text) = @_;
+  my $state = $self->{state_information};
+  #$matches: matches array for each text node in the HTML Tree.
+  #$textref: this is an array of references to the original text
+  #           of the HTML tree. allowing us to modify the tree directly.
+  my $matches = [];
+  my $textref = [];
+
+  print "Linking ";
+  push @$matches, doAutomaticLinking($state->{config},
+				     $text,
+				     $state->{nolink},
+				     $state->{class},
+				     $state->{fromid});
+
+  # Only ANNOTATE the FIRST occurrence of each term
+  # = delete all following duplicates
   my %linked = ();
-  foreach my $m ( @matches ) {
+  foreach my $m ( @$matches ) {
     foreach my $pos (sort {$a <=> $b} keys %$m) {
       my $matchtitle = $m->{$pos}->{'term'};
-      if ( defined $linked{$matchtitle} ) {
-	delete $m->{$pos};
-      } else {
-	$linked{$matchtitle} = 1;
-      }
+      delete $m->{$pos} if defined $linked{$matchtitle};
+      $linked{$matchtitle} = 1;
     }
   }
-  #print Dumper( \@textref );
-  #print Dumper( \@matches );
-  my $priorities = getdomainpriorities($config, $domain );
 
-  #print "STILL IN CROSSREF -> priorities = \n";
-  #print Dumper( $priorities );
-  my @scriptMenuCode = ();
+  my $priorities = getdomainpriorities($state->{config}, $state->{domain} );
+  my $linked_result;
   my @linkarray;		# array of href's
-  undef %linked;			# linked titles
-  my %clinked;			# linked concepts
-  for ( my $i = 0; $i < @matches; $i++ ) {
-    my $match = $matches[$i];
-    my $tref = $textref[$i];
-    my @ltext = split(/(\W+)/, $$tref);
+  for ( my $i = 0; $i < @$matches; $i++ ) {
+    my $match = $matches->[$i];
+    my @ltext = split(/(\W+)/, $text);
     # do the text substitution here.
     #loop through the text backwards
+    print STDERR "Beginning linkHTMLText...\n";
     foreach my $pos (sort {$b <=> $a} keys %$match) {
       my $length = $match->{$pos}->{'length'};
       my $objects = $match->{$pos}->{'links'};
       my $rltext = $ltext[$pos+$length-1];
       my $texttolink = "";
       $texttolink = join( '', @ltext[$pos..$pos+$length-1] );
-      push @scriptMenuCode, 
-	substituteHTMLLinks($config, $objects, \@ltext,
-			     $pos, $pos+$length-1, $texttolink, $priorities);
-      #print "JAMESG :";
-      #print Dumper($objects);
-      my $domainid = getdomainid($db, $domain);
+      my $domainid = getdomainid($state->{config}, $state->{domain});
       my $linktarget = $objects->{$domainid}[0][0];
-      my $lnk = getlinkstring($db, $linktarget, $texttolink );
-      #print "$domainid -> $linktarget";
-      #print "looking at $lnk against $domain\n";
-      if ( $lnk =~ $domain ) {
-				#print "adding lnk = [$lnk]\n";
-	push @linkarray, $lnk; 
+      my $lnk = getlinkstring($state->{config}->get_DB, $linktarget, $texttolink );
+      print "looking at $lnk against ",$state->{domain},"\n";
+      if ( $lnk =~ $state->{domain} ) {
+	#print "adding lnk = [$lnk]\n";
+     	push @linkarray, $lnk;
+	delete @ltext[$pos+1..$pos+$length-1] if ($length>1);
+	$ltext[$pos]=$lnk;
       }
-      # add to links table if we have a from id
-      # 
-      #TODO - figure out how to do the addlinks in the database 
-      #	addLink($fromid,$object->{'objectid'}) if ($fromid);
+       # add to links table if we have a from id
+       # 
+       #TODO - figure out how to do the addlinks in the database 
+       #	addLink($fromid,$object->{'objectid'}) if ($fromid);
     }
-    my $finaltext = join('', @ltext);
-    #	$finaltext = postprocessLaTeX($finaltext);
-    #		print "updating $$tref\n :to: $finaltext\n";
-    $$tref = $finaltext;
+    my $finaltext = join('', grep (defined, @ltext));
+     #	$finaltext = postprocessLaTeX($finaltext);
+     #		print "updating $$tref\n :to: $finaltext\n";
+    $linked_result .= $finaltext;
   }
-
-  #generate the menucode
-  #my $script = generateMenuCode( \@scriptMenuCode );
-
-  my $htmltext = $root->as_HTML("&");
-
-
-  #fix the entities bug
-  #my $specials = getAllUTF8Entities();
-  # fix the `` '' and quote style entities
-  #my $others = "&#8220;&#8221;&#8216;&#8217;&#8201;&#160;&#229;";
-  #decode_entities($others);
-  #$specials .= $others;
-  #	encode_entities($htmltext, $specials."\'");
-
-  #	$htmltext = uri_unescape($htmltext);
-  #	$htmltext = spaceOutHTML( $htmltext );
-  #	my $css = getStyleSheetLink();
-  #	my $style = '<LINK REL="STYLESHEET" HREF="' . $css . '" TYPE="text/css" />';
-  #	my $dropmenu = <<STUFF;
-  #<div id="dropmenudiv" style="visibility:hidden;width:20em;background-color:lightyellow" onMouseover="clearhidemenu()" onMouseout="dynamichide(event)"></div>
-  #STUFF
-  #	$htmltext =~ s/<\/body>/$dropmenu<\/body>/i;
-  #	my $linkedtext = $htmltext;
-  #	$linkedtext =~ s/<head>/<head>$style\n$script/i;
-  #	$linkedtext =~ s/<head>/<head>$script/i;
-  #fix the space character
-
-  ##############
-  # 
-  # DG: If you really want any HTML processing here, use WWW::Mechanize, *not*
-  #       RegExps. Commenting out for now.
-  #
-  ##############
-
-  #	$htmltext =~ s/<head>/<head>$script/;
-  # $htmltext =~ s/<html\s*>//;
-  # $htmltext =~ s/<\/html\s*>//;
-  # $htmltext =~ s/<body>/<body>$script/;
-  # $htmltext =~ s/\x{a0}/&nbsp;/g;
-  #	$linkedtext = postprocessLaTeX( $linkedtext );
-
-
-  #print "HTML will look like this:\n";
-  #print $linkedtext;
-  #print "DONE PRINTING HTML\n";
-  #	$htmltext = encode('utf8', $htmltext);
-  #	print "crossRef After:[\n$htmltext\n]\n";
-
-
-  return ( $htmltext, \@linkarray);
+  $self->{annotated}.=$linked_result;
+  push @{$self->{linkarray}}, @linkarray;
 }
 
 #new main entry point for cross-referencing, you send it some markup text and the mode (latex or html)
 # and it returns the same text linked up in the same markup format
 # This (in theory) is our all-powerful method
 sub crossReference {
-  my $config = shift;
+  my (%opts) = @_;
+  my ($config,$format,$domain,$text,$nolink,$fromid,$class,$detail) =
+    map {$opts{$_}} qw(config format domain text nolink fromid class detail);
   my $db = $config->get_DB;
-  my $mode = shift; # what mode of referencing LaTeX or HTML are currently supported.
-  my $domain = shift;	   #domain of the object;
-  my $text = shift;	   #preprocessed text array ref of the object;
-  my $nolink = shift;	   #terms to not link to:
-  #includes synonyms, user escaped, blacklisted terms
-				# and phrases
-  my $fromid = shift || -1;
-  my $class = shift;		#class of the object;
-  my $detail = shift;
+  $fromid = -1 unless defined $fromid;
 
   #pull this blacklist into a config file
   #	my @blacklist = ( 'g', 'and','or','i','e', 'a','means','set','sets',
@@ -275,43 +178,29 @@ sub crossReference {
   my $domainbl = getdomainblacklist( $config, $domain );
   push @$nolink, @$domainbl;
   foreach my $n ( @$nolink ) {
-    next unless $n;
-    if ( $n ne lc($n) ) {
-      push @$nolink, lc($n);
-    }
+    push @$nolink, lc($n) if ($n && ($n ne lc($n)));
   }
 
   my $DEBUG = 0;
-
-  #print "CROSS REFERENCING and excluding [" . join( ', ', @$nolink) . "] \n";
-
-  print "LINKING IN MODE $mode\n";
-
-  if ( $mode eq 'l2h' ) {
-    return crossReferenceLaTeX($config, $domain, $text, $nolink, $fromid, $class);
-  } elsif ( $mode eq 'html' ) {
+  print "LINKING IN MODE $format\n";
+  if ( $format eq 'l2h' ) {
+    return crossReferenceLaTeX(@_);
+  } elsif ( $format eq 'html' ) {
     print "LINKING IN HTML MODE\n"	if $DEBUG;
-    return crossReferenceHTML( $config, $domain, $text, $nolink, $fromid, $class);
+    return crossReferenceHTML(@_);
   } else {
-    print "Mode $mode is not yet supported\n";
+    print "Mode $format is not yet supported\n";
   }
 }
 
-#doAutomaticLinking returns back the matches and position of disambiguated links of the
-# supplied text.
+# MAIN PLAIN TEXT LINKER (!!!)
+# returns back the matches and position of disambiguated links of the supplied text.
 sub doAutomaticLinking {
   my ($config,$text,$nolink,$class,$fromid) = @_;
   $fromid = -1 unless defined $fromid;
-
-  #	print "doAutomaticLinking called with args:\n";
-  #	print "class = $class\n";
-  #	print Dumper( $class );
-
   deleteLinksFrom( $fromid ) if ($fromid > 0);
 
   my $matches = findmatches($config->get_DB, $text );
-  #	print Dumper( $matches );
-
   #this matches hash now contains the candidate links for each word.
   # we now no longer need the terms from findmatches so we remove it.
 	
@@ -330,7 +219,7 @@ sub doAutomaticLinking {
     my $fw = lc($1);
     #		my $candidates = $terms->{$fw}->{$matchterms};
     my $finals = disambiguate($config, $candidates, $matchterms, $class, $fromid);
-    print Dumper( $finals );
+    #print Dumper( $finals );
     $linked{$matchterms} = $finals; #mark the term as linked with the optional targets
     $matches->{$pos}->{'active'}=1; # turn the link "on" in the matches hash
     $matches->{$pos}->{'links'} = $finals; #save the link targets in the matches hash.
@@ -658,11 +547,7 @@ sub makeLaTeXLinks {
   my $matches = shift;		# match structure
   my $class = shift;	   # classification arrayref of current object
   my $fromid = shift;	   # id of current object (or -1)
-	
   my @linkarray;		# array of href's
-  my %linked;			# linked titles
-  my %clinked;			# linked concepts
-
   my ($start, $finish, $DEBUG);
   $DEBUG = 0;
 
@@ -768,16 +653,11 @@ sub generateMenuCode {
 }
 
 #this function returns a standard <a href=link>text</a> string
-sub getlinkstring{ 
-  my $db = shift;
-  my $objectid = shift;
-  my $anchor = shift;
-
+sub getlinkstring { 
+  my ($db , $objectid, $anchor) = @_;
   my $object = getobjecthash( $db, $objectid );
   my $domain = getdomainhash( $db, $object->{'domainid'} );
-  print Dumper($domain);
   my $template = $domain->{'urltemplate'};
-  print "template = $template\n";
   my $linkstring = $template . HTML::Entities::encode($object->{'identifier'});
   #	my $domainnick = $domain->{'nickname'};
 
@@ -908,21 +788,15 @@ sub substituteLaTeXLinks {
 
 #this substitutes in the text the menuing links stuff - HTML version.
 sub substituteHTMLLinks {
-  my $config = shift;
+  my ($config, $objects, $textarray, $startpos, $endpos, $texttolink, $priorities) = @_;
+  #$priorities is needed for the domain priorities (i.e. which domain to link to first)
   my $db = $config->get_DB;
-  my $objects = shift;
-  my $textarray = shift;
-  my $startpos = shift;
-  my $endpos = shift;
-  my $texttolink = shift;
-  my $priorities = shift; #this is needed for the domain priorities (i.e. which domain to link to first 
-	
   #a->{domain} =  [ [internalobjectid, score], [..] ... ] 
   #a->{domain2} = [ [internalobjectid2, score2] , []... ] 
 
   my $first = 0; #this is used to mark whether or not the first link had been added to the
   #string to be linked
-	
+
   my @optionallinks = ();  #array list of optional links for a concept
   my $menuname = "menu" . $nummenus;
   my $menulink;
@@ -935,15 +809,10 @@ sub substituteHTMLLinks {
       print "the objects were not found to be subed\n";
       next;
     }
-		
     #print Dumper( $objects->{$k} );
-	
     my $domain = getdomainhash($db, $k );
     #this is very hackish but works until we get the scoring functionality working
     my $targets = $objects->{$k};
-    print Dumper( $priorities );
-    print Dumper( $targets );
-    print Dumper( $domain );
     my $id = $targets->[0]->[0];
     print "linking to $id for domain $k = $domain->{'nickname'}\n";
     #this hack is necessary. I need to reinvestigate how to populate
@@ -952,23 +821,16 @@ sub substituteHTMLLinks {
       $id = ${@$id}[0];
     }
 
-    #print $id;
-
-    print Dumper($id);
+    print STDERR "The ID: $id\n";
     my $objhash = getobjecthash($db,$id);
-    print Dumper( $objhash );
+    #print Dumper( $objhash );
 
     my $identifier = getobjecthash($db,$id)->{'identifier'};
     my $linkstring = $domain->{'urltemplate'} . $identifier;
     $linkstring = uri_escape( $linkstring );
 
-    #		print "adding : " . $linkstring . "\n";
     my $domainnick = $domain->{'nickname'};
-    #my $size = length($domainnick) . 'em';
     my $size = "13em";
-
-    #		print "making link to $domainnick\n";
-    # we no longer have to worry about the first stuff.
     if ( $first == 0 ) {
       $menulink = getmenulinkstring($db, 
 				    $id, $texttolink, $nummenus, $size );
