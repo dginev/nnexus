@@ -77,9 +77,7 @@ my $server = XMLin("config.xml");
 
 #print Dumper($configu);
 
-print Dumper($server);
-
-print $server->{'host'}. ":".  $server->{'port'};
+print $server->{'host'}. ":".  $server->{'port'},"\n";
 
 my $sock = new IO::Socket::INET (
                                   PeerAddr => "$server->{host}",
@@ -88,14 +86,14 @@ my $sock = new IO::Socket::INET (
                                 );
 die "Could not create socket: $!\n" unless $sock;
 print $sock "<request>\n$output\n</request>\n";
-print "PORT = " . $server->{'port'};
+print "PORT = " . $server->{'port'},"\n";
 
 my $response = "";
 while (my $bl = <$sock>){
 	$response .= $bl;
 }
 
-print "RESPONSE =\n$response";
+print "RESPONSE =\n$response\n";
 
 #find the body in the response and return that
 $response =~ /<linked.*?>(.*)<\/linked.*?>/s;
