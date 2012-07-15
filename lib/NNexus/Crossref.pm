@@ -86,6 +86,7 @@ sub crossReferenceHTML {
 			      );
   $parser->{annotated} = "";
   $parser->{linkarray} = [];
+  $parser->{linked}={};
   $parser->{state_information}=\%opts; # Not pretty, but TODO: improve
   $parser->unbroken_text;
   $parser->xml_mode;
@@ -113,12 +114,12 @@ sub linkHTMLText {
 
   # Only ANNOTATE the FIRST occurrence of each term
   # = delete all following duplicates
-  my %linked = ();
+  my $linked = $self->{linked};
   foreach my $m ( @$matches ) {
     foreach my $pos (sort {$a <=> $b} keys %$m) {
       my $matchtitle = $m->{$pos}->{'term'};
-      delete $m->{$pos} if defined $linked{$matchtitle};
-      $linked{$matchtitle} = 1;
+      delete $m->{$pos} if defined $linked->{$matchtitle};
+      $linked->{$matchtitle} = 1;
     }
   }
 
@@ -130,7 +131,6 @@ sub linkHTMLText {
     my @ltext = split(/(\W+)/, $text);
     # do the text substitution here.
     #loop through the text backwards
-    print STDERR "Beginning linkHTMLText...\n";
     foreach my $pos (sort {$b <=> $a} keys %$match) {
       my $length = $match->{$pos}->{'length'};
       my $objects = $match->{$pos}->{'links'};
