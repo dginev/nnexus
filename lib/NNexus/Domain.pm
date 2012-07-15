@@ -43,10 +43,7 @@ sub getdomainblacklist {
       my $content = get("$url");
       if ( $content ) {
 	my $ref = XMLin($content);
-	my @bl = split( /\s*,\s*/, $d->{'blacklist'} ) if defined $d->{blacklist};
-	foreach my $b ( @bl ) {
-	  $b = lc($b);
-	}
+	my @bl = map {lc($_);} split( /\s*,\s*/, $ref->{'blacklist'} ) if defined $ref->{blacklist};
 	return \@bl;
       }
     }

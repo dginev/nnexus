@@ -186,7 +186,6 @@ sub crossReference {
   #pull this blacklist into a config file
   #	my @blacklist = ( 'g', 'and','or','i','e', 'a','means','set','sets',
   #			'choose', 'it',  'o', 'r', 'in', 'the', 'my', 'on', 'of');
-  #	push @$nolink, @blacklist;
   my $domainbl = getdomainblacklist( $config, $domain );
   push @$nolink, @$domainbl;
   foreach my $n ( @$nolink ) {
