@@ -57,9 +57,10 @@ sub getdomainblacklist {
 }
 
 #get the domain priorities as an arrayref of domain ids
+our %domain_priorities = ();
 sub getdomainpriorities {
   my ($config,$domain) = @_;
-
+  return $domain_priorities{$domain} if defined $domain_priorities{$domain};
   my @priorities = ();
   my $domains = $config->{'domains'}->{'domain'};
   foreach my $d (@$domains) {
@@ -73,12 +74,14 @@ sub getdomainpriorities {
       foreach my $p (@prio) {
 	push @priorities, getdomainidfromdb($config->get_DB,$p);
       }
+      $domain_priorities{$domain} = \@priorities;
       return \@priorities;
     }
   }
 
   print "using default priorities\n";
   push @priorities, (1,2,3,4,5,6,7,8,10,11,12,13,14,15,16,17);
+  $domain_priorities{$domain} = \@priorities;
   return \@priorities;
 }
 
