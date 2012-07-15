@@ -47,9 +47,9 @@ post '/autolink' => sub {
   my $parameters = { @$get_params, @$post_params };
   # Currently , we only support :
   my $payload = $parameters->{'body'};
-  my $format = $parameters->{'format'};
-  my $operation = $parameters->{'function'};
-  my $domain = $parameters->{'domain'};
+  my $format = $parameters->{'format'}||'html';
+  my $operation = $parameters->{'function'}||'linkentry';
+  my $domain = $parameters->{'domain'}||'planetmath';
   my $job = NNexus::Job->new(config=>$config,payload=>$payload,format=>$format,jobtype=>$operation,
 			    domain=>$domain);
   $job->execute;
