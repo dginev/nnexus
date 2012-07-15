@@ -81,7 +81,7 @@ sub crossReferenceHTML {
 
   my $parser = HTML::Parser->new(
 			       'api_version' => 3,
-			       'start_h' => [sub {$_[0]->{noparse}=1 if $_[1]=~/^style|title|script|xmp|iframe|math|svg|a$/;
+			       'start_h' => [sub {$_[0]->{noparse}=1 if $_[1]=~/^style|title|script|xmp|iframe|math|svg|a|(h\d+)$/;
 						  $_[0]->{annotated} .= $_[2];}, 'self, tagname, text'],
 			       'end_h' => [sub {$_[0]->{noparse}=0;
 						$_[0]->{annotated} .= $_[1];}, 'self,text'],
