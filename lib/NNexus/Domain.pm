@@ -112,12 +112,11 @@ sub getdomainidfromdb {
 #
 
 #CACHE this stuff.
-my %domaincache = ();
+our %domaincache = ();
 sub getdomainhash {
   my ($db,$domid) = @_;
-
-  print "getting domain hash for domain $domid\n";
   if ( ! exists $domaincache{$domid} ) {
+    print "getting domain hash for domain $domid\n";
     my $sth = $db->cachedPrepare( "select * from domain where domainid = ?" );
     $sth->execute( $domid );
     if ( my $row = $sth->fetchrow_hashref() ) {
