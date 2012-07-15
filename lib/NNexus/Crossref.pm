@@ -81,6 +81,10 @@ sub crossReferenceHTML {
 
   my $parser = HTML::Parser->new(
 			       'api_version' => 3,
+			       'start_h' => [sub {$_[0]->{noparse}=1 if $_[1]=~/^style|title|script|xmp|iframe|math|svg|a$/;
+						  $_[0]->{annotated} .= $_[2];}, 'self, tagname, text'],
+			       'end_h' => [sub {$_[0]->{noparse}=0;
+						$_[0]->{annotated} .= $_[1];}, 'self,text'],
 			       'default_h' => [sub { $_[0]->{annotated} .= $_[1]; }, 'self, text'],
 			       'text_h'      => [\&linkHTMLText, 'self,dtext']
 			      );
@@ -99,6 +103,12 @@ sub crossReferenceHTML {
 sub linkHTMLText {
   my ($self,$text) = @_;
   my $state = $self->{state_information};
+  # Skip if in a silly element:
+  if ($self->{noparse}) {
+    $self->{annotated}.=$text;
+    return;
+  }
+
   #$matches: matches array for each text node in the HTML Tree.
   #$textref: this is an array of references to the original text
   #           of the HTML tree. allowing us to modify the tree directly.
