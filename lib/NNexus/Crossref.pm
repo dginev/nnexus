@@ -81,6 +81,10 @@ sub crossReferenceHTML {
 
   my $parser = HTML::Parser->new(
 			       'api_version' => 3,
+			       'start_h' => [sub {$_[0]->{noparse}=1 if $_[1]=~/^style|title|script|xmp|iframe|math|svg|a$/;
+						  $_[0]->{annotated} .= $_[2];}, 'self, tagname, text'],
+			       'end_h' => [sub {$_[0]->{noparse}=0;
+						$_[0]->{annotated} .= $_[1];}, 'self,text'],
 			       'default_h' => [sub { $_[0]->{annotated} .= $_[1]; }, 'self, text'],
 			       'text_h'      => [\&linkHTMLText, 'self,dtext']
 			      );
@@ -99,13 +103,19 @@ sub crossReferenceHTML {
 sub linkHTMLText {
   my ($self,$text) = @_;
   my $state = $self->{state_information};
+  # Skip if in a silly element:
+  if ($self->{noparse}) {
+    $self->{annotated}.=$text;
+    return;
+  }
+
   #$matches: matches array for each text node in the HTML Tree.
   #$textref: this is an array of references to the original text
   #           of the HTML tree. allowing us to modify the tree directly.
   my $matches = [];
   my $textref = [];
 
-  print "Linking ";
+  #print "Linking ";
   push @$matches, doAutomaticLinking($state->{config},
 				     $text,
 				     $state->{nolink},
@@ -140,7 +150,7 @@ sub linkHTMLText {
       my $domainid = getdomainid($state->{config}, $state->{domain});
       my $linktarget = $objects->{$domainid}[0][0];
       my $lnk = getlinkstring($state->{config}->get_DB, $linktarget, $texttolink );
-      print "looking at $lnk against ",$state->{domain},"\n";
+      #print "looking at $lnk against ",$state->{domain},"\n";
       if ( $lnk =~ $state->{domain} ) {
 	#print "adding lnk = [$lnk]\n";
      	push @linkarray, $lnk;
@@ -169,25 +179,27 @@ sub crossReference {
   my ($config,$format,$domain,$text,$nolink,$fromid,$class,$detail) =
     map {$opts{$_}} qw(config format domain text nolink fromid class detail);
   my $db = $config->get_DB;
-  $fromid = -1 unless defined $fromid;
-
+  if (! defined $fromid) {
+    $fromid = -1;
+    $opts{fromid}=$fromid;
+  }
   #pull this blacklist into a config file
   #	my @blacklist = ( 'g', 'and','or','i','e', 'a','means','set','sets',
   #			'choose', 'it',  'o', 'r', 'in', 'the', 'my', 'on', 'of');
-  #	push @$nolink, @blacklist;
   my $domainbl = getdomainblacklist( $config, $domain );
   push @$nolink, @$domainbl;
   foreach my $n ( @$nolink ) {
     push @$nolink, lc($n) if ($n && ($n ne lc($n)));
   }
+  $opts{nolink}=$nolink;
 
   my $DEBUG = 0;
   print "LINKING IN MODE $format\n";
   if ( $format eq 'l2h' ) {
-    return crossReferenceLaTeX(@_);
+    return crossReferenceLaTeX(%opts);
   } elsif ( $format eq 'html' ) {
     print "LINKING IN HTML MODE\n"	if $DEBUG;
-    return crossReferenceHTML(@_);
+    return crossReferenceHTML(%opts);
   } else {
     print "Mode $format is not yet supported\n";
   }
@@ -814,7 +826,7 @@ sub substituteHTMLLinks {
     #this is very hackish but works until we get the scoring functionality working
     my $targets = $objects->{$k};
     my $id = $targets->[0]->[0];
-    print "linking to $id for domain $k = $domain->{'nickname'}\n";
+    #print "linking to $id for domain $k = $domain->{'nickname'}\n";
     #this hack is necessary. I need to reinvestigate how to populate
     # the targets hash
     if ( ref ($id) ) {
@@ -1010,33 +1022,33 @@ sub findmatches {
     %termlist = (%termlist, %{$terms});
     if (defined $terms->{$word}) {
       $fail = 0;
-      print "*** xref: found [$word] for [$tlist[$i]] in hash\n" if $COND;
+      #print "*** xref: found [$word] for [$tlist[$i]] in hash\n" if $COND;
       $rv = matchrest(\%matches,
 		      $word,$terms->{$word},
 		      \@tlist,$tlen,$i);
       #	[$stag,$etag]);
       $fail = !$rv;
       if (!$rv) {
-	print "*** xref: rejected initial match for [$word]\n" if $COND;
+	#print "*** xref: rejected initial match for [$word]\n" if $COND;
       }
     }
     if ($fail) {
       if (ispossessive($word)) {
-	print "*** xref: trying unpossesive for [$word]\n" if $COND;
+	#print "*** xref: trying unpossesive for [$word]\n" if $COND;
 	$word = getnonpossessive($word);
 	$rv = matchrest(\%matches,
 			$word,$terms->{$word},
 			\@tlist,$tlen,$i);
 	#					[$stag,$etag]);
       } elsif (isplural($word)) {
-	print "*** xref: trying nonplural for [$word]\n" if $COND;
+	#print "*** xref: trying nonplural for [$word]\n" if $COND;
 	my $np = depluralize($word);
 	$rv = matchrest(\%matches,
 			$word,$terms->{$np},
 			\@tlist,$tlen,$i);
 	#					[$stag,$etag]);
       } else {
-	print "*** xref: found no forms for [$word]\n" if $COND;
+	#print "*** xref: found no forms for [$word]\n" if $COND;
       }
     }
     # now lets update $i so we don't check terms that are already matched (this should speed up
@@ -1044,7 +1056,7 @@ sub findmatches {
     if ( defined ( $matches{$i} ) ) {
       my $mlen = $matches{$i}->{'length'};
       $i += $mlen;
-      print "MOVING $i forward $mlen\n" if $DEBUG;
+      #print "MOVING $i forward $mlen\n" if $DEBUG;
     }
   }
 
@@ -1052,7 +1064,7 @@ sub findmatches {
     $finish = time();
     my $total = $finish - $start;
     my $len = keys %matches;
-    print "find matches: $total seconds to make $len matches\n";
+    #print "find matches: $total seconds to make $len matches\n";
   }
 
   #modify the matches hash to contain the candidate link information for each term.
@@ -1143,7 +1155,7 @@ sub matchrest {
  
   foreach my $title (sort {lc($b) cmp lc($a)} keys %$subhash) {
     my $COND = 0;		# debug printing condition
-    print " *** xref: comparing $word to $title\n" if $COND;
+    #print " *** xref: comparing $word to $title\n" if $COND;
     my @words = split(/\s+/,$title); # split into words
     # go through the words and make them non-plural and non-possessive
     foreach my $w ( @words ) {
@@ -1155,8 +1167,8 @@ sub matchrest {
     my $widx = $#words;
     my $skip = 0;	 # text index adjuster based on skipped words 
 
-    print "*** xref: skip starts out as $skip\n" if $COND;
-    print "*** xref: next text word is $tlist->[$i+$skip+1]\n" if $COND;
+    #print "*** xref: skip starts out as $skip\n" if $COND;
+    #print "*** xref: next text word is $tlist->[$i+$skip+1]\n" if $COND;
     # see how many words we can match against this title
     while (($i+$midx+$skip+1 < $tlen) && ($midx<$widx)) {
       if (skipword($tlist->[$i+$midx+$skip+1]) ) {
@@ -1175,16 +1187,16 @@ sub matchrest {
       }
     }
 
-    print " *** xref: skip is $skip\n" if $COND;
+    #print " *** xref: skip is $skip\n" if $COND;
 
     # if we matched all words, store match info
     #
     if ($midx == $widx) {	 
       $matchterm = $title;
       $matchlen = $widx + $skip + 1;
-      print " *** xref: matched all words, $midx = $widx\n" if $COND;
-      print " *** xref: matchterm is [$matchterm]" . 
-	" with length $matchlen\n" if $COND;
+      #print " *** xref: matched all words, $midx = $widx\n" if $COND;
+      #print " *** xref: matchterm is [$matchterm]" . 
+      #" with length $matchlen\n" if $COND;
       last;
     }
   }
@@ -1248,7 +1260,7 @@ sub insertmatch {
       $safe = 0 if ($pos < ($ppos + $matches->{$ppos}->{'length'}));
     } 
     if ($safe) {
-      warn "*** xref: adding match $term at $pos, length $length\n";
+      #warn "*** xref: adding match $term at $pos, length $length\n";
       $matches->{$pos}={
 			'term'=>$term, 
 			'length'=>$length };

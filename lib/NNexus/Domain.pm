@@ -43,10 +43,7 @@ sub getdomainblacklist {
       my $content = get("$url");
       if ( $content ) {
 	my $ref = XMLin($content);
-	my @bl = split( /\s*,\s*/, $d->{'blacklist'} ) if defined $d->{blacklist};
-	foreach my $b ( @bl ) {
-	  $b = lc($b);
-	}
+	my @bl = map {lc($_);} split( /\s*,\s*/, $ref->{'blacklist'} ) if defined $ref->{blacklist};
 	return \@bl;
       }
     }
@@ -112,12 +109,11 @@ sub getdomainidfromdb {
 #
 
 #CACHE this stuff.
-my %domaincache = ();
+our %domaincache = ();
 sub getdomainhash {
   my ($db,$domid) = @_;
-
-  print "getting domain hash for domain $domid\n";
   if ( ! exists $domaincache{$domid} ) {
+    print "getting domain hash for domain $domid\n";
     my $sth = $db->cachedPrepare( "select * from domain where domainid = ?" );
     $sth->execute( $domid );
     if ( my $row = $sth->fetchrow_hashref() ) {
