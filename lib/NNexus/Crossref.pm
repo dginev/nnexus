@@ -104,7 +104,7 @@ sub linkHTMLText {
   my ($self,$text) = @_;
   my $state = $self->{state_information};
   # Skip if in a silly element:
-  if ($self->{noparse}>0) {
+  if ($self->{noparse} && ($self->{noparse}>0)) {
     $self->{annotated}.=$text;
     return;
   }

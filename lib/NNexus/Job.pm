@@ -1,3 +1,17 @@
+# /=====================================================================\ #
+# |  NNexus Autolinker                                                  | #
+# | Job Request Module                                                  | #
+# |=====================================================================| #
+# | Part of the Planetary project: http://trac.mathweb.org/planetary    | #
+# |  Research software, produced as part of work done by:               | #
+# |  the KWARC group at Jacobs University                               | #
+# | Copyright (c) 2012                                                  | #
+# | Released under the GNU Public License                               | #
+# |---------------------------------------------------------------------| #
+# | Deyan Ginev <d.ginev@jacobs-university.de>                  #_#     | #
+# | http://kwarc.info/people/dginev                            (o o)    | #
+# \=========================================================ooo==U==ooo=/ #
+
 package NNexus::Job;
 use strict;
 use warnings;
@@ -116,3 +130,58 @@ sub link_entry {
 
 __END__
 
+=pod 
+
+=head1 NAME
+
+C<NNexus::Job> - Class for Servicing Job Request to NNexus
+
+=head1 SYNOPSIS
+
+    use NNexus::Job;
+    my $job = NNexus::Job->new(config=>$config,payload=>$payload,format=>$format,jobtype=>$operation,
+   			       domain=>$domain);
+    $job->execute;
+    my $result = $job->result;
+
+=head1 DESCRIPTION
+
+This class serves as an encapsulation for users' NNexus requests, driven by a minimal API.
+
+=head2 METHODS
+
+=over 4
+
+=item C<< my $job = NNexus::Job->new(%options); >>
+
+Creates a new job object, customized via an options hash. Admissible options are:
+  - payload: The textual payload to be autolinked/indexed/etc.
+  - format: The format of the given payload. Supported: tex|html
+  - jobtype: Operation to be performed. 
+      * autolink: Autolinks a given payload returning a result in the same format
+      * TODO: Add more
+  - domain: Domain to use as the reference knowledge base for autolinking/indexing
+  - config: An initialized NNexus::Config object (typically internal)
+
+=item C<< $job->execute; >>
+
+Executes the job prepared by the new method.
+
+=item C<< $job->result; >>
+
+Retrieves the job result. In the case of autolinking, that is a result payload, in the case
+  of indexing a response status, etc.
+
+=back
+
+=head1 AUTHOR
+
+Deyan Ginev <d.ginev@jacobs-university.de>
+
+=head1 COPYRIGHT
+
+ Research software, produced as part of work done by 
+ the KWARC group at Jacobs University Bremen.
+ Released under the GNU Public License
+
+=cut
