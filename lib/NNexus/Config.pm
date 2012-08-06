@@ -9,7 +9,7 @@ use NNexus::DB;
 
 sub new {
   my ($class,$opts) = @_;
-  $opts = XMLin('/var/www/nnexus/baseconf.xml') unless defined $opts;
+  $opts = XMLin('./baseconf.xml') unless defined $opts;
   print "Starting NNexus with configuration:\n";
   print Dumper( $opts );
   $opts->{nnexus_db} = NNexus::DB->new(config=>$opts);

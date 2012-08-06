@@ -6,7 +6,6 @@ use utf8;
 use Data::Dumper;
 use Time::HiRes qw ( time alarm sleep );
 
-# use NNexus::Latex;
 use NNexus::Morphology qw(getnonpossessive depluralize ispossessive isplural);
 use NNexus::Linkpolicy qw (post_resolve_linkpolicy);
 use NNexus::Concepts qw(getpossiblematches);
@@ -955,7 +954,6 @@ sub getanchor {
 }
 
 # build a match description structure based on text and synonyms list
-#
 sub findmatches {
   my ($db,$text) = @_;
 
@@ -966,42 +964,21 @@ sub findmatches {
 
   my %termlist = ();
 
-  #dwarn "*** xref: text is [$text]";
-  #
-  #? this was already done so why do again?
-  #
-  #($text,) = getEscapedWords($text);	# pull out \PMlinkescapeword/phrase
-  #	my @tlist = split(/\s+/,$text);
   my @tlist = split(/(\W+)/, $text);
-  #	print Dumper( \@tlist );
-
   my %matches;	       # main matches hash (hash key is word position)
-
-  #my $terms = \%terms;
 
   # loop through words in the text. this is the O(m) main loop.
   my $tlen = $#tlist+1;
   for (my $i = 0; $i < $tlen; $i++) {
-
-    #		my $stag = getstarttag($tlist[$i]);	# get tags around first word 
-    #		my $etag = getendtag($tlist[$i]);			
-
     # if the word is of the form @@\d+@@, ##\d+##, __\w+-- we skip it
     my $word = $tlist[$i];
-    if ( $word =~ /\@\@\d+\@\@/ || $word =~ /\#\#\d+\#\#/ || $word =~ /__\w+__/ ||
-	 $word =~ /^\d+$/ || length($word) < 2) {
+    next if ( $word =~ /\@\@\d+\@\@/ || $word =~ /\#\#\d+\#\#/ || $word =~ /__\w+__/ ||
+	 $word =~ /^\d+$/ || length($word) < 2);
 
-      #	print "skipping special word: $word\n";
-      next;
-    }
-
-    #		my $word = bareword($tlist[$i]);
     $word = lc($tlist[$i]);	#make sure it is lowercase for hash
-    #print "building matches for $word\n";
     my $COND = 0;		# turn this to 1 to debug this portion
 
     # look for the first word, then try to match additional words
-    #
     my $rv = 0;
     my $fail = 1;
 
