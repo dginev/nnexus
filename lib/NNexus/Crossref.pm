@@ -81,12 +81,12 @@ sub crossReferenceHTML {
 
   my $parser = HTML::Parser->new(
 			       'api_version' => 3,
-			       'start_h' => [sub {$_[0]->{noparse}=1 if $_[1]=~/^style|title|script|xmp|iframe|math|svg|a|(h\d+)$/;
+			       'start_h' => [sub {$_[0]->{noparse}++ if $_[1]=~/^style|title|script|xmp|iframe|math|svg|a|(h\d+)/;
 						  $_[0]->{annotated} .= $_[2];}, 'self, tagname, text'],
-			       'end_h' => [sub {$_[0]->{noparse}=0;
+			       'end_h' => [sub {$_[0]->{noparse}--  if $_[1]=~/^\<\/style|title|script|xmp|iframe|math|svg|a|(h\d+)\>$/;
 						$_[0]->{annotated} .= $_[1];}, 'self,text'],
 			       'default_h' => [sub { $_[0]->{annotated} .= $_[1]; }, 'self, text'],
-			       'text_h'      => [\&linkHTMLText, 'self,dtext']
+			       'text_h'      => [\&linkHTMLText, 'self,text']
 			      );
   $parser->{annotated} = "";
   $parser->{linkarray} = [];
@@ -104,7 +104,7 @@ sub linkHTMLText {
   my ($self,$text) = @_;
   my $state = $self->{state_information};
   # Skip if in a silly element:
-  if ($self->{noparse}) {
+  if ($self->{noparse}>0) {
     $self->{annotated}.=$text;
     return;
   }
