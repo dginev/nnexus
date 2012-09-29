@@ -3,12 +3,12 @@
 # This is the main entry point of the nnexus server
 # written by James Gardner for Google's Summer of Code 2006
 # ----------------------------------------------------------------
-use lib '/var/www/nnexus/';
+use lib './lib';
 package NNexus;
 use strict;
 use IO::Socket;
 use Sys::Hostname;
-use NNexus::Response;
+# use NNexus::Response;
 use Data::Dumper;
 use NNexus::DB;
 use NNexus::Config;
@@ -25,7 +25,7 @@ $SIG{CHLD} = \&REAP;
 # set up the config hash and open the db and intialize the db with new info from the
 # config file
 #
-init();
+NNexus::Config::new();
 
 my $sock = new IO::Socket::INET(
 			LocalHost => 'localhost',
