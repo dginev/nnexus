@@ -1,54 +1,17 @@
-<body
-><head></head><body><script type="text/javascript">
-var menu = new Array();
-menu[0] = new Array();
-menu[0][0] = '<a href="http://planetmath.org/?op=getobj;from=objects;id=450">PlanetMath</a>';
-menu[1] = new Array();
-menu[1][0] = '<a href="http://planetmath.org/?op=getobj;from=objects;id=78">PlanetMath</a>';
-menu[2] = new Array();
-menu[2][0] = '<a href="http://planetmath.org/?op=getobj;from=objects;id=1534">PlanetMath</a>';
-menu[3] = new Array();
-menu[3][0] = '<a href="http://planetmath.org/?op=getobj;from=objects;id=5926">PlanetMath</a>';
-menu[4] = new Array();
-menu[4][0] = '<a href="http://planetmath.org/?op=getobj;from=objects;id=2256">PlanetMath</a>';
-menu[5] = new Array();
-menu[5][0] = '<a href="http://planetmath.org/?op=getobj;from=objects;id=4492">PlanetMath</a>';
-menu[6] = new Array();
-menu[6][0] = '<a href="http://planetmath.org/?op=getobj;from=objects;id=3521">PlanetMath</a>';
-menu[7] = new Array();
-menu[7][0] = '<a href="http://planetmath.org/?op=getobj;from=objects;id=1635">PlanetMath</a>';
-menu[8] = new Array();
-menu[8][0] = '<a href="http://planetmath.org/?op=getobj;from=objects;id=5905">PlanetMath</a>';
-menu[9] = new Array();
-menu[9][0] = '<a href="http://planetmath.org/?op=getobj;from=objects;id=6153">PlanetMath</a>';
-menu[10] = new Array();
-menu[10][0] = '<a href="http://planetmath.org/?op=getobj;from=objects;id=10602">PlanetMath</a>';
-menu[11] = new Array();
-menu[11][0] = '<a href="http://planetmath.org/?op=getobj;from=objects;id=3264">PlanetMath</a>';
-menu[12] = new Array();
-menu[12][0] = '<a href="http://planetmath.org/?op=getobj;from=objects;id=6153">PlanetMath</a>';
-menu[13] = new Array();
-menu[13][0] = '<a href="http://planetmath.org/?op=getobj;from=objects;id=2604">PlanetMath</a>';
-menu[14] = new Array();
-menu[14][0] = '<a href="http://planetmath.org/?op=getobj;from=objects;id=388">PlanetMath</a>';
+<html><head></head><body>
+Let S be a <a class="PlanetMath_autolink" id="autolink_14" href="http://planetmath.org/?op=getobj;from=objects;id=388" >semigroup</a>. An <a class="PlanetMath_autolink" id="autolink_13" href="http://planetmath.org/?op=getobj;from=objects;id=2604" >idempotent</a> eS is <a class="PlanetMath_autolink" id="autolink_12" href="http://planetmath.org/?op=getobj;from=objects;id=6153" >primitive</a> if for every other idempotent <a class="PlanetMath_autolink" id="autolink_11" href="http://planetmath.org/?op=getobj;from=objects;id=3264" >fS</a> , ef=fe=f=0e=f
 
-</script>
-Let S be a <a class="PlanetMath nndropdown" id="menu14" href="http://planetmath.org/?op=getobj;from=objects;id=388" onClick="return clickreturnvalue()" onMouseover="dropdown(this, 14)" >semigroup</a>. An <a class="PlanetMath nndropdown" id="menu13" href="http://planetmath.org/?op=getobj;from=objects;id=2604" onClick="return clickreturnvalue()" onMouseover="dropdown(this, 13)" >idempotent</a> eS is <a class="PlanetMath nndropdown" id="menu12" href="http://planetmath.org/?op=getobj;from=objects;id=6153" onClick="return clickreturnvalue()" onMouseover="dropdown(this, 12)" >primitive</a> if for every other idempotent <a class="PlanetMath nndropdown" id="menu11" href="http://planetmath.org/?op=getobj;from=objects;id=3264" onClick="return clickreturnvalue()" onMouseover="dropdown(this, 11)" >fS</a> , ef=fe=f=0e=f
-
-A semigroup S (without <a class="PlanetMath nndropdown" id="menu10" href="http://planetmath.org/?op=getobj;from=objects;id=10602" onClick="return clickreturnvalue()" onMouseover="dropdown(this, 10)" >zero</a>) is <a class="PlanetMath nndropdown" id="menu9" href="http://planetmath.org/?op=getobj;from=objects;id=6153" onClick="return clickreturnvalue()" onMouseover="dropdown(this, 9)" >completely simple</a> if it is <a class="PlanetMath nndropdown" id="menu8" href="http://planetmath.org/?op=getobj;from=objects;id=5905" onClick="return clickreturnvalue()" onMouseover="dropdown(this, 8)" >simple</a> and <a class="PlanetMath nndropdown" id="menu7" href="http://planetmath.org/?op=getobj;from=objects;id=1635" onClick="return clickreturnvalue()" onMouseover="dropdown(this, 7)" >contains</a> a primitive idempotent.
+A semigroup S (without <a class="PlanetMath_autolink" id="autolink_10" href="http://planetmath.org/?op=getobj;from=objects;id=10602" >zero</a>) is <a class="PlanetMath_autolink" id="autolink_9" href="http://planetmath.org/?op=getobj;from=objects;id=6153" >completely simple</a> if it is <a class="PlanetMath_autolink" id="autolink_8" href="http://planetmath.org/?op=getobj;from=objects;id=5905" >simple</a> and <a class="PlanetMath_autolink" id="autolink_7" href="http://planetmath.org/?op=getobj;from=objects;id=1635" >contains</a> a primitive idempotent.
 
 A semigroup S is completely 0 -simple if it is 0 -simple and contains a primitive idempotent.
 
-Completely simple and completely 0 -<a class="PlanetMath nndropdown" id="menu6" href="http://planetmath.org/?op=getobj;from=objects;id=3521" onClick="return clickreturnvalue()" onMouseover="dropdown(this, 6)" >simple semigroups</a> maybe characterised by the Rees <a class="PlanetMath nndropdown" id="menu5" href="http://planetmath.org/?op=getobj;from=objects;id=4492" onClick="return clickreturnvalue()" onMouseover="dropdown(this, 5)" >Theorem</a> ([Ho95], Theorem 3.2.3).
+Completely simple and completely 0 -<a class="PlanetMath_autolink" id="autolink_6" href="http://planetmath.org/?op=getobj;from=objects;id=3521" >simple semigroups</a> maybe characterised by the Rees <a class="PlanetMath_autolink" id="autolink_5" href="http://planetmath.org/?op=getobj;from=objects;id=4492" >Theorem</a> ([Ho95], Theorem 3.2.3).
 
 Note:
 
-A semigroup (without zero) is completely simple if and only if it is <a class="PlanetMath nndropdown" id="menu4" href="http://planetmath.org/?op=getobj;from=objects;id=2256" onClick="return clickreturnvalue()" onMouseover="dropdown(this, 4)" >regular</a> and <a class="PlanetMath nndropdown" id="menu3" href="http://planetmath.org/?op=getobj;from=objects;id=5926" onClick="return clickreturnvalue()" onMouseover="dropdown(this, 3)" >weakly cancellative</a>.
+A semigroup (without zero) is completely simple if and only if it is <a class="PlanetMath_autolink" id="autolink_4" href="http://planetmath.org/?op=getobj;from=objects;id=2256" >regular</a> and <a class="PlanetMath_autolink" id="autolink_3" href="http://planetmath.org/?op=getobj;from=objects;id=5926" >weakly cancellative</a>.
 
-A simple semigroup (without zero) is completely simple if and only if it is <a class="PlanetMath nndropdown" id="menu2" href="http://planetmath.org/?op=getobj;from=objects;id=1534" onClick="return clickreturnvalue()" onMouseover="dropdown(this, 2)" >completely regular</a>.
+A simple semigroup (without zero) is completely simple if and only if it is <a class="PlanetMath_autolink" id="autolink_2" href="http://planetmath.org/?op=getobj;from=objects;id=1534" >completely regular</a>.
 
-A 0 -simple semigroup is completely 0 -simple if and only if it is <a class="PlanetMath nndropdown" id="menu1" href="http://planetmath.org/?op=getobj;from=objects;id=78" onClick="return clickreturnvalue()" onMouseover="dropdown(this, 1)" >group</a>-<a class="PlanetMath nndropdown" id="menu0" href="http://planetmath.org/?op=getobj;from=objects;id=450" onClick="return clickreturnvalue()" onMouseover="dropdown(this, 0)" >bound</a>.
-</body></body
-><links
-></links
->
+A 0 -simple semigroup is completely 0 -simple if and only if it is <a class="PlanetMath_autolink" id="autolink_1" href="http://planetmath.org/?op=getobj;from=objects;id=78" >group</a>-<a class="PlanetMath_autolink" id="autolink_0" href="http://planetmath.org/?op=getobj;from=objects;id=450" >bound</a>.
+</body></html>
