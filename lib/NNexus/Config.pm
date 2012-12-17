@@ -5,6 +5,7 @@ use XML::Simple;
 use Data::Dumper;
 use NNexus::Concepts;
 use NNexus::Classification;
+use NNexus::Domain;
 use NNexus::DB;
 
 sub new {

@@ -2,15 +2,16 @@
 # ----------------------------------------------------------------
 # A Mojo Web App as a NNexus entry point
 # Deyan Ginev, <d.ginev@jacobs-university.de>
-# GPL code
+# GPLv3 code
 # ----------------------------------------------------------------
 use File::Basename;
 my $FILE_BASE;
 BEGIN {
     $FILE_BASE = dirname(__FILE__);
 }
-use lib $FILE_BASE."/lib";
-#use lib $FILE_BASE."/NNexus";
+if (-e $FILE_BASE."/../lib") {
+  use lib $FILE_BASE."/../lib";
+}
 
 use Mojolicious::Lite;
 use Mojo::JSON;
@@ -27,7 +28,9 @@ use Data::Dumper;
 
 our $version = '0.1';
 # Configuration is server-level
-our $config = NNexus::Config->new;
+my $opts;
+$opts = XMLin($_[0]) if ($_[0] && (-e $_[0]));
+our $config = NNexus::Config->new($opts);
 
 $ENV{MOJO_HOME} = '.' unless defined $ENV{MOJO_HOME};
 $ENV{MOJO_MAX_MESSAGE_SIZE} = 10485760; # 10 MB file upload limit
