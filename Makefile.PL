@@ -23,7 +23,10 @@ WriteMakefile(NAME => 'NNexus',
 				'Mojolicious'=>0,
 				'Graph'=>0,
 				'DBI'=>0,
-				'DBD::mysql'=>0
+				'DBD::mysql'=>0,
+				'LWP'=>0,
+				'JSON'=>0,
+				'Encode'=>0
 				# We also need mysql server installed,
 				# Any way to mark this in the dependencies?
 			   },

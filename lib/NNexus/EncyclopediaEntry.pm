@@ -263,5 +263,3 @@ sub getobjectidbycid {
 }
 
 1;
-
-__END__

@@ -8,6 +8,9 @@
 # | Copyright (c) 2012                                                  | #
 # | Released under the GNU Public License                               | #
 # |---------------------------------------------------------------------| #
+# | Adapted from the original NNexus code by                            | #
+# |                                  James Gardner and Aaron Krowne     | #
+# |---------------------------------------------------------------------| #
 # | Deyan Ginev <d.ginev@jacobs-university.de>                  #_#     | #
 # | http://kwarc.info/people/dginev                            (o o)    | #
 # \=========================================================ooo==U==ooo=/ #
