@@ -65,3 +65,13 @@ The exact API functionality and their arguments are as follows:
   deleteobject     : $objid
   checkvalid       : $objid
 ```
+
+# Status
+
+This is a fork and rewrite of the original NNexus code by James Gardner (pebbler@gmail.com).
+The current refactoring is pre-alpha and is under active development. Watch this space for frequent updates.
+
+# Contact
+
+For any questions and support requests, contact the current package maintainers:
+Deyan Ginev (d.ginev@jacobs-university.de)
