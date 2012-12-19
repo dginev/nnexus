@@ -12,13 +12,19 @@ apt-get install libmojolicious-perl libxml-simple-perl \
   libunicode-string-perl libgraph-perl libjson-perl
 ```
 
-Then, in order to run the server:
+Then, in order to quickly run the server:
 
 ```
-morbo --listen=http://*:3001 nnexus setup/baseconf.xml
+perl Makefile.PL ; make
+morbo --listen=http://*:3001 blib/script/nnexus setup/baseconf.xml
 ```
 
 Note: While morbo is nice for development, deploying through Apache or Hypnotoad would be clearly the way to go for production use.
+Work is underway into making NNexus into a proper service that you would be able to boot via the standard
+
+```sh
+sudo service nnexus start
+```
 
 ## Connecting from a client
 
