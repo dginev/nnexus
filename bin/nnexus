@@ -73,8 +73,39 @@ post '/' => sub {
   $_[0]->render(json=>{result=>$job->result});
 };
 
+# Shortcut paths:
 post '/autolink' => sub {
   my $job = $_[0]->prepare_job(function=>'linkentry');
+  $job->execute;
+  $_[0]->render(json=>{result=>$job->result});
+};
+post '/linkentry' => sub {
+  my $job = $_[0]->prepare_job(function=>'linkentry');
+  $job->execute;
+  $_[0]->render(json=>{result=>$job->result});
+};
+post '/addobject' => sub {
+  my $job = $_[0]->prepare_job(function=>'addobject');
+  $job->execute;
+  $_[0]->render(json=>{result=>$job->result});
+};
+post '/updateobject' => sub {
+  my $job = $_[0]->prepare_job(function=>'updateobject');
+  $job->execute;
+  $_[0]->render(json=>{result=>$job->result});
+};
+post '/deleteobject' => sub {
+  my $job = $_[0]->prepare_job(function=>'deleteobject');
+  $job->execute;
+  $_[0]->render(json=>{result=>$job->result});
+};
+post '/updatelinkpolicy' => sub {
+  my $job = $_[0]->prepare_job(function=>'updatelinkpolicy');
+  $job->execute;
+  $_[0]->render(json=>{result=>$job->result});
+};
+post '/checkvalid' => sub {
+  my $job = $_[0]->prepare_job(function=>'checkvalid');
   $job->execute;
   $_[0]->render(json=>{result=>$job->result});
 };

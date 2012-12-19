@@ -18,6 +18,7 @@
 package NNexus::Job;
 use strict;
 use warnings;
+use feature qw(say switch);
 
 use NNexus::Domain qw(getdomainid);
 use NNexus::EncyclopediaEntry qw(getobjectid getobjecthash);
@@ -26,23 +27,40 @@ use NNexus::Crossref qw(crossReference);
 sub new {
   my ($class,%opts) = @_;
   $opts{format} = lc($opts{format});
+  $opts{result} = {};
   bless \%opts, $class;
 }
 
 sub execute {
   my ($self) = @_;
-  if ($self->{function} eq 'linkentry') {
-    $self->link_entry;
-  } else {
-    # ... TODO: Support ALL API methods
+  given ($self->{function}) {
+    when('linkentry') {$self->_link_entry;}
+    when('addobject') {$self->_add_object;}
+    when('updateobject') {$self->_update_object;}
+    when('deleteobject') {$self->_delete_object;}
+    when('updatelinkpolicy') {$self->_update_link_policy;}
+    when('checkvalid') {$self->_check_valid;}
+    default {$self->_fail_with("Invalid action, aborting!"); }
   }
 }
 
+sub _fail_with {
+  my ($self,$message)=@_;
+  # TODO: Spec this out, maybe similar to LaTeXML?
+  my $result = {payload=>q{},message=>$message,status=>'Failed!'};
+  $self->{result} = $result;
+}
 sub result {
-  $_[0]->{result};
+  $_[0]->{result}->{payload};
+}
+sub message {
+  $_[0]->{result}->{message};
+}
+sub status {
+  $_[0]->{result}->{status};
 }
 
-sub link_entry {
+sub _link_entry {
   my ($self) = @_;
   my $config = $self->{config};
   my $db=$config->get_DB;
@@ -125,9 +143,16 @@ sub link_entry {
   #print "linked\t$objid\t$numlinks\t$total sec\t$title\n";
   #print "links=",join(', ', @{$links});
 
-  $self->{result}=$linkedbody;
+  $self->{result}={payload=>$linkedbody,message=>'No obvious problems.', status=>'OK'};
   $linkedbody;
 }
+
+sub _add_object { $_[0]->_fail_with('Not supported yet!');}
+sub _update_object { $_[0]->_fail_with('Not supported yet!');}
+sub _delete_object { $_[0]->_fail_with('Not supported yet!');}
+sub _update_link_policy { $_[0]->_fail_with('Not supported yet!');}
+sub _check_valid { $_[0]->_fail_with('Not supported yet!');}
+
 
 1;
 
@@ -146,6 +171,8 @@ C<NNexus::Job> - Class for Servicing Job Request to NNexus
    			       domain=>$domain);
     $job->execute;
     my $result = $job->result;
+    my $message = $job->message;
+    my $status = $job->status;
 
 =head1 DESCRIPTION
 
