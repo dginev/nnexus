@@ -96,13 +96,24 @@ sub crossReferenceHTML {
 
   my $parser = HTML::Parser->new(
 			       'api_version' => 3,
-			       'start_h' => [sub {$_[0]->{noparse}++ if $_[1]=~/^style|title|script|xmp|iframe|math|svg|a|(h\d+)/;
-						  $_[0]->{annotated} .= $_[2];}, 'self, tagname, text'],
-			       'end_h' => [sub {$_[0]->{noparse}--  if $_[1]=~/^\<\/style|title|script|xmp|iframe|math|svg|a|(h\d+)\>$/;
-						$_[0]->{annotated} .= $_[1];}, 'self,text'],
+			       'start_h' => [sub {
+              if ($_[1]=~/^head|style|title|script|xmp|iframe|math|svg|a|(h\d+)/) {
+                $_[0]->{fresh_skip}=1;
+                $_[0]->{noparse}++;
+              } else {
+                $_[0]->{fresh_skip}=0;
+              }
+						  $_[0]->{annotated} .= $_[2];}
+              , 'self, tagname, text'],
+			       'end_h' => [sub {
+              $_[0]->{noparse}--
+              if (($_[1]=~/^\<\/head|style|title|script|xmp|iframe|math|svg|a|(h\d+)\>$/) ||
+                ((length($_[1])==0) && ($_[0]->{fresh_skip})));
+						  $_[0]->{annotated} .= $_[1];}, 'self,text'],
 			       'default_h' => [sub { $_[0]->{annotated} .= $_[1]; }, 'self, text'],
 			       'text_h'      => [\&linkHTMLText, 'self,text']
 			      );
+  $parser->empty_element_tags(1);
   $parser->{annotated} = "";
   $parser->{linkarray} = [];
   $parser->{linked}={};
@@ -209,14 +220,14 @@ sub crossReference {
   $opts{nolink}=$nolink;
 
   my $DEBUG = 0;
-  print "LINKING IN MODE $format\n";
+  #print STDERR "LINKING IN MODE $format\n";
   if ( $format eq 'l2h' ) {
     return crossReferenceLaTeX(%opts);
   } elsif ( $format eq 'html' ) {
-    print "LINKING IN HTML MODE\n"	if $DEBUG;
+    #print STDERR "LINKING IN HTML MODE\n"	if $DEBUG;
     return crossReferenceHTML(%opts);
   } else {
-    print "Mode $format is not yet supported\n";
+    print STDERR "Mode $format is not yet supported\n";
   }
 }
 

@@ -127,7 +127,7 @@ sub _link_entry {
 					   detail=>$mode
 					  );
   } 
-  #print "BODY LINKED: $linkedbody\n";
+  #print STDERR "BODY LINKED: $linkedbody\n";
   if ( $objid != -1 ) {
     validateobject($objid);	# set the object link stuff to valid
   }
@@ -135,8 +135,9 @@ sub _link_entry {
   my $numlinks = $#{$links} + 1;
   my $end = time();
   my $total = $end - $start;
-  #print "linked\t$objid\t$numlinks\t$total sec\t$title\n";
-  #print "links=",join(', ', @{$links});
+  print STDERR "Created $numlinks links.\n";
+  #print STDERR "linked\t$objid\t$numlinks\t$total sec\t$title\n";
+  #print STDERR "links=",join(', ', @{$links});
 
   $self->{result}={payload=>$linkedbody,message=>'No obvious problems.', status=>'OK'};
   $linkedbody;
