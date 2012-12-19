@@ -15,8 +15,10 @@ apt-get install libmojolicious-perl libxml-simple-perl \
 Then, in order to run the server:
 
 ```
-morbo --listen=http://*:3001 nnexusmojo.pl
+morbo --listen=http://*:3001 nnexus setup/baseconf.xml
 ```
+
+Note: While morbo is nice for development, deploying through Apache or Hypnotoad would be clearly the way to go for production use.
 
 ## Connecting from a client
 
@@ -50,7 +52,7 @@ autolinked in the future, if you send in JSON like this:
 
 ```json
   {"function":"linkentry",
-   "text":"bla bla bar agh garble blorg",
+   "body":"bla bla bar agh garble blorg",
    "format":"xhtml",
    "nolink":null}
 ```

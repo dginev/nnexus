@@ -20,7 +20,7 @@ use strict;
 use warnings;
 
 use NNexus::Domain qw(getdomainid);
-use NNexus::Object qw(getobjectid getobjecthash);
+use NNexus::EncyclopediaEntry qw(getobjectid getobjecthash);
 use NNexus::Crossref qw(crossReference);
 
 sub new {
@@ -31,7 +31,7 @@ sub new {
 
 sub execute {
   my ($self) = @_;
-  if ($self->{jobtype} eq 'linkentry') {
+  if ($self->{function} eq 'linkentry') {
     $self->link_entry;
   } else {
     # ... TODO: Support ALL API methods
@@ -46,7 +46,7 @@ sub link_entry {
   my ($self) = @_;
   my $config = $self->{config};
   my $db=$config->get_DB;
-  my $body = $self->{payload};
+  my $body = $self->{body};
   my $format = $self->{format}||'html'; # default is html, l2h is broken
   my $domain = $self->{domain};
   # 0 - return back fully linked html
@@ -142,7 +142,7 @@ C<NNexus::Job> - Class for Servicing Job Request to NNexus
 =head1 SYNOPSIS
 
     use NNexus::Job;
-    my $job = NNexus::Job->new(config=>$config,payload=>$payload,format=>$format,jobtype=>$operation,
+    my $job = NNexus::Job->new(config=>$config,body=>$body,format=>$format,function=>$function,
    			       domain=>$domain);
     $job->execute;
     my $result = $job->result;
@@ -158,10 +158,10 @@ This class serves as an encapsulation for users' NNexus requests, driven by a mi
 =item C<< my $job = NNexus::Job->new(%options); >>
 
 Creates a new job object, customized via an options hash. Admissible options are:
-  - payload: The textual payload to be autolinked/indexed/etc.
-  - format: The format of the given payload. Supported: tex|html
-  - jobtype: Operation to be performed. 
-      * autolink: Autolinks a given payload returning a result in the same format
+  - body: The textual payload to be autolinked/indexed/etc.
+  - format: The format of the given body. Supported: tex|html
+  - function: Operation to be performed. 
+      * linkentry: Autolinks a given body returning a result in the same format
       * TODO: Add more
   - domain: Domain to use as the reference knowledge base for autolinking/indexing
   - config: An initialized NNexus::Config object (typically internal)

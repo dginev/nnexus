@@ -25,7 +25,7 @@ use Time::HiRes qw ( time alarm sleep );
 use NNexus::Morphology qw(getnonpossessive depluralize ispossessive isplural);
 use NNexus::Linkpolicy qw (post_resolve_linkpolicy);
 use NNexus::Concepts qw(getpossiblematches);
-use NNexus::Object qw(getobjecthash);
+use NNexus::EncyclopediaEntry qw(getobjecthash);
 use NNexus::Util qw(inset uniquify);
 use NNexus::Domain qw(getdomainblacklist getdomainpriorities getdomainhash getdomainid);
 

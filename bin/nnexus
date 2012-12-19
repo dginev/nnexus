@@ -23,13 +23,21 @@ use strict;
 
 use NNexus::Job;
 use NNexus::Config;
-
+use XML::Simple;
 use Data::Dumper;
 
 our $version = '0.1';
 # Configuration is server-level
+
 my $opts;
-$opts = XMLin($_[0]) if ($_[0] && (-e $_[0]));
+if ($ARGV[0]) {
+  print STDERR "\nBase Configuration to be read from: $ARGV[0]\n";
+  if (-e $ARGV[0]) {
+    $opts = XMLin($ARGV[0])
+  } else {
+    print STDERR "Error: No such file $ARGV[0]! Expect trouble...\n";
+  }
+}
 our $config = NNexus::Config->new($opts);
 
 $ENV{MOJO_HOME} = '.' unless defined $ENV{MOJO_HOME};
@@ -38,8 +46,8 @@ $ENV{MOJO_MAX_MESSAGE_SIZE} = 10485760; # 10 MB file upload limit
 # Make signed cookies secure
 app->secret('NNexus auto-linking for the win!');
 
-post '/autolink' => sub {
-  my $self = shift;
+helper prepare_job => sub {
+  my ($self,%override) = @_;
   my $get_params = $self->req->url->query->params || [];
   my $post_params = $self->req->body_params->params || [];
   if (scalar(@$post_params) == 1) {
@@ -49,16 +57,27 @@ post '/autolink' => sub {
   }
   my $parameters = { @$get_params, @$post_params };
   # Currently , we only support :
-  my $payload = $parameters->{'body'};
-  my $format = $parameters->{'format'}||'html';
-  my $operation = $parameters->{'function'}||'linkentry';
-  my $domain = $parameters->{'domain'}||'planetmath';
-  my $job = NNexus::Job->new(config=>$config,payload=>$payload,format=>$format,jobtype=>$operation,
-			    domain=>$domain);
-  $job->execute;
-  $self->render(json=>{result=>$job->result});
+  $parameters->{'format'} //= 'html';
+  $parameters->{'function'} //= 'linkentry';
+  $parameters->{'domain'} //= 'planetmath';
+  foreach my $key(keys %override) {
+    $parameters->{$key} = $override{$key};
+  }
+  $parameters->{'config'} = $config;
+  return NNexus::Job->new(%$parameters);
 };
 
+post '/' => sub {
+  my $job = $_[0]->prepare_job;
+  $job->execute;
+  $_[0]->render(json=>{result=>$job->result});
+};
+
+post '/autolink' => sub {
+  my $job = $_[0]->prepare_job(function=>'linkentry');
+  $job->execute;
+  $_[0]->render(json=>{result=>$job->result});
+};
 
 app->start;
 
