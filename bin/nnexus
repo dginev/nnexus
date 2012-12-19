@@ -70,44 +70,44 @@ helper prepare_job => sub {
 post '/' => sub {
   my $job = $_[0]->prepare_job;
   $job->execute;
-  $_[0]->render(json=>{result=>$job->result});
+  $_[0]->render(json=>$job->response);
 };
 
 # Shortcut paths:
 post '/autolink' => sub {
   my $job = $_[0]->prepare_job(function=>'linkentry');
   $job->execute;
-  $_[0]->render(json=>{result=>$job->result});
+  $_[0]->render(json=>$job->response);
 };
 post '/linkentry' => sub {
   my $job = $_[0]->prepare_job(function=>'linkentry');
   $job->execute;
-  $_[0]->render(json=>{result=>$job->result});
+  $_[0]->render(json=>$job->response);
 };
 post '/addobject' => sub {
   my $job = $_[0]->prepare_job(function=>'addobject');
   $job->execute;
-  $_[0]->render(json=>{result=>$job->result});
+  $_[0]->render(json=>$job->response);
 };
 post '/updateobject' => sub {
   my $job = $_[0]->prepare_job(function=>'updateobject');
   $job->execute;
-  $_[0]->render(json=>{result=>$job->result});
+  $_[0]->render(json=>$job->response);
 };
 post '/deleteobject' => sub {
   my $job = $_[0]->prepare_job(function=>'deleteobject');
   $job->execute;
-  $_[0]->render(json=>{result=>$job->result});
+  $_[0]->render(json=>$job->response);
 };
 post '/updatelinkpolicy' => sub {
   my $job = $_[0]->prepare_job(function=>'updatelinkpolicy');
   $job->execute;
-  $_[0]->render(json=>{result=>$job->result});
+  $_[0]->render(json=>$job->response);
 };
 post '/checkvalid' => sub {
   my $job = $_[0]->prepare_job(function=>'checkvalid');
   $job->execute;
-  $_[0]->render(json=>{result=>$job->result});
+  $_[0]->render(json=>$job->response);
 };
 
 app->start;

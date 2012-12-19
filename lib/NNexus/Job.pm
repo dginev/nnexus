@@ -50,14 +50,9 @@ sub _fail_with {
   my $result = {payload=>q{},message=>$message,status=>'Failed!'};
   $self->{result} = $result;
 }
-sub result {
-  $_[0]->{result}->{payload};
-}
-sub message {
-  $_[0]->{result}->{message};
-}
-sub status {
-  $_[0]->{result}->{status};
+sub response {
+  my $response = $_[0]->{result};
+  {result=>$response->{payload},message=>$response->{message},status=>$response->{status}};
 }
 
 sub _link_entry {
@@ -197,10 +192,12 @@ Creates a new job object, customized via an options hash. Admissible options are
 
 Executes the job prepared by the new method.
 
-=item C<< $job->result; >>
+=item C<< $job->response; >>
 
-Retrieves the job result. In the case of autolinking, that is a result payload, in the case
-  of indexing a response status, etc.
+Retrieves the job result. Returns a hash ref with three fields:
+ result: the job result (e.g. a payload for a linking job)
+ message: a human-readable description of the job
+ status: a machine-readable status report
 
 =back
 
