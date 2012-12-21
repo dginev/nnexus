@@ -19,12 +19,12 @@ package NNexus::Concepts;
 use strict;
 use warnings;
 
-use NNexus::Morphology qw(ispossessive isplural getnonpossessive depluralize);
+use NNexus::Morphology qw(is_possessive is_plural get_nonpossessive depluralize);
 use Encode qw( is_utf8 );
 
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(getpossiblematches);
+our @EXPORT_OK = qw(get_possible_matches);
 
 # this is a function that is called recursively to insure that all different encodings 
 # of a concept are inserted into the concepthash
@@ -60,12 +60,12 @@ sub addterm {
   }
 
   # add extra nonpossessive entry for possessives, linking to same obj
-  if (ispossessive($firstword)) {
-    addterm($objectid,getnonpossessive($terms), $encoding) 
+  if (is_possessive($firstword)) {
+    addterm($objectid,get_nonpossessive($terms), $encoding) 
   }
 
   # add extra nonplural entry for plurals, linking to same obj
-  if (isplural($terms)) {
+  if (is_plural($terms)) {
     addterm($objectid,depluralize($terms), $encoding) 
   }
 
@@ -148,7 +148,7 @@ sub getconcepts {
 # get the possible matches based on the first word of a concept
 # returns as an array containing a hash with newterm
 #
-sub getpossiblematches {
+sub get_possible_matches {
   my ($db,$word) = @_;
   my @matches = ();
 
@@ -160,10 +160,10 @@ sub getpossiblematches {
   }
 
   #print "Started with $word\n";
-  if (ispossessive($word) ) {
-    $word = getnonpossessive($word);
+  if (is_possessive($word) ) {
+    $word = get_nonpossessive($word);
   }
-  if ( isplural( $word ) ) {
+  if ( is_plural( $word ) ) {
     $word = depluralize($word);
   }
 
@@ -176,7 +176,7 @@ sub getpossiblematches {
   if ($DEBUG) {
     $finish = time();
     my $total = $finish - $start;
-    print "getpossiblematches: $total seconds\n";
+    print "get_possible_matches: $total seconds\n";
   }
   return @matches;
 }

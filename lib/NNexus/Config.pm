@@ -62,7 +62,7 @@ sub new {
 		       $k->{'nickname'}
 		    );
         $ins->finish();
-	      $k->{'domainid'} = getdomainidfromdb($k); 
+	      $k->{'domainid'} = getdb_domain_id($k); 
       } else {
         print STDERR "updating domain $name $k->{urltemplate}\n";
         $upd->execute(  $k->{'urltemplate'}, 

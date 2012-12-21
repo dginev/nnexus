@@ -22,12 +22,12 @@ use utf8;
 use Data::Dumper;
 use Time::HiRes qw ( time alarm sleep );
 
-use NNexus::Morphology qw(getnonpossessive depluralize ispossessive isplural);
+use NNexus::Morphology qw(get_nonpossessive depluralize is_possessive is_plural);
 use NNexus::Linkpolicy qw (post_resolve_linkpolicy);
-use NNexus::Concepts qw(getpossiblematches);
-use NNexus::EncyclopediaEntry qw(getobjecthash);
+use NNexus::Concepts qw(get_possible_matches);
+use NNexus::EncyclopediaEntry qw(get_object_hash);
 use NNexus::Util qw(inset uniquify);
-use NNexus::Domain qw(getdomainblacklist getdomainpriorities getdomainhash getdomainid);
+use NNexus::Domain qw(getdomainblacklist get_domain_priorities getdomainhash get_domain_id);
 
 use HTML::TreeBuilder;
 use HTML::Entities;
@@ -113,13 +113,13 @@ sub crossReferenceHTML {
 			       'default_h' => [sub { $_[0]->{annotated} .= $_[1]; }, 'self, text'],
 			       'text_h'      => [\&linkHTMLText, 'self,text']
 			      );
-  $parser->empty_element_tags(1);
   $parser->{annotated} = "";
   $parser->{linkarray} = [];
   $parser->{linked}={};
   $parser->{state_information}=\%opts; # Not pretty, but TODO: improve
   $parser->unbroken_text;
   $parser->xml_mode;
+  $parser->empty_element_tags(1);
   $parser->parse($text);
   $parser->eof();
 
@@ -159,7 +159,7 @@ sub linkHTMLText {
     }
   }
 
-  my $priorities = getdomainpriorities($state->{config}, $state->{domain} );
+  my $priorities = get_domain_priorities($state->{config}, $state->{domain} );
   my $linked_result;
   my @linkarray;		# array of href's
   for ( my $i = 0; $i < @$matches; $i++ ) {
@@ -173,15 +173,15 @@ sub linkHTMLText {
       my $rltext = $ltext[$pos+$length-1];
       my $texttolink = "";
       $texttolink = join( '', @ltext[$pos..$pos+$length-1] );
-      my $domainid = getdomainid($state->{config}, $state->{domain});
+      my $domainid = get_domain_id($state->{config}, $state->{domain});
       my $linktarget = $objects->{$domainid}[0][0];
       my $lnk = getlinkstring($state->{config}->get_DB, $linktarget, $texttolink );
       #print "looking at $lnk against ",$state->{domain},"\n";
       if ( $lnk =~ $state->{domain} ) {
-	#print "adding lnk = [$lnk]\n";
-     	push @linkarray, $lnk;
-	delete @ltext[$pos+1..$pos+$length-1] if ($length>1);
-	$ltext[$pos]=$lnk;
+      	#print "adding lnk = [$lnk]\n";
+     	  push @linkarray, $lnk;
+        delete @ltext[$pos+1..$pos+$length-1] if ($length>1);
+        $ltext[$pos]=$lnk;
       }
        # add to links table if we have a from id
        # 
@@ -352,7 +352,7 @@ sub disambiguate {
 
   my %domainobjects = ();  # {domainid}->[list of objects, in domain] 
   foreach my $id ( @ids ) {
-    my $obj = getobjecthash($db,$id);
+    my $obj = get_object_hash($db,$id);
     push @{$domainobjects{$obj->{'domainid'}}}, $id;
   }
 
@@ -383,7 +383,7 @@ sub disambiguate {
   }
 	
   foreach my $j ( @ids ) {
-    my $obj = getobjecthash($db,$j);
+    my $obj = get_object_hash($db,$j);
     #	print "adding $j to list\n";
     my @fixer = ($j,1);
     if ( defined $scorelist{$obj->{'domainid'}} ) {
@@ -596,7 +596,7 @@ sub makeLaTeXLinks {
   }
   my @ltext = split(/\s+/,$text);
   # we want to split based on anything that isn't a word
-  my $priorities = getdomainpriorities($config, $domain );
+  my $priorities = get_domain_priorities($config, $domain );
   foreach my $pos (sort {$b <=> $a} keys %$matches) {
     my $length = $matches->{$pos}->{'length'};
     my $objects = $matches->{$pos}->{'links'};
@@ -693,7 +693,7 @@ sub generateMenuCode {
 #this function returns a standard <a href=link>text</a> string
 sub getlinkstring { 
   my ($db , $objectid, $anchor) = @_;
-  my $object = getobjecthash( $db, $objectid );
+  my $object = get_object_hash( $db, $objectid );
   my $domain = getdomainhash( $db, $object->{'domainid'} );
   my $template = $domain->{'urltemplate'};
   my $linkstring = $template . HTML::Entities::encode($object->{'identifier'});
@@ -709,7 +709,7 @@ sub getmenulinkstring{
   my ($db,$objectid,$texttolink,$menuid,$menuwidth) = @_;
 
   print "IN getmenulinkstring";
-  my $object = getobjecthash($db, $objectid );
+  my $object = get_object_hash($db, $objectid );
   my $domain = getdomainhash($db, $object->{'domainid'} );
   #my $linkstring = $domain->{'urltemplate'} . $object->{'identifier'};
   my $linkstring = $domain->{'urltemplate'} . HTML::Entities::encode($object->{'identifier'});
@@ -788,7 +788,7 @@ sub substituteLaTeXLinks {
 
     #print $id;
 
-    my $identifier = getobjecthash($db,$id)->{'identifier'};
+    my $identifier = get_object_hash($db,$id)->{'identifier'};
     my $linkstring = $domain->{'urltemplate'} . $identifier;
 
     #		print "adding : " . $linkstring . "\n";
@@ -860,10 +860,10 @@ sub substituteHTMLLinks {
     }
 
     print STDERR "The ID: $id\n";
-    my $objhash = getobjecthash($db,$id);
+    my $objhash = get_object_hash($db,$id);
     #print Dumper( $objhash );
 
-    my $identifier = getobjecthash($db,$id)->{'identifier'};
+    my $identifier = get_object_hash($db,$id)->{'identifier'};
     my $linkstring = $domain->{'urltemplate'} . $identifier;
     $linkstring = uri_escape( $linkstring );
 
@@ -889,7 +889,7 @@ sub substituteHTMLLinks {
 	
   my %menuinfo = ();
   $menuinfo{'menuid'} = $nummenus;
-  #	if ( ! defined $objects->{getdomainid('planetmath.org')} ) {
+  #	if ( ! defined $objects->{get_domain_id('planetmath.org')} ) {
   #		push @optionallinks,
   #		"<a href=\"http://planet.math.uwaterloo.ca/?op=adden&title=$texttolink\">(add to PlanetMath)</a>";
   #	}
@@ -998,11 +998,9 @@ sub findmatches {
   my $tlen = $#tlist+1;
   for (my $i = 0; $i < $tlen; $i++) {
     # if the word is of the form @@\d+@@, ##\d+##, __\w+-- we skip it
-    my $word = $tlist[$i];
+    my $word = lc($tlist[$i]);  #make sure it is lowercase for hash
     next if ( $word =~ /\@\@\d+\@\@/ || $word =~ /\#\#\d+\#\#/ || $word =~ /__\w+__/ ||
 	 $word =~ /^\d+$/ || length($word) < 2);
-
-    $word = lc($tlist[$i]);	#make sure it is lowercase for hash
     my $COND = 0;		# turn this to 1 to debug this portion
 
     # look for the first word, then try to match additional words
@@ -1010,12 +1008,8 @@ sub findmatches {
     my $fail = 1;
 
     # get all possible candidates for both posessive and plural forms of $word 
-    my @cand = getpossiblematches($db, $word );
-
-    # if there are no candidates skip the word
-    if ($#cand < 0 ) {
-      next;
-    }
+    my @cand = get_possible_matches($db, $word );
+    next unless @cand; # if there are no candidates skip the word
 
     #now figure out the code for making the match hash.
     #we now generate the small terms hash using the old noosphere logic.
@@ -1023,7 +1017,11 @@ sub findmatches {
     my $terms = generateterms(\@cand);
 
     #add these terms to the big hash of terms.
-    %termlist = (%termlist, %{$terms});
+    # WAS: %termlist = (%termlist, %{$terms});
+    # What about overrides?
+    foreach my $key(keys %$terms) {
+      $termlist{$key} = $terms->{$key};
+    }
     if (defined $terms->{$word}) {
       $fail = 0;
       #print "*** xref: found [$word] for [$tlist[$i]] in hash\n" if $COND;
@@ -1037,14 +1035,14 @@ sub findmatches {
       }
     }
     if ($fail) {
-      if (ispossessive($word)) {
+      if (is_possessive($word)) {
 	#print "*** xref: trying unpossesive for [$word]\n" if $COND;
-	$word = getnonpossessive($word);
+	$word = get_nonpossessive($word);
 	$rv = matchrest(\%matches,
 			$word,$terms->{$word},
 			\@tlist,$tlen,$i);
 	#					[$stag,$etag]);
-      } elsif (isplural($word)) {
+      } elsif (is_plural($word)) {
 	#print "*** xref: trying nonplural for [$word]\n" if $COND;
 	my $np = depluralize($word);
 	$rv = matchrest(\%matches,
@@ -1097,29 +1095,25 @@ sub findmatches {
 sub generateterms {
   my $candidates = shift;	# the array of hashrefs of candidates 
   # (concept, conceptid, objectid)
-  my %terms;			# terms hash
+  my $terms={};			# terms hash
   # build firstword->{concept->{cid}, concept->{cid} ,...} hash
   #
-  foreach my $cand (@{$candidates}) {
-    newterm(\%terms, $cand);
-  }	
-  return (\%terms);
+  newterm($terms, $_) foreach (@$candidates);
+  return ($terms);
 }
 
 # add to terms hash-of-hashes
-#
 sub newterm {
-  my $terms = shift;		#hash of terms to keep updating
-  my $concepthash = shift; #hash of concept (firstword, concept, conceptid, objectid)
-  my $encoding = shift || '';
+  my ($terms,$concepthash,$encoding) = @_;		#hash of terms to keep updating
+  #$concepthash := hash of concept (firstword, concept, conceptid, objectid)
+  $encoding //= '';
 	
   my $fw = lc($concepthash->{'firstword'});
   my $concept = lc($concepthash->{'concept'});
   my $objectid = $concepthash->{'objectid'};
 	
   # do the actual adding
-  #
-  if (not defined $terms->{$fw} || not defined $terms->{$fw}->{$concept}) {
+  if ((! defined $terms->{$fw}) || (!defined $terms->{$fw}->{$concept})) {
     $terms->{$fw}->{$concept} = []; # create array
   } 
   push @{$terms->{$fw}->{$concept}}, $objectid;
@@ -1163,7 +1157,7 @@ sub matchrest {
     my @words = split(/\s+/,$title); # split into words
     # go through the words and make them non-plural and non-possessive
     foreach my $w ( @words ) {
-      my $temp = depluralize ( getnonpossessive ( $w ) );
+      my $temp = depluralize ( get_nonpossessive ( $w ) );
       $w = $temp;
     }
 
@@ -1178,7 +1172,7 @@ sub matchrest {
       if (skipword($tlist->[$i+$midx+$skip+1]) ) {
 	$skip++;
       } else {
-	my $nextterm = lc(depluralize(getnonpossessive($tlist->[$i+$midx+$skip+1])));
+	my $nextterm = lc(depluralize(get_nonpossessive($tlist->[$i+$midx+$skip+1])));
 	if ( $nextterm eq lc( $words[$midx+1] ) ) {
 	  $midx++;		# update indexes
 	  last if ( $midx == $widx );
@@ -1481,7 +1475,7 @@ sub scoreAgainstArray {
   foreach my $a (@$array) {
     #print "getting class for $a\n";
     my $fetchc = [getclass($a)];
-    push @carray,$fetchc if (@{$fetchc}[0]);
+    push @carray,$fetchc if ($fetchc->[0]);
   }
 
   # loop through each input classification and score it
@@ -1526,8 +1520,8 @@ sub xrefGetNeighborListByList {
     my @list = xrefGetNeighborList($sid);
     foreach my $nid (@list) {
       if (! defined $seen->{$nid}) { # add only novel items
-	push @outlist,$nid;
-	$seen->{$nid} = 1;	 
+	       push @outlist,$nid;
+	       $seen->{$nid} = 1;	 
       }
     }
   }

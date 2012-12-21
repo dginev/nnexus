@@ -20,8 +20,8 @@ use strict;
 use warnings;
 use feature qw(say switch);
 
-use NNexus::Domain qw(getdomainid);
-use NNexus::EncyclopediaEntry qw(getobjectid getobjecthash);
+use NNexus::Domain qw(get_domain_id);
+use NNexus::EncyclopediaEntry qw(get_object_id get_object_hash);
 use NNexus::Crossref qw(crossReference);
 
 sub new {
@@ -69,8 +69,8 @@ sub _link_entry {
   # all we need is the externalid, domain, and body of the document to figure out the linking.
   #  if the entry needing to be link is not yet in the db we need to call add_entry.
 
-  my $domid = getdomainid( $db, $self->{'domain'} ); 
-  my $objid = getobjectid( $db, $self->{'objid'} ,$domid);
+  my $domid = get_domain_id( $db, $self->{'domain'} ); 
+  my $objid = get_object_id( $db, $self->{'objid'} ,$domid);
 
   print "Linking object $objid of domain $domain with format = $format and " .
     "detail = $mode\n";
@@ -82,7 +82,7 @@ sub _link_entry {
   my $title;
 		
   if ($objid != -1) {		#object is in the database
-    my $object = getobjecthash($db, $objid );
+    my $object = get_object_hash($db, $objid );
     $title = $object->{'title'};
     #get the concepts as a an array this object defines.
     $syns = getconcepts( $objid );

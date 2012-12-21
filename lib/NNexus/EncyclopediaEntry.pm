@@ -32,7 +32,7 @@ use Time::HiRes qw ( time alarm sleep );
 
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(getobjectid getobjecthash);
+our @EXPORT_OK = qw(get_object_id get_object_hash);
 
 
 # Add a new object to the db
@@ -205,7 +205,7 @@ sub addauthor {
 }
 
 # Get the object as a hashref based on the unique internal id
-sub getobjecthash {
+sub get_object_hash {
   my ($db,$objid) = @_;
 
   my $sth = $db->cachedPrepare("select * from object where objectid = ?");
@@ -217,7 +217,7 @@ sub getobjecthash {
 }
 
 # Get the internal object id of the object based on the external id and domain id
-sub getobjectid {
+sub get_object_id {
   my ($db,$extid,$domid) = @_;
 
   my $sth = $db->cachedPrepare("select objectid from object where identifier = ? and domainid = ?");
@@ -253,7 +253,7 @@ sub is_valid {
   return 0;
 }
 
-sub getobjectidbycid {
+sub get_object_idbycid {
   my ($db,$cid) = @_;
   my $sth = $db->cachedPrepare("SELECT objectid from concepthash where conceptid = ?");
   $sth->execute($cid);
