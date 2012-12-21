@@ -26,8 +26,8 @@ use XML::Simple;
 
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(get_domain_id getdomainblacklist get_domain_priorities getdb_domain_id
-		    getdomainhash);
+our @EXPORT_OK = qw(get_domain_id get_domain_blacklist get_domain_priorities getdb_domain_id
+		    get_domain_hash);
 
 #use NNexus::Classification;
 #use NNexus::Concepts;
@@ -47,7 +47,7 @@ sub get_domain_id {
 }
 
 # get the domain specific blacklist
-sub getdomainblacklist {
+sub get_domain_blacklist {
   my ($config,$domain) = @_;
 
   my $ref = $config->{'domains'}->{'domain'};
@@ -127,7 +127,7 @@ sub getdb_domain_id {
 
 #CACHE this stuff.
 our %domaincache = ();
-sub getdomainhash {
+sub get_domain_hash {
   my ($db,$domid) = @_;
   if ( ! exists $domaincache{$domid} ) {
     print "getting domain hash for domain $domid\n";

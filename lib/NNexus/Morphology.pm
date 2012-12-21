@@ -25,7 +25,7 @@ use warnings;
 use Encode qw{is_utf8};
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(is_possessive is_plural get_nonpossessive depluralize);
+our @EXPORT_OK = qw(is_possessive is_plural get_nonpossessive get_possessive depluralize);
 
 use utf8;
 use feature qw(switch);
@@ -78,7 +78,7 @@ sub get_nonpossessive {
 }
 
 # return first word with possessive suffix ("Euler" becomes "Euler's")
-sub getpossessive { 
+sub get_possessive { 
 	s/^(\w+)/$1'/;
 	s/^(\w+[^s])'/$1's/;
 	$_;
@@ -114,7 +114,7 @@ sub depluralize {
 }
 
 # get the non-plural root for a word
-sub getroot {
+sub root {
 	given ($_[0]) {	
 		when(/(.+ri)ces$/) { return $1; }
 		when(/(.+[aeiuo]x)es$/) { return $1; }
@@ -128,11 +128,11 @@ sub getroot {
 	}
 }
 
-# bogostem - really elementary "stemming" algorithm
-sub bogostem {
+# fake_stem - really elementary "stemming" algorithm
+sub fake_stem {
 	my $word = shift;
 	$word = get_nonpossessive($word);
-	$word = getroot($word);
+	$word = root($word);
 	$word =~ s/'//g;
 	return $word;
 }

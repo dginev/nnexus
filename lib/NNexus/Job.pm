@@ -22,7 +22,7 @@ use feature qw(say switch);
 
 use NNexus::Domain qw(get_domain_id);
 use NNexus::EncyclopediaEntry qw(get_object_id get_object_hash);
-use NNexus::Crossref qw(crossReference);
+use NNexus::Crossref qw(cross_reference);
 
 sub new {
   my ($class,%opts) = @_;
@@ -75,7 +75,7 @@ sub _link_entry {
   print "Linking object $objid of domain $domain with format = $format and " .
     "detail = $mode\n";
 
-  #build the data structures necessary to call crossReference
+  #build the data structures necessary to call cross_reference
   my $start = time();
   my $syns;
   my $classes;
@@ -117,7 +117,7 @@ sub _link_entry {
   my $linkedbody = "";
   my $links = [];
   if ($body ne "") {
-    ($linkedbody, $links) = crossReference(config=>$config,
+    ($linkedbody, $links) = cross_reference(config=>$config,
 					   format=>$format,
 					   domain=>$domain,
 					   text=>$body,

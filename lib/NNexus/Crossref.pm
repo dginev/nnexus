@@ -22,12 +22,12 @@ use utf8;
 use Data::Dumper;
 use Time::HiRes qw ( time alarm sleep );
 
-use NNexus::Morphology qw(get_nonpossessive depluralize is_possessive is_plural);
+use NNexus::Morphology qw(get_nonpossessive get_possessive depluralize is_possessive is_plural);
 use NNexus::Linkpolicy qw (post_resolve_linkpolicy);
 use NNexus::Concepts qw(get_possible_matches);
 use NNexus::EncyclopediaEntry qw(get_object_hash);
 use NNexus::Util qw(inset uniquify);
-use NNexus::Domain qw(getdomainblacklist get_domain_priorities getdomainhash get_domain_id);
+use NNexus::Domain qw(get_domain_blacklist get_domain_priorities get_domain_hash get_domain_id);
 
 use HTML::TreeBuilder;
 use HTML::Entities;
@@ -35,7 +35,7 @@ use URI::Escape;
 
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(crossReference);
+our @EXPORT_OK = qw(cross_reference);
 
 our %LINKTAGS = (
 	     'PMlinkescapeword'=>1,
@@ -43,7 +43,7 @@ our %LINKTAGS = (
 	    );
 
 # This is irrelevant for HTML version ?
-sub crossReferenceLaTeX {
+sub cross_reference_LaTeX {
   my (%opts) = @_;
   my ($config,$domain,$latex,$syns,$fromid,$class) = map {$opts{$_}} qw(config domain text nolink fromid class);
   # $syns: synonyms, more things not to link to
@@ -69,7 +69,7 @@ sub crossReferenceLaTeX {
 
   doManualLinks($linkids, $fromid); #this Manual links call is PMLink specific
   #lets just see what happens here.
-  my $matches = doAutomaticLinking($config, $nonmath, \@user_escaped, $class, $fromid );
+  my $matches = cross_reference_text($config, $nonmath, \@user_escaped, $class, $fromid );
   my ($linked,$links) = makeLaTeXLinks($domain, $nonmath, $matches, $class,$fromid);
 	
   my $recombined = recombine($linked, $math, $escaped);
@@ -78,7 +78,7 @@ sub crossReferenceLaTeX {
 }
 
 # I assume this should populate the <links /> 
-sub crossReferenceHTML {
+sub cross_reference_HTML {
   my (%opts) = @_;
   my ($config,$domain,$text,$syns,$fromid,$class) = map {$opts{$_}} qw(config domain text nolink fromid class);
   my $db = $config->get_DB;
@@ -111,7 +111,7 @@ sub crossReferenceHTML {
                 ((length($_[1])==0) && ($_[0]->{fresh_skip})));
 						  $_[0]->{annotated} .= $_[1];}, 'self,text'],
 			       'default_h' => [sub { $_[0]->{annotated} .= $_[1]; }, 'self, text'],
-			       'text_h'      => [\&linkHTMLText, 'self,text']
+			       'text_h'      => [\&text_handler, 'self,text']
 			      );
   $parser->{annotated} = "";
   $parser->{linkarray} = [];
@@ -126,7 +126,7 @@ sub crossReferenceHTML {
   return ( $parser->{annotated}, $parser->{linkarray});
 }
 
-sub linkHTMLText {
+sub text_handler {
   my ($self,$text) = @_;
   my $state = $self->{state_information};
   # Skip if in a silly element:
@@ -142,7 +142,7 @@ sub linkHTMLText {
   my $textref = [];
 
   #print "Linking ";
-  push @$matches, doAutomaticLinking($state->{config},
+  push @$matches, cross_reference_text($state->{config},
 				     $text,
 				     $state->{nolink},
 				     $state->{class},
@@ -200,7 +200,7 @@ sub linkHTMLText {
 #new main entry point for cross-referencing, you send it some markup text and the mode (latex or html)
 # and it returns the same text linked up in the same markup format
 # This (in theory) is our all-powerful method
-sub crossReference {
+sub cross_reference {
   my (%opts) = @_;
   my ($config,$format,$domain,$text,$nolink,$fromid,$class,$detail) =
     map {$opts{$_}} qw(config format domain text nolink fromid class detail);
@@ -212,7 +212,7 @@ sub crossReference {
   #pull this blacklist into a config file
   #	my @blacklist = ( 'g', 'and','or','i','e', 'a','means','set','sets',
   #			'choose', 'it',  'o', 'r', 'in', 'the', 'my', 'on', 'of');
-  my $domainbl = getdomainblacklist( $config, $domain );
+  my $domainbl = get_domain_blacklist( $config, $domain );
   push @$nolink, @$domainbl;
   foreach my $n ( @$nolink ) {
     push @$nolink, lc($n) if ($n && ($n ne lc($n)));
@@ -222,10 +222,10 @@ sub crossReference {
   my $DEBUG = 0;
   #print STDERR "LINKING IN MODE $format\n";
   if ( $format eq 'l2h' ) {
-    return crossReferenceLaTeX(%opts);
+    return cross_reference_LaTeX(%opts);
   } elsif ( $format eq 'html' ) {
     #print STDERR "LINKING IN HTML MODE\n"	if $DEBUG;
-    return crossReferenceHTML(%opts);
+    return cross_reference_HTML(%opts);
   } else {
     print STDERR "Mode $format is not yet supported\n";
   }
@@ -233,14 +233,14 @@ sub crossReference {
 
 # MAIN PLAIN TEXT LINKER (!!!)
 # returns back the matches and position of disambiguated links of the supplied text.
-sub doAutomaticLinking {
+sub cross_reference_text {
   my ($config,$text,$nolink,$class,$fromid) = @_;
   $fromid = -1 unless defined $fromid;
   deleteLinksFrom( $fromid ) if ($fromid > 0);
 
-  my $matches = findmatches($config->get_DB, $text );
+  my $matches = find_matches($config->get_DB, $text );
   #this matches hash now contains the candidate links for each word.
-  # we now no longer need the terms from findmatches so we remove it.
+  # we now no longer need the terms from find_matches so we remove it.
 	
   #we need to disambiguate the matches here and mark active matches. 
   my %linked;		       #used to mark active links and targets 
@@ -694,7 +694,7 @@ sub generateMenuCode {
 sub getlinkstring { 
   my ($db , $objectid, $anchor) = @_;
   my $object = get_object_hash( $db, $objectid );
-  my $domain = getdomainhash( $db, $object->{'domainid'} );
+  my $domain = get_domain_hash( $db, $object->{'domainid'} );
   my $template = $domain->{'urltemplate'};
   my $linkstring = $template . HTML::Entities::encode($object->{'identifier'});
   #	my $domainnick = $domain->{'nickname'};
@@ -710,7 +710,7 @@ sub getmenulinkstring{
 
   print "IN getmenulinkstring";
   my $object = get_object_hash($db, $objectid );
-  my $domain = getdomainhash($db, $object->{'domainid'} );
+  my $domain = get_domain_hash($db, $object->{'domainid'} );
   #my $linkstring = $domain->{'urltemplate'} . $object->{'identifier'};
   my $linkstring = $domain->{'urltemplate'} . HTML::Entities::encode($object->{'identifier'});
   my $domainnick = $domain->{'nickname'};
@@ -777,7 +777,7 @@ sub substituteLaTeXLinks {
     #print Dumper( $objects->{$k} );
 	
     print "IN priority loop";
-    my $domain = getdomainhash($db, $k );
+    my $domain = get_domain_hash($db, $k );
     #this is very hackish but works until we get the scoring functionality working
     my $id = ${$objects->{$k}}[0];
     print Dumper($id);
@@ -848,7 +848,7 @@ sub substituteHTMLLinks {
       next;
     }
     #print Dumper( $objects->{$k} );
-    my $domain = getdomainhash($db, $k );
+    my $domain = get_domain_hash($db, $k );
     #this is very hackish but works until we get the scoring functionality working
     my $targets = $objects->{$k};
     my $id = $targets->[0]->[0];
@@ -971,7 +971,7 @@ sub getanchor {
 
   my $anchor = $term;
   if ($psv == 1) {
-    $anchor = getpossessive($term);
+    $anchor = get_possessive($term);
   } 
   if ($plural == 1) {
     $anchor = pluralize($term);
@@ -981,7 +981,7 @@ sub getanchor {
 }
 
 # build a match description structure based on text and synonyms list
-sub findmatches {
+sub find_matches {
   my ($db,$text) = @_;
 
   my ($finish, $DEBUG);
@@ -1529,7 +1529,7 @@ sub xrefGetNeighborListByList {
   return @outlist;
 }
 
-# get a list of "neighbors" in the crossreference graph, from a particular
+# get a list of "neighbors" in the cross_reference graph, from a particular
 # node (i.e. nodes the source node can "see" or has outgoing links to)
 #
 sub xrefGetNeighborList {

@@ -292,7 +292,7 @@ sub cleancategory {
 
   #check the supported schemes and see if the category matches
   if ( !$self->supportedscheme( $scheme ) ) {
-    my $domain = getdomainhash( $domid );
+    my $domain = get_domain_hash( $domid );
     $scheme = $self->{config}->{'domains'}->{'domain'}->{$domain->{'name'}}->{'defaultscheme'};
     $ext = $category;
     #	print "using default scheme - $scheme\n";
