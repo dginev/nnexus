@@ -130,7 +130,7 @@ sub text_handler {
   my ($self,$text) = @_;
   my $state = $self->{state_information};
   # Skip if in a silly element:
-  if ($self->{noparse} && ($self->{noparse}>0)) {
+  if (($self->{noparse} && ($self->{noparse}>0)) || ($text !~ /\w/)) {
     $self->{annotated}.=$text;
     return;
   }
@@ -162,7 +162,7 @@ sub text_handler {
   my $priorities = get_domain_priorities($state->{config}, $state->{domain} );
   my $linked_result;
   my @linkarray;		# array of href's
-  for ( my $i = 0; $i < @$matches; $i++ ) {
+  for my $i( 0..scalar(@$matches)-1 ) {
     my $match = $matches->[$i];
     my @ltext = split(/(\W+)/, $text);
     # do the text substitution here.
@@ -175,7 +175,7 @@ sub text_handler {
       $texttolink = join( '', @ltext[$pos..$pos+$length-1] );
       my $domainid = get_domain_id($state->{config}, $state->{domain});
       my $linktarget = $objects->{$domainid}[0][0];
-      my $lnk = getlinkstring($state->{config}->get_DB, $linktarget, $texttolink );
+      my $lnk = make_link_string($state->{config}->get_DB, $linktarget, $texttolink );
       #print "looking at $lnk against ",$state->{domain},"\n";
       if ( $lnk =~ $state->{domain} ) {
       	#print "adding lnk = [$lnk]\n";
@@ -197,7 +197,7 @@ sub text_handler {
   push @{$self->{linkarray}}, @linkarray;
 }
 
-#new main entry point for cross-referencing, you send it some markup text and the mode (latex or html)
+# new main entry point for cross-referencing, you send it some markup text and the mode (latex or html)
 # and it returns the same text linked up in the same markup format
 # This (in theory) is our all-powerful method
 sub cross_reference {
@@ -252,9 +252,8 @@ sub cross_reference_text {
     next if ($linked{$matchterms});
     next if (inset(lc($matchterms),@$nolink));
     # get array of ids of qualifying entries
-    #
-    $matchterms =~ /^([^\s]+)(\s|$)/;
-    my $fw = lc($1);
+    #$matchterms =~ /^([^\s]+)(\s|$)/;
+    #my $fw = lc($1);
     #		my $candidates = $terms->{$fw}->{$matchterms};
     my $finals = disambiguate($config, $candidates, $matchterms, $class, $fromid);
     #print Dumper( $finals );
@@ -631,7 +630,7 @@ sub makeLaTeXLinks {
 				
     # add to simple links list 
     #
-    my $lnk = getlinkstring($db, $objects, $texttolink );
+    my $lnk = make_link_string($db, $objects, $texttolink );
 		
     push @linkarray, $lnk;
 	
@@ -691,7 +690,7 @@ sub generateMenuCode {
 }
 
 #this function returns a standard <a href=link>text</a> string
-sub getlinkstring { 
+sub make_link_string { 
   my ($db , $objectid, $anchor) = @_;
   my $object = get_object_hash( $db, $objectid );
   my $domain = get_domain_hash( $db, $object->{'domainid'} );
@@ -810,7 +809,7 @@ sub substituteLaTeXLinks {
     }
 
     #build a list of linkstrings to appear as the menulinks.
-    push @optionallinks, getlinkstring($db, $id, $domainnick );
+    push @optionallinks, make_link_string($db, $id, $domainnick );
     print "LEAVE loop";
   }
   my %menuinfo = ();
@@ -875,7 +874,7 @@ sub substituteHTMLLinks {
       $first = 1;
     } 
     #build a list of linkstrings to appear as the menulinks.
-    push @optionallinks, getlinkstring($db, $id, $domainnick );
+    push @optionallinks, make_link_string($db, $id, $domainnick );
   }
 	
   if ( $menulink ne "" ) {
@@ -983,16 +982,13 @@ sub getanchor {
 # build a match description structure based on text and synonyms list
 sub find_matches {
   my ($db,$text) = @_;
-
   my ($finish, $DEBUG);
   $DEBUG = 1;
-
   my $start = time() if ($DEBUG);
-
+  my %matches;         # main matches hash (hash key is word position)
   my %termlist = ();
-
   my @tlist = split(/(\W+)/, $text);
-  my %matches;	       # main matches hash (hash key is word position)
+
 
   # loop through words in the text. this is the O(m) main loop.
   my $tlen = $#tlist+1;
@@ -1025,7 +1021,7 @@ sub find_matches {
     if (defined $terms->{$word}) {
       $fail = 0;
       #print "*** xref: found [$word] for [$tlist[$i]] in hash\n" if $COND;
-      $rv = matchrest(\%matches,
+      $rv = maximize_match(\%matches,
 		      $word,$terms->{$word},
 		      \@tlist,$tlen,$i);
       #	[$stag,$etag]);
@@ -1038,14 +1034,14 @@ sub find_matches {
       if (is_possessive($word)) {
 	#print "*** xref: trying unpossesive for [$word]\n" if $COND;
 	$word = get_nonpossessive($word);
-	$rv = matchrest(\%matches,
+	$rv = maximize_match(\%matches,
 			$word,$terms->{$word},
 			\@tlist,$tlen,$i);
 	#					[$stag,$etag]);
       } elsif (is_plural($word)) {
 	#print "*** xref: trying nonplural for [$word]\n" if $COND;
 	my $np = depluralize($word);
-	$rv = matchrest(\%matches,
+	$rv = maximize_match(\%matches,
 			$word,$terms->{$np},
 			\@tlist,$tlen,$i);
 	#					[$stag,$etag]);
@@ -1120,12 +1116,9 @@ sub newterm {
 }
 
 # return true if "word" shouldn't be considered in matching
-#
 sub skipword {
   my $word = shift;
-
   return 1 if ($word =~ m/^\s*$/ );
-
   #	return 1 if ($word eq '__NL__');
   #	return 1 if ($word eq '__CR__');
   return 0;
@@ -1133,21 +1126,19 @@ sub skipword {
 
 # match the rest of a title after getting a first-word match.
 #	
-sub matchrest {
+sub maximize_match {
   my $matches = shift; # matches structs we keep updated (pointer to hash)
   my $word = shift;    # first word in matched sequence
   my $subhash = shift; # hash of matching terms to $word
   my $tlist = shift;   # text words list (pointer to list)
   my $tlen = shift;    # text words count
   my $i = shift;       # position in text words list we're at
-	
+
+  return 0 if $word !~ /\w/;	# fail if blank input
   my ($start, $finish, $DEBUG);
-  # fail if blank input
-  return 0 if $word =~ /^\s*$/;
 
   # find longest matching term from subhash
   # since sorting in reverse order, we stop at first (longest) match.
-  #
   my $matchterm = '';	  # this gets set to non "" if we have a match
   my $matchlen = 0;	  # length of match, the larger the better.
  
@@ -1170,25 +1161,23 @@ sub matchrest {
     # see how many words we can match against this title
     while (($i+$midx+$skip+1 < $tlen) && ($midx<$widx)) {
       if (skipword($tlist->[$i+$midx+$skip+1]) ) {
-	$skip++;
+	     $skip++;
       } else {
-	my $nextterm = lc(depluralize(get_nonpossessive($tlist->[$i+$midx+$skip+1])));
-	if ( $nextterm eq lc( $words[$midx+1] ) ) {
-	  $midx++;		# update indexes
-	  last if ( $midx == $widx );
-	  #	$skip++ if (skipword($tlist->[$i+$midx+$skip+1])); 
-	} else {
-	  last;
-	}
-	#print " *** xref: matched word $tlist->[$i+$midx+$skip+1]\n" if $COND;
-	#print "*** xref: skip is now $skip\n" if $COND;
+	     my $nextterm = lc(depluralize(get_nonpossessive($tlist->[$i+$midx+$skip+1])));
+	     if ( $nextterm eq lc( $words[$midx+1] ) ) {
+	     $midx++;		# update indexes
+	     last if ( $midx == $widx );
+	     #	$skip++ if (skipword($tlist->[$i+$midx+$skip+1])); 
+      } else {
+	     last;
+    	}
+	     #print " *** xref: matched word $tlist->[$i+$midx+$skip+1]\n" if $COND;
+	     #print "*** xref: skip is now $skip\n" if $COND;
       }
     }
-
     #print " *** xref: skip is $skip\n" if $COND;
 
     # if we matched all words, store match info
-    #
     if ($midx == $widx) {	 
       $matchterm = $title;
       $matchlen = $widx + $skip + 1;
@@ -1200,9 +1189,8 @@ sub matchrest {
   }
 
   # try to add match if we found one.
-  #
   if ($matchterm ne "") {
-    insertmatch($matches,$i,$matchterm,$matchlen);
+    insert_match($matches,$i,$matchterm,$matchlen);
   }
 	 
   return ($matchterm eq "")?0:1; # return success or fail
@@ -1210,8 +1198,7 @@ sub matchrest {
 
 
 # add to matches list - only if we found a better (larger) match for a position
-#
-sub insertmatch {
+sub insert_match {
   my ($matches,$pos,$term,$length)=@_;
   #my ($matches,$pos,$term,$length,$plural,$psv)=@_;
 	
@@ -1220,9 +1207,7 @@ sub insertmatch {
   #return if (defined $mterms->{$term});
 
   my $COND = 0;			#DEBUGING
-	
   # check for existing entry 
-  #
   if (defined $matches->{$pos}) {
     if ($matches->{$pos}->{'length'} < $length) {
       print "replacing $term at $pos, length $length with $term, length $length\n" if ($COND);

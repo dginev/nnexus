@@ -50,7 +50,7 @@ sub pluralize {
 }
 
 # see if a title contains math ($.+$)
-sub ismathy { /\$.+\$/; }
+sub ismathy { shift =~ /\$.+\$/; }
 
 # get a title without math (two levels... one removes $$s, one removes all)
 sub getnonmathy {
@@ -68,20 +68,22 @@ sub getnonmathy {
 }
 
 # return true if a word is possessive (ends in 's or s')
-sub is_possessive { /^\w+('s|s')(\s|$)/; }
+sub is_possessive { shift =~ /^\w+('s|s')(\s|$)/; }
 
 # return phrase without possessive suffix ("Euler's" becomes "Euler")
 sub get_nonpossessive {
-	s/'s(\s|$)/$1/g;
-	s/s'(\s|$)/s$1/g;
-	$_;
+	my $word = shift;
+	$word =~ s/'s(\s|$)/$1/g;
+	$word =~ s/s'(\s|$)/s$1/g;
+	$word;
 }
 
 # return first word with possessive suffix ("Euler" becomes "Euler's")
 sub get_possessive { 
-	s/^(\w+)/$1'/;
-	s/^(\w+[^s])'/$1's/;
-	$_;
+	my $word = shift;
+	$word =~ s/^(\w+)/$1'/;
+	$word =~ s/^(\w+[^s])'/$1's/;
+	$word;
 }
 
 # boolean for tagged or not
