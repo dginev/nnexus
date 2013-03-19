@@ -28,8 +28,10 @@ use NNexus::DB;
 sub new {
   my ($class,$opts) = @_;
   $opts = XMLin('./baseconf.xml') unless defined $opts;
-  print STDERR "Starting NNexus with configuration:\n";
-  print STDERR Dumper( $opts );
+  if ($opts->{verbosity} && $opts->{verbosity} > 0) {
+    print STDERR "Starting NNexus with configuration:\n";
+    print STDERR Dumper( $opts );
+  }
   $opts->{nnexus_db} = NNexus::DB->new(config=>$opts);
   my $dbh = $opts->{nnexus_db}->dbConnect;
   # DG: Deprecating for now.
@@ -45,7 +47,7 @@ sub new {
   my $upd = $dbh->prepare( "update domain set urltemplate = ?, code = ?, nickname = ? where name = ?" );
 
   my $ref = $opts->{'domains'}->{'domain'};
-  print STDERR Dumper($ref);
+  print STDERR Dumper($ref) if $opts->{verbosity}>0;
   foreach my $k ( @$ref ) {
     if ( defined $k->{'name'} ) {
       my $name = $k->{'name'};
