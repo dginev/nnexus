@@ -9,10 +9,13 @@ use base qw(NNexus::IndexTemplate);
 sub domain_root { "http://planetmath.org/articles"; }
 sub page_regexp { qr/^http\:\/\/en\.wikipedia\.org\/wiki\/([^\:]+)$/; }
 sub candidate_links {
-	# TODO: Retrieve candidate links from a given HTML page. 
-	#qr/^http\:\/\/en\.wikipedia\.org\/wiki\/([^\:]+)$/;
+  # TODO: Retrieve candidate links from a given HTML page. 
+  #qr/^http\:\/\/en\.wikipedia\.org\/wiki\/([^\:]+)$/;
 }
-sub index { print STDERR "TODO: Planetmath indexer\n";}
+sub index {
+  my (@self,%options) = @_;
+  
+}
 
 1;
 __END__

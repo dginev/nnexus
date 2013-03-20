@@ -155,11 +155,12 @@ sub _check_valid { $_[0]->_fail_with('Not supported yet!');}
 sub _index {
   my ($self)=@_;
   my $domain = $self->{domain} || 'planetmath';
-  my $body = $self->{body};
+  my $url = $self->{url}||$self->{body};
+  my $dom = $self->{dom};
   require NNexus::IndexDispatcher;
   my $dispatcher = NNexus::IndexDispatcher->new($domain);
-  if ($dispatcher->index(start=>$body)) {
-    $self->_ok_with(q{},"IndexConcepts succeeded in domain $domain, on: ".($body||'domain_root'));
+  if ($dispatcher->index(start=>$url,dom=>$dom)) {
+    $self->_ok_with(q{},"IndexConcepts succeeded in domain $domain, on: ".($url||'domain_root'));
   } else {
     $self->_fail_with("Indexing failed!");
   }

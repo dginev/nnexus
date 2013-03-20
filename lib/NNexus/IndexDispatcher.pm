@@ -6,15 +6,17 @@ use strict;
 sub new {
 	my ($class,$domain) = @_;
 	$domain = $domain ? ucfirst(lc($domain)) : 'Planetmath';
+	die ("Bad domain name: $domain; Must contain only alphanumeric characters!") if $domain =~ /\W/;
 	my $eval_return = eval {require "NNexus/IndexTemplate/$domain.pm"; 1; };
 	if ($eval_return && (!$@)) {
-		bless {}, "NNexus::IndexTemplate::$domain";
+		eval " NNexus::IndexTemplate::$domain->new(); "
 	} else {
-		print STDERR "NNexus::IndexTemplate::$domain not available, fallback to generic indexer...\n";
+		print STDERR "NNexus::IndexTemplate::$domain not available, fallback to generic indexer.\n";
+		print STDERR "Reason: $@\n" if $@;
 		require NNexus::IndexTemplate;
 		# The generic template will always fail...
 		# TODO: Should we fallback to Planetmath instead?
-		bless {}, "NNexus::IndexTemplate";
+		NNexus::IndexTemplate->new();
 	}
 }
 
