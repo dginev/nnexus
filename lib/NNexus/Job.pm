@@ -159,8 +159,8 @@ sub _index {
   my $dom = $self->{dom};
   require NNexus::IndexDispatcher;
   my $dispatcher = NNexus::IndexDispatcher->new($domain);
-  if ($dispatcher->index(start=>$url,dom=>$dom)) {
-    $self->_ok_with(q{},"IndexConcepts succeeded in domain $domain, on: ".($url||'domain_root'));
+  if (my $payload = $dispatcher->index(start=>$url,dom=>$dom)) {
+    $self->_ok_with($payload,"IndexConcepts succeeded in domain $domain, on: ".($url||'domain_root'));
   } else {
     $self->_fail_with("Indexing failed!");
   }

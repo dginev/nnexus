@@ -7,15 +7,17 @@ use base qw(NNexus::IndexTemplate);
 # 1. We want to start from the top-level math category
 
 sub domain_root { "http://planetmath.org/articles"; }
-sub page_regexp { qr/^http\:\/\/en\.wikipedia\.org\/wiki\/([^\:]+)$/; }
 sub candidate_links {
   # TODO: Retrieve candidate links from a given HTML page. 
   #qr/^http\:\/\/en\.wikipedia\.org\/wiki\/([^\:]+)$/;
 }
-sub index {
-  my (@self,%options) = @_;
+sub index_page {
+  my ($self) = @_;
   
 }
+
+sub depth_limit {500;}
+
 
 1;
 __END__

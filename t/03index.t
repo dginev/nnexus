@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
+use Test::More tests => 4;
 
 use NNexus::Job;
 use Data::Dumper;
@@ -15,13 +15,32 @@ sub local_dom {
 	Mojo::DOM->new($contents);
 }
 
-# Prepare a Mojo::DOM
-my $wiki_file = 't/pages/Integral.html';
-my $wiki_dom = local_dom($wiki_file);
+sub index_test{
+	my (%options)=@_;
+	# Prepare a Mojo::DOM
+	my $url = $options{url}; 
+	my $dom = local_dom($url) if $url;
 
-my $index_job = NNexus::Job->new(function=>'index',
-	url=>$wiki_file,dom=>$wiki_dom,domain=>"wikipedia");
-$index_job->execute;
-my $response = $index_job->response;
-is($response->{status},'OK','Error-free indexing');
-ok($response->{payload},'Indexing returned a concept hash');
+	my $index_job = NNexus::Job->new(function=>'index',
+	url=>$url,dom=>$dom,domain=>$options{domain});
+
+  $index_job->execute;
+
+  my $response = $index_job->response;
+  is($response->{status},'OK','Error-free indexing in '.$options{domain});
+  my @concepts = ref $response->{payload} ? @{$response->{payload}} : ();
+  ok(@concepts,$options{domain}.' Indexing returned a concept hash');	
+}
+
+# Test the Wikipedia indexing
+index_test(
+  url=>'t/pages/Integral.html',
+  domain=>'wikipedia');
+
+# index_test(
+#   domain=>'wikipedia');
+
+# Test the PlanetMath indexing
+index_test(
+  url=>'t/pages/HeytingAlgebra.html',
+  domain=>'planetmath');

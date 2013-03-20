@@ -9,7 +9,7 @@ use Mojo::UserAgent;
 sub new {
 	my ($class,%options) = @_;
 	my $ua = Mojo::UserAgent->new;
-	bless {ua=>$ua,%options}, $class;
+	bless {ua=>$ua,visited=>{},%options}, $class;
 }
 sub ua {$_[0]->{ua};}
 sub sanity {
@@ -18,9 +18,12 @@ sub sanity {
 	delete ($options->{current_url});
 	# Check if current_url, page_regexp, ... 
 	#	exist
-	unless ($self->current_url) {
+	my $current_url = $self->current_url;
+	unless ($current_url && !($self->{visited}->{$current_url})) {
 		return;
 	}
+	# Mark as visited, we don't want infinite loops
+	$self->{visited}->{$current_url} = 1;
 	return 1; # Sane setup if ok so far
 }
 
@@ -33,24 +36,29 @@ sub index {
 	my ($self,%options) = @_;
 	$options{current_url}//=$options{start}; # Start is fallback if no current_url set yet.
 	# 2.0. Check for configuration sanity
-	return unless $self->sanity(\%options);
+	return [] unless $self->sanity(\%options);
 	# 2.1. Prepare (or just accept) a Mojo::DOM to be analyzed
 	if ($options{dom}) {
-		$self->{current_dom} =  $options{dom};
+		$self->current_dom($options{dom});
 		delete $options{dom};
 	} else {
-		$self->{current_dom} = $self->ua->get($self->current_url)->res->dom;
+		$self->current_dom($self->ua->get($self->current_url)->res->dom);
+		sleep 1; # Don't overload the server
 	}
-	# 2.1. Record all pages in the category
+	my $depth = $options{depth}||0;
+	return [] if $depth > $self->depth_limit;
+	# 2.2. Record all pages in the category
 	my $candidate_links = $self->candidate_links;
-	# 2.2. Obtain the indexer payload
+	# 2.3. Obtain the indexer payload
+	print STDERR "Indexing: ",$self->current_url,"\n";
 	my $payload = $self->index_page;
-	# 2.3. Recurse in subcategories
+	# 2.4. Recurse in subcategories
 	foreach (@$candidate_links) {
 		$options{current_url}=$_;
-		push @$payload, $self->index(%options);
+		$options{depth}=$depth+1;
+		push @$payload, @{$self->index(%options)};
 	}
-	# 2.4. Return final list of concepts
+	# 2.5. Return final list of concepts
 	return $payload;
 	# We want to return a list of hashes:
 	# [
@@ -64,13 +72,14 @@ sub index {
 
 ### CONCRETE METHODS
 # To be overloaded by concrete classes
-
+sub depth_limit {4;}
 sub domain_root {q{};} # To be overriden in the concrete classes
 sub index_page {[];} # To be overriden in the concrete classes
 sub candidate_links {
 	[];
 	# TODO: Generic implementation, retrieves ALL candidate links.
 }
+sub current_category {$_[1] ? $_[0]->{current_category} = $_[1] : $_[0]->{current_category};}
 
 1;
 __END__
