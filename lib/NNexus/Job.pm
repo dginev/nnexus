@@ -26,7 +26,7 @@ use NNexus::Crossref qw(cross_reference);
 
 sub new {
   my ($class,%opts) = @_;
-  $opts{format} = lc($opts{format});
+  $opts{format} = lc($opts{format}||'html');
   $opts{result} = {};
   bless \%opts, $class;
 }
@@ -40,6 +40,7 @@ sub execute {
     when('deleteobject') {$self->_delete_object;}
     when('updatelinkpolicy') {$self->_update_link_policy;}
     when('checkvalid') {$self->_check_valid;}
+    when('index') {$self->_index;}
     default {$self->_fail_with("Invalid action, aborting!"); }
   }
 }
@@ -50,10 +51,13 @@ sub _fail_with {
   my $result = {payload=>q{},message=>$message,status=>'Failed!'};
   $self->{result} = $result;
 }
-sub response {
-  my $response = $_[0]->{result};
-  {result=>$response->{payload},message=>$response->{message},status=>$response->{status}};
+sub _ok_with {
+  my ($self,$payload,$message)=@_;
+  # TODO: Spec this out, maybe similar to LaTeXML?
+  my $result = {payload=>$payload,message=>$message,status=>'OK'};
+  $self->{result} = $result;
 }
+sub response { $_[0]->{result};}
 
 sub _link_entry {
   my ($self) = @_;
@@ -148,7 +152,18 @@ sub _update_object { $_[0]->_fail_with('Not supported yet!');}
 sub _delete_object { $_[0]->_fail_with('Not supported yet!');}
 sub _update_link_policy { $_[0]->_fail_with('Not supported yet!');}
 sub _check_valid { $_[0]->_fail_with('Not supported yet!');}
-
+sub _index {
+  my ($self)=@_;
+  my $domain = $self->{domain} || 'planetmath';
+  my $body = $self->{body};
+  require NNexus::IndexDispatcher;
+  my $dispatcher = NNexus::IndexDispatcher->new($domain);
+  if ($dispatcher->index(start=>$body)) {
+    $self->_ok_with(q{},"IndexConcepts succeeded in domain $domain, on: ".($body||'domain_root'));
+  } else {
+    $self->_fail_with("Indexing failed!");
+  }
+}
 
 1;
 
