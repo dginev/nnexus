@@ -159,8 +159,15 @@ sub _index {
   my $dom = $self->{dom};
   require NNexus::IndexDispatcher;
   my $dispatcher = NNexus::IndexDispatcher->new($domain);
-  if (my $payload = $dispatcher->index(start=>$url,dom=>$dom)) {
-    $self->_ok_with($payload,"IndexConcepts succeeded in domain $domain, on: ".($url||'domain_root'));
+  my @indexed_concepts;
+  my $payload = $dispatcher->index_step(start=>$url,dom=>$dom);
+  push @indexed_concepts, $payload;
+  # TODO: Add indexed $payload to DB
+  while ($payload = $dispatcher->index_step ) {
+    push @indexed_concepts, $payload;
+  }
+  if (@indexed_concepts) {
+    $self->_ok_with(\@indexed_concepts,"IndexConcepts succeeded in domain $domain, on: ".($url||'domain_root'));
   } else {
     $self->_fail_with("Indexing failed!");
   }

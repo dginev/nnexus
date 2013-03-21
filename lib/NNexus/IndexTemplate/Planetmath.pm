@@ -18,6 +18,5 @@ sub index_page {
 
 sub depth_limit {500;}
 
-
 1;
 __END__

@@ -19,7 +19,7 @@ sub index_test{
 	my (%options)=@_;
 	# Prepare a Mojo::DOM
 	my $url = $options{url}; 
-	my $dom = local_dom($url) if $url;
+	my $dom = local_dom($url) if ($url && ($url ne 'default'));
 
 	my $index_job = NNexus::Job->new(function=>'index',
 	url=>$url,dom=>$dom,domain=>$options{domain});
@@ -37,10 +37,12 @@ index_test(
   url=>'t/pages/Integral.html',
   domain=>'wikipedia');
 
-# index_test(
-#   domain=>'wikipedia');
-
 # Test the PlanetMath indexing
 index_test(
   url=>'t/pages/HeytingAlgebra.html',
   domain=>'planetmath');
+
+# Note: Uncomment to index all of Wikipedia's math concepts
+# index_test(
+#    url=>'default',
+#    domain=>'wikipedia');
