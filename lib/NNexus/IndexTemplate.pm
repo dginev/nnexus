@@ -74,23 +74,23 @@ sub index_step {
   if ($depth <= $self->depth_limit) { # Don't add pointless nodes
     my $candidate_links = $self->candidate_links;
     foreach (@$candidate_links) {
-      push (@{$self->{queue}}, {
+      unshift (@{$self->{queue}}, {
         url=>$_,
-        category=>$category,
+        category=>[$category],
         depth=>$depth+1});
     }
   }
   print STDERR "Payload:\n",Dumper($payload);
-	# 2.6. Return final list of concepts for this page
-	return $payload;
-	# We want to return a list of hashes:
-	# [
-	#   { URL => $url,
-	#	  canonical => $canonical,
-	#     NLconcept => $concepts,
-	#     category => $category 
-	#   }, ...
-	# ]
+  # 2.6. Return final list of concepts for this page
+  return $payload;
+  # We want to return a list of hashes:
+  # [
+  #   { URL => $url,
+  #	  canonical => $canonical,
+  #     NLconcept => $concepts,
+  #     category => $category 
+  #   }, ...
+  # ]
 }
 
 ### CONCRETE METHODS

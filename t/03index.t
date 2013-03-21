@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 4;
+use Test::More tests => 6;
 
 use NNexus::Job;
 use Data::Dumper;
@@ -42,7 +42,13 @@ index_test(
   url=>'t/pages/HeytingAlgebra.html',
   domain=>'planetmath');
 
+# Test the MathWorld indexing
+index_test(
+  url=>'t/pages/QuadraticInvariant.html',
+  domain=>'mathworld');
+
+
 # Note: Uncomment to index all of Wikipedia's math concepts
-# index_test(
-#    url=>'default',
-#    domain=>'wikipedia');
+ # index_test(
+ #    url=>'default',
+ #    domain=>'mathworld');
