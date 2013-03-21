@@ -1,12 +1,16 @@
-NNexus provides an API and an engine for autolinking.
+NNexus provides an API and an engine for auto-linking of mathematical concepts.
+ It supports the subtasks of concept indexing, concept discovery and flexible annotation (e.g. linking).
+
+NNexus is free, libre, open-source software.
 
 # Current features
 
 ## Setting up the server
 
 You need Mojolicious and several other standard perl
-modules, which can be installed via apt-get or cpan.
+modules, which can be installed via your OS package manager or CPAN.
 
+On Debian-based systems:
 ```
 apt-get install libmojolicious-perl libxml-simple-perl \
   libunicode-string-perl libgraph-perl libjson-perl
@@ -15,7 +19,7 @@ apt-get install libmojolicious-perl libxml-simple-perl \
 Then, in order to quickly run the server:
 
 ```
-perl Makefile.PL ; make
+perl Makefile.PL ; make ; make test
 morbo --listen=http://*:3001 blib/script/nnexus setup/baseconf.xml
 ```
 
@@ -37,34 +41,35 @@ These two lines of PHP illustrate how NNexus can be used via curl:
 
 # Future plans: JSON support
 
-For example, sending JSON like this:
+For example, sending JSON like this, as prescribed by the legaxy NNexus API:
 
 ```json
   {"function":"addobject",
-   "title":"foo",
-   "body":"bla blarg foo blab",
+   "title":"myconcept",
+   "body":"a description or other message",
    "objid":123,
    "authorid":3,
    "linkpolicy":null,
    "classes":"11-XX",
-   "synonyms":"bla bla",
-   "defines":"bla bla bla",
+   "synonyms":"ourconcept, theirconcept",
+   "defines":"others",
    "batchmode":null}
 ```
 
 will add the document foo to the repository.  The terms
-"foo", "bla bla", and "bla bla bla" will then be
+"myconcept", "ourcocnept", and "theirconcept" will then be
 autolinked in the future, if you send in JSON like this:
 
 ```json
   {"function":"linkentry",
-   "body":"bla bla bar agh garble blorg",
+   "body":"Some text using myconcept, ourconcept or theirconcept",
    "format":"xhtml",
    "nolink":null}
 ```
 
-The exact API functionality and their arguments are as follows:
-
+The exact legacy API is as follows:
+ There are plans to revisit and polish the API in the future, so keep an open eye on this space.
+ 
 ```perl
   linkentry        : $objid $text $format $nolink
   addobject        : $objid $title $body $authorid $linkpolicy $classes $synonyms $defines $batchmode
@@ -79,7 +84,9 @@ The exact API functionality and their arguments are as follows:
 This is a fork and rewrite of the original NNexus code by James Gardner (pebbler@gmail.com).
 The current refactoring is pre-alpha and is under active development. Watch this space for frequent updates.
 
+The scheduled release for the "NNexus Reloaded" milestone is June 2013.
+
 # Contact
 
-For any questions and support requests, contact the current package maintainers:
+For any questions and support requests, contact the current package maintainer:
 Deyan Ginev (d.ginev@jacobs-university.de)
