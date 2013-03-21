@@ -61,13 +61,13 @@ sub candidate_category {
 
 # The subcategories trail into unrelated topics after the 4th level...
 sub depth_limit {4;}
+
+# Utility:
 # Right trim function to remove trailing whitespace
-sub rtrim($)
-{
+sub rtrim {
 	my $string = shift;
 	$string =~ s/\s+$//;
-	return $string;
-}
+	return $string; }
 
 1;
 __END__

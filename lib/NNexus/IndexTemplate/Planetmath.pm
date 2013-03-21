@@ -3,17 +3,22 @@ use warnings;
 use strict;
 use base qw(NNexus::IndexTemplate);
 
-# Wikipedia.org indexing template
-# 1. We want to start from the top-level math category
-
 sub domain_root { "http://planetmath.org/articles"; }
 sub candidate_links {
-  # TODO: Retrieve candidate links from a given HTML page. 
-  #qr/^http\:\/\/en\.wikipedia\.org\/wiki\/([^\:]+)$/;
+  my ($self) = @_;
+  my $url = $self->current_url;
+  my $dom = $self->current_dom;
+
 }
 sub index_page {
   my ($self) = @_;
+  my $url = $self->current_url;
+  my $dom = $self->current_dom;
   
+}
+
+sub candidate_category {
+
 }
 
 sub depth_limit {500;}
