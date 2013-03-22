@@ -1,7 +1,7 @@
-package NNexus::IndexTemplate::Planetmath;
+package NNexus::Index::Planetmath;
 use warnings;
 use strict;
-use base qw(NNexus::IndexTemplate);
+use base qw(NNexus::Index::Template);
 
 sub domain_root { "http://planetmath.org/articles"; }
 sub candidate_links {

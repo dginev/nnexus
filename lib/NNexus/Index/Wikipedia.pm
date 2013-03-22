@@ -1,7 +1,7 @@
-package NNexus::IndexTemplate::Wikipedia;
+package NNexus::Index::Wikipedia;
 use warnings;
 use strict;
-use base qw(NNexus::IndexTemplate);
+use base qw(NNexus::Index::Template);
 use feature 'say';
 use List::MoreUtils qw(uniq);
 

@@ -1,7 +1,7 @@
-package NNexus::IndexTemplate::Mathworld;
+package NNexus::Index::Mathworld;
 use warnings;
 use strict;
-use base qw(NNexus::IndexTemplate);
+use base qw(NNexus::Index::Template);
 
 sub domain_root { "http://mathworld.wolfram.com/letters/"; }
 sub domain_base { "http://mathworld.wolfram.com" }

@@ -1,4 +1,4 @@
-package NNexus::IndexTemplate;
+package NNexus::Index::Template;
 use warnings;
 use strict;
 use Mojo::DOM;
