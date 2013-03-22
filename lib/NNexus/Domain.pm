@@ -109,7 +109,7 @@ sub getdb_domain_id {
 
   #we no longer use the db we just use the config hash
 
-  my $sth =$db->cachedPrepare( "select domainid FROM domain WHERE name = ?");
+  my $sth =$db->prepare( "select domainid FROM domain WHERE name = ?");
   $sth->execute( $domain );
   my $domid;
   $sth->bind_columns(\$domid);
@@ -131,7 +131,7 @@ sub get_domain_hash {
   my ($db,$domid) = @_;
   if ( ! exists $domaincache{$domid} ) {
     print "getting domain hash for domain $domid\n";
-    my $sth = $db->cachedPrepare( "select * from domain where domainid = ?" );
+    my $sth = $db->prepare( "select * from domain where domainid = ?" );
     $sth->execute( $domid );
     if ( my $row = $sth->fetchrow_hashref() ) {
       $domaincache{$domid} = $row;

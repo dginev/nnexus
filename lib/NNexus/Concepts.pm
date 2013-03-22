@@ -49,7 +49,7 @@ sub addterm {
   # do the actual adding and update
 
   # we may have a lot of duplicate strings in the concepthash, but we don't care because we want speed on lookup
-  my $sth = $db->cachedPrepare("INSERT into concepthash (firstword, concept, objectid ) VALUES (?,?,?)");
+  my $sth = $db->prepare("INSERT into concepthash (firstword, concept, objectid ) VALUES (?,?,?)");
 
   $sth->execute($firstword, $terms, $objectid);
   $sth->finish();
@@ -103,7 +103,7 @@ sub addterm {
 # Remove the concepts from the db based on internal objid
 sub removeconcepts {
   my ($db,$objid) = @_;
-  my $delc = $db->cachedPrepare("DELETE from concepthash where objectid = ?");
+  my $delc = $db->prepare("DELETE from concepthash where objectid = ?");
   $delc->execute($objid);
 }
 
@@ -111,7 +111,7 @@ sub removeconcepts {
 sub getallconcepts {
   my ($db) = @_;
   #get the concepts
-  my $sth = $db->cachedPrepare("SELECT urltemplate, identifier, title, object.objectid, concept from concepthash, domain, object where object.domainid=domain.domainid and object.objectid = concepthash.objectid");
+  my $sth = $db->prepare("SELECT urltemplate, identifier, title, object.objectid, concept from concepthash, domain, object where object.domainid=domain.domainid and object.objectid = concepthash.objectid");
   $sth->execute();
 
   my %concepts = ();
@@ -130,7 +130,7 @@ sub getconcepts {
   my ($db,$objid) = @_;
 
   #get the concepts
-  my $sth = $db->cachedPrepare("SELECT concept from concepthash where objectid = ?");
+  my $sth = $db->prepare("SELECT concept from concepthash where objectid = ?");
   $sth->execute( $objid );
 
   my @concepts = ();
@@ -167,7 +167,7 @@ sub get_possible_matches {
     $word = depluralize($word);
   }
 
-  my $sth = $db->cachedPrepare("SELECT firstword, concept, objectid from concepthash where firstword=?");
+  my $sth = $db->prepare("SELECT firstword, concept, objectid from concepthash where firstword=?");
   $sth->execute($word);
   while ( my $row = $sth->fetchrow_hashref() ) {
     push @matches, $row;

@@ -38,7 +38,7 @@ sub initClassificationModule {
   my $classgraph = $self->{classgraph};
 
   print "Initializing Classification Distance Module\n";
-  my $sth = $self->{db}->cachedPrepare("SELECT child, parent, weight from ontology");
+  my $sth = $self->{db}->prepare("SELECT child, parent, weight from ontology");
   $sth->execute();
 
   while ( my $row = $sth->fetchrow_hashref() ) {
@@ -123,7 +123,7 @@ sub class_distance {
 #
 sub getclasses{
   my ($self,$objid) = @_;
-  my $sth = $self->{db}->cachedPrepare("SELECT scheme, class from classification where classification.objectid = ?");
+  my $sth = $self->{db}->prepare("SELECT scheme, class from classification where classification.objectid = ?");
 
   my @classes = ();
 
@@ -146,7 +146,7 @@ sub classinfo {
 
   # first get the classification..
   #
-  my $sth = $self->{db}->cachedPrepare("select scheme, class from classification where objectid = ?");
+  my $sth = $self->{db}->prepare("select scheme, class from classification where objectid = ?");
   $sth->execute( $id );
 
   my @output = ();
@@ -267,7 +267,7 @@ sub getnslinkbyid {
 
 sub declassify {
   my ($self,$objid) = @_;
-  my $sth = $self->{db}->cachedPrepare("DELETE FROM classification where objectid = ?");
+  my $sth = $self->{db}->prepare("DELETE FROM classification where objectid = ?");
   $sth->execute( $objid );
   $sth->finish();
 }
@@ -301,22 +301,24 @@ sub cleancategory {
   #	return "$scheme:$ext";
 }
 
-sub addcategory {
-  my $category = shift;
-  my $default = shift;		#default category for the domain
+# DG: No one is using this, deprecate?
+# sub addcategory {
+#   my $category = shift;
+#   my $default = shift;		#default category for the domain
 
-  my ($scheme, @other ) = split( /:/, $category);
-  my $ext = join( ":", @other );	
+#   my ($scheme, @other ) = split( /:/, $category);
+#   my $ext = join( ":", @other );	
 
 
-  print "adding category $scheme : $ext\n";
-  my $sth = cachedPrepare("insert into categories (externalid, scheme) values (?,?)");
-  # removed due to an eval related memory leak in perl
-  #	eval {
-  $sth->execute(  $ext, $scheme );
-  $sth->finish();
-  #	};
-}
+#   print "adding category $scheme : $ext\n";
+#   # TODO: Get a DB object in here
+#   my $sth = cachedPrepare("insert into categories (externalid, scheme) values (?,?)");
+#   # removed due to an eval related memory leak in perl
+#   #	eval {
+#   $sth->execute(  $ext, $scheme );
+#   $sth->finish();
+#   #	};
+# }
 
 # shorten classifications, turn
 #	 msc:11-00, msc:15-00, ...
@@ -359,7 +361,7 @@ sub updateclass {
   $self->declassify( $objid );
   #	print Dumper($classes);
 
-  my $upclass = $self->{db}->cachedPrepare("INSERT into classification (objectid, scheme, class) values ( ?, ?, ?)");
+  my $upclass = $self->{db}->prepare("INSERT into classification (objectid, scheme, class) values ( ?, ?, ?)");
   foreach my $cl (@{$classes}) {
     my ( $scheme, $class ) = $self->cleancategory( $cl, $domainid );
     $upclass->execute( $objid, $scheme, $class );
@@ -380,7 +382,7 @@ sub getclass {
   }
 
   my $sql = "SELECT class, scheme from classification where objectid = ?";
-  my $sth = $self->{db}->cachedPrepare( $sql );
+  my $sth = $self->{db}->prepare( $sql );
   $sth->execute( $id );
 
   my @classes = ();

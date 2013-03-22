@@ -52,12 +52,12 @@ sub addobject {
 
   print STDERR "adding object $objid $title\n";
 
-  my $sth = $db->cachedPrepare("INSERT into object (identifier, title, body, domainid, authorid, linkpolicy, valid) values (?, ?, ?, ?, ?, ?, ?)");
+  my $sth = $db->prepare("INSERT into object (identifier, title, body, domainid, authorid, linkpolicy, valid) values (?, ?, ?, ?, ?, ?, ?)");
   $sth->execute($objid, $title, $body, $domid, $authorid , $linkpolicy, 0  );
   #
   # we need the object id in order to update the concepts and classification
   #
-  $objid = $db->dbConnect->{'mysql_insertid'};
+  $objid = $db->do->{'mysql_insertid'};
   $sth->finish(); 
 
   # we eliminated concept labels. We now just use the concepthash table directly
@@ -108,7 +108,7 @@ sub updateobject {
   #we need to change this so that we only update if the values are different and defined.
   my $sth;
   if ( $body ne "" ) {
-    $sth = $db->cachedPrepare("UPDATE object SET title = ? , body = ?, domainid = ?, authorid = ?, linkpolicy = ?, valid = ? WHERE objectid = ?");
+    $sth = $db->prepare("UPDATE object SET title = ? , body = ?, domainid = ?, authorid = ?, linkpolicy = ?, valid = ? WHERE objectid = ?");
     $sth->execute( $title, $body, $domid, $authorid, $linkpolicy, 0, $objid); 
     $sth->finish();	
     #
@@ -128,7 +128,7 @@ sub updateobject {
 
     updateclass( $objid , $domid,  $classes );
   } else {
-    $sth = $db->cachedPrepare("UPDATE object set linkpolicy = ?, valid = ? WHERE objectid = ?");
+    $sth = $db->prepare("UPDATE object set linkpolicy = ?, valid = ? WHERE objectid = ?");
     $sth->execute( $linkpolicy, 0, $objid); 
     $sth->finish();	
   }
@@ -156,7 +156,7 @@ sub deleteobject {
   my ($db,$objid) = @_;#this is the internal objectid
 
   removeconcepts( $objid );
-  my $sth = $db->cachedPrepare("delete from object where objectid = ?");
+  my $sth = $db->prepare("delete from object where objectid = ?");
   eval { 
     $sth->execute($objid );
     $sth->finish(); 
@@ -182,7 +182,7 @@ sub deleteobject {
 sub getauthorid {
   my ($db,$name,$domid)=@_;
 
-  my $sth = $db->cachedPrepare( "select authorid from author where name = ? AND domainid = ?" );
+  my $sth = $db->prepare( "select authorid from author where name = ? AND domainid = ?" );
   $sth->execute($name, $domid);
 
   my $row = $sth->fetchrow_hashref();
@@ -196,7 +196,7 @@ sub getauthorid {
 # Add a new author
 sub addauthor {
   my ($db,$name,$domid)=@_;
-  my $sth = $db->cachedPrepare( "INSERT into author ( name, domainid ) values ( ?, ? )" );
+  my $sth = $db->prepare( "INSERT into author ( name, domainid ) values ( ?, ? )" );
   eval {
     $sth->execute( $name, $domid );
     $sth->finish();
@@ -208,7 +208,7 @@ sub addauthor {
 sub get_object_hash {
   my ($db,$objid) = @_;
 
-  my $sth = $db->cachedPrepare("select * from object where objectid = ?");
+  my $sth = $db->prepare("select * from object where objectid = ?");
   $sth->execute( $objid );
   my $row = $sth->fetchrow_hashref();
   $sth->finish();
@@ -220,7 +220,7 @@ sub get_object_hash {
 sub get_object_id {
   my ($db,$extid,$domid) = @_;
 
-  my $sth = $db->cachedPrepare("select objectid from object where identifier = ? and domainid = ?");
+  my $sth = $db->prepare("select objectid from object where identifier = ? and domainid = ?");
   $sth->execute( $extid, $domid );	 
   my $objectid = -1;
   my $row = $sth->fetchrow_hashref();
@@ -235,7 +235,7 @@ sub get_object_id {
 sub getexternalid {
   my ($db,$objid) = @_;
 
-  my $sth = $db->cachedPrepare("select identifier from object where objectid = ?");
+  my $sth = $db->prepare("select identifier from object where objectid = ?");
   $sth->execute($objid);
   my $row = $sth->fetchrow_hashref();
   $sth->finish();
@@ -244,7 +244,7 @@ sub getexternalid {
 
 sub is_valid {
   my ($db,$objid) = @_;
-  my $sth = $db->cachedPrepare("select valid from object where objectid = ?");
+  my $sth = $db->prepare("select valid from object where objectid = ?");
   $sth->execute($objid);
   my $row = $sth->fetchrow_hashref();
   $sth->finish();
@@ -255,7 +255,7 @@ sub is_valid {
 
 sub get_object_idbycid {
   my ($db,$cid) = @_;
-  my $sth = $db->cachedPrepare("SELECT objectid from concepthash where conceptid = ?");
+  my $sth = $db->prepare("SELECT objectid from concepthash where conceptid = ?");
   $sth->execute($cid);
   my $row = $sth->fetchrow_hashref();
   $sth->finish();

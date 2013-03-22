@@ -32,8 +32,8 @@ sub new {
     print STDERR "Starting NNexus with configuration:\n";
     print STDERR Dumper( $opts );
   }
-  $opts->{nnexus_db} = NNexus::DB->new(config=>$opts);
-  my $dbh = $opts->{nnexus_db}->dbConnect;
+  my $db = NNexus::DB->new(config=>$opts);
+  $opts->{db} = $db;
   # DG: Deprecating for now.
   #load up the menuing code;
   # open (MENUFILE, "<", $config->{'menufile'});
@@ -42,9 +42,9 @@ sub new {
   # }
 
   #now initialize the db with domain info;
-  my $sth = $dbh->prepare( "select * FROM domain WHERE name = ?");
-  my $ins = $dbh->prepare( "insert into domain (name, urltemplate, code, nickname) values ( ? , ?, ?, ? )" );
-  my $upd = $dbh->prepare( "update domain set urltemplate = ?, code = ?, nickname = ? where name = ?" );
+  my $sth = $db->prepare( "select * FROM domain WHERE name = ?");
+  my $ins = $db->prepare( "insert into domain (name, urltemplate, code, nickname) values ( ? , ?, ?, ? )" );
+  my $upd = $db->prepare( "update domain set urltemplate = ?, code = ?, nickname = ? where name = ?" );
 
   my $ref = $opts->{'domains'}->{'domain'};
   print STDERR Dumper($ref) if $opts->{verbosity}>0;
@@ -76,7 +76,7 @@ sub new {
       #fix this because if it is new we will not have the domainid
     }
   }
-  my $classification=NNexus::Classification->new(db=>$opts->{nnexus_db},config=>{ %$opts });
+  my $classification = NNexus::Classification->new(db=>$db,config=>{ %$opts });
   $classification->initClassificationModule();
   $opts->{classification} = $classification;
   bless $opts, $class;
@@ -92,7 +92,7 @@ sub getDomainConfig {
 }
 
 sub get_DB {
-  $_[0]->{nnexus_db};
+  $_[0]->{db};
 }
 
 1;

@@ -1305,7 +1305,7 @@ sub addLink {
 
   #dwarn "*** xref: adding link table entry for $fromid -> $toid" if ($DEBUG);
   if (!linkPresent($fromid , $toid)) {
-    my $sth = $db->dbConnect->prepare("INSERT into links (fromid, toid) VALUES (?, ?)");
+    my $sth = $db->prepare("INSERT into links (fromid, toid) VALUES (?, ?)");
     eval {
       $sth->execute($fromid, $toid);
       $sth-finish();
@@ -1318,7 +1318,7 @@ sub addLink {
 sub linkPresent {
   my ($db,$fromid,$toid)=@_;
 
-  my $sth = $db->dbConnect->prepare("select fromid from links WHERE fromid = ? AND toid = ?");
+  my $sth = $db->prepare("select fromid from links WHERE fromid = ? AND toid = ?");
   $sth->execute( $fromid, $toid );
   my $rc = $sth->rows();
 
@@ -1342,7 +1342,7 @@ sub unlink {
 sub deleteLinksTo {
   my ($db,$id) = @_;
 
-  my $sth = $db->dbConnect->prepare("delete from links where toid = ?");
+  my $sth = $db->prepare("delete from links where toid = ?");
   eval {
     $sth->execute($id);
     $sth->finish();
@@ -1356,7 +1356,7 @@ sub deleteLinksFrom {
 	
   return if ($id<0);		# sanity
 
-  my $sth = $db->dbConnect->prepare("delete from links WHERE fromid = ?");
+  my $sth = $db->prepare("delete from links WHERE fromid = ?");
   eval {
     $sth->execute($id);	
     $sth->finish();
@@ -1366,7 +1366,7 @@ sub deleteLinksFrom {
 
 sub getlinkedto {
   my ($db,$objid) = @_;
-  my $sth = $db->dbConnect->prepare("select fromid from links where toid = ?");
+  my $sth = $db->prepare("select fromid from links where toid = ?");
   $sth->execute($objid);
   my @links = ();
   while (my $row = $sth->fetchrow_hashref() ) {
@@ -1522,7 +1522,7 @@ sub xrefGetNeighborList {
 
   my @list = ();
 
-  my $sth = $db->dbConnect->prepare("select toid from links where fromid = ?");
+  my $sth = $db->prepare("select toid from links where fromid = ?");
   $sth->execute($source);
 
   while ( my $row = $sth->fetchrow_hashref() ) {

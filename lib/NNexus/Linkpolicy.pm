@@ -133,7 +133,7 @@ sub post_resolve_linkpolicy {
 sub loadpolicy {
   my ($db,$objectid) = @_;
 
-  my $sth = $db->cachedPrepare("select linkpolicy from object where objectid = ?");
+  my $sth = $db->prepare("select linkpolicy from object where objectid = ?");
   $sth->execute($objectid);
 
   my $row = $sth->fetchrow_arrayref();
