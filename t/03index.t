@@ -51,4 +51,4 @@ index_test(
 # Note: Uncomment to index all of Wikipedia's math concepts
  # index_test(
  #    url=>'default',
- #    domain=>'mathworld');
+ #    domain=>'DLMF');
