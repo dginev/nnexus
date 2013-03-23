@@ -18,24 +18,24 @@ setup
  |- config.json
 lib
  |- NNexus
-   |- Job
-   |- DB
-   |- Config
-   |- Util
+   |- Job.pm
+   |- DB.pm
+   |- Config.pm
+   |- Util.pm
    |- Index
-       |- Dispatcher
-       |- Template
-       |- Wikipedia
-       |- Mathworld
-       |- DLMF
+       |- Dispatcher.pm
+       |- Template.pm
+       |- Wikipedia.pm
+       |- Mathworld.pm
+       |- DLMF.pm
   ...
    |
-   |- Concepts
-   |- Crossref
-   |- Domain
-   |- EncyclopediaEntry
-   |- LinkPolicy
-   |- Morphology
+   |- Concepts.pm
+   |- Crossref.pm
+   |- Domain.pm
+   |- EncyclopediaEntry.pm
+   |- LinkPolicy.pm
+   |- Morphology.pm
 ```
 
 The classes under the ... separator are yet to undergo more than a shallow refactoring pass and expect a rewrite.
@@ -108,12 +108,19 @@ The classes under the ... separator are yet to undergo more than a shallow refac
    This is harder to realize, as NNexus needs to be aware of all concept occurances before they are recognized as concepts. 
    The old NNexus implementation kept all of PlanetMath's articles in its index, which was a very heavy integration committment and ceratinly would not scale as the content grows in size.
    Reconceptualizing change management is still **work in progress** for the NNexus 2.0 implementation.
-   
+
+## The NNexus Knowledge Base
+
+**TODO:** Discuss the database organisation, which tables serves what purpose and how the overall interplay between
+indexing and auto-linking takes place. This is the **current** developer focus as of end of March.
+
 ## Concept Discovery
  Discuss Longest-token matching, ideas for improvements.
+ **TODO:** The code behind this functionality is yet to be revisted, but is on the development short-list.
  
 ## Annotation Schemes
  Talk about adding achors to HTML, JSON for editors, etc.
+ **TODO:** These are also features that will be ready for the June release, but are future work as of March.
  
 ## Release Milestone and Goals
 
