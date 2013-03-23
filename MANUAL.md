@@ -56,6 +56,7 @@ The classes under the ... separator are yet to undergo more than a shallow refac
 
 ### On Demand Processing
  In order to make NNexus scalable, robust and responsive, we divide the work in **processing jobs**.
+ 
  Each job is a ```NNexus::Job``` object, which flexibly supports all flavours of NNexus operations - on demand (re-)indexing,
  auto-linking (in turn concept-discovery and annotation). 
  
@@ -83,11 +84,11 @@ The classes under the ... separator are yet to undergo more than a shallow refac
  - The logic mining candidate links of interest from the currently visited page
  - The logic mining math concepts to be indexed from the currently visited page
 
- With this framework in place, each domain indexer can be implemented in ~50 lines of Perl code. 
+With this framework in place, each domain indexer can be implemented in ~50 lines of Perl code. 
 
 ### Indexer Plug-ins
- Currently, NNexus sports four indexers - one for each of [PlanetMath](www.planetmath.org), [Wikipedia](wikipedia.org),
- [MathWorld](mathworld.wolfram.com/) and [DLMF](dlmf.nist.gov).
+ Currently, NNexus sports four indexers - one for each of [PlanetMath](http://www.planetmath.org), [Wikipedia](http://wikipedia.org),
+ [MathWorld](http://mathworld.wolfram.com/) and [DLMF](http://dlmf.nist.gov).
  
  Each domain provides a single Perl class ```NNexus::Index::Domain``` inheriting from the template class ```NNexus::Index::Template```.
  As each domain has different markup and arrangement for its concepts, the indexing logic varies in the different classes.
@@ -116,10 +117,12 @@ indexing and auto-linking takes place. This is the **current** developer focus a
 
 ## Concept Discovery
  Discuss Longest-token matching, ideas for improvements.
+ 
  **TODO:** The code behind this functionality is yet to be revisted, but is on the development short-list.
  
 ## Annotation Schemes
  Talk about adding achors to HTML, JSON for editors, etc.
+ 
  **TODO:** These are also features that will be ready for the June release, but are future work as of March.
  
 ## Release Milestone and Goals
@@ -128,5 +131,5 @@ The NNexus 2.0 (NNexus Reloaded) milestone is set to expire at the end of June 2
 The release will consist in tagging a GitHub branch, as well as releasing the NNexus library on CPAN. 
 The main focus of the 2.0 release is to reincarnate and refactor the NNexus code, into a fresher and shinier app.
 
-The NNexus 3.0 release is schedule for the end of 2013 and will target various extensions and improvements to the original NNexus algorithms,
+The NNexus 3.0 release is scheduled for the end of 2013 and will target various extensions and improvements to the original NNexus algorithms,
 such as enhancing the longest-token matching logic for concept discovery, adding new annotation schemes and supporting more diverse and more numerous indexing sources.
