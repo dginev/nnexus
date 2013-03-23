@@ -27,7 +27,7 @@ sub new {
   #this is the global graph for determining classification distance
   my $classgraph = Graph::Undirected->new();
 
-  bless {classgraph=>$classgraph,db=>$opts{db},config=>$opts{config}}, $class;
+  bless {classgraph=>$classgraph,db=>$opts{db},config=>$opts{config}, verbosity=>$opts{verbosity}}, $class;
 }
 
 #this function assumes that the classification information has already been added
@@ -37,17 +37,17 @@ sub initClassificationModule {
   my ($self)=@_;
   my $classgraph = $self->{classgraph};
 
-  print "Initializing Classification Distance Module\n";
+  print STDERR "Initializing Classification Distance Module\n" if $self->{verbosity} > 0;
   my $sth = $self->{db}->prepare("SELECT child, parent, weight from ontology");
   $sth->execute();
 
   while ( my $row = $sth->fetchrow_hashref() ) {
-    #	print "adding edge $row->{'child'} $row->{'parent'}\n";
+    print STDERR "adding edge ".$row->{'child'}." ".$row->{'parent'}."\n" if $self->{verbosity} > 0;
     $classgraph->add_weighted_edge( $row->{'child'},
 				    $row->{'parent'},
 				    $row->{'weight'} );
   }
-  print "Done\n";
+  print STDERR "Done Classification Initializing\n" if $self->{verbosity} > 0;
 }
 
 #this function converts a string of the form scheme:id into

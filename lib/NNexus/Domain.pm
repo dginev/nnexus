@@ -31,7 +31,6 @@ our @EXPORT_OK = qw(get_domain_id get_domain_blacklist get_domain_priorities get
 
 #use NNexus::Classification;
 #use NNexus::Concepts;
-#use NNexus::DB;
 
 #
 # Get the domainid from config hash.
