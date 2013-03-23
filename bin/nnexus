@@ -22,9 +22,7 @@ use Encode;
 use strict;
 
 use NNexus::Job;
-use NNexus::Config;
-use XML::Simple;
-use Data::Dumper;
+use NNexus::Config qw(read_json_file);
 
 our $version = '0.1';
 # Configuration is server-level
@@ -33,9 +31,9 @@ my $opts;
 if ($ARGV[0]) {
   print STDERR "\nBase Configuration to be read from: $ARGV[0]\n";
   if (-e $ARGV[0]) {
-    $opts = XMLin($ARGV[0])
+    $opts = read_json_file($ARGV[0]);
   } else {
-    print STDERR "Error: No such file $ARGV[0]! Expect trouble...\n";
+    die "Error: No such file $ARGV[0]! Failing...\n";
   }
 }
 our $config = NNexus::Config->new($opts);

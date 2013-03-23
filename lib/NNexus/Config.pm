@@ -18,8 +18,10 @@
 package NNexus::Config;
 use strict;
 
-use XML::Simple;
-use Data::Dumper;
+use Exporter;
+our @ISA = qw(Exporter);
+our @EXPORT = qw(&read_json_file);
+
 use NNexus::Concepts;
 use NNexus::Classification;
 use NNexus::Domain;
@@ -27,72 +29,31 @@ use NNexus::DB;
 
 sub new {
   my ($class,$opts) = @_;
-  $opts = XMLin('./baseconf.xml') unless defined $opts;
+  $opts = read_json_file('conf.json') unless defined $opts;
   if ($opts->{verbosity} && $opts->{verbosity} > 0) {
     print STDERR "Starting NNexus with configuration:\n";
     print STDERR Dumper( $opts );
   }
   my $db = NNexus::DB->new(config=>$opts);
   $opts->{db} = $db;
-  # DG: Deprecating for now.
-  #load up the menuing code;
-  # open (MENUFILE, "<", $config->{'menufile'});
-  # while ( <MENUFILE> ) {
-  #   $menuscript .= $_;
-  # }
 
-  #now initialize the db with domain info;
-  my $sth = $db->prepare( "select * FROM domain WHERE name = ?");
-  my $ins = $db->prepare( "insert into domain (name, urltemplate, code, nickname) values ( ? , ?, ?, ? )" );
-  my $upd = $db->prepare( "update domain set urltemplate = ?, code = ?, nickname = ? where name = ?" );
-
-  my $ref = $opts->{'domains'}->{'domain'};
-  print STDERR Dumper($ref) if $opts->{verbosity}>0;
-  foreach my $k ( @$ref ) {
-    if ( defined $k->{'name'} ) {
-      my $name = $k->{'name'};
-      print STDERR "current domain " . $name . "\n";
-      $sth->execute( "$name" );		
-      #print Dumper($ref);
-      my @data = $sth->fetchrow_array();
-      if ($#data < 0) {
-        #we add a new row in the domain table if the domain doesn't exist
-        print STDERR $name . " " . $k->{'urltemplate'} . "\n";
-        $ins->execute( $k->{'name'} , 
-		       $k->{'urltemplate'}, 
-		       $k->{'code'},
-		       $k->{'nickname'}
-		    );
-        $ins->finish();
-	      $k->{'domainid'} = getdb_domain_id($k); 
-      } else {
-        print STDERR "updating domain $name $k->{urltemplate}\n";
-        $upd->execute(  $k->{'urltemplate'}, 
-        $k->{'code'},
-        $k->{'nickname'}, $k->{'name'} );
-        $k->{'domainid'}  = $data[0];
-      }
-      # for faster lookup of domain id we add it to the config
-      #fix this because if it is new we will not have the domainid
-    }
-  }
   my $classification = NNexus::Classification->new(db=>$db,config=>{ %$opts });
   $classification->initClassificationModule();
   $opts->{classification} = $classification;
   bless $opts, $class;
 }
 
-sub getStyleSheetLink {
-  return $_[0]->{'stylesheet'};
-}
-
-sub getDomainConfig {
-  my ($self,$domain,$arg) = @_;
-  return $self->{'domains'}->{'domain'}->{$domain}->{$arg};
-}
-
 sub get_DB {
   $_[0]->{db};
+}
+
+sub read_json_file {
+  my $file_name = shift;
+  use JSON::PP qw(decode_json);
+  open my $fh, "<", $file_name or die "Error opening Configuration JSON file: $file_name!\n";
+  my $string = join('',<$fh>);
+  close $fh;
+  return decode_json($string);
 }
 
 1;

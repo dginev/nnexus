@@ -1,0 +1,9 @@
+{"database": {
+    "dbms": "mysql",
+    "dbname": "nnexus",
+    "dbuser": "nnexus",
+    "dbpass": "nnexus",
+    "dbhost": "localhost"
+  },
+  "verbosity": 1
+}

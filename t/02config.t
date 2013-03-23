@@ -7,7 +7,7 @@ use NNexus::Config;
 use NNexus::Job;
 use XML::Simple;
 
-my $opts = XMLin('setup/baseconf.xml');
+my $opts = read_json_file('setup/config.json');
 ok($opts, 'Base configuration loads fine.');
 
 my $dbh = NNexus::DB->new(config=>$opts);
