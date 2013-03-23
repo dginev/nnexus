@@ -28,7 +28,6 @@ use Time::HiRes qw ( time alarm sleep );
 # use NNexus::Linkpolicy;
 # use NNexus::Concepts;
 # use NNexus::Indexing;
-# use NNexus::DB;
 
 use Exporter;
 our @ISA = qw(Exporter);

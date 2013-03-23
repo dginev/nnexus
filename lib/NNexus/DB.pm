@@ -24,17 +24,16 @@ use DBI;
 
 sub new {
   my ($class,%input)=@_;
+  # White-list the options we care about:
   my %options;
-  if (my $config = $input{config}) {
-    my $database = $config->{database};
-    $options{dbuser} = $database->{dbuser};
-    $options{dbpass} = $database->{dbpass};
-    $options{dbname} = $database->{dbname};
-    $options{dbhost} = $database->{dbhost};
-    $options{dbms} = $database->{dbms};
-  }
-  $options{'query_cache'} = $input{'query_cache'} || {};
-  $options{'handle'} = $input{'handle'};
+  $options{dbuser} = $input{dbuser};
+  $options{dbpass} = $input{dbpass};
+  $options{dbname} = $input{dbname};
+  $options{dbhost} = $input{dbhost};
+  $options{dbms} = $input{dbms};
+  $options{query_cache} = $input{query_cache} || {};
+  $options{handle} = $input{handle};
+
   bless \%options, $class;
 }
 
@@ -43,7 +42,6 @@ sub new {
 # do - adverb for connection to the database and returning a handle for further "deeds"
 sub do {
   my ($self)=@_;
-  # TODO: Kind of assuming the $config is the same throughout, maybe customize more?
   if (defined $self->{handle} && $self->{handle}->ping) {
     return $self->{handle};
   } else {

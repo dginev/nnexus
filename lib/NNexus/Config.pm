@@ -21,6 +21,7 @@ use strict;
 use Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(&read_json_file);
+use Data::Dumper;
 
 use NNexus::Concepts;
 use NNexus::Classification;
@@ -34,7 +35,7 @@ sub new {
     print STDERR "Starting NNexus with configuration:\n";
     print STDERR Dumper( $opts );
   }
-  my $db = NNexus::DB->new(config=>$opts);
+  my $db = NNexus::DB->new(%{$opts->{database}});
   $opts->{db} = $db;
 
   my $classification = NNexus::Classification->new(db=>$db,config=>{ %$opts });

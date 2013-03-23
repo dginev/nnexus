@@ -5,22 +5,26 @@ use Test::More tests => 3;
 
 use NNexus::Config;
 use NNexus::Job;
-use XML::Simple;
 
 my $opts = read_json_file('setup/config.json');
-ok($opts, 'Base configuration loads fine.');
+ok($opts, 'Default configuration setup/config.json loads fine.');
 
-my $dbh = NNexus::DB->new(config=>$opts);
-ok ($dbh, 'Can initialize a new NNexus::DB instance');
+my $db = NNexus::DB->new(%{$opts->{database}});
+ok($db, 'NNexus::DB object successfully created.');
+
 
 SKIP: {
-	my $config;
-	my $eval_return = eval { $dbh->dbConnect;  1; };
+	my $eval_return = eval { $db->do->ping };
 	if ((!$eval_return) || $@ ) {
-		skip "Config couldn't initialize with the default setup at setup/baseconf.xml\n."
+		skip "Config couldn't initialize with the default setup at setup/config.json."
 	 	." Do you have MySQL properly setup? Skipping...", 1;
 	} else {
-		$config = NNexus::Config->new($opts);
-		ok ($config, 'Can initialize a new NNexus::Config instance');	
+		ok ($db, 'Can initialize a new NNexus::DB object');
+
+		my $config=NNexus::Config->new($opts);
+		ok ($config, 'Can initialize a new NNexus::Config object');
 	}
 }
+
+
+
