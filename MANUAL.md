@@ -38,7 +38,7 @@ lib
    |- Morphology
 ```
 
-The classes under the ... separator are yet to undergo more than a shallow refactoring pass and expect refactoring.
+The classes under the ... separator are yet to undergo more than a shallow refactoring pass and expect a rewrite.
 
 ### Minimal Configuration
  The ```config.json``` configuration file prepackages a default configuration for the NNexus backend, mirrored in the startup SQL script.
@@ -60,7 +60,7 @@ The classes under the ... separator are yet to undergo more than a shallow refac
  auto-linking (in turn concept-discovery and annotation). 
  
 ### Persistence and Provenance
- Talk about the any-SQL backend.
+ Deserving no more than a passing note, the NNexus knowledge base can be store in any SQL backend that is supported by Perl's ```DBI``` library.
 
 ### Use in your own Perl Application
  The NNexus code now complies to the guidelines for writing Perl libraries, so besides having a convenient installation via:
@@ -69,12 +69,46 @@ The classes under the ... separator are yet to undergo more than a shallow refac
  you can also conveniently connect to a remote backend in the cloud via ```NNexus::Config``` and use that configuration for any NNexus operation,
  executed by a ```NNexus::Job``` object. In other words, NNexus functionality is easily embeddable in arbitrary Perl code.
 
-## PULL API Framework
- Discuss the indexing framework with a NNexus spider.
+## Indexing Framework
+ The original NNexus application was tightly coupled with the framework behind PlanetMath.org, **Noosphere**.
+ As NNexus 2.0 aims to be an independent general-purpose library for interlinking mathematical concepts, the
+ coupling to both its sources of indexed terms and its target auto-link recepients has been loosened.
+ 
+ On the indexing side, NNexus now takes initiative, as it crawls through web sites of interests and (re-)indexes their pages for defined math concepts.
+ As there is no all-pervasive convention for annotating math concepts and their definitions at the time of writing (March 2013),
+ every separate web site (or **domain**) requires a slightly (or completely) different indexing logic.
+ 
+ The PULL API provides a one-size-fits-all logic for traversing web sites, parametrized in three key aspects:
+ - The domain root to be the traversal start by default
+ - The logic mining candidate links of interest from the currently visited page
+ - The logic mining math concepts to be indexed from the currently visited page
 
-## Indexing Plug-ins
- Discuss a template plug-in for indexing a new web site.
+ With this framework in place, each domain indexer can be implemented in ~50 lines of Perl code. 
 
+### Indexer Plug-ins
+ Currently, NNexus sports four indexers - one for each of [PlanetMath](www.planetmath.org), [Wikipedia](wikipedia.org),
+ [MathWorld](mathworld.wolfram.com/) and [DLMF](dlmf.nist.gov).
+ 
+ Each domain provides a single Perl class ```NNexus::Index::Domain``` inheriting from the template class ```NNexus::Index::Template```.
+ As each domain has different markup and arrangement for its concepts, the indexing logic varies in the different classes.
+ 
+ However, the common API behind the plug-ins, as well as their common location at ```NNexus/Index/``` is quite powerful.
+ NNexus is able to automatically discover every domain for which a indexing plug-in is available, initialize the correct backend tables,
+ and automatically recognize and support jobs that request services for these domains.
+
+### Just-in-time Indexing
+ PlanetMath.org has offered its users just-in-time (re-)indexing for quite some time now, which is a feature
+ we intend to keep supported. The new framework meets this need in two steps:
+ - It allows for "on-demand" indexing jobs, through the web service API.
+  
+   Whenever the host application (e.g. PlanetMath) recognizes that a page of its content has changed, it is then requested for re-indexing by NNexus.
+
+ - The second aspect is **change management** or re-linking of any PlanetMath page that had already used a newly indexed concept.
+
+   This is harder to realize, as NNexus needs to be aware of all concept occurances before they are recognized as concepts. 
+   The old NNexus implementation kept all of PlanetMath's articles in its index, which was a very heavy integration committment and ceratinly would not scale as the content grows in size.
+   Reconceptualizing change management is still **work in progress** for the NNexus 2.0 implementation.
+   
 ## Concept Discovery
  Discuss Longest-token matching, ideas for improvements.
  
