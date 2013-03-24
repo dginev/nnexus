@@ -157,7 +157,7 @@ The index_step method is the core of the indexing logic behind NNexus. It provid
  - Indexing as iteration. Each NNexus indexer object contains an iterator, which can be stepped through.
    The traversal is left-to-right and depth-first.
  - The indexing is bound by depth (if requested) and keeps a cache of visited pages, avoiding loops.
- - An automatic one second sleep is triggered whenever a page is activated, in good crawling manners.
+ - An automatic one second sleep is triggered whenever a page is fetched, in good crawling manners.
 
 =back
 
