@@ -53,7 +53,7 @@ sub do {
 			 { RaiseError => 1 }
 			) || die "Could not connect to database: $DBI::errstr";
     $self->{handle}=$dbh;
-    $self->recover_cache;
+    $self->_recover_cache;
     return $dbh;
   }
 }
@@ -81,7 +81,9 @@ sub prepare {
 	return $query_cache->{$statement};
 }
 
-sub recover_cache {
+### Internal helper routines:
+
+sub _recover_cache {
   my ($self) = @_;
   my $query_cache = $self->{query_cache};
   foreach my $statement(keys %$query_cache) {
@@ -91,6 +93,7 @@ sub recover_cache {
 
 1;
 __END__
+
 =pod
 
 =head1 NAME
