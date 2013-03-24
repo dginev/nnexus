@@ -53,6 +53,7 @@ sub do {
 			 { RaiseError => 1 }
 			) || die "Could not connect to database: $DBI::errstr";
     $self->{handle}=$dbh;
+    $self->recover_cache;
     return $dbh;
   }
 }
@@ -61,10 +62,9 @@ sub do {
 # done - adverb for cleaning up. Disconnects and deletes the statement cache
 sub done {
   my ($self,$dbh)=@_;
-  $dbh = $self->{dbh} unless defined $dbh;
+  $dbh = $self->{handle} unless defined $dbh;
   $dbh->disconnect();
-  $self->{dbh}=undef;
-  $self->{query_cache} = undef;
+  $self->{handle}=undef;
 }
 
 # Performs an SQL statement prepare and returns, maintaining a cache of already
@@ -79,6 +79,14 @@ sub prepare {
 		$query_cache->{$statement} = $self->do->prepare($statement);
 	}
 	return $query_cache->{$statement};
+}
+
+sub recover_cache {
+  my ($self) = @_;
+  my $query_cache = $self->{query_cache};
+  foreach my $statement(keys %$query_cache) {
+   $query_cache->{$statement} = $self->do->prepare($statement); 
+  }
 }
 
 1;
