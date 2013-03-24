@@ -4,8 +4,9 @@ use strict;
 use Mojo::DOM;
 use Mojo::UserAgent;
 use Data::Dumper;
+
 ### GENERIC METHODS
-# To be directly inherited by concrete classes
+# To be directly inherited and used by concrete classes
 
 sub new {
 	my ($class,%options) = @_;
@@ -21,7 +22,7 @@ sub current_url { $_[1] ? $_[0]->{current_url} = $_[1] : $_[0]->{current_url}; }
 sub current_dom { $_[1] ? $_[0]->{current_dom} = $_[1] : $_[0]->{current_dom}; }
 sub current_category {$_[1] ? $_[0]->{current_category} = $_[1] : $_[0]->{current_category};}
 
-# 2. index: Traverse a page, obtain candidate concepts and candidate further links
+# index: Traverse a page, obtain candidate concepts and candidate further links
 sub index_step {
 	my ($self,%options) = @_;
   my $depth;
@@ -66,11 +67,11 @@ sub index_step {
 		$self->current_dom($self->ua->get($current_url)->res->dom);
 		sleep 1; # Don't overload the server
 	}
-  # 2.3. Obtain the indexer payload
+  # Obtain the indexer payload
   my $payload = $self->index_page;
-  # 2.4. What is the candidate category for follow-up jobs?
+  # What is the candidate category for follow-up jobs?
   my $category = $self->candidate_category;
-	# 2.5. Push all following candidate jobs to queue
+	# Push all following candidate jobs to queue
   if ($depth <= $self->depth_limit) { # Don't add pointless nodes
     my $candidate_links = $self->candidate_links;
     foreach (@$candidate_links) {
@@ -80,8 +81,9 @@ sub index_step {
         depth=>$depth+1});
     }
   }
+  # TODO : Comment this out when stable.
   print STDERR "Payload:\n",Dumper($payload);
-  # 2.6. Return final list of concepts for this page
+  # Return final list of concepts for this page
   return $payload;
   # We want to return a list of hashes:
   # [
@@ -95,14 +97,84 @@ sub index_step {
 
 ### CONCRETE METHODS
 # To be overloaded by concrete classes
+
 sub depth_limit {4;}
 sub domain_root {q{};} # To be overriden in the concrete classes
 sub index_page {[];} # To be overriden in the concrete classes
 sub candidate_links {
 	[];
-	# TODO: Generic implementation, retrieves ALL candidate links.
+	# TODO: Generic implementation should simply retrieve ALL <a href>s as candidate links.
 }
 sub candidate_category {}
 
 1;
 __END__
+
+=pod
+
+=head1 NAME
+
+C<NNexus::Index::Template> - Foundation Template for NNexus Domain Indexers
+
+=head1 SYNOPSIS
+
+package NNexus::Index::Mydomain;
+use base qw(NNexus::Index::Template);
+
+sub domain_root { 'http://mydomain.com' }
+sub candidate_links { ... }
+sub index_page { ... }
+sub depth_limit { 10; }
+
+1;
+
+# Then from e.g. a NNexus::Job invoke:
+my $indexer = NNexus::Index::Dispatcher->new('mydomain');
+my $first_payload = $indexer->index_step('start'=>'default');
+while (my $concept_payload = $indexer->index_step ) {
+ # Do something with the indexed concepts...
+}
+
+=head1 DESCRIPTION
+
+This class contains the generic NNexus indexing logic, and offers the PULL API for concrete domain indexers.
+  There are three categories of methods:
+  - Core methods - defining the generic crawl process and logic
+  - PULL API - methods to be overloaded by concrete domain indexers
+  - External API - public methods, to be used to set up and drive the indexing process.
+
+=head2 CORE METHODS
+
+=over 4
+
+=item C<Write more>
+
+=back
+
+=head2 PULL API
+
+=over 4
+
+=item C<Write more>
+
+=back
+
+=head2 EXTERNAL API
+
+=over 4
+
+=item C<Write more>
+
+=back
+
+=head1 AUTHOR
+
+Deyan Ginev <d.ginev@jacobs-university.de>
+
+=head1 COPYRIGHT
+
+Research software, produced as part of work done by
+the KWARC group at Jacobs University Bremen.
+Released under the GNU Public License
+
+=cut
