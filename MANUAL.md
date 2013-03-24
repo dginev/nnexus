@@ -61,7 +61,7 @@ The classes under the ... separator are yet to undergo more than a shallow refac
  auto-linking (in turn concept-discovery and annotation). 
  
 ### Persistence and Provenance
- Deserving no more than a passing note, the NNexus knowledge base can be store in any SQL backend that is supported by Perl's ```DBI``` library.
+ Deserving no more than a passing note, the NNexus knowledge base can be stored in any SQL backend that is supported by Perl's ```DBI``` library.
 
 ### Use in your own Perl Application
  The NNexus code now complies to the guidelines for writing Perl libraries, so besides having a convenient installation via:
@@ -87,8 +87,8 @@ The classes under the ... separator are yet to undergo more than a shallow refac
 With this framework in place, each domain indexer can be implemented in ~50 lines of Perl code. 
 
 ### Indexer Plug-ins
- Currently, NNexus sports four indexers - one for each of [PlanetMath](http://www.planetmath.org), [Wikipedia](http://wikipedia.org),
- [MathWorld](http://mathworld.wolfram.com/) and [DLMF](http://dlmf.nist.gov).
+ Currently, NNexus sports four indexers - one for each of [PlanetMath](https://github.com/dginev/nnexus/blob/master/lib/NNexus/Index/Planetmath.pm), [Wikipedia](https://github.com/dginev/nnexus/blob/master/lib/NNexus/Index/Wikipedia.pm),
+ [MathWorld](https://github.com/dginev/nnexus/blob/master/lib/NNexus/Index/Mathworld.pm) and [DLMF](https://github.com/dginev/nnexus/blob/master/lib/NNexus/Index/Dlmf.pm).
  
  Each domain provides a single Perl class ```NNexus::Index::Domain``` inheriting from the template class ```NNexus::Index::Template```.
  As each domain has different markup and arrangement for its concepts, the indexing logic varies in the different classes.
