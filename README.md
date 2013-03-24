@@ -3,7 +3,9 @@ NNexus provides an API and an engine for auto-linking of mathematical concepts.
 
 NNexus is free, libre, open-source software.
 
-# Current features
+# Installation and Deployment
+
+You can check out the [Manual](MANUAL.md) draft, for a technical overview of the NNexus system.
 
 ## Setting up the server
 
@@ -39,8 +41,11 @@ These two lines of PHP illustrate how NNexus can be used via curl:
   $content = planetary_webglue_do_post('http://127.0.0.1:3001/autolink',$data);
 ```
 
-# Future plans: JSON support
+# Future plans
 
+## Exhaustive JSON support
+
+JSON is already the preferred representation for NNexus requests, yet the coverage of the original NNexus request types is incomplete.
 For example, sending JSON like this, as prescribed by the legaxy NNexus API:
 
 ```json
