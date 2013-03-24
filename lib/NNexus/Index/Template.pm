@@ -5,9 +5,7 @@ use Mojo::DOM;
 use Mojo::UserAgent;
 use Data::Dumper;
 
-### GENERIC METHODS
-# To be directly inherited and used by concrete classes
-
+### EXTERNAL API
 sub new {
 	my ($class,%options) = @_;
 	my $ua = Mojo::UserAgent->new;
@@ -17,16 +15,11 @@ sub new {
 }
 sub ua {$_[0]->{ua};}
 
-# Getter or Setter for the current URL to be indexed
-sub current_url { $_[1] ? $_[0]->{current_url} = $_[1] : $_[0]->{current_url}; }
-sub current_dom { $_[1] ? $_[0]->{current_dom} = $_[1] : $_[0]->{current_dom}; }
-sub current_category {$_[1] ? $_[0]->{current_category} = $_[1] : $_[0]->{current_category};}
-
 # index: Traverse a page, obtain candidate concepts and candidate further links
 sub index_step {
-	my ($self,%options) = @_;
+  my ($self,%options) = @_;
   my $depth;
-	 # Set current if we're starting up.
+  # Set current if we're starting up.
 	if (defined $options{start}) {
 		if ($options{start} eq 'default') {
       $self->current_url($self->domain_root);
@@ -85,27 +78,27 @@ sub index_step {
   print STDERR "Payload:\n",Dumper($payload);
   # Return final list of concepts for this page
   return $payload;
-  # We want to return a list of hashes:
-  # [
-  #   { URL => $url,
-  #	  canonical => $canonical,
-  #     NLconcept => $concepts,
-  #     category => $category 
-  #   }, ...
-  # ]
 }
 
-### CONCRETE METHODS
+### PULL API
 # To be overloaded by concrete classes
-
 sub depth_limit {4;}
 sub domain_root {q{};} # To be overriden in the concrete classes
+# TODO: Rename index_page to candidate_concepts ? Or index_links / index_category instead?
 sub index_page {[];} # To be overriden in the concrete classes
 sub candidate_links {
 	[];
 	# TODO: Generic implementation should simply retrieve ALL <a href>s as candidate links.
 }
 sub candidate_category {}
+
+### SHARED METHODS
+# To be directly inherited and used by concrete classes
+
+# Getter or Setter for the current URL/DOM/Category
+sub current_url { $_[1] ? $_[0]->{current_url} = $_[1] : $_[0]->{current_url}; }
+sub current_dom { $_[1] ? $_[0]->{current_dom} = $_[1] : $_[0]->{current_dom}; }
+sub current_category {$_[1] ? $_[0]->{current_category} = $_[1] : $_[0]->{current_category};}
 
 1;
 __END__
@@ -121,6 +114,7 @@ C<NNexus::Index::Template> - Foundation Template for NNexus Domain Indexers
 package NNexus::Index::Mydomain;
 use base qw(NNexus::Index::Template);
 
+# Instantiate the PULL API methods
 sub domain_root { 'http://mydomain.com' }
 sub candidate_links { ... }
 sub index_page { ... }
@@ -128,7 +122,7 @@ sub depth_limit { 10; }
 
 1;
 
-# Then from e.g. a NNexus::Job invoke:
+# Then from outside e.g. a NNexus::Job invoke:
 my $indexer = NNexus::Index::Dispatcher->new('mydomain');
 my $first_payload = $indexer->index_step('start'=>'default');
 while (my $concept_payload = $indexer->index_step ) {
@@ -139,31 +133,105 @@ while (my $concept_payload = $indexer->index_step ) {
 
 This class contains the generic NNexus indexing logic, and offers the PULL API for concrete domain indexers.
   There are three categories of methods:
-  - Core methods - defining the generic crawl process and logic
-  - PULL API - methods to be overloaded by concrete domain indexers
-  - External API - public methods, to be used to set up and drive the indexing process.
-
-=head2 CORE METHODS
-
-=over 4
-
-=item C<Write more>
-
-=back
-
-=head2 PULL API
-
-=over 4
-
-=item C<Write more>
-
-=back
+  - External API - public methods, to be used to set up and drive the indexing process
+  - Shared methods - defining the generic crawl process and logic, shared by all domain indexers
+  - PULL API - per-page data-mining methods, to be overloaded by concrete domain indexers
 
 =head2 EXTERNAL API
 
 =over 4
 
-=item C<Write more>
+=item C<< my $indexer = NNexus::Index::Dispatcher->new('mydomain'); >>
+
+The most reliable way to instantiate a domain indexer. The 'mydomain' string is conventionally the shorthand
+name a certain site is referred by, e.g. Wikipedia, DLMF or Mathworld. 
+
+=item C<< my $payload = $indexer->index_step('start'=>'default'); >>
+
+The index_step method is the core of the indexing logic behind NNexus. It provides:
+ - Automatic crawling under the specified 'start' domain root.
+ - Fine-tuning of crawl targets. 'start' can be both the 'default' for the domain, as well as any specific URL.
+ - Indexing as iteration. Each NNexus indexer object contains an iterator, which can be stepped through.
+   The traversal is left-to-right and depth-first.
+ - The indexing is bound by depth (if requested) and keeps a cache of visited pages, avoiding loops.
+ - An automatic one second sleep is triggered whenever a page is activated, in good crawling manners.
+
+=back
+
+=head2 SHARED METHODS
+
+=over 4
+
+=item C<< my $url = $self->current_url >>
+
+Getter, provides the current URL of the page being indexed. 
+  Dually acts as a setter when an argument is provided,
+  mainly set from the index_step method.
+
+=item C<< my $dom = $self->current_dom >>
+
+Getter, provides the current Mojo::DOM of the page being indexed. 
+  Dually acts as a setter when an argument is provided,
+  mainly set from the index_step method.
+
+=item C<< my $dom = $self->current_category >>
+
+Getter, provides the current category of the page being indexed. 
+  Dually acts as a setter when an argument is provided,
+  mainly set from the index_step method.
+
+The main use of this method is for sites setup similarly to Wikipedia, where a sub-categorization scheme
+  is being traversed and the current category needs to be remembered whenever a new leaf concept page is entered.
+  See NNexus::Index::Wikipedia for examples.
+
+=back
+
+=head2 PULL API
+
+All PULL API methods are intended to be overridden in each concrete domain indexer,
+  with occasional exceptions, where the default behaviour (if any) suffices.
+
+=over 4
+
+=item C<< sub domain_root { 'http://mydomain.org' } >>
+
+Sets the default start URL for an indexing process of the entire domain.
+
+=item C<< sub candidate_links {...} >>
+
+Using the information provided by the shared methods,
+  datamine zero or more candidate links for further indexing.
+
+  The expected return value is a reference to an array of absolute URL strings.
+  
+=item C<< sub index_page {...} >>
+
+Using the information provided by the shared methods,
+  datamine zero or more candidate concepts for NNexus indexing.
+  
+  The expected return value is a reference to an array of hash-references,
+  each hash-reference being a concept hash datastructure, specified as:
+  	
+  { canonical => 'concept name',
+    url => 'origin url',
+    synonyms => [ qw(list of synonyms) ],
+    categories => [ qw(list of categories) ],
+    # ... TODO: More?
+  }
+  
+=item C<< sub candidate_category {...} >>
+
+Propose a candidate category for the current page, using the shared methods.
+  Useful in cases where the category information of a concept is not recorded in the same page, but
+  has to be inferred instead, as is the case for Wikipedia's traversal process.
+  
+  See Index::Template::Wikipedia for an example of overriding candidate_category.
+
+=item C<< sub depth_limit { 10; } >>
+
+An integer constant specifying a depth-limit for the crawling process, wrt to the start URL provided.
+  Useful for heavily interlinked sites, such as Wikipedia, in which as depth increases, the topicality
+  of the indexed subcategories decreases.
 
 =back
 
