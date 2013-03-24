@@ -29,3 +29,26 @@ sub depth_limit {10;}
 
 1;
 __END__
+
+=pod
+
+=head1 NAME
+
+C<NNexus::Index::Planetmath> - Concrete Indexer for the PlanetMath.org domain.
+
+=head1 DESCRIPTION
+
+Concrete indexer for the PlanetMath.org domain.
+See C<NNexus::Index::Template> for detailed indexing documentation.
+
+=head1 AUTHOR
+
+Deyan Ginev <d.ginev@jacobs-university.de>
+
+=head1 COPYRIGHT
+
+Research software, produced as part of work done by
+the KWARC group at Jacobs University Bremen.
+Released under the GNU Public License
+
+=cut
