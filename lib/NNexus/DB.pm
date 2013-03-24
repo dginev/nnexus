@@ -90,5 +90,72 @@ sub recover_cache {
 }
 
 1;
-
 __END__
+=pod
+
+=head1 NAME
+
+C<NNexus::DB> - DBI interface for NNexus, provides one DBI handle per NNexus::DB object.
+
+=head1 SYNOPSIS
+
+  use NNexus::DB;
+  my $db = NNexus::DB(dbuser=>'nnexus',dbpass=>'pass',dbname=>"nnexus",dbhost=>"localhost", dbms=>"mysql");
+  my $connection_alive = $db->do->ping;
+  my $statement_handle = $db->prepare('DBI sql statement');
+  $db->do->execute('DBI sql statement');
+  my $disconnect_successful = $db->done;
+
+=head1 DESCRIPTION
+
+Interface to DBI's SQL logic. Provides an Object-oriented approach, 
+  where each NNexus::DB object contains a single DBI handle, 
+  together with a cache of prepared statements.
+
+The documentation assumes basic familiarity with DBI.
+
+=head2 METHODS
+
+=over 4
+
+=item C<< my $db = NNexus::Job->new(%options); >>
+
+Creates a new NNexus::DB object.
+  Required options are dbuser, dbpass, dbname, dbhost and dbms, so that
+  the database connection can be successfully created.
+
+=item C<< my $response = $db->do->DBI_handle_command; >>
+
+The do adverb returns a DBI handle, taking extra care that the handle is properly connected to
+  the respective DB backend.
+  While you could take the DBI handle and use it directly (it is the return value of the do method),
+  avoid that approach.
+
+  Instead, always invoke DBI commands through the do adverb, e.g. $db->do->execute, or $db->do->prepare,
+  in order to ensure robustness and safety of your backend calls. The cache of prepared statements is also
+  rejuvenated whenever a new DBI handle is auto-created.
+
+=item C<< my $disconnect_successful = $db->done; >>
+
+Disconnects from the backend and destroys the DBI handle.
+  Note that the cache of prepared statements will be kept and rejuvenated
+  when a new DBI handle is initialized.
+
+=item C<< my $statement_handle = $db->prepare; >>
+
+Cached preparation of SQL statements. Internally uses the do adverb, to ensure robustness.
+  Each SQL query and its DBI statement handle is cached, to avoid multiple prepare calls on the same query string.
+
+=back
+
+=head1 AUTHOR
+
+Deyan Ginev <d.ginev@jacobs-university.de>
+
+=head1 COPYRIGHT
+
+Research software, produced as part of work done by
+the KWARC group at Jacobs University Bremen.
+Released under the GNU Public License
+
+=cut
