@@ -122,7 +122,7 @@ sub depth_limit { 10; }
 
 1;
 
-# Then from outside e.g. a NNexus::Job invoke:
+# Then from outside e.g. from inside a NNexus::Job, invoke:
 my $indexer = NNexus::Index::Dispatcher->new('mydomain');
 my $first_payload = $indexer->index_step('start'=>'default');
 while (my $concept_payload = $indexer->index_step ) {
@@ -147,6 +147,9 @@ The most reliable way to instantiate a domain indexer. The 'mydomain' string is 
 name a certain site is referred by, e.g. Wikipedia, DLMF or Mathworld. 
 
 =item C<< my $payload = $indexer->index_step('start'=>'default'); >>
+
+While the index_step method is the main externally-facing interface method, it is also the most important shared
+  method between all domain indexers, as it automates the crawling and PULL processes.
 
 The index_step method is the core of the indexing logic behind NNexus. It provides:
  - Automatic crawling under the specified 'start' domain root.
