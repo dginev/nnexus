@@ -3,9 +3,9 @@ NNexus provides an API and an engine for auto-linking of mathematical concepts.
 
 NNexus is free, libre, open-source software.
 
-# Installation and Deployment
-
 You can check out the [Manual](MANUAL.md) draft, for a technical overview of the NNexus system.
+
+# Installation and Deployment
 
 ## Setting up the server
 
