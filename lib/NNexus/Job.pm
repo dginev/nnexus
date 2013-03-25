@@ -157,8 +157,8 @@ sub _index {
   my $domain = $self->{domain} || 'planetmath';
   my $url = $self->{url}||$self->{body};
   my $dom = $self->{dom};
-  require NNexus::IndexDispatcher;
-  my $dispatcher = NNexus::IndexDispatcher->new($domain);
+  require NNexus::Index::Dispatcher;
+  my $dispatcher = NNexus::Index::Dispatcher->new($domain);
   my @indexed_concepts;
   my $payload = $dispatcher->index_step(start=>$url,dom=>$dom);
   push @indexed_concepts, $payload;

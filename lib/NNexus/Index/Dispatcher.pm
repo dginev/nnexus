@@ -1,4 +1,4 @@
-package NNexus::IndexDispatcher;
+package NNexus::Index::Dispatcher;
 use warnings;
 use strict;
 
