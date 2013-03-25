@@ -108,7 +108,7 @@ With this framework in place, each domain indexer can be implemented in ~50 line
 
    This is harder to realize, as NNexus needs to be aware of all concept occurances before they are recognized as concepts. 
    The old NNexus implementation kept all of PlanetMath's articles in its index, which was a very heavy integration committment and ceratinly would not scale as the content grows in size.
-   Reconceptualizing change management is still **work in progress** ( #12 ) for the NNexus 2.0 implementation.
+   Reconceptualizing change management is still [work in progress](https://github.com/dginev/nnexus/issues/12) for the NNexus 2.0 implementation.
 
 ## The NNexus Knowledge Base
 
