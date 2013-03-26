@@ -33,7 +33,7 @@ sub index_step {
 		my $next_step = shift @{$self->{queue}};
     if (ref $next_step) {
 		  $self->current_url($next_step->{url});
-      $self->current_category($next_step->{category});
+      $self->current_categories($next_step->{categories});
       $depth = $next_step->{depth};
     } else {
       # We're out of urls, last step.
@@ -62,15 +62,15 @@ sub index_step {
 	}
   # Obtain the indexer payload
   my $payload = $self->index_page;
-  # What is the candidate category for follow-up jobs?
-  my $category = $self->candidate_category;
+  # What are the candidate categories for follow-up jobs?
+  my $categories = $self->candidate_categories;
 	# Push all following candidate jobs to queue
   if ($depth <= $self->depth_limit) { # Don't add pointless nodes
     my $candidate_links = $self->candidate_links;
     foreach (@$candidate_links) {
       unshift (@{$self->{queue}}, {
         url=>$_,
-        category=>[$category],
+        categories=>$categories,
         depth=>$depth+1});
     }
   }
@@ -84,21 +84,21 @@ sub index_step {
 # To be overloaded by concrete classes
 sub depth_limit {4;}
 sub domain_root {q{};} # To be overriden in the concrete classes
-# TODO: Rename index_page to candidate_concepts ? Or index_links / index_category instead?
+# TODO: Rename index_page to candidate_concepts ? Or index_links / index_categories instead?
 sub index_page {[];} # To be overriden in the concrete classes
 sub candidate_links {
 	[];
 	# TODO: Generic implementation should simply retrieve ALL <a href>s as candidate links.
 }
-sub candidate_category {}
+sub candidate_categories {}
 
 ### SHARED METHODS
 # To be directly inherited and used by concrete classes
 
-# Getter or Setter for the current URL/DOM/Category
+# Getter or Setter for the current URL/DOM/Categories
 sub current_url { $_[1] ? $_[0]->{current_url} = $_[1] : $_[0]->{current_url}; }
 sub current_dom { $_[1] ? $_[0]->{current_dom} = $_[1] : $_[0]->{current_dom}; }
-sub current_category {$_[1] ? $_[0]->{current_category} = $_[1] : $_[0]->{current_category};}
+sub current_categories {$_[1] ? $_[0]->{current_categories} = $_[1] : $_[0]->{current_categories};}
 
 1;
 __END__
@@ -177,14 +177,16 @@ Getter, provides the current Mojo::DOM of the page being indexed.
   Dually acts as a setter when an argument is provided,
   mainly set from the index_step method.
 
-=item C<< my $dom = $self->current_category >>
+=item C<< my $dom = $self->current_categories >>
 
-Getter, provides the current category of the page being indexed. 
+Getter, provides the current categories of the page being indexed. 
   Dually acts as a setter when an argument is provided,
   mainly set from the index_step method.
 
+The categories are a reference to an array of strings, ideally of MSC classes.
+
 The main use of this method is for sites setup similarly to Wikipedia, where a sub-categorization scheme
-  is being traversed and the current category needs to be remembered whenever a new leaf concept page is entered.
+  is being traversed and the current categories need to be remembered whenever a new leaf concept page is entered.
   See NNexus::Index::Wikipedia for examples.
 
 =back
@@ -222,13 +224,13 @@ Using the information provided by the shared methods,
     # ... TODO: More?
   }
   
-=item C<< sub candidate_category {...} >>
+=item C<< sub candidate_categories {...} >>
 
-Propose a candidate category for the current page, using the shared methods.
+Propose candidate categories for the current page, using the shared methods.
   Useful in cases where the category information of a concept is not recorded in the same page, but
   has to be inferred instead, as is the case for Wikipedia's traversal process.
   
-  See Index::Template::Wikipedia for an example of overriding candidate_category.
+  See Index::Template::Wikipedia for an example of overriding candidate_categories.
 
 =item C<< sub depth_limit { 10; } >>
 

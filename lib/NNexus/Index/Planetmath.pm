@@ -21,7 +21,7 @@ sub index_page {
   return [{
     url=>$url,
     canonical=>$name,
-    category=>[@categories],
+    categories=>\@categories,
     }];
 }
 

@@ -42,20 +42,20 @@ sub index_page {
 
   my ($concept) = map {/([^\(]+)/; lc(rtrim($1));} $dom->find('span[dir="auto"]')->pluck('all_text')->each;
   my @synonyms = grep {$_ ne $concept} map {lc $_} $dom->find('p')->[0]->find('b')->pluck('all_text')->each;
-  my $category = $self->current_category;
+  my $categories = $self->current_categories;
   return [{ url => $url,
 	 canonical => $concept,
-	 $category ? (category => [$category]) : (),
+	 $categories ? (categories => $categories) : (),
 	 @synonyms ? (synonyms => \@synonyms) : ()
    }];
 }
 
-sub candidate_category {
+sub candidate_categories {
 	my ($self) = @_;
 	if ($self->current_url =~ /\/wiki\/Category:(.+)$/ ) {
-		return "wiki:$1";
+		return ["wiki:$1"];
 	} else {
-		return "wiki:".($self->current_category||'math');
+		return $self->current_categories;
 	}
 }
 

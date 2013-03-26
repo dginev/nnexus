@@ -23,13 +23,14 @@ sub index_page {
   my $url = $self->current_url;
   my $dom = $self->current_dom;
   return [] if $dom->find('#directory')->[0];
+  # TODO: Support multiple MSC categories in the same page, not only [0]
   my $msc = $dom->find('meta[scheme="MSC_2000"]')->[0];
   my $category = 'msc:'.$msc->attrs('content') if $msc;
   my $name = $dom->find('h1')->[0]->all_text;
   return [{
     url=>$url,
     canonical=>$name,
-    $category ? (category=>$category) : (),
+    $category ? (categories=>[$category]) : (),
     }];
 }
 
