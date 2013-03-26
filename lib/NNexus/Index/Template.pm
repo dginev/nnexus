@@ -51,7 +51,7 @@ sub index_step {
   }
   # Also done if we're over the depth limit.
   return [] if $depth > $self->depth_limit;
-  print STDERR "Indexing $current_url\n";
+  print STDERR "\nIndexing $current_url\n";
 	# 2.1. Prepare (or just accept) a Mojo::DOM to be analyzed
 	if ($options{dom}) {
 		$self->current_dom($options{dom});

@@ -4,20 +4,32 @@ use strict;
 
 # Dispatch to the right NNexus::Index::Domain class
 sub new {
-	my ($class,$domain) = @_;
-	$domain = $domain ? ucfirst(lc($domain)) : 'Planetmath';
-	die ("Bad domain name: $domain; Must contain only alphanumeric characters!") if $domain =~ /\W/;
-	my $eval_return = eval {require "NNexus/Index/$domain.pm"; 1; };
-	if ($eval_return && (!$@)) {
-		eval " NNexus::Index::$domain->new(); "
-	} else {
-		print STDERR "NNexus::Index::$domain not available, fallback to generic indexer.\n";
-		print STDERR "Reason: $@\n" if $@;
-		require NNexus::Index::Template;
-		# The generic template will always fail...
-		# TODO: Should we fallback to Planetmath instead?
-		NNexus::Index::Template->new;
-	}
+  my ($class,$domain) = @_;
+  $domain = $domain ? ucfirst(lc($domain)) : 'Planetmath';
+  die ("Bad domain name: $domain; Must contain only alphanumeric characters!") if $domain =~ /\W/;
+  my $index_template;
+  my $eval_return = eval {require "NNexus/Index/$domain.pm"; 1; };
+  if ($eval_return && (!$@)) {
+    $index_template = eval " NNexus::Index::$domain->new(); "
+  } else {
+    print STDERR "NNexus::Index::$domain not available, fallback to generic indexer.\n";
+    print STDERR "Reason: $@\n" if $@;
+    require NNexus::Index::Template;
+    # The generic template will always fail...
+    # TODO: Should we fallback to Planetmath instead?
+    $index_template = NNexus::Index::Template->new;
+  }
+
+  bless {index_template=>$index_template}, $class;
+}
+
+sub index_step {
+  my ($self,%options) = @_;
+  # 1. Relay the indexing request to the template, gather concepts
+  my $concepts = $self->{index_template}->index_step(%options);
+  return unless defined $concepts; # Last step.
+  # 2. If this URL has been visited before
+  return $concepts;
 }
 
 1;

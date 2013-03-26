@@ -37,29 +37,30 @@ sub new {
   bless \%options, $class;
 }
 
-# Methods: 
+# Methods:
 
-# do - adverb for connection to the database and returning a handle for further "deeds"
-sub do {
+# safe - adverb for connection to the database and returning a handle for further "deeds"
+sub safe {
   my ($self)=@_;
   if (defined $self->{handle} && $self->{handle}->ping) {
     return $self->{handle};
   } else {
     my $dbh = DBI->connect("DBI:". $self->{'dbms'} .
-			 ":" . $self->{'dbname'} .
-			 ";host=". $self->{'dbhost'} ,
-			 $self->{'dbuser'} , 
-			 $self->{'dbpass'},
-			 { RaiseError => 1 }
-			) || die "Could not connect to database: $DBI::errstr";
+			   ":" . $self->{'dbname'},
+			   $self->{'dbuser'},
+			   $self->{'dbpass'},
+			   {
+			    host => $self->{'dbhost'},
+			    RaiseError => 1
+			   }) || die "Could not connect to database: $DBI::errstr";
     $self->{handle}=$dbh;
     $self->_recover_cache;
     return $dbh;
   }
 }
 
- 
 # done - adverb for cleaning up. Disconnects and deletes the statement cache
+
 sub done {
   my ($self,$dbh)=@_;
   $dbh = $self->{handle} unless defined $dbh;
@@ -67,18 +68,36 @@ sub done {
   $self->{handle}=undef;
 }
 
-# Performs an SQL statement prepare and returns, maintaining a cache of already
-# prepared statements for potential re-use..
-#
-# NOTE: it is only useful to use these for immutable statements, with bind
-# variables or no variables.
+###  Safe interfaces for the DBI methods
+
+sub disconnect { done(@_); } # Synonym for done
+sub do {
+  my ($self,@args) = @_;
+  $self->safe->do(@args);
+}
+sub execute {
+  my ($self,@args) = @_;
+  $self->safe->execute(@args);
+}
+sub ping {
+  my ($self,@args) = @_;
+  $self->safe->ping(@args);
+}
+
+
+
 sub prepare {
-	my ($self,$statement) = @_;
-	my $query_cache = $self->{query_cache};
-	if (! exists $query_cache->{$statement}) {
-		$query_cache->{$statement} = $self->do->prepare($statement);
-	}
-	return $query_cache->{$statement};
+  # Performs an SQL statement prepare and returns, maintaining a cache of already
+  # prepared statements for potential re-use..
+  #
+  # NOTE: it is only useful to use these for immutable statements, with bind
+  # variables or no variables.
+  my ($self,$statement) = @_;
+  my $query_cache = $self->{query_cache};
+  if (! exists $query_cache->{$statement}) {
+    $query_cache->{$statement} = $self->safe->prepare($statement);
+  }
+  return $query_cache->{$statement};
 }
 
 ### Internal helper routines:
@@ -86,8 +105,8 @@ sub prepare {
 sub _recover_cache {
   my ($self) = @_;
   my $query_cache = $self->{query_cache};
-  foreach my $statement(keys %$query_cache) {
-   $query_cache->{$statement} = $self->do->prepare($statement); 
+  foreach my $statement (keys %$query_cache) {
+    $query_cache->{$statement} = $self->safe->prepare($statement); 
   }
 }
 
@@ -104,9 +123,9 @@ C<NNexus::DB> - DBI interface for NNexus, provides one DBI handle per NNexus::DB
 
   use NNexus::DB;
   my $db = NNexus::DB(dbuser=>'nnexus',dbpass=>'pass',dbname=>"nnexus",dbhost=>"localhost", dbms=>"mysql");
-  my $connection_alive = $db->do->ping;
+  my $connection_alive = $db->ping;
   my $statement_handle = $db->prepare('DBI sql statement');
-  $db->do->execute('DBI sql statement');
+  $db->execute('DBI sql statement');
   my $disconnect_successful = $db->done;
 
 =head1 DESCRIPTION
@@ -127,16 +146,19 @@ Creates a new NNexus::DB object.
   Required options are dbuser, dbpass, dbname, dbhost and dbms, so that
   the database connection can be successfully created.
 
-=item C<< my $response = $db->do->DBI_handle_command; >>
+=item C<< my $response = $db->DBI_handle_command; >>
 
-The do adverb returns a DBI handle, taking extra care that the handle is properly connected to
+The NNexus::DB methods are interfaces to their counterparts in DBI, with the addition of a query cache and
+  a safety mechanism that auto-vivifies the connection when needed.
+
+The "safe" adverb returns a DBI handle, taking extra care that the handle is properly connected to
   the respective DB backend.
   While you could take the DBI handle and use it directly (it is the return value of the do method),
   avoid that approach.
 
-  Instead, always invoke DBI commands through the do adverb, e.g. $db->do->execute, or $db->do->prepare,
-  in order to ensure robustness and safety of your backend calls. The cache of prepared statements is also
-  rejuvenated whenever a new DBI handle is auto-created.
+  Instead, always invoke DBI commands through NNexus::DB (or use the "safe" adverb to get a handle),
+  e.g. C<$db->execute>, C<$db->prepare> or C<$sth = $db->safe>
+  The cache of prepared statements is also rejuvenated whenever a new DBI handle is auto-created.
 
 =item C<< my $disconnect_successful = $db->done; >>
 
