@@ -22,7 +22,7 @@ Then, in order to quickly run the server:
 
 ```
 perl Makefile.PL ; make ; make test
-morbo --listen=http://*:3001 blib/script/nnexus setup/baseconf.xml
+morbo --listen=http://*:3001 blib/script/nnexus setup/config.json
 ```
 
 Note: While morbo is nice for development, deploying through Apache or Hypnotoad would be clearly the way to go for production use.
