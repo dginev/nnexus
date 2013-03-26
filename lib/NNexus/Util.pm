@@ -21,7 +21,7 @@ use warnings;
 # [16/12/2012] DG: Most of this code is horribly deprecated (e.g. the Unicode support) and should be updated...
 
 # This code is verbatim from the Noosphere project except package names.
-use Unicode::String qw(latin1 utf8 utf16);
+#use Unicode::String qw(latin1 utf8 utf16);
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(protectURL protectAnchor octify inset htmlescape qhtmlescape nb
@@ -46,11 +46,11 @@ sub octify {
   return join('',(map {sprintf('\%03O',ord($_))} (split(//,$string))));
 }
 
-# convert latin1 strings to utf8 strings
-sub latin1ToUTF8 { latin1($_)->utf8; }
+# # convert latin1 strings to utf8 strings
+# sub latin1ToUTF8 { latin1($_)->utf8; }
 
-# convert utf8 strings to latin1 strings
-sub UTF8ToLatin1 { utf8($_)->latin1; }
+# # convert utf8 strings to latin1 strings
+# sub UTF8ToLatin1 { utf8($_)->latin1; }
 
 # return 1 if a given item is in a list (set) (really should use hashes instead)
 sub inset {

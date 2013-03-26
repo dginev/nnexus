@@ -17,7 +17,7 @@ SKIP: {
 	my $eval_return = eval { $db->do->ping };
 	if ((!$eval_return) || $@ ) {
 		skip "Config couldn't initialize with the default setup at setup/config.json."
-	 	." Do you have MySQL properly setup? Skipping...", 1;
+	 	." Do you have MySQL properly setup? Skipping...", 2;
 	} else {
 		ok ($db, 'Can initialize a new NNexus::DB object');
 

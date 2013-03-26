@@ -50,7 +50,7 @@ sub get_DB {
 
 sub read_json_file {
   my $file_name = shift;
-  use JSON::PP qw(decode_json);
+  use JSON::XS qw(decode_json);
   open my $fh, "<", $file_name or die "Error opening Configuration JSON file: $file_name!\n";
   my $string = join('',<$fh>);
   close $fh;
