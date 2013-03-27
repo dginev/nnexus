@@ -30,7 +30,7 @@ use NNexus::DB;
 
 sub new {
   my ($class,$opts) = @_;
-  $opts = read_json_file('conf.json') unless defined $opts;
+  $opts = read_json_file('setup/config.json') unless defined $opts;
   if ($opts->{verbosity} && $opts->{verbosity} > 0) {
     print STDERR "Starting NNexus with configuration:\n";
     print STDERR Dumper( $opts );

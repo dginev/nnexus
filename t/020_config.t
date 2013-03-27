@@ -13,7 +13,7 @@ ok($opts, 'Default configuration setup/config.json loads fine.');
 $opts = {
   "database" => {
     "dbms" => "SQLite",
-    "dbname" => "setup/database/sqlite/sqlite.db",
+    "dbname" => "setup/database/sqlite/nnexus.db",
     "dbuser" => "nnexus",
     "dbpass" => "nnexus",
     "dbhost" => "localhost"

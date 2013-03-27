@@ -27,7 +27,7 @@ sub new {
   #this is the global graph for determining classification distance
   my $classgraph = Graph::Undirected->new();
 
-  bless {classgraph=>$classgraph,db=>$opts{db},config=>$opts{config}, verbosity=>$opts{verbosity}}, $class;
+  bless {classgraph=>$classgraph,db=>$opts{db},config=>$opts{config}, verbosity=>$opts{verbosity}||0}, $class;
 }
 
 #this function assumes that the classification information has already been added
