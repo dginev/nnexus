@@ -47,8 +47,11 @@ index_test(
   url=>'t/pages/QuadraticInvariant.html',
   domain=>'mathworld');
 
-
+# TODO: Add a DLMF test
 # Note: Uncomment to index all of Wikipedia's math concepts
  # index_test(
  #    url=>'default',
  #    domain=>'DLMF');
+
+# TODO: 
+# Check that all indexed concepts have made it to the database
