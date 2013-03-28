@@ -25,6 +25,7 @@ lib
    |- Index
        |- Dispatcher.pm
        |- Template.pm
+       |- Planetmath.pm
        |- Wikipedia.pm
        |- Mathworld.pm
        |- DLMF.pm
