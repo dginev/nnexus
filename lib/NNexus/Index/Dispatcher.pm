@@ -33,17 +33,21 @@ sub index_step {
   my $db = $self->{db};
   my $concepts = $template->index_step(%options);
   return unless defined $concepts; # Last step.
+
+  # Idea: If a page can no longer be accessed, we will never delete it from the object table,
+  #       we will only empty its payload (= no concepts defined by it).
+
   # NOTE: Indexing is the **ONLY** stage in NNexus processing where there are write operations to the backend
   # 2. Check if object has already been indexed:
-  my $url = $template->current_url||'mock'; # Grab the current canonical URL
+  my $url = $template->current_url; # Grab the current canonical URL
+  my $objectid = $db->select_objectid_by_url($url);
+  my ($old_concepts, $new_concepts) = ([],[]); # We will compare between the old and new concepts
+  if (! $objectid) {
+    # 2.1. If not present, add it:
+    $objectid = $db->add_object(url=>$url,domain=>$self->{domain});
+  }
+  # 2.2. Grab all concepts defined by the object.
   
-  # TODO: Should we add/update/delete/diff ...
-  # Adding would look as:
-  #my $objectid = $db->add_object(url=>$url,domain=>$self->{domain});
-  #print STDERR "Added object $objectid\n";
-
-  # 2.1. If yes, grab all concepts defined by it.
-  # 2.2. Delete the object from the DB
   # 3. Compute diff between previous and new concepts
   # 3.1. Flatten out synonyms as individual concepts
   # 4. Delete no longer present concepts
