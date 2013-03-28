@@ -31,6 +31,11 @@ sub add_object {
   $sth->execute($url,$domain);
   $sth->finish();
   # Return the object id in order to update the concepts and classification
+  return $db->last_inserted_id;
+}
+
+sub last_inserted_id {
+  my ($db) = @_;
   my $objid;
   given ($db->{dbms}) {
     when ('mysql') {
@@ -43,7 +48,6 @@ sub add_object {
   };
   return $objid;
 }
-
 
 
 1;
@@ -69,7 +73,14 @@ This class provides API methods for specific SQL queries commonly needed by NNex
 
 =over 4
 
-=item C<< $db->add_object(%options);
+=item C<< $db->add_object(url=>$url,domain=>$domain); >>
+
+Adds a new object, identified by a URL and, for convenience, a domain.
+
+=item C<< $db->last_inserted_id; >>
+
+Return the last inserted id, in an auto-generated primary key column.
+  DBMS-independent, supports MySQL and SQLite so far.
 
 =back
 
