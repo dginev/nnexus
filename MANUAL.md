@@ -114,9 +114,9 @@ With this framework in place, each domain indexer can be implemented in ~50 line
 
 ### Philosophy: Concepts, Resources and Signs
 
-The state of the web in 2013 is one of either no metadata (e.g. Wikipedia and DLMF) or document-level metadata (e.g. PlanetMath and MathWorld) in the vast majority of web pages. From this practical foundation, NNexus can interpret resources, identified by URLs, as opaque knowledge containers, labelled with container-level (i.e. coarse-grained) metadata.
+The state of the web in 2013, with respect to semantic annotations, is one of either no metadata (e.g. Wikipedia and DLMF) or document-level metadata (e.g. PlanetMath and MathWorld). From this practical foundation, NNexus views web resources, identified by URLs, as opaque knowledge containers, labelled with container-level, coarse-grained metadata.
 
-On the other end of NNexus processing, we deal with mathematical concepts. Notice, however, that a "concept" is a semantic object in the mind of a mathematician, while what NNexus really work on are natural language constructs, typically phrases, that sometimes possibly represent mathematical concepts. Phenomena such as polysemy and metonymy are frequent also in the terms representing mathematical concepts. In addition, many concepts have several synonymous names, used in different contexts or in different communities.
+On the other end of NNexus processing, we deal with mathematical concepts. Notice, however, that a "concept" is a semantic object in the mind of a mathematician, while what NNexus really operates on are natural language constructs, typically phrases, that sometimes possibly represent mathematical concepts. Phenomena such as polysemy and metonymy are frequent also in the terms representing mathematical concepts. In addition, many concepts have several synonymous names, used in different contexts or in different communities.
 
 Now, as the web is a distributed venture, multiple math encyclopedias exist and are of indexing interest. This creates another plurality, namely that each concept is possibly defined in multiple domains. Two restrictions come to our aid to make possible the classification and cross-referencing of web domains. The first is domain-internal, the Math Subject Classification, which namespaces a concept definition into a particular mathematical domain. With it, we can place the second restriction - one of uniqueness. We require each concept definition in a given MSC class to be unique (i.e. indicated by a single object, in turn a single URL) in each domain ( as in "Web domain").
 
@@ -125,6 +125,11 @@ With these restrictions in place, we can distinguish between:
  - term "space", category "Euclidean geometry", defined in Wikipedia
  - term "space", category "Optimization", defined in PlanetMath
  - term "space", category "Optimization", defined in MathWorld
+
+ as different (by category or domain) concept definitions, all represented by the word "space".
+ From an application stand-point, definitions from different domains but the same category are (ideally) semantically equivalent
+ definitions of the same concept. On the other hand, definitions from the same domain but different categories are a
+ sign of ambiguity in natural language, and need to be explicitly disambiguated in the concept discovery task. 
 
 ### Implementation
 To summarize:
