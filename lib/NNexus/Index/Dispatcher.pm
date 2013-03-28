@@ -35,8 +35,13 @@ sub index_step {
   return unless defined $concepts; # Last step.
   # NOTE: Indexing is the **ONLY** stage in NNexus processing where there are write operations to the backend
   # 2. Check if object has already been indexed:
-  my $url = $template->current_url; # Grab the current canonical URL
+  my $url = $template->current_url||'mock'; # Grab the current canonical URL
   
+  # TODO: Should we add/update/delete/diff ...
+  # Adding would look as:
+  #my $objectid = $db->add_object(url=>$url,domain=>$self->{domain});
+  #print STDERR "Added object $objectid\n";
+
   # 2.1. If yes, grab all concepts defined by it.
   # 2.2. Delete the object from the DB
   # 3. Compute diff between previous and new concepts

@@ -4,6 +4,7 @@ use warnings;
 use Test::More tests => 6;
 
 use NNexus::Job;
+use NNexus::DB;
 use Data::Dumper;
 use Mojo::DOM;
 
@@ -15,6 +16,20 @@ sub local_dom {
 	Mojo::DOM->new($contents);
 }
 
+# Test DB setup:
+my $opts = {
+  "database" => {
+    "dbms" => "SQLite",
+    "dbname" => "setup/database/sqlite/nnexus.db",
+    "dbuser" => "nnexus",
+    "dbpass" => "nnexus",
+    "dbhost" => "localhost"
+  },
+  "verbosity" => 1
+};
+
+my $db = NNexus::DB->new(%{$opts->{database}});
+
 sub index_test{
 	my (%options)=@_;
 	# Prepare a Mojo::DOM
@@ -22,7 +37,7 @@ sub index_test{
 	my $dom = local_dom($url) if ($url && ($url ne 'default'));
 
 	my $index_job = NNexus::Job->new(function=>'index',
-	url=>$url,dom=>$dom,domain=>$options{domain});
+	url=>$url,dom=>$dom,domain=>$options{domain},db=>$db);
 
   $index_job->execute;
 
