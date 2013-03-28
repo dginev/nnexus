@@ -1,6 +1,8 @@
 package NNexus::Index::Template;
 use warnings;
 use strict;
+
+use NNexus::Util qw(url_canonical);
 use Mojo::DOM;
 use Mojo::UserAgent;
 use Data::Dumper;
@@ -20,37 +22,37 @@ sub index_step {
   my ($self,%options) = @_;
   my $depth;
   # Set current if we're starting up.
-	if (defined $options{start}) {
-		if ($options{start} eq 'default') {
+  if (defined $options{start}) {
+    if ($options{start} eq 'default') {
       $self->current_url($self->domain_root);
-		} else {
-			$self->current_url($options{start});
-		}
+    } else {
+      $self->current_url($options{start});
+    }
     $depth=0;
-		delete $options{start};
-	} else {
-   # Otherwise, grab the next job from the queue
-		my $next_step = shift @{$self->{queue}};
+    delete $options{start};
+  } else {
+    # Otherwise, grab the next job from the queue
+    my $next_step = shift @{$self->{queue}};
     if (ref $next_step) {
-		  $self->current_url($next_step->{url});
+      $self->current_url($next_step->{url});
       $self->current_categories($next_step->{categories});
       $depth = $next_step->{depth};
     } else {
       # We're out of urls, last step.
       delete $self->{current_url};
     }
-	}
+  }
   # If we've visited, or we're out of urls, terminate.
   my $current_url = $self->current_url;
   return unless $current_url; # Empty return for last job
   if (!($self->{visited}->{$current_url})) {
     $self->{visited}->{$current_url} = 1;
   } else {
-    # Empty array-ref for visited URL.
-    return [];
+    # Skip to next URL.
+    return $self->index_step;
   }
-  # Also done if we're over the depth limit.
-  return [] if $depth > $self->depth_limit;
+  # Also skip if we're over the depth limit.
+  return $self->index_step if $depth > $self->depth_limit;
   print STDERR "\nIndexing $current_url\n";
 	# 2.1. Prepare (or just accept) a Mojo::DOM to be analyzed
 	if ($options{dom}) {
@@ -96,7 +98,7 @@ sub candidate_categories {}
 # To be directly inherited and used by concrete classes
 
 # Getter or Setter for the current URL/DOM/Categories
-sub current_url { $_[1] ? $_[0]->{current_url} = $_[1] : $_[0]->{current_url}; }
+sub current_url { $_[1] ? $_[0]->{current_url} = url_canonical($_[1]) : $_[0]->{current_url}; }
 sub current_dom { $_[1] ? $_[0]->{current_dom} = $_[1] : $_[0]->{current_dom}; }
 sub current_categories {$_[1] ? $_[0]->{current_categories} = $_[1] : $_[0]->{current_categories};}
 
@@ -217,7 +219,7 @@ Using the information provided by the shared methods,
   The expected return value is a reference to an array of hash-references,
   each hash-reference being a concept hash datastructure, specified as:
   	
-  { canonical => 'concept name',
+  { term => 'concept name',
     url => 'origin url',
     synonyms => [ qw(list of synonyms) ],
     categories => [ qw(list of categories) ],

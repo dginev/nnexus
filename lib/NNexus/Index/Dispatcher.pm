@@ -1,10 +1,13 @@
 package NNexus::Index::Dispatcher;
+use NNexus::Util;
 use warnings;
 use strict;
 
 # Dispatch to the right NNexus::Index::Domain class
 sub new {
-  my ($class,$domain) = @_;
+  my ($class,%options) = @_;
+  my $domain = $options{domain};
+  my $db = $options{db};
   $domain = $domain ? ucfirst(lc($domain)) : 'Planetmath';
   die ("Bad domain name: $domain; Must contain only alphanumeric characters!") if $domain =~ /\W/;
   my $index_template;
@@ -20,16 +23,30 @@ sub new {
     $index_template = NNexus::Index::Template->new;
   }
 
-  bless {index_template=>$index_template}, $class;
+  bless {index_template=>$index_template,domain=>$domain,db=>$db}, $class;
 }
 
 sub index_step {
   my ($self,%options) = @_;
   # 1. Relay the indexing request to the template, gather concepts
-  my $concepts = $self->{index_template}->index_step(%options);
+  my $template = $self->{index_template};
+  my $db = $self->{db};
+  my $concepts = $template->index_step(%options);
   return unless defined $concepts; # Last step.
-  # 2. If this URL has been visited before
-  return $concepts;
+  # NOTE: Indexing is the **ONLY** stage in NNexus processing where there are write operations to the backend
+  # 2. Check if object has already been indexed:
+  my $url = $template->current_url; # Grab the current canonical URL
+  
+  # 2.1. If yes, grab all concepts defined by it.
+  # 2.2. Delete the object from the DB
+  # 3. Compute diff between previous and new concepts
+  # 3.1. Flatten out synonyms as individual concepts
+  # 4. Delete no longer present concepts
+  # 5. Add newly introduced concepts
+  
+  # 6. Return URLs to be invalidated as effect:
+  my $invalidated_URLs = [];
+  return $invalidated_URLs;
 }
 
 1;

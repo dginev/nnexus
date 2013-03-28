@@ -44,7 +44,7 @@ sub index_page {
   my @synonyms = grep {$_ ne $concept} map {lc $_} $dom->find('p')->[0]->find('b')->pluck('all_text')->each;
   my $categories = $self->current_categories;
   return [{ url => $url,
-	 canonical => $concept,
+	 term => $concept,
 	 $categories ? (categories => $categories) : (),
 	 @synonyms ? (synonyms => \@synonyms) : ()
    }];

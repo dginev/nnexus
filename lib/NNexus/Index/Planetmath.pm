@@ -20,7 +20,7 @@ sub index_page {
   my @categories = map {$_->attrs('resource')} $dom->find('div[class="ltx_rdf"][property="dct:subject"]')->each;
   return [{
     url=>$url,
-    canonical=>$name,
+    term=>$name,
     categories=>\@categories,
     }];
 }

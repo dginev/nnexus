@@ -43,7 +43,7 @@ sub index_page {
   my $results=[];
   while (@def_links && @def_names) {
     my ($name,$link)=(shift @def_names, shift @def_links);
-    push @$results, {url=>$link,canonical=>$name,categories=>[$category]};
+    push @$results, {url=>$link,term=>$name,categories=>[$category]};
   }
   return $results;
 }

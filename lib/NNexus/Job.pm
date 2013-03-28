@@ -158,7 +158,7 @@ sub _index {
   my $url = $self->{url}||$self->{body};
   my $dom = $self->{dom};
   require NNexus::Index::Dispatcher;
-  my $dispatcher = NNexus::Index::Dispatcher->new($domain);
+  my $dispatcher = NNexus::Index::Dispatcher->new(db=>$self->{db},domain=>$domain);
   my @indexed_concepts;
   my $payload = $dispatcher->index_step(start=>$url,dom=>$dom);
   push @indexed_concepts, $payload;
