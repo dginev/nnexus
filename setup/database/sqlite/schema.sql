@@ -85,8 +85,8 @@ CREATE TABLE links (
 DROP TABLE IF EXISTS object;
 CREATE TABLE object (
   objectid integer primary key AUTOINCREMENT,
-  url varchar(2000) NOT NULL DEFAULT '',
-  domain varchar(50) NOT NULL DEFAULT '0',
+  url varchar(2083) NOT NULL UNIQUE,
+  domain varchar(50) NOT NULL,
   modified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 -- TODO: Rethink this trigger, as well as all of the object table
