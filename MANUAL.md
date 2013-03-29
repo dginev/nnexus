@@ -20,6 +20,8 @@ lib
  |- NNexus
    |- Job.pm
    |- DB.pm
+   |- DB
+       |- API.pm
    |- Config.pm
    |- Util.pm
    |- Index
@@ -29,9 +31,9 @@ lib
        |- Wikipedia.pm
        |- Mathworld.pm
        |- DLMF.pm
+   |- Concepts.pm
   ...
    |
-   |- Concepts.pm
    |- Crossref.pm
    |- Domain.pm
    |- EncyclopediaEntry.pm
