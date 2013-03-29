@@ -1,6 +1,6 @@
 # /=====================================================================\ #
 # |  NNexus Autolinker                                                  | #
-# | Backend API Module                                                  | #
+# | Database Interface Module                                           | #
 # |=====================================================================| #
 # | Part of the Planetary project: http://trac.mathweb.org/planetary    | #
 # |  Research software, produced as part of work done by:               | #
@@ -19,6 +19,7 @@ package NNexus::DB;
 use strict;
 use warnings;
 use DBI;
+use NNexus::DB::API;
 # Design: One database handle per NNexus::DB object
 #  ideally lightweight, only store DB-specific data in the object
 

@@ -29,7 +29,7 @@ sub index_page {
   my $name = $dom->find('h1')->[0]->all_text;
   return [{
     url=>$url,
-    canonical=>$name,
+    concept=>$name,
     $category ? (categories=>[$category]) : (),
     }];
 }

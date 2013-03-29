@@ -18,14 +18,32 @@
 package NNexus::Util;
 use strict;
 use warnings;
+use Carp;
 # [16/12/2012] DG: Most of this code is horribly deprecated (e.g. the Unicode support) and should be updated...
 
 # This code is verbatim from the Noosphere project except package names.
 #use Unicode::String qw(latin1 utf8 utf16);
 require Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(protectURL protectAnchor octify inset htmlescape qhtmlescape nb
+our @EXPORT_OK = qw(url_canonical protectURL protectAnchor octify inset htmlescape qhtmlescape nb
 		    objectExistsById sq sqa sqq lookupfield readFile writeField uniquify);
+
+# Canonicalize absolute URLs, borrowed from LaTeXML::Util::Pathname
+our $PROTOCOL_RE = '(?:https?)(?=:)';
+sub url_canonical {
+  my ($pathname) = @_;
+  my $urlprefix= undef;
+  if($pathname =~ s|^($PROTOCOL_RE//[^/]*)/?|/|){
+    $urlprefix = $1; }
+
+  if($pathname =~ m|//+/|){
+    Carp::cluck "Recursive pathname? : $pathname\n"; }
+##  $pathname =~ s|//+|/|g;
+  $pathname =~ s|/\./|/|g;
+  # Collapse any foo/.. patterns, but not ../..
+  while($pathname =~ s|/(?!\.\./)[^/]+/\.\.(/\|$)|$1|){}
+  $pathname =~ s|^\./||;
+  (defined $urlprefix ? $urlprefix . $pathname : $pathname); }
 
 # translate ampersands for URLs in PlanetMath entry bodies
 sub protectURL {  s/&(?!amp;)/&amp;/og; $_; }

@@ -13,29 +13,36 @@ bin
  |- nnexus
 setup
  |- database
-   |- schema.sql
-   |- setup_nnexus_mysql.sql
+   |- mysql
+       |- schema.sql
+       |- setup_nnexus_mysql.sql
+   |- SQLite
+       |- schema.sql
+       |- nnexus.db
+       |- test.db
  |- config.json
 lib
  |- NNexus
    |- Job.pm
    |- DB.pm
+   |- DB
+       |- API.pm
    |- Config.pm
    |- Util.pm
    |- Index
        |- Dispatcher.pm
        |- Template.pm
+       |- Planetmath.pm
        |- Wikipedia.pm
        |- Mathworld.pm
        |- DLMF.pm
+   |- Concepts.pm
+   |- Morphology.pm
   ...
    |
-   |- Concepts.pm
    |- Crossref.pm
    |- Domain.pm
-   |- EncyclopediaEntry.pm
    |- LinkPolicy.pm
-   |- Morphology.pm
 ```
 
 The classes under the ... separator are yet to undergo more than a shallow refactoring pass and expect a rewrite.
@@ -112,8 +119,41 @@ With this framework in place, each domain indexer can be implemented in ~50 line
 
 ## The NNexus Knowledge Base
 
-**TODO:** Discuss the database organisation, which tables serves what purpose and how the overall interplay between
-indexing and auto-linking takes place. This is the **current** developer focus as of end of March.
+### Philosophy: Concepts, Resources and Signs
+
+The state of the web in 2013, with respect to semantic annotations, is one of either no metadata (e.g. Wikipedia and DLMF) or document-level metadata (e.g. PlanetMath and MathWorld). From this practical foundation, NNexus views web resources, identified by URLs, as opaque knowledge containers, labelled with container-level, coarse-grained metadata.
+
+On the other end of NNexus processing, we deal with mathematical concepts. Notice, however, that a "concept" is a semantic object in the mind of a mathematician, while what NNexus really operates on are natural language constructs, typically phrases, that sometimes possibly represent mathematical concepts. Phenomena such as polysemy and metonymy are frequent also in the terms representing mathematical concepts. In addition, many concepts have several synonymous names, used in different contexts or in different communities.
+
+Now, as the web is a distributed venture, multiple math encyclopedias exist and are of indexing interest. This creates another plurality, namely that each concept is possibly defined in multiple domains. Two restrictions come to our aid to make possible the classification and cross-referencing of web domains. The first is domain-internal, the Math Subject Classification, which namespaces a concept definition into a particular mathematical domain. With it, we can place the second restriction - one of uniqueness. We require each concept definition in a given MSC class to be unique (i.e. indicated by a single object, in turn a single URL) in each domain ( as in "Web domain").
+
+With these restrictions in place, we can distinguish between:
+ - term "space", category "Euclidean geometry", defined in PlanetMath
+ - term "space", category "Euclidean geometry", defined in Wikipedia
+ - term "space", category "Optimization", defined in PlanetMath
+ - term "space", category "Optimization", defined in MathWorld
+
+ as different (by category or domain) concept definitions, all represented by the word "space".
+ From an application stand-point, definitions from different domains but the same category are (ideally) semantically equivalent
+ definitions of the same concept. On the other hand, definitions from the same domain but different categories are a
+ sign of ambiguity in natural language, and need to be explicitly disambiguated in the concept discovery task. 
+
+### Implementation
+To summarize:
+ - NNexus indexes and auto-links opaques objects, namely web resources, identified by URLs.
+ - Web resources are seen as namespaced inside their top-level "domain"
+ - Each relevantly indexed object defines concepts and their natural language names and synonyms, via top-level metadata.
+ - Each concept is additionally namespaced inside a category, provided by the Math Subject Classification (also object metadata).
+ - Concepts are only indirectly referenced by NNexus, via their natural language terms.
+ - NNexus uniquely captures a concept definition by the tuple of:
+  - its resource locator **URL** and **domain**
+  - the concept's **MSC category**
+  - the concept's representations as **natural language terms**
+
+### Database Schema
+The different NNexus tasks (indexing, concept discovery, annotation and invalidation) approach the knowledge base from different sides. For example, (re-)indexing needs to lookup if the object being processed is new or has been previously processed, and update it as necessary. On the other hand, invalidation and concept-discovery work on natural language fragments and are interested in doing efficient lookup for the terms already indexed. To make these processes efficient, NNexus creates a number of database indices for the fields of interest.
+
+ **TODO:** Describe schema when stable
 
 ## Concept Discovery
  Discuss Longest-token matching, ideas for improvements.

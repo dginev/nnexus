@@ -24,8 +24,6 @@ use Time::HiRes qw ( time alarm sleep );
 
 use NNexus::Morphology qw(get_nonpossessive get_possessive depluralize is_possessive is_plural);
 use NNexus::Linkpolicy qw (post_resolve_linkpolicy);
-use NNexus::Concepts qw(get_possible_matches);
-use NNexus::EncyclopediaEntry qw(get_object_hash);
 use NNexus::Util qw(inset uniquify);
 use NNexus::Domain qw(get_domain_blacklist get_domain_priorities get_domain_hash get_domain_id);
 
@@ -41,41 +39,6 @@ our %LINKTAGS = (
 	     'PMlinkescapeword'=>1,
 	     'PMlinkescapephrase'=>1,
 	    );
-
-# This is irrelevant for HTML version ?
-sub cross_reference_LaTeX {
-  my (%opts) = @_;
-  my ($config,$domain,$latex,$syns,$fromid,$class) = map {$opts{$_}} qw(config domain text nolink fromid class);
-  # $syns: synonyms, more things not to link to
-  $fromid = -1 unless defined $fromid; # if this is null or -1, we dont touch links tbl
-   # $class: classification array	
-  # fix l2h stuff
-  my $db = $config->get_DB;
-  $latex = l2hhacks($latex);
-  # separate math from linkable text, and do some massaging
-  my @user_escaped;
-  my $escaped;
-  my $linkids;
-
-  my $method = 'l2h';
-  ($latex,@user_escaped) = getEscapedWords($latex);
-  ($latex,$escaped,$linkids) = splitPseudoLaTeX($domain, $latex, $method);
-	
-  $latex = preprocessLaTeX($latex);
-  my ($nonmath,$math) = splitLaTeX($latex, $escaped);
-
-
-  push @user_escaped, @$syns; #add synonyms to the user_esaped list for makeLaTeXLinks
-
-  doManualLinks($linkids, $fromid); #this Manual links call is PMLink specific
-  #lets just see what happens here.
-  my $matches = cross_reference_text($config, $nonmath, \@user_escaped, $class, $fromid );
-  my ($linked,$links) = makeLaTeXLinks($domain, $nonmath, $matches, $class,$fromid);
-	
-  my $recombined = recombine($linked, $math, $escaped);
-	
-  return (postprocessLaTeX($recombined),$links);
-}
 
 # I assume this should populate the <links /> 
 sub cross_reference_HTML {
@@ -189,8 +152,6 @@ sub text_handler {
        #	addLink($fromid,$object->{'objectid'}) if ($fromid);
     }
     my $finaltext = join('', grep (defined, @ltext));
-     #	$finaltext = postprocessLaTeX($finaltext);
-     #		print "updating $$tref\n :to: $finaltext\n";
     $linked_result .= $finaltext;
   }
   $self->{annotated}.=$linked_result;
@@ -221,13 +182,11 @@ sub cross_reference {
 
   my $DEBUG = 0;
   #print STDERR "LINKING IN MODE $format\n";
-  if ( $format eq 'l2h' ) {
-    return cross_reference_LaTeX(%opts);
-  } elsif ( $format eq 'html' ) {
+  if ( $format eq 'html' ) {
     #print STDERR "LINKING IN HTML MODE\n"	if $DEBUG;
     return cross_reference_HTML(%opts);
   } else {
-    print STDERR "Mode $format is not yet supported\n";
+    print STDERR "Mode $format is not (yet?) supported\n";
   }
 }
 
@@ -309,27 +268,6 @@ sub cross_reference_text {
 
 
 
-# handle figuring out the URLs for the \PMlinktofile pseudo-command
-# \PMlinktofile directives get left after cross-referencing
-#
-sub dolinktofile {
-  my $latex = shift;
-  my $table = shift;	 
-  my $id = shift;		# object id
-
-  my $fileserver = getAddr('files');
-
-  while ($latex =~ /\\PMlinktofile\{(.+?)\}\{(.+?)\}/s) {
-    my $anchor = $1;
-    my $filename = $2;
-    my $url = protectURL("http://$fileserver/files/$table/$id/$filename");
-    $latex =~ s/\\PMlinktofile\{.+?\}\{.+?\}/\\htmladdnormallink{$anchor}{$url}/s;
-    #$latex=~s/\\PMlinktofile\{.+?\}\{.+?\}/$url/s;
-  }
-
-  return $latex;
-}
-
 
 
 # disambiguate a link
@@ -351,8 +289,9 @@ sub disambiguate {
 
   my %domainobjects = ();  # {domainid}->[list of objects, in domain] 
   foreach my $id ( @ids ) {
-    my $obj = get_object_hash($db,$id);
-    push @{$domainobjects{$obj->{'domainid'}}}, $id;
+    # TODO : REFACTOR THIS!!!
+    # my $obj = get_object_hash($db,$id);
+    #push @{$domainobjects{$obj->{'domainid'}}}, $id;
   }
 
 
@@ -576,119 +515,6 @@ sub disambiguate_subcollection {
   return @ids;
 }
 
-sub makeLaTeXLinks {
-  my $config = shift;
-  my $db = $config->get_DB;
-  my $domain = shift;		#the domain we are linking
-  my $text = shift;		# entry text
-  my $matches = shift;		# match structure
-  my $class = shift;	   # classification arrayref of current object
-  my $fromid = shift;	   # id of current object (or -1)
-  my @linkarray;		# array of href's
-  my ($start, $finish, $DEBUG);
-  $DEBUG = 0;
-
-  my @scriptMenuCode = ();
-	
-  if ($DEBUG) {
-    $start = time();
-  }
-  my @ltext = split(/\s+/,$text);
-  # we want to split based on anything that isn't a word
-  my $priorities = get_domain_priorities($config, $domain );
-  foreach my $pos (sort {$b <=> $a} keys %$matches) {
-    my $length = $matches->{$pos}->{'length'};
-    my $objects = $matches->{$pos}->{'links'};
-		
-    #we don't want to get the name anymore since we don't keep it, we want to link by objectid
-    #		my $listanchor = getanchor($matches->{$pos});
-    # pull quotes/brackets out of boundary linked text
-    #
-    #		my ($left, $right) = outertags($tags);
-    my $lltext = $ltext[$pos];
-    my $rltext = $ltext[$pos+$length-1];
-    #$lltext =~ s/^\Q$left\E//;
-    #if ($length > 1) {
-    #	$rltext =~ s/\Q$right\E$//;
-    #} else {
-    #	$lltext =~ s/\Q$right\E$//;
-    #}
-
-    # integrate hyperlink commands into output linked text
-    #
-		
-    # create the external domain link string
-		
-    #objects is the hasref called finals above
-    my $texttolink = "";
-    $texttolink = join( " ", @ltext[$pos..$pos+$length-1] );
-    #	print "Making link string for " . Dumper($objects) . "\n";
-    push @scriptMenuCode, 
-      substituteLaTeXLinks( $objects, # $left, $right, 
-			    \$ltext[$pos], \$ltext[$pos+$length-1], 
-			    $texttolink, $priorities );
-				
-    # add to simple links list 
-    #
-    my $lnk = make_link_string($db, $objects, $texttolink );
-		
-    push @linkarray, $lnk;
-	
-    # add to links table if we have a from id
-    # 
-    #TODO - figure out how to do the addlinks in the database 
-    #	addLink($fromid,$object->{'objectid'}) if ($fromid);
-  }
-		
-  my $finaltext = join(' ',@ltext);
-
-
-
-  #generate the menucode
-  # DG: Removing this functionality for now
-  # Planetary should be responsible for such magic
-  #my $script = generateMenuCode( \@scriptMenuCode );
-
-  #we need to add the script info to the final text
-  #my $scriptstuff = "\n" . '\begin{rawhtml}' . "\n";
-  #$scriptstuff .= $script;
-  #$scriptstuff .= "\n" . '\end{rawhtml}' . "\n";
-
-  #$finaltext = $scriptstuff . $finaltext;
-	
-  if ($DEBUG) {
-    $finish = time();
-    my $total = $finish - $start;
-    print "makelinks: $total seconds to make " . ($#linkarray+1). " links\n";
-  }
-	
-  return ($finaltext, \@linkarray);
-}
-
-#The code in this section is specific to the optional menuing stuff.
-#returns the menucode that should be added to the top of the document
-sub generateMenuCode {
-  my $menu = shift;
-  #
-  #Build the dynamic menu code for linking one term to multiple sites
-  #
-  my $menucode = "var menu = new Array();\n";
-  foreach my $m ( @$menu ) {
-    my $menuid = $m->{'menuid'};
-    $menucode .= "menu[$menuid] = new Array();\n";
-    my $i = 0;
-    foreach my $t ( @{$m->{'linktargets'}} ) {
-      print "****** \n\nadding $t to menu $menuid [$i]\n\n";
-      $menucode .= "menu[$menuid][$i] = '$t';\n";
-      $i++;
-    }
-  }
-  my $script = "<script type=\"text/javascript\">\n";
-  $script .= $menucode;
-  $script .= "\n</script>";
-  return $script;
-}
-
 #this function returns a standard <a href=link>text</a> string
 sub make_link_string { 
   my ($db , $objectid, $anchor) = @_;
@@ -702,200 +528,6 @@ sub make_link_string {
   #This allows for user customizable stylesheets for how the links appear
   # in the browser.
   return "<a href=\"$linkstring\">$anchor</a>";
-}
-
-sub getmenulinkstring{
-  my ($db,$objectid,$texttolink,$menuid,$menuwidth) = @_;
-
-  print "IN getmenulinkstring";
-  my $object = get_object_hash($db, $objectid );
-  my $domain = get_domain_hash($db, $object->{'domainid'} );
-  #my $linkstring = $domain->{'urltemplate'} . $object->{'identifier'};
-  my $linkstring = $domain->{'urltemplate'} . HTML::Entities::encode($object->{'identifier'});
-  my $domainnick = $domain->{'nickname'};
-
-  #the <a> class is set = to the domain nickname provided by the user. 
-  #This allows for user customizable stylesheets for how the links appear
-  # in the browser.
-  #my $menulinkstring = "<a class=\"$domainnick nndropdown\" ";
-  my $menulinkstring = "<a class=\"$domainnick"."_autolink\" ";
-  $menulinkstring .= "id=\"autolink_$menuid\" ";
-  $menulinkstring .= "href=\"$linkstring\" ";
-  #$menulinkstring .= "onClick=\"return clickreturnvalue()\" ";
-  #$menulinkstring .= "onMouseover=\"dropdown(this, $menuid)\" ";
-  #	$menulinkstring .= "onMouseout=\"hidemenu()\">";
-  $menulinkstring .= ">";
-  $menulinkstring .= $texttolink;
-  $menulinkstring .= "</a>";
-  print "LEAVE getmenulinkstring";
-
-  return $menulinkstring;
-}
-
-#
-# make the link string in the form of latex or whatever wrapped around urltemplate . externalobjectid
-#
-# remember this function makes the link string for one phrase or concept label in the object. I.e. this function
-# is called multiple times (once for each linked concept).
-
-my $nummenus = 0; #this global is used to keep track of the number of menus necessary to add to the javascript
-#that will be generated.
-#this function returns the menuinformation for the link it substituted.
-sub substituteLaTeXLinks {
-  my $config = shift;
-  my $db = $config->get_DB;
-  my $objects = shift;
-  #	my $left = shift;
-  #	my $right = shift;
-  my $textbegin = shift; #scalar reference to first position linked text array
-  my $textend = shift; 
-  my $texttolink = shift;
-  my $priorities = shift; #this is needed for the domain priorities (i.e. which domain to link to first 
-	
-  #a->{domain} =  [ [internalobjectid, score], [..] ... ] 
-  #a->{domain2} = [ [internalobjectid2, score2] , []... ] 
-
-  my @larray = ();		#this is the array of alternate links.
-  my $lstring = "";		#link string
-
-  my $first = 0; #this is used to mark whether or not the first link had been added to the
-  #string to be linked
-	
-  my @optionallinks = ();  #array list of optional links for a concept
-  my $menuname = "menu" . $nummenus;
-
-  #this sort function needs to be based on the domain priority rather than using
-  # for each
-
-  foreach my $k ( @$priorities ) {
-    print "****CHECKING [$k]";
-    if ( ! $objects->{$k} ) {
-      next;
-    }
-		
-    #print Dumper( $objects->{$k} );
-	
-    print "IN priority loop";
-    my $domain = get_domain_hash($db, $k );
-    #this is very hackish but works until we get the scoring functionality working
-    my $id = ${$objects->{$k}}[0];
-    print Dumper($id);
-    $id = $id->[0];
-    #		if ( ref ($id) ) {
-    #			$id = ${@$id}[0];
-    #		}
-
-    #print $id;
-
-    my $identifier = get_object_hash($db,$id)->{'identifier'};
-    my $linkstring = $domain->{'urltemplate'} . $identifier;
-
-    #		print "adding : " . $linkstring . "\n";
-    my $domainnick = $domain->{'nickname'};
-    #my $size = length($domainnick) . 'em';
-    my $size = "13em";
-
-    #		print "making link to $domainnick\n";
-    if ( $first == 0 ) {
-      my $htmlonly = "\n" . '\begin{rawhtml}' . "\n";
-      $htmlonly .= getmenulinkstring($db, $id, $texttolink, $nummenus, $size );
-      $htmlonly .= '\end{rawhtml}';
-      $$textbegin =  $htmlonly. "\n" .'\begin{latexonly}' . "\n" . '\htmladdnormallink{'.$$textbegin;
-      $$textend = $$textend . '}{' . $linkstring . '}';	
-      $first = 1;
-    } else {
-      push @larray, 
-	'{\scriptsize \{\htmladdnormallink{'.$domain->{'code'}.'}{'.$linkstring.'}\} }';
-    }
-
-    #build a list of linkstrings to appear as the menulinks.
-    push @optionallinks, make_link_string($db, $id, $domainnick );
-    print "LEAVE loop";
-  }
-  my %menuinfo = ();
-  $menuinfo{'menuid'} = $nummenus;
-  $menuinfo{'linktargets'} = \@optionallinks;
-  $nummenus++;
-  #add in the latex only mode links of the form {PM}{MW}{etc...}{}
-  $lstring = join('', @larray);
-  $$textend = $$textend . $lstring . "\n" . '\end{latexonly}' . "\n";	
-
-  return \%menuinfo;
-}
-
-#this substitutes in the text the menuing links stuff - HTML version.
-sub substituteHTMLLinks {
-  my ($config, $objects, $textarray, $startpos, $endpos, $texttolink, $priorities) = @_;
-  #$priorities is needed for the domain priorities (i.e. which domain to link to first)
-  my $db = $config->get_DB;
-  #a->{domain} =  [ [internalobjectid, score], [..] ... ] 
-  #a->{domain2} = [ [internalobjectid2, score2] , []... ] 
-
-  my $first = 0; #this is used to mark whether or not the first link had been added to the
-  #string to be linked
-
-  my @optionallinks = ();  #array list of optional links for a concept
-  my $menuname = "menu" . $nummenus;
-  my $menulink;
-
-  #this sort function needs to be based on the domain priority rather than using
-  # for each
-
-  foreach my $k ( @$priorities ) {
-    if ( ! defined $objects->{$k} ) {
-      print "the objects were not found to be subed\n";
-      next;
-    }
-    #print Dumper( $objects->{$k} );
-    my $domain = get_domain_hash($db, $k );
-    #this is very hackish but works until we get the scoring functionality working
-    my $targets = $objects->{$k};
-    my $id = $targets->[0]->[0];
-    #print "linking to $id for domain $k = $domain->{'nickname'}\n";
-    #this hack is necessary. I need to reinvestigate how to populate
-    # the targets hash
-    if ( ref ($id) ) {
-      $id = ${@$id}[0];
-    }
-
-    print STDERR "The ID: $id\n";
-    my $objhash = get_object_hash($db,$id);
-    #print Dumper( $objhash );
-
-    my $identifier = get_object_hash($db,$id)->{'identifier'};
-    my $linkstring = $domain->{'urltemplate'} . $identifier;
-    $linkstring = uri_escape( $linkstring );
-
-    my $domainnick = $domain->{'nickname'};
-    my $size = "13em";
-    if ( $first == 0 ) {
-      $menulink = getmenulinkstring($db, 
-				    $id, $texttolink, $nummenus, $size );
-      $first = 1;
-    } 
-    #build a list of linkstrings to appear as the menulinks.
-    push @optionallinks, make_link_string($db, $id, $domainnick );
-  }
-	
-  if ( $menulink ne "" ) {
-    for ( my $i = $startpos; $i <= $endpos; $i++ ) {
-      $textarray->[$i] = "";
-    }
-
-    $textarray->[$startpos] = $menulink;
-	
-  }
-	
-  my %menuinfo = ();
-  $menuinfo{'menuid'} = $nummenus;
-  #	if ( ! defined $objects->{get_domain_id('planetmath.org')} ) {
-  #		push @optionallinks,
-  #		"<a href=\"http://planet.math.uwaterloo.ca/?op=adden&title=$texttolink\">(add to PlanetMath)</a>";
-  #	}
-  $menuinfo{'linktargets'} = \@optionallinks;
-  $nummenus++;
-
-  return \%menuinfo;
 }
 
 # remove things from the tags that should go "outside" the anchor.
@@ -1004,7 +636,7 @@ sub find_matches {
     my $fail = 1;
 
     # get all possible candidates for both posessive and plural forms of $word 
-    my @cand = get_possible_matches($db, $word );
+    my @cand = $db->select_firstword_matches($word);
     next unless @cand; # if there are no candidates skip the word
 
     #now figure out the code for making the match hash.

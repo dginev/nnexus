@@ -18,7 +18,7 @@ $opts = {
     "dbpass" => "nnexus",
     "dbhost" => "localhost"
   },
-  "verbosity" => 1
+  "verbosity" => 0
 };
 
 my $db = NNexus::DB->new(%{$opts->{database}});
