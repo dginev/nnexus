@@ -42,7 +42,6 @@ lib
    |
    |- Crossref.pm
    |- Domain.pm
-   |- EncyclopediaEntry.pm
    |- LinkPolicy.pm
 ```
 
