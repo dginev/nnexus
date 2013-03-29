@@ -21,7 +21,6 @@ use warnings;
 use feature qw(say switch);
 
 use NNexus::Domain qw(get_domain_id);
-use NNexus::EncyclopediaEntry qw(get_object_id get_object_hash);
 use NNexus::Crossref qw(cross_reference);
 
 sub new {
@@ -73,8 +72,7 @@ sub _link_entry {
   # all we need is the externalid, domain, and body of the document to figure out the linking.
   #  if the entry needing to be link is not yet in the db we need to call add_entry.
 
-  my $domid = get_domain_id( $db, $self->{'domain'} ); 
-  my $objid = get_object_id( $db, $self->{'objid'} ,$domid);
+  my $objid = $db->select_objectid_by(url=>$self->{'url'}) || -1;
 
   print "Linking object $objid of domain $domain with format = $format and " .
     "detail = $mode\n";
@@ -84,16 +82,15 @@ sub _link_entry {
   my $syns;
   my $classes;
   my $title;
-		
+  # TODO: Refactor here, what do we want to do when in DB?
   if ($objid != -1) {		#object is in the database
-    my $object = get_object_hash($db, $objid );
-    $title = $object->{'title'};
+    #my $object = $db->, $objid );
+    #$title = $object->{'title'};
     #get the concepts as a an array this object defines.
-    $syns = getconcepts( $objid );
-    my $class;
-    ($class ,$classes) = classinfo( $objid );		
-    print STDERR "no body sent for object $objid" unless defined $body;
-    push @$syns, $title;
+    #$syns = getconcepts( $objid );
+    #my $class;
+    #($class ,$classes) = classinfo( $objid );		
+    #print STDERR "no body sent for object $objid" unless defined $body;
   } else {			#object is not in the database
     print STDERR "linking an arbitrary object\n";
     if (defined $self->{'title'}) {
