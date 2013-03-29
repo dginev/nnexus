@@ -37,13 +37,13 @@ lib
        |- Mathworld.pm
        |- DLMF.pm
    |- Concepts.pm
+   |- Morphology.pm
   ...
    |
    |- Crossref.pm
    |- Domain.pm
    |- EncyclopediaEntry.pm
    |- LinkPolicy.pm
-   |- Morphology.pm
 ```
 
 The classes under the ... separator are yet to undergo more than a shallow refactoring pass and expect a rewrite.
