@@ -13,8 +13,13 @@ bin
  |- nnexus
 setup
  |- database
-   |- schema.sql
-   |- setup_nnexus_mysql.sql
+   |- mysql
+       |- schema.sql
+       |- setup_nnexus_mysql.sql
+   |- SQLite
+       |- schema.sql
+       |- nnexus.db
+       |- test.db
  |- config.json
 lib
  |- NNexus
