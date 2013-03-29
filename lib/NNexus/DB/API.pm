@@ -27,7 +27,7 @@ our @EXPORT = qw(add_object select_objectid_by select_concepts_by last_inserted_
 
 ### API for Table: Object
 
-sub add_object {
+sub add_object_by {
   my ($db,%options) = @_;
   my ($url, $domain) = map {$options{$_}} qw(url domain);
   my $sth = $db->prepare("INSERT into object (url, domain) values (?, ?)");
@@ -57,11 +57,8 @@ sub select_concepts_by {
   my $sth = $db->prepare("select concept, category from concept where (objectid = ?)");
   $sth->execute($objectid);
   my $concepts = [];
-  while (my ($concept, $category) = $sth->fetchrow_array) {
-    push @$concepts, {
-                      concept=>$concept,
-                      category=>$category,
-                     };
+  while (my $row = $sth->fetchrow_hashref()) {
+    push @$concepts, $row;
   }
   $sth->finish();
   return $concepts;
@@ -87,6 +84,25 @@ sub add_concept_by {
   my $sth = $db->prepare("insert into concept (firstword, concept, category, objectid, domain, link) values (?, ?, ?, ?, ?, ?)");
   $sth->execute($firstword, $concept, $category, $objectid, $domain, $link);
   $sth->finish();
+}
+
+# get the possible matches based on the first word of a concept
+# returns as an array containing a hash with newterm
+sub select_firstword_matches {
+  my ($db,$word) = @_;
+  my @matches = ();
+
+  # Normalize word
+  $word = get_nonpossessive($word);
+  $word = depluralize($word);
+
+  my $sth = $db->prepare("SELECT firstword, concept, objectid from concept where firstword=?");
+  $sth->execute($word);
+  while ( my $row = $sth->fetchrow_hashref() ) {
+    push @matches, $row;
+  }
+  $sth->finish();
+  return @matches;
 }
 
 ### API for Table: Invalidate *

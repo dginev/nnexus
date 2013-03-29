@@ -43,12 +43,14 @@ sub index_step {
   # 2. Check if object has already been indexed:
   my $url = $template->current_url; # Grab the current canonical URL
   my $objectid = $db->select_objectid_by(url=>$url);
+  my $old_concepts = [];
   if (! $objectid) {
     # 2.1. If not present, add it:
-    $objectid = $db->add_object(url=>$url,domain=>$domain);
+    $objectid = $db->add_object_by(url=>$url,domain=>$domain);
+  } else {
+    # 2.2. Otherwise, grab all concepts defined by the object.
+    $old_concepts = $db->select_concepts_by(objectid=>$objectid);
   }
-  # 2.2. Grab all concepts defined by the object.
-  my $old_concepts = $db->select_concepts_by(objectid=>$objectid);
   # 3.0. Flatten out incoming synonyms and categories to individual concepts:
   my $new_concepts = flatten_concept_harvest($indexed_concepts);
   # 3.1 Compute diff between previous and new concepts
@@ -57,7 +59,7 @@ sub index_step {
   my $invalidated_URLs = [];
   foreach my $delc(@$delete_concepts) {
     $db->delete_concept_by(concept=>$delc->{concept},category=>$delc->{category},objectid=>$objectid);
-    push @$invalidated_URLs, 
+    push @$invalidated_URLs,
       $db->invalidate_by(concept=>$delc->{concept},category=>$delc->{category},objectid=>$objectid);
   }
   # 5. Add newly introduced concepts

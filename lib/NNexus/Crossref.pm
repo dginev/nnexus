@@ -24,7 +24,6 @@ use Time::HiRes qw ( time alarm sleep );
 
 use NNexus::Morphology qw(get_nonpossessive get_possessive depluralize is_possessive is_plural);
 use NNexus::Linkpolicy qw (post_resolve_linkpolicy);
-use NNexus::Concepts qw(get_possible_matches);
 use NNexus::EncyclopediaEntry qw(get_object_hash);
 use NNexus::Util qw(inset uniquify);
 use NNexus::Domain qw(get_domain_blacklist get_domain_priorities get_domain_hash get_domain_id);
@@ -1004,7 +1003,7 @@ sub find_matches {
     my $fail = 1;
 
     # get all possible candidates for both posessive and plural forms of $word 
-    my @cand = get_possible_matches($db, $word );
+    my @cand = $db->select_firstword_matches($word);
     next unless @cand; # if there are no candidates skip the word
 
     #now figure out the code for making the match hash.

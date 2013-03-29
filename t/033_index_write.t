@@ -30,7 +30,7 @@ my $opts = {
 
 my $db = NNexus::DB->new(%{$opts->{database}});
 
-sub index_test{
+sub index_test {
   my (%options)=@_;
   # Prepare a Mojo::DOM
   my $url = $options{url}; 
