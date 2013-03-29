@@ -22,7 +22,8 @@ use feature 'switch';
 
 require Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT = qw(add_object select_objectid_by_url);
+our @EXPORT = qw(add_object select_objectid_by select_concepts_by last_inserted_id
+               add_concept_by delete_concept_by invalidate_by);
 
 ### API for Table: Object
 
@@ -33,11 +34,12 @@ sub add_object {
   $sth->execute($url,$domain);
   $sth->finish();
   # Return the object id in order to update the concepts and classification
-  return $db->last_inserted_id;
+  return last_inserted_id($db);
 }
 
-sub select_objectid_by_url {
-  my ($db,$url) = @_;
+sub select_objectid_by {
+  my ($db,%options) = @_;
+  my $url = $options{url};
   return unless $url;
   my $sth = $db->prepare("select objectid from object where (url = ?)");
   $sth->execute($url);
@@ -45,6 +47,51 @@ sub select_objectid_by_url {
   $sth->finish();
   return $objectid;
 }
+
+### API for Table: Concept
+
+sub select_concepts_by {
+  my ($db,%options) = @_;
+  my $objectid = $options{objectid};
+  return unless $objectid;
+  my $sth = $db->prepare("select concept, category from concept where (objectid = ?)");
+  $sth->execute($objectid);
+  my $concepts = [];
+  while (my ($concept, $category) = $sth->fetchrow_array) {
+    push @$concepts, {
+                      concept=>$concept,
+                      category=>$category,
+                     };
+  }
+  $sth->finish();
+  return $concepts;
+}
+
+sub delete_concept_by {
+  my ($db, %options) = @_;
+  my ($concept, $category, $objectid) = map {$options{$_}} qw(concept category objectid);
+  return unless $concept && $category && $objectid; # Mandatory fields. TODO: Raise error?
+  my $sth = $db->prepare("delete * from concept where (concept = ? AND category = ? AND objectid = ?)");
+  $sth->execute($concept,$category,$objectid);
+  $sth->finish();
+}
+
+sub add_concept_by {
+  my ($db, %options) = @_;
+  my ($concept, $category, $objectid, $domain, $link, $firstword) =
+    map {$options{$_}} qw(concept category objectid domain link firstword);
+  return unless $concept && $category && $objectid && $link && $domain; # Mandatory fields. TODO: Raise error?
+  if ((! $firstword) && $concept=~/^((\w|\-)+)\b/) { # Grab first word if not provided
+    $firstword = $1;
+  }
+  my $sth = $db->prepare("insert into concept (firstword, concept, category, objectid, domain, link) values (?, ?, ?, ?, ?, ?)");
+  $sth->execute($firstword, $concept, $category, $objectid, $domain, $link);
+  $sth->finish();
+}
+
+### API for Table: Invalidate *
+
+sub invalidate_by{[];}
 
 ### Generic DB API
 

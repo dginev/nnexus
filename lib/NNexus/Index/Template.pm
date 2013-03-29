@@ -219,7 +219,7 @@ Using the information provided by the shared methods,
   The expected return value is a reference to an array of hash-references,
   each hash-reference being a concept hash datastructure, specified as:
   	
-  { term => 'concept name',
+  { concept => 'concept name',
     url => 'origin url',
     synonyms => [ qw(list of synonyms) ],
     categories => [ qw(list of categories) ],
