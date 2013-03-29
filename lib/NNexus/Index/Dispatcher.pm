@@ -53,11 +53,8 @@ sub index_step {
   my $new_concepts = flatten_concept_harvest($indexed_concepts);
   # 3.1 Compute diff between previous and new concepts
   my ($delete_concepts,$add_concepts) = diff_concept_harvests($old_concepts,$new_concepts);
-  use Data::Dumper;
-  print STDERR "To delete: ",Dumper($delete_concepts),"\n\n";
-  print STDERR "To add: ",Dumper($add_concepts),"\n\n";
-  my $invalidated_URLs = [];
   # 4. Delete no longer present concepts
+  my $invalidated_URLs = [];
   foreach my $delc(@$delete_concepts) {
     $db->delete_concept_by(concept=>$delc->{concept},category=>$delc->{category},objectid=>$objectid);
     push @$invalidated_URLs, 

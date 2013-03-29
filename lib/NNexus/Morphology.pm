@@ -79,7 +79,8 @@ sub is_plural { $_[0] ne depluralize($_[0]); }
 sub depluralize {
 	given ($_[0]) {
 		# "spaces of functions" depluralizes as "space of functions" for example.
-		when (/(^\w[\w\s]+\w)(\s+of\s+.+)$/) {
+                # also "proofs by induction"
+		when (/(^\w[\w\s]+\w)(\s+(of|by)\s+.+)$/) {
 			my ($l,$r) = ($1,$2);
 			return depluralize($l).$r;
 		}

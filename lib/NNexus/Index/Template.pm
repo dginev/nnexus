@@ -53,20 +53,19 @@ sub index_step {
   }
   # Also skip if we're over the depth limit.
   return $self->index_step if $depth > $self->depth_limit;
-  print STDERR "\nIndexing $current_url\n";
-	# 2.1. Prepare (or just accept) a Mojo::DOM to be analyzed
-	if ($options{dom}) {
-		$self->current_dom($options{dom});
-		delete $options{dom};
-	} else {
-		$self->current_dom($self->ua->get($current_url)->res->dom);
-		sleep 1; # Don't overload the server
-	}
+  # 2.1. Prepare (or just accept) a Mojo::DOM to be analyzed
+  if ($options{dom}) {
+    $self->current_dom($options{dom});
+    delete $options{dom};
+  } else {
+    $self->current_dom($self->ua->get($current_url)->res->dom);
+    sleep 1; # Don't overload the server
+  }
   # Obtain the indexer payload
   my $payload = $self->index_page;
   # What are the candidate categories for follow-up jobs?
   my $categories = $self->candidate_categories;
-	# Push all following candidate jobs to queue
+  # Push all following candidate jobs to queue
   if ($depth <= $self->depth_limit) { # Don't add pointless nodes
     my $candidate_links = $self->candidate_links;
     foreach (@$candidate_links) {
@@ -76,8 +75,6 @@ sub index_step {
         depth=>$depth+1});
     }
   }
-  # TODO : Comment this out when stable.
-  print STDERR "Payload:\n",Dumper($payload);
   # Return final list of concepts for this page
   return $payload;
 }

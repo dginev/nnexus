@@ -18,6 +18,7 @@
 package NNexus::Util;
 use strict;
 use warnings;
+use Carp;
 # [16/12/2012] DG: Most of this code is horribly deprecated (e.g. the Unicode support) and should be updated...
 
 # This code is verbatim from the Noosphere project except package names.
