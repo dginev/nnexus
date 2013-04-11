@@ -17,7 +17,7 @@
 package NNexus::Crossref;
 use strict;
 use warnings;
-use Encode qw{is_utf8};
+use Encode qw/is_utf8/;
 use utf8;
 use Data::Dumper;
 use Time::HiRes qw ( time alarm sleep );
@@ -42,44 +42,44 @@ our %LINKTAGS = (
 
 # I assume this should populate the <links /> 
 sub cross_reference_HTML {
-  my (%opts) = @_;
-  my ($config,$domain,$text,$syns,$fromid,$class) = map {$opts{$_}} qw(config domain text nolink fromid class);
+  my (%options) = @_;
+  my ($config,$domain,$text,$syns,$fromid,$class) = map {$options{$_}} qw(config domain text nolink fromid class);
   my $db = $config->get_DB;
   $fromid = -1 unless defined $fromid; # from id - if this is null or -1, we dont touch links tbl
-	
   # fix l2h stuff
   # separate math from linkable text, and do some massaging
   my @user_escaped;
   my $escaped;
   my $linkids;
 
-  #TODO - we need to figure out what kind of preprocessing we need to do for HTML.
-
   push @user_escaped, @$syns; #add synonyms to the user_esaped list for makeLaTeXLinks
 
-  my $parser = HTML::Parser->new(
-			       'api_version' => 3,
-			       'start_h' => [sub {
-              if ($_[1]=~/^head|style|title|script|xmp|iframe|math|svg|a|(h\d+)/) {
-                $_[0]->{fresh_skip}=1;
-                $_[0]->{noparse}++;
-              } else {
-                $_[0]->{fresh_skip}=0;
-              }
-						  $_[0]->{annotated} .= $_[2];}
-              , 'self, tagname, text'],
-			       'end_h' => [sub {
-              $_[0]->{noparse}--
-              if (($_[1]=~/^\<\/head|style|title|script|xmp|iframe|math|svg|a|(h\d+)\>$/) ||
-                ((length($_[1])==0) && ($_[0]->{fresh_skip})));
-						  $_[0]->{annotated} .= $_[1];}, 'self,text'],
-			       'default_h' => [sub { $_[0]->{annotated} .= $_[1]; }, 'self, text'],
-			       'text_h'      => [\&text_handler, 'self,text']
-			      );
+  # Current HTML Parsing strategy - fire events for all HTML tags and explicitly skip over tags that 
+  # won't be of interest. We need to autolink in all textual elements.
+  # TODO: Handle MathML better
+  my $parser = 
+    HTML::Parser->new(
+		      'api_version' => 3,
+		      'start_h' => [sub {
+				      if ($_[1]=~/^head|style|title|script|xmp|iframe|math|svg|a|(h\d+)/) {
+					$_[0]->{fresh_skip}=1;
+					$_[0]->{noparse}++;
+				      } else {
+					$_[0]->{fresh_skip}=0;
+				      }
+				      $_[0]->{annotated} .= $_[2];} , 'self, tagname, text'],
+		      'end_h' => [sub {
+				    $_[0]->{noparse}--
+				      if (($_[1]=~/^\<\/head|style|title|script|xmp|iframe|math|svg|a|(h\d+)\>$/) ||
+					  ((length($_[1])==0) && ($_[0]->{fresh_skip})));
+				    $_[0]->{annotated} .= $_[1];}, 'self,text'],
+		      'default_h' => [sub { $_[0]->{annotated} .= $_[1]; }, 'self, text'],
+		      'text_h'      => [\&text_handler, 'self,text']
+		     );
   $parser->{annotated} = "";
   $parser->{linkarray} = [];
   $parser->{linked}={};
-  $parser->{state_information}=\%opts; # Not pretty, but TODO: improve
+  $parser->{state_information}=\%options; # Not pretty, but TODO: improve
   $parser->unbroken_text;
   $parser->xml_mode;
   $parser->empty_element_tags(1);
@@ -97,6 +97,7 @@ sub text_handler {
     $self->{annotated}.=$text;
     return;
   }
+  # Otherwise - discover concepts and annotate!
 
   #$matches: matches array for each text node in the HTML Tree.
   #$textref: this is an array of references to the original text
@@ -122,6 +123,7 @@ sub text_handler {
     }
   }
 
+  # DG: ??? Domain priorities?
   my $priorities = get_domain_priorities($state->{config}, $state->{domain} );
   my $linked_result;
   my @linkarray;		# array of href's

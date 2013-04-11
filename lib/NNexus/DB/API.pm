@@ -158,19 +158,32 @@ BEGIN
  UPDATE object SET modified = CURRENT_TIMESTAMP WHERE objectid = old.objectid;
 END;");
 
+# Table structure for table linkcache
+$self->do("DROP TABLE IF EXISTS linkcache;");
+$self->do("CREATE TABLE linkcache (
+  objectid integer NOT NULL,
+  conceptid integer NOT NULL,
+  PRIMARY KEY (objectid, conceptid)
+);");
+
+
 # Table structure for table concepthash
+# A 'concept' has a 'firstword', belongs to a 'category' (e.g. 10-XX) with a certain 'scheme' (e.g. MSC) and is defined at a 'link', obtained while traversing an object known via 'objectid'. The concept inherits the 'domain' of the object (e.g. PlanetMath).
+# The distinction between link and objectid allows for a level of indirection, e.g. in DLMF, where we would obtain the 'link's that define concepts while at a higher (e.g. index) webpage, only which we would register in the object table. The reindexing should be driven by the traversal process, while the linking should use the actual obtained URL for the concept definition.
 $self->do("DROP TABLE IF EXISTS concept;");
 $self->do("CREATE TABLE concept (
+  conceptid integer primary key AUTOINCREMENT,
   firstword varchar(50) NOT NULL,
   concept varchar(255) NOT NULL,
-  link varchar(2083) NOT NULL,
   category varchar(10) NOT NULL,
   scheme varchar(10) NOT NULL DEFAULT 'msc',
   domain varchar(50) NOT NULL,
-  objectid int(11) NOT NULL,
-  PRIMARY KEY (objectid, concept, category)
+  link varchar(2053) NOT NULL,
+  objectid int(11) NOT NULL
 );");
-$self->do("CREATE INDEX conceptidx ON concept(concept);");
+$self->do("CREATE INDEX conceptidx ON concept(firstword);");
+# TODO: Do we need this one?
+#$self->do("CREATE INDEX conceptidx ON concept(concept);");
 $self->do("CREATE INDEX objectididx ON concept(objectid);");
 
 # Table structure for table domain

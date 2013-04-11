@@ -293,25 +293,6 @@ sub cleancategory {
   #	return "$scheme:$ext";
 }
 
-# DG: No one is using this, deprecate?
-# sub addcategory {
-#   my $category = shift;
-#   my $default = shift;		#default category for the domain
-
-#   my ($scheme, @other ) = split( /:/, $category);
-#   my $ext = join( ":", @other );	
-
-
-#   print "adding category $scheme : $ext\n";
-#   # TODO: Get a DB object in here
-#   my $sth = cachedPrepare("insert into categories (externalid, scheme) values (?,?)");
-#   # removed due to an eval related memory leak in perl
-#   #	eval {
-#   $sth->execute(  $ext, $scheme );
-#   $sth->finish();
-#   #	};
-# }
-
 # shorten classifications, turn
 #	 msc:11-00, msc:15-00, ...
 # to
