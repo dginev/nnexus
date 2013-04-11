@@ -23,31 +23,23 @@ use Graph;
 use NNexus::Util;
 
 sub new {
-  my ($class,%opts) = @_;
+  my ($class,%options) = @_;
   #this is the global graph for determining classification distance
   my $classgraph = Graph::Undirected->new();
 
-  bless {classgraph=>$classgraph,db=>$opts{db},config=>$opts{config}, verbosity=>$opts{verbosity}||0}, $class;
-}
-
-#this function assumes that the classification information has already been added
-# to the database. There are utility scripts to do this. In the future we may add
-# API calls to intialize the classification trees.
-sub initClassificationModule {
-  my ($self)=@_;
-  my $classgraph = $self->{classgraph};
-
-  print STDERR "Initializing Classification Distance Module\n" if $self->{verbosity} > 0;
-  my $sth = $self->{db}->prepare("SELECT child, parent, weight from ontology");
+  print STDERR "Initializing classification graph...\n" if $options{verbosity} > 0;
+  my $sth = $options{db}->prepare("SELECT child, parent, weight from ontology");
   $sth->execute();
-
   while ( my $row = $sth->fetchrow_hashref() ) {
-    print STDERR "adding edge ".$row->{'child'}." ".$row->{'parent'}."\n" if $self->{verbosity} > 0;
+    print STDERR "adding edge ".$row->{'child'}." ".$row->{'parent'}."\n" if $options{verbosity} > 0;
     $classgraph->add_weighted_edge( $row->{'child'},
 				    $row->{'parent'},
 				    $row->{'weight'} );
   }
-  print STDERR "Done Classification Initializing\n" if $self->{verbosity} > 0;
+  print STDERR "... graph initialization complete!\n" if $options{verbosity} > 0;
+
+  bless {classgraph=>$classgraph,db=>$options{db},config=>$options{config}, verbosity=>$options{verbosity}||0},
+    $class;
 }
 
 #this function converts a string of the form scheme:id into

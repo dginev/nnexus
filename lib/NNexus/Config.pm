@@ -37,10 +37,8 @@ sub new {
   }
   my $db = NNexus::DB->new(%{$opts->{database}});
   $opts->{db} = $db;
+  $opts->{classification} = NNexus::Classification->new(db=>$db, verbosity=>$opts->{verbosity});
 
-  my $classification = NNexus::Classification->new(db=>$db, verbosity=>$opts->{verbosity});
-  $classification->initClassificationModule();
-  $opts->{classification} = $classification;
   bless $opts, $class;
 }
 

@@ -132,7 +132,8 @@ use Data::Dumper;
 sub reset_db {
 my ($self) = @_;
 $self = $self->safe; # unsafe but faster...
-# Schema code goes in here...
+
+# Table structure for table categories
 $self->do("DROP TABLE IF EXISTS categories;");
 $self->do("CREATE TABLE categories (
   categoryid integer primary key AUTOINCREMENT,
@@ -140,6 +141,22 @@ $self->do("CREATE TABLE categories (
   externalid text,
   scheme varchar(50) NOT NULL DEFAULT ''
 );");
+
+# Table structure for table object
+$self->do("DROP TABLE IF EXISTS object;");
+$self->do("CREATE TABLE object (
+  objectid integer primary key AUTOINCREMENT,
+  url varchar(2083) NOT NULL UNIQUE,
+  domain varchar(50) NOT NULL,
+ -- TODO: Do we really care about modified?
+  modified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+);");
+# TODO: Rethink this trigger, do we need modified?
+$self->do("CREATE TRIGGER ObjectModified
+AFTER UPDATE ON object
+BEGIN
+ UPDATE object SET modified = CURRENT_TIMESTAMP WHERE objectid = old.objectid;
+END;");
 
 # Table structure for table concepthash
 $self->do("DROP TABLE IF EXISTS concept;");
@@ -201,22 +218,6 @@ $self->do("CREATE TABLE inv_words (
   word char(128) DEFAULT ''
 );");
 $self->do("CREATE INDEX word_idx ON inv_words(word);");
-
-# Table structure for table object
-$self->do("DROP TABLE IF EXISTS object;");
-$self->do("CREATE TABLE object (
-  objectid integer primary key AUTOINCREMENT,
-  url varchar(2083) NOT NULL UNIQUE,
-  domain varchar(50) NOT NULL,
- -- TODO: Do we really care about modified?
-  modified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-);");
-# TODO: Rethink this trigger, do we need modified?
-$self->do("CREATE TRIGGER ObjectModified
-AFTER UPDATE ON object
-BEGIN
- UPDATE object SET modified = CURRENT_TIMESTAMP WHERE objectid = old.objectid;
-END;");
 
 # Table structure for table ontology
 $self->do("DROP TABLE IF EXISTS ontology;");
