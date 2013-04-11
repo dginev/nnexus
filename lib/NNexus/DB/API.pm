@@ -30,7 +30,7 @@ our @EXPORT = qw(add_object_by select_objectid_by select_concepts_by last_insert
 sub add_object_by {
   my ($db,%options) = @_;
   my ($url, $domain) = map {$options{$_}} qw(url domain);
-  my $sth = $db->prepare("INSERT into object (url, domain) values (?, ?)");
+  my $sth = $db->prepare("INSERT into objects (url, domain) values (?, ?)");
   $sth->execute($url,$domain);
   $sth->finish();
   # Return the object id in order to update the concepts and classification
@@ -41,7 +41,7 @@ sub select_objectid_by {
   my ($db,%options) = @_;
   my $url = $options{url};
   return unless $url;
-  my $sth = $db->prepare("select objectid from object where (url = ?)");
+  my $sth = $db->prepare("select objectid from objects where (url = ?)");
   $sth->execute($url);
   my ($objectid) = $sth->fetchrow_array;
   $sth->finish();
@@ -54,7 +54,7 @@ sub select_concepts_by {
   my ($db,%options) = @_;
   my $objectid = $options{objectid};
   return unless $objectid;
-  my $sth = $db->prepare("select concept, category from concept where (objectid = ?)");
+  my $sth = $db->prepare("select concept, category from concepts where (objectid = ?)");
   $sth->execute($objectid);
   my $concepts = [];
   while (my $row = $sth->fetchrow_hashref()) {
@@ -68,7 +68,7 @@ sub delete_concept_by {
   my ($db, %options) = @_;
   my ($concept, $category, $objectid) = map {$options{$_}} qw(concept category objectid);
   return unless $concept && $category && $objectid; # Mandatory fields. TODO: Raise error?
-  my $sth = $db->prepare("delete * from concept where (concept = ? AND category = ? AND objectid = ?)");
+  my $sth = $db->prepare("delete * from concepts where (concept = ? AND category = ? AND objectid = ?)");
   $sth->execute($concept,$category,$objectid);
   $sth->finish();
 }
@@ -81,7 +81,7 @@ sub add_concept_by {
   if ((! $firstword) && $concept=~/^((\w|\-)+)\b/) { # Grab first word if not provided
     $firstword = $1;
   }
-  my $sth = $db->prepare("insert into concept (firstword, concept, category, objectid, domain, link) values (?, ?, ?, ?, ?, ?)");
+  my $sth = $db->prepare("insert into concepts (firstword, concept, category, objectid, domain, link) values (?, ?, ?, ?, ?, ?)");
   $sth->execute($firstword, $concept, $category, $objectid, $domain, $link);
   $sth->finish();
 }
@@ -96,7 +96,7 @@ sub select_firstword_matches {
   $word = get_nonpossessive($word);
   $word = depluralize($word);
 
-  my $sth = $db->prepare("SELECT firstword, concept, objectid from concept where firstword=?");
+  my $sth = $db->prepare("SELECT firstword, concept, objectid from concepts where firstword=?");
   $sth->execute($word);
   while ( my $row = $sth->fetchrow_hashref() ) {
     push @matches, $row;
@@ -143,8 +143,8 @@ $self->do("CREATE TABLE categories (
 );");
 
 # Table structure for table object
-$self->do("DROP TABLE IF EXISTS object;");
-$self->do("CREATE TABLE object (
+$self->do("DROP TABLE IF EXISTS objects;");
+$self->do("CREATE TABLE objects (
   objectid integer primary key AUTOINCREMENT,
   url varchar(2083) NOT NULL UNIQUE,
   domain varchar(50) NOT NULL,
@@ -153,13 +153,13 @@ $self->do("CREATE TABLE object (
 );");
 # TODO: Rethink this trigger, do we need modified?
 $self->do("CREATE TRIGGER ObjectModified
-AFTER UPDATE ON object
+AFTER UPDATE ON objects
 BEGIN
- UPDATE object SET modified = CURRENT_TIMESTAMP WHERE objectid = old.objectid;
+ UPDATE objects SET modified = CURRENT_TIMESTAMP WHERE objectid = old.objectid;
 END;");
 
-# Table structure for table linkcache
-$self->do("DROP TABLE IF EXISTS linkcache;");
+# Table structure for table links_cache
+$self->do("DROP TABLE IF EXISTS links_cache;");
 $self->do("CREATE TABLE linkcache (
   objectid integer NOT NULL,
   conceptid integer NOT NULL,
@@ -167,11 +167,11 @@ $self->do("CREATE TABLE linkcache (
 );");
 
 
-# Table structure for table concepthash
+# Table structure for table concept
 # A 'concept' has a 'firstword', belongs to a 'category' (e.g. 10-XX) with a certain 'scheme' (e.g. MSC) and is defined at a 'link', obtained while traversing an object known via 'objectid'. The concept inherits the 'domain' of the object (e.g. PlanetMath).
 # The distinction between link and objectid allows for a level of indirection, e.g. in DLMF, where we would obtain the 'link's that define concepts while at a higher (e.g. index) webpage, only which we would register in the object table. The reindexing should be driven by the traversal process, while the linking should use the actual obtained URL for the concept definition.
-$self->do("DROP TABLE IF EXISTS concept;");
-$self->do("CREATE TABLE concept (
+$self->do("DROP TABLE IF EXISTS concepts;");
+$self->do("CREATE TABLE concepts (
   conceptid integer primary key AUTOINCREMENT,
   firstword varchar(50) NOT NULL,
   concept varchar(255) NOT NULL,
@@ -181,14 +181,17 @@ $self->do("CREATE TABLE concept (
   link varchar(2053) NOT NULL,
   objectid int(11) NOT NULL
 );");
-$self->do("CREATE INDEX conceptidx ON concept(firstword);");
+$self->do("CREATE INDEX conceptidx ON concepts(firstword);");
 # TODO: Do we need this one?
 #$self->do("CREATE INDEX conceptidx ON concept(concept);");
-$self->do("CREATE INDEX objectididx ON concept(objectid);");
+$self->do("CREATE INDEX objectididx ON concepts(objectid);");
+
+# Table structure for table candidate
+
 
 # Table structure for table domain
-$self->do("DROP TABLE IF EXISTS domain;");
-$self->do("CREATE TABLE domain (
+$self->do("DROP TABLE IF EXISTS domains;");
+$self->do("CREATE TABLE domains (
   domainid integer primary key AUTOINCREMENT,
   name varchar(30) NOT NULL DEFAULT '' UNIQUE,
   urltemplate varchar(100) DEFAULT NULL,
@@ -228,7 +231,7 @@ This class provides API methods for specific SQL queries commonly needed by NNex
 
 =head2 METHODS
 
-=head3 Table: Object
+=head3 Table: Objects
 
 =over 4
 
