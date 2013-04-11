@@ -192,6 +192,7 @@ $self->do("CREATE TABLE candidates (
   candidateid integer primary key AUTOINCREMENT,
   firstword varchar(50) NOT NULL,
   candidate varchar(255) NOT NULL,
+  confidence real NOT NULL DEFAULT 0
 );");
 
 # Table structure for table domain
