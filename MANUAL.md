@@ -40,6 +40,7 @@ lib
    |- Morphology.pm
   ...
    |
+   |- Classification.pm
    |- Crossref.pm
    |- Domain.pm
    |- LinkPolicy.pm
