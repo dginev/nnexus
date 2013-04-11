@@ -36,7 +36,7 @@ sub new {
   $options{handle} = $input{handle};
   my $self = bless \%options, $class;
   if (($options{dbms} eq 'SQLite') && ((! -e $options{dbname})||(-z $options{dbname}))) {
-    # Initialize a new SQLite database, if requested
+    # Auto-vivify a new SQLite database, if not already created
     $self->reset_db;
   }
   return $self;
