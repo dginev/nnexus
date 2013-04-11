@@ -35,9 +35,9 @@ sub new {
   $options{query_cache} = $input{query_cache} || {};
   $options{handle} = $input{handle};
   my $self = bless \%options, $class;
-  if ($input{dbinitialize} && ($options{dbms} eq 'SQLite')) {
+  if (($options{dbms} eq 'SQLite') && ((! -e $options{dbname})||(-z $options{dbname}))) {
     # Initialize a new SQLite database, if requested
-    initialize_sqlite_db($self);
+    $self->reset_db;
   }
   return $self;
 }
@@ -89,8 +89,6 @@ sub ping {
   my ($self,@args) = @_;
   $self->safe->ping(@args);
 }
-
-
 
 sub prepare {
   # Performs an SQL statement prepare and returns, maintaining a cache of already

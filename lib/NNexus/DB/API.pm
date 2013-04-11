@@ -23,7 +23,7 @@ use DBI;
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(add_object_by select_objectid_by select_concepts_by last_inserted_id
-               add_concept_by delete_concept_by invalidate_by initialize_sqlite_db);
+               add_concept_by delete_concept_by invalidate_by reset_db);
 
 ### API for Table: Object
 
@@ -129,7 +129,7 @@ sub last_inserted_id {
 
 ### API for Initializing a SQLite Database:
 use Data::Dumper;
-sub initialize_sqlite_db {
+sub reset_db {
 my ($self) = @_;
 $self = $self->safe; # unsafe but faster...
 # Schema code goes in here...

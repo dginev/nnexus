@@ -25,7 +25,7 @@ $opts = {
   "verbosity" => 0
 };
 
-my $db = NNexus::DB->new(%{$opts->{database}},"dbinitialize" => 1);
+my $db = NNexus::DB->new(%{$opts->{database}});
 ok($db, 'NNexus::DB object successfully created.');
 ok ($db->ping, 'SQLite database is operational');
 

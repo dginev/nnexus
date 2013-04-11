@@ -32,7 +32,7 @@ my $opts = {
   "verbosity" => 1
 };
 
-my $db = NNexus::DB->new(%{$opts->{database}},dbinitialize=>1);
+my $db = NNexus::DB->new(%{$opts->{database}});
 use Data::Dumper;
 sub index_test {
   my (%options)=@_;
