@@ -186,8 +186,13 @@ $self->do("CREATE INDEX conceptidx ON concepts(firstword);");
 #$self->do("CREATE INDEX conceptidx ON concept(concept);");
 $self->do("CREATE INDEX objectididx ON concepts(objectid);");
 
-# Table structure for table candidate
-
+# Table structure for table candidates
+$self->do("DROP TABLE IF EXISTS candidates;");
+$self->do("CREATE TABLE candidates (
+  candidateid integer primary key AUTOINCREMENT,
+  firstword varchar(50) NOT NULL,
+  candidate varchar(255) NOT NULL,
+);");
 
 # Table structure for table domain
 $self->do("DROP TABLE IF EXISTS domains;");
