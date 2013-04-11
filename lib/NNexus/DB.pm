@@ -34,8 +34,12 @@ sub new {
   $options{dbms} = $input{dbms};
   $options{query_cache} = $input{query_cache} || {};
   $options{handle} = $input{handle};
-
-  bless \%options, $class;
+  my $self = bless \%options, $class;
+  if ($input{dbinitialize} && ($options{dbms} eq 'SQLite')) {
+    # Initialize a new SQLite database, if requested
+    initialize_sqlite_db($self);
+  }
+  return $self;
 }
 
 # Methods:
@@ -52,7 +56,8 @@ sub safe {
 			   $self->{'dbpass'},
 			   {
 			    host => $self->{'dbhost'},
-			    RaiseError => 1
+			    RaiseError => 1,
+          AutoCommit => 1
 			   }) || die "Could not connect to database: $DBI::errstr";
     $self->{handle}=$dbh;
     $self->_recover_cache;

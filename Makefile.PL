@@ -14,25 +14,26 @@ our $MORE_MACROS = {};
 our $MORE_MAKERULES=''; 
 
 WriteMakefile(NAME => 'NNexus',
-	      AUTHOR => 'Deyan Ginev <d.ginev@jacobs-university.de>',
-	      ABSTRACT => "NNexus autolinker",
-	      PREREQ_PM => { 
-			    'Test::Simple'=>0,
-				'XML::Simple'=>0,
-				'Mojolicious'=>0,
-				'Graph'=>0,
-				'DBI'=>0,
-			        'DBD::SQLite'=>0,
-				'DBD::mysql'=>0,
-				'LWP'=>0,
-				'JSON::XS'=>0,
-				'Encode'=>0,
-				'Cwd'=>0,
-				'Data::Dumper'=>0,
-				'HTML::Entities'=>0,
-				'HTML::TreeBuilder'=>0,
-				# We also need mysql server installed,
-				# Any way to mark this in the dependencies?
-			   },
-	      EXE_FILES => [ 'bin/nnexus'],
-	      );
+  AUTHOR => 'Deyan Ginev <d.ginev@jacobs-university.de>',
+  ABSTRACT => "NNexus autolinker",
+  PREREQ_PM => { 
+    'Test::Simple'=>0,
+    'XML::Simple'=>0,
+    'Mojolicious'=>0,
+    'Graph'=>0,
+    'DBI'=>0,
+    'DBD::SQLite'=>0,
+    'DBD::mysql'=>0,
+    'File::Temp'=>0,
+    'LWP'=>0,
+    'JSON::XS'=>0,
+    'Encode'=>0,
+    'Cwd'=>0,
+    'Data::Dumper'=>0,
+    'HTML::Entities'=>0,
+    'HTML::TreeBuilder'=>0,
+        # We also need mysql server installed,
+        # Any way to mark this in the dependencies?
+        },
+        EXE_FILES => [ 'bin/nnexus'],
+        );
