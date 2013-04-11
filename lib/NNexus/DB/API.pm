@@ -197,41 +197,6 @@ $self->do("CREATE TABLE domain (
   nickname varchar(50) DEFAULT NULL
 );");
 
-# Table structure for table inv_dfs
-$self->do("DROP TABLE IF EXISTS inv_dfs;");
-$self->do("CREATE TABLE inv_dfs (
-  id int(11) DEFAULT '0',
-  word_or_phrase tinyint(4) DEFAULT '0',
-  count int(11) DEFAULT '0'
-);");
-$self->do("CREATE INDEX invididx ON inv_dfs(id);");
-
-# Table structure for table inv_idx
-$self->do("DROP TABLE IF EXISTS inv_idx;");
-$self->do("CREATE TABLE inv_idx (
-  id int(11) DEFAULT '0',
-  word_or_phrase tinyint(4) DEFAULT '0',
-  objectid int(11) DEFAULT '0'
-);");
-$self->do("CREATE INDEX ididx ON inv_idx(id);");
-$self->do("CREATE INDEX objididx ON inv_idx(objectid);");
-
-# Table structure for table `inv_phrases`
-$self->do("DROP TABLE IF EXISTS inv_phrases;");
-$self->do("CREATE TABLE inv_phrases (
-  id integer primary key AUTOINCREMENT,
-  phrase char(255) DEFAULT ''
-);");
-$self->do("CREATE INDEX phrase_idx ON inv_phrases(phrase);");
-
-# Table structure for table inv_words
-$self->do("DROP TABLE IF EXISTS inv_words;");
-$self->do("CREATE TABLE inv_words (
-  id integer primary key AUTOINCREMENT,
-  word char(128) DEFAULT ''
-);");
-$self->do("CREATE INDEX word_idx ON inv_words(word);");
-
 # Table structure for table ontology
 $self->do("DROP TABLE IF EXISTS ontology;");
 $self->do("CREATE TABLE ontology (
