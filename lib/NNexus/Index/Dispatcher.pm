@@ -42,7 +42,8 @@ sub index_step {
 
   # 2. Check if object has already been indexed:
   my $url = $template->current_url; # Grab the current canonical URL
-  my $objectid = $db->select_objectid_by(url=>$url);
+  my $object = $db->select_object_by(url=>$url);
+  my $objectid = $object->{objectid};
   my $old_concepts = [];
   if (! $objectid) {
     # 2.1. If not present, add it:

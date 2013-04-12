@@ -22,7 +22,7 @@ use feature 'switch';
 use DBI;
 require Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT = qw(add_object_by select_objectid_by select_concepts_by last_inserted_id
+our @EXPORT = qw(add_object_by select_object_by select_concepts_by last_inserted_id
                add_concept_by delete_concept_by invalidate_by reset_db);
 
 ### API for Table: Object
@@ -37,15 +37,15 @@ sub add_object_by {
   return last_inserted_id($db);
 }
 
-sub select_objectid_by {
+sub select_object_by {
   my ($db,%options) = @_;
   my $url = $options{url};
   return unless $url;
-  my $sth = $db->prepare("select objectid from objects where (url = ?)");
+  my $sth = $db->prepare("select objectid, domain from objects where (url = ?)");
   $sth->execute($url);
-  my ($objectid) = $sth->fetchrow_array;
+  my $object = $sth->fetchrow_hashref;
   $sth->finish();
-  return $objectid;
+  return $object;
 }
 
 ### API for Table: Concept
