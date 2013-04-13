@@ -43,115 +43,87 @@ sub mine_candidates {
   #        mining on, as well as its URL.
   # Optional: Deprecated details such as 'domain' or 'format'.
   #           Interesting: allow 'nolink' again?
-
-  my $config = $options{config};
+  my ($config,$format,$body,$nolink,$url,$domain) = 
+    map {$options{$_}} qw(config format body nolink url domain);
   my $db = $config->get_DB;
-  my $format = $options{format}||'html';
-  my $body = $options{body};
-  my $nolink = $options{'nolink'};
-  # TODO: Raise error if body, or URL are missing
-
-  # Prepare data:
-  my $object = $db->select_object_by(url=>$options{'url'}) || {};
-  my $objectid = $object->{objectid} || -1;
-  my $domain = $options{domain}||$object->{domain};
-  # If objectid is -1 , we will also need to add_object on the url
-  if ($objectid == -1) {
-    $objectid = $db->add_object_by(url=>$options{'url'},domain=>$domain);
+  $format = 'html' unless defined $format;
+  # Prepare data, if we have a URL:
+  my $objectid; # undefined if we don't have a URL, we only do MoC for named resources
+  if ($url) {
+    my $object = $db->select_object_by(url=>) || {};
+    $objectid = $object->{objectid} || -1;
+    $domain = $object->{domain} unless defined $domain;
+    # If objectid is -1 , we will also need to add_object on the url
+    if ($objectid == -1) {
+      $objectid = $db->add_object_by(url=>$options{'url'},domain=>$domain);
+    }
+    # TODO: Flush the links_cache for this object!
   }
   my $start = time();
   # TODO: Assemble a blacklist and push it to 'nolink'
   #pull this blacklist into a config file
   #	my @blacklist = ( 'g', 'and','or','i','e', 'a','means','set','sets',
   #			'choose', 'it',  'o', 'r', 'in', 'the', 'my', 'on', 'of');
-  my $mined_candidates = [];
+  # Always return an embedded annotation with links, as well as a stand-off mined_canidates hash, containing the individual concepts with pointers.
+  my ($annotated_body,$mined_candidates)=('',[]);
   if ($format eq 'html') {
-    my $parser = 
-      HTML::Parser->new(
-        'api_version' => 3,
-	'start_h' => [sub {
-	  if ($_[1]=~/^head|style|title|script|xmp|iframe|math|svg|a|(h\d+)/) {
-	    $_[0]->{fresh_skip}=1;
-	    $_[0]->{noparse}++;
-	  } else {
-	    $_[0]->{fresh_skip}=0;
-	  }
-	  $_[0]->{annotated} .= $_[2];} , 'self, tagname, text'],
-        'end_h' => [sub {
-	  $_[0]->{noparse}--
-	    if (($_[1]=~/^\<\/head|style|title|script|xmp|iframe|math|svg|a|(h\d+)\>$/) ||
-		((length($_[1])==0) && ($_[0]->{fresh_skip})));
-	  $_[0]->{annotated} .= $_[1];}, 'self,text'],
-	'default_h' => [sub { $_[0]->{annotated} .= $_[1]; }, 'self, text'],
-	'text_h'      => [\&text_handler, 'self,text']
-    );
-    $parser->{annotated} = "";
-    $parser->{linkarray} = [];
-    $parser->{linked}={};
-    $parser->{state_information}=\%options; # Not pretty, but TODO: improve
-    $parser->unbroken_text;
-    $parser->xml_mode;
-    $parser->empty_element_tags(1);
-    $parser->parse($body);
-    $parser->eof();
-
-    my ($annotated,$mined_candidates) = 
-      ( $parser->{annotated}, $parser->{linkarray});
-    my $numlinks = scalar(@$mined_candidates);
-    my $end = time();
-    my $total = $end - $start;
-    print STDERR "Mined $numlinks concepts in $total seconds.\n";
-    print STDERR Dumper($mined_candidates);
-    return $mined_candidates;
+    ($annotated_body,$mined_candidates) = mine_candidates_html(\%options);
+  } elsif ($format eq 'text') {
+    ($annotated_body,$mined_candidates) = mine_candidates_text(\%options);
+  } else {
+    print STDERR "Error: Unrecognized input format for auto-linking.\n";
   }
+
+  my $end = time();
+  my $total = $end - $start;
+  my $numlinks = scalar(@$mined_candidates);
+
+  print STDERR "Mined $numlinks concepts in $total seconds.\n";
+  print STDERR Dumper($mined_candidates);
+  if ($url) {
+    # TODO: Update the links_cache for this object with the mined_candidates!
+  }
+  return ($mined_candidates,$annotated_body);
+
 }
 
 sub mine_candidates_html {
-  my (%options) = @_;
-  my ($config,$domain,$text,$syns,$targetid,$class) = map {$options{$_}} qw(config domain text nolink targetid class);
+  my ($options) = @_;
+  my ($config,$domain,$body,$syns,$targetid,$class) = map {$options->{$_}} qw(config domain body nolink targetid class);
   my $db = $config->get_DB;
-  $targetid = -1 unless defined $targetid; # from id - if this is null or -1, we dont touch links tbl
-  # fix l2h stuff
-  # separate math from linkable text, and do some massaging
-  my @user_escaped;
-  my $escaped;
-  my $linkids;
-
-  push @user_escaped, @$syns; #add synonyms to the user_esaped list for makeLaTeXLinks
-
   # Current HTML Parsing strategy - fire events for all HTML tags and explicitly skip over tags that 
   # won't be of interest. We need to autolink in all textual elements.
   # TODO: Handle MathML better
   my $parser = 
     HTML::Parser->new(
-		      'api_version' => 3,
-		      'start_h' => [sub {
-				      if ($_[1]=~/^head|style|title|script|xmp|iframe|math|svg|a|(h\d+)/) {
-					$_[0]->{fresh_skip}=1;
-					$_[0]->{noparse}++;
-				      } else {
-					$_[0]->{fresh_skip}=0;
-				      }
-				      $_[0]->{annotated} .= $_[2];} , 'self, tagname, text'],
-		      'end_h' => [sub {
-				    $_[0]->{noparse}--
-				      if (($_[1]=~/^\<\/head|style|title|script|xmp|iframe|math|svg|a|(h\d+)\>$/) ||
-					  ((length($_[1])==0) && ($_[0]->{fresh_skip})));
-				    $_[0]->{annotated} .= $_[1];}, 'self,text'],
-		      'default_h' => [sub { $_[0]->{annotated} .= $_[1]; }, 'self, text'],
-		      'text_h'      => [\&text_handler, 'self,text']
-		     );
-  $parser->{annotated} = "";
+      'api_version' => 3,
+      'start_h' => [sub {
+		      if ($_[1]=~/^head|style|title|script|xmp|iframe|math|svg|a|(h\d+)/) {
+			$_[0]->{fresh_skip}=1;
+			$_[0]->{noparse}++;
+		      } else {
+			$_[0]->{fresh_skip}=0;
+		      }
+		      $_[0]->{annotated_body} .= $_[2];} , 'self, tagname, text'],
+       'end_h' => [sub {
+		     $_[0]->{noparse}--
+		       if (($_[1]=~/^\<\/head|style|title|script|xmp|iframe|math|svg|a|(h\d+)\>$/) ||
+			   ((length($_[1])==0) && ($_[0]->{fresh_skip})));
+		     $_[0]->{annotated_body} .= $_[1];}, 'self,text'],
+       'default_h' => [sub { $_[0]->{annotated_body} .= $_[1]; }, 'self, text'],
+       'text_h'      => [\&text_handler, 'self,text']
+  );
+  $parser->{annotated_body} = "";
   $parser->{linkarray} = [];
   $parser->{linked}={};
-  $parser->{state_information}=\%options; # Not pretty, but TODO: improve
+  $parser->{state_information}=$options; # Not pretty, but TODO: improve
   $parser->unbroken_text;
   $parser->xml_mode;
   $parser->empty_element_tags(1);
-  $parser->parse($text);
+  $parser->parse($body);
   $parser->eof();
 
-  return ( $parser->{annotated}, $parser->{linkarray});
+  return ( $parser->{linkarray}, $parser->{annotated_body});
 }
 
 sub text_handler {
@@ -159,7 +131,7 @@ sub text_handler {
   my $state = $self->{state_information};
   # Skip if in a silly element:
   if (($self->{noparse} && ($self->{noparse}>0)) || ($text !~ /\w/)) {
-    $self->{annotated}.=$text;
+    $self->{annotated_body}.=$text;
     return;
   }
   # Otherwise - discover concepts and annotate!
@@ -170,11 +142,10 @@ sub text_handler {
   my $matches = [];
   my $textref = [];
 
-  push @$matches, mine_candidates_text($state->{config},
-				     $text,
-				     $state->{nolink},
-				     $state->{class},
-				     $state->{targetid});
+  push @$matches, mine_candidates_text(config=>$state->{config},
+				       nolink=>$state->{nolink},
+				       body=>$text,
+				     class=>$state->{class});
 
   # Only ANNOTATE the FIRST occurrence of each term
   # = delete all following duplicates
@@ -188,7 +159,7 @@ sub text_handler {
   }
 
   # DG: ??? Domain priorities?
-  my $priorities = get_domain_priorities($state->{config}, $state->{domain} );
+  # my $priorities = get_domain_priorities($state->{config}, $state->{domain} );
   my $linked_result;
   my @linkarray;		# array of href's
   for my $i( 0..scalar(@$matches)-1 ) {
@@ -220,18 +191,17 @@ sub text_handler {
     my $finaltext = join('', grep (defined, @ltext));
     $linked_result .= $finaltext;
   }
-  $self->{annotated}.=$linked_result;
+  $self->{annotated_body}.=$linked_result;
   push @{$self->{linkarray}}, @linkarray;
 }
 
 # MAIN PLAIN TEXT LINKER (!!!)
 # returns back the matches and position of disambiguated links of the supplied text.
 sub mine_candidates_text {
-  my ($config,$text,$nolink,$class,$targetid) = @_;
-  $targetid = -1 unless defined $targetid;
-  deleteLinksFrom( $targetid ) if ($targetid > 0);
+  my ($options) = @_;
+  my ($config,$domain,$body,$syns,$targetid,$nolink,$class) = map {$options->{$_}} qw(config domain body nolink targetid nolink class);
 
-  my $matches = find_matches($config->get_DB, $text );
+  my $matches = find_matches($config->get_DB, $body );
   #this matches hash now contains the candidate links for each word.
   # we now no longer need the terms from find_matches so we remove it.
 	
@@ -239,9 +209,9 @@ sub mine_candidates_text {
   my %linked;		       #used to mark active links and targets 
   #loop through the candidate matches and disambiguate and update match hash
   # with disambiguated links
-  foreach my $pos (sort {$a <=> $b} keys %$matches) {
-    my $matchterms = $matches->{$pos}->{'term'};
-    my $candidates = $matches->{$pos}->{'candidates'};
+  foreach my $match (@$matches) {
+    my $matchterms = $match->{'term'};
+    my $candidates = $match->{'candidates'};
     next if ($linked{$matchterms});
     next if (inset(lc($matchterms),@$nolink));
     # get array of ids of qualifying entries
@@ -251,17 +221,14 @@ sub mine_candidates_text {
     my $finals = disambiguate($config, $candidates, $matchterms, $class, $targetid);
     #print Dumper( $finals );
     $linked{$matchterms} = $finals; #mark the term as linked with the optional targets
-    $matches->{$pos}->{'active'}=1; # turn the link "on" in the matches hash
-    $matches->{$pos}->{'links'} = $finals; #save the link targets in the matches hash.
+    $matches->{'active'}=1; # turn the link "on" in the matches hash
+    $matches->{'links'} = $finals; #save the link targets in the matches hash.
   }
 
   #loop through the matches and delete those matches that are no longer active
-  foreach my $pos ( keys %$matches) {
-    if ( not defined $matches->{$pos}->{'active'} ) {
-      #	print "deleting $pos for term " . $matches->{$pos}->{'term'} . "\n";
-      delete $matches->{$pos};
-    }
-  }
+  @$matches = grep { defined $_->{'active'}} @$matches;
+
+  # TODO: This should really be an array, with unique pointers...
   #return the matches hash which is of the form
   #'3' => {
   #                   'plural' => 1,
@@ -297,9 +264,11 @@ sub mine_candidates_text {
   #                   'term' => 'state'
   #                 },
 
-  return $matches;
+  # TODO: Reconceptualize
+  return ($body,$matches);
 }
 
+sub find_matches {[];}
 
 1;
 

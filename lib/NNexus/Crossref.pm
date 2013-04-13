@@ -35,11 +35,6 @@ use Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(cross_reference);
 
-our %LINKTAGS = (
-	     'PMlinkescapeword'=>1,
-	     'PMlinkescapephrase'=>1,
-	    );
-
 # I assume this should populate the <links /> 
 sub cross_reference_HTML {
   my (%options) = @_;

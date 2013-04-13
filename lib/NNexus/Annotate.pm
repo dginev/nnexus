@@ -29,10 +29,14 @@ sub serialize_candidates {
   # links - return back fully linked html
   # xml - return back the matches hash in XML format.
   # json - returns back the matches in JSON format
-  # DEFAULT: embed HTML links via anchor elements
-  my $annotation = $options{annotation} || 'links'; 
-  
-
+  if ($options{annotation} eq 'links') {
+    # DEFAULT: embed HTML links via anchor elements (already precomputed)
+    return $options{serialized} if defined $options{serialized};
+    return "Error: serialized should be passed in, but wasn't!";
+  } else {
+    print STDERR "TODO: ".($options{annotation}||'unknown')."\n";
+    return [];
+  }
 }
 
 # TODO: Given a list of internally represented annotations, serialize them to
