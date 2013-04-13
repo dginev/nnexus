@@ -39,7 +39,10 @@ lib
    |- Concepts.pm
    |- Morphology.pm
   ...
+   // In progress:
    |
+   |- Discover.pm
+   |- Annotate.pm
    |- Classification.pm
    |- Crossref.pm
    |- Domain.pm
