@@ -27,11 +27,6 @@ sub new {
   my ($class,%opts) = @_;
   $opts{format} = lc($opts{format}||'html');
   $opts{result} = {};
-  if (!$opts{config}) {
-    # Default configuration?
-    # It's only meaningful if we specify the database so...
-    die "'config' is a mandatory parameter for NNexus::Job->new()";
-  }
   bless \%opts, $class;
 }
 

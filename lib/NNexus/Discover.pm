@@ -45,6 +45,7 @@ sub mine_candidates {
   #           Interesting: allow 'nolink' again?
   my ($config,$format,$body,$nolink,$url,$domain) = 
     map {$options{$_}} qw(config format body nolink url domain);
+  die "The config key is a mandatory parameter for mine_candidates!\n" unless defined $config; # TODO: Maybe raise a better error?
   my $db = $config->get_DB;
   $format = 'html' unless defined $format;
   # Prepare data, if we have a URL:
@@ -59,7 +60,7 @@ sub mine_candidates {
     }
     # TODO: Flush the links_cache for this object!
   }
-  my $start = time();
+  #my $start = time();
   # TODO: Assemble a blacklist and push it to 'nolink'
   #pull this blacklist into a config file
   #	my @blacklist = ( 'g', 'and','or','i','e', 'a','means','set','sets',
@@ -74,12 +75,11 @@ sub mine_candidates {
     print STDERR "Error: Unrecognized input format for auto-linking.\n";
   }
 
-  my $end = time();
-  my $total = $end - $start;
+  #my $end = time();
+  #my $total = $end - $start;
   my $numlinks = scalar(@$mined_candidates);
 
-  print STDERR "Mined $numlinks concepts in $total seconds.\n";
-  print STDERR Dumper($mined_candidates);
+  #print STDERR "\nMined $numlinks concepts in $total seconds.\n";
   if ($url) {
     # TODO: Update the links_cache for this object with the mined_candidates!
   }
@@ -268,7 +268,11 @@ sub mine_candidates_text {
   return ($body,$matches);
 }
 
-sub find_matches {[];}
+sub find_matches {
+  # TODO: We have to make a distinction between "defined concepts" and "candidate concepts" here.
+  # Probably just based on whether we find a URL or not?
+  [];
+}
 
 1;
 
