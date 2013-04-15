@@ -45,7 +45,7 @@ sub mine_candidates {
   #           Interesting: allow 'nolink' again?
   my ($config,$format,$body,$nolink,$url,$domain) = 
     map {$options{$_}} qw(config format body nolink url domain);
-  die "The config key is a mandatory parameter for mine_candidates!\n" unless defined $config; # TODO: Maybe raise a better error?
+  die "The config key is a mandatory parameter for mine_candidates!\n" unless ref $config; # TODO: Maybe raise a better error?
   my $db = $config->get_DB;
   $format = 'html' unless defined $format;
   # Prepare data, if we have a URL:
@@ -68,9 +68,9 @@ sub mine_candidates {
   # Always return an embedded annotation with links, as well as a stand-off mined_canidates hash, containing the individual concepts with pointers.
   my ($annotated_body,$mined_candidates)=('',[]);
   if ($format eq 'html') {
-    ($annotated_body,$mined_candidates) = mine_candidates_html(\%options);
+    ($mined_candidates,$annotated_body) = mine_candidates_html(\%options);
   } elsif ($format eq 'text') {
-    ($annotated_body,$mined_candidates) = mine_candidates_text(\%options);
+    ($mined_candidates,$annotated_body) = mine_candidates_text(\%options);
   } else {
     print STDERR "Error: Unrecognized input format for auto-linking.\n";
   }
@@ -111,10 +111,10 @@ sub mine_candidates_html {
 			   ((length($_[1])==0) && ($_[0]->{fresh_skip})));
 		     $_[0]->{annotated_body} .= $_[1];}, 'self,text'],
        'default_h' => [sub { $_[0]->{annotated_body} .= $_[1]; }, 'self, text'],
-       'text_h'      => [\&text_handler, 'self,text']
+       'text_h'      => [\&_text_event_handler, 'self,text']
   );
   $parser->{annotated_body} = "";
-  $parser->{linkarray} = [];
+  $parser->{mined_candidates} = [];
   $parser->{linked}={};
   $parser->{state_information}=$options; # Not pretty, but TODO: improve
   $parser->unbroken_text;
@@ -123,10 +123,10 @@ sub mine_candidates_html {
   $parser->parse($body);
   $parser->eof();
 
-  return ( $parser->{linkarray}, $parser->{annotated_body});
+  return ( $parser->{mined_candidates}, $parser->{annotated_body});
 }
 
-sub text_handler {
+sub _text_event_handler {
   my ($self,$text) = @_;
   my $state = $self->{state_information};
   # Skip if in a silly element:
@@ -135,64 +135,13 @@ sub text_handler {
     return;
   }
   # Otherwise - discover concepts and annotate!
-
-  #$matches: matches array for each text node in the HTML Tree.
-  #$textref: this is an array of references to the original text
-  #           of the HTML tree. allowing us to modify the tree directly.
-  my $matches = [];
-  my $textref = [];
-
-  push @$matches, mine_candidates_text(config=>$state->{config},
-				       nolink=>$state->{nolink},
-				       body=>$text,
-				     class=>$state->{class});
-
-  # Only ANNOTATE the FIRST occurrence of each term
-  # = delete all following duplicates
-  my $linked = $self->{linked};
-  foreach my $m ( @$matches ) {
-    foreach my $pos (sort {$a <=> $b} keys %$m) {
-      my $matchtitle = $m->{$pos}->{'term'};
-      delete $m->{$pos} if defined $linked->{$matchtitle};
-      $linked->{$matchtitle} = 1;
-    }
-  }
-
-  # DG: ??? Domain priorities?
-  # my $priorities = get_domain_priorities($state->{config}, $state->{domain} );
-  my $linked_result;
-  my @linkarray;		# array of href's
-  for my $i( 0..scalar(@$matches)-1 ) {
-    my $match = $matches->[$i];
-    my @ltext = split(/(\W+)/, $text);
-    # do the text substitution here.
-    #loop through the text backwards
-    foreach my $pos (sort {$b <=> $a} keys %$match) {
-      my $length = $match->{$pos}->{'length'};
-      my $objects = $match->{$pos}->{'links'};
-      my $rltext = $ltext[$pos+$length-1];
-      my $texttolink = "";
-      $texttolink = join( '', @ltext[$pos..$pos+$length-1] );
-      my $domainid = get_domain_id($state->{config}, $state->{domain});
-      my $linktarget = $objects->{$domainid}[0][0];
-      my $lnk = make_link_string($state->{config}->get_DB, $linktarget, $texttolink );
-      #print "looking at $lnk against ",$state->{domain},"\n";
-      if ( $lnk =~ $state->{domain} ) {
-      	#print "adding lnk = [$lnk]\n";
-     	  push @linkarray, $lnk;
-        delete @ltext[$pos+1..$pos+$length-1] if ($length>1);
-        $ltext[$pos]=$lnk;
-      }
-       # add to links table if we have a from id
-       # 
-       #TODO - figure out how to do the addlinks in the database 
-       #	addLink($targetid,$object->{'objectid'}) if ($targetid);
-    }
-    my $finaltext = join('', grep (defined, @ltext));
-    $linked_result .= $finaltext;
-  }
-  $self->{annotated_body}.=$linked_result;
-  push @{$self->{linkarray}}, @linkarray;
+  my ($mined_candidates, $annotated_body) = 
+    mine_candidates_text({config=>$state->{config},
+			   nolink=>$state->{nolink},
+			   body=>$text,
+			   class=>$state->{class}});
+  $self->{annotated_body}.=$annotated_body;
+  push @{$self->{mined_candidates}}, @$mined_candidates;
 }
 
 # MAIN PLAIN TEXT LINKER (!!!)
@@ -265,7 +214,52 @@ sub mine_candidates_text {
   #                 },
 
   # TODO: Reconceptualize
-  return ($body,$matches);
+ # TODO: Belongs somewhere here:
+ # # DG: ??? Domain priorities?
+ #  # my $priorities = get_domain_priorities($state->{config}, $state->{domain} );
+ #  my $linked_result;
+ #  my @linkarray;		# array of href's
+ #  for my $i( 0..scalar(@$matches)-1 ) {
+ #    my $match = $matches->[$i];
+ #    my @ltext = split(/(\W+)/, $text);
+ #    # do the text substitution here.
+ #    #loop through the text backwards
+ #    foreach my $pos (sort {$b <=> $a} keys %$match) {
+ #      my $length = $match->{$pos}->{'length'};
+ #      my $objects = $match->{$pos}->{'links'};
+ #      my $rltext = $ltext[$pos+$length-1];
+ #      my $texttolink = "";
+ #      $texttolink = join( '', @ltext[$pos..$pos+$length-1] );
+ #      my $domainid = get_domain_id($state->{config}, $state->{domain});
+ #      my $linktarget = $objects->{$domainid}[0][0];
+ #      my $lnk = make_link_string($state->{config}->get_DB, $linktarget, $texttolink );
+ #      #print "looking at $lnk against ",$state->{domain},"\n";
+ #      if ( $lnk =~ $state->{domain} ) {
+ #      	#print "adding lnk = [$lnk]\n";
+ #     	  push @linkarray, $lnk;
+ #        delete @ltext[$pos+1..$pos+$length-1] if ($length>1);
+ #        $ltext[$pos]=$lnk;
+ #      }
+ #       # add to links table if we have a from id
+ #       # 
+ #       #TODO - figure out how to do the addlinks in the database 
+ #       #	addLink($targetid,$object->{'objectid'}) if ($targetid);
+ #    }
+ #    my $finaltext = join('', grep (defined, @ltext));
+ #    $linked_result .= $finaltext;
+ #  }
+  # # Only ANNOTATE the FIRST occurrence of each term
+  # # = delete all following duplicates
+  # my $linked = $self->{linked};
+  # foreach my $m ( @$matches ) {
+  #   print STDERR Dumper($m),"\n";
+  #   foreach my $pos (sort {$a <=> $b} keys %$m) {
+  #     my $matchtitle = $m->{$pos}->{'term'};
+  #     delete $m->{$pos} if defined $linked->{$matchtitle};
+  #     $linked->{$matchtitle} = 1;
+  #   }
+  # }
+  return ($matches,$body);
 }
 
 sub find_matches {

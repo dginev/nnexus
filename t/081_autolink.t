@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 use File::Temp;
 File::Temp->safe_level( File::Temp::HIGH );
 
@@ -23,18 +23,27 @@ my $options = {
 };
 
 my $config=NNexus::Config->new($options);
-# 1. Mock JSON
-my $job = NNexus::Job->new('format' => 'text', 'function' => 'linkentry', 'domain' => 'Planetmath', body=>'mock body',config=>$config,annotation=>'json');
+# 1. Mock text input, stand-off JSON
+my $job = NNexus::Job->new('format' => 'text', 'function' => 'linkentry', 'domain' => 'Planetmath', body=>'mock body',config=>$config,annotation=>'json',embed=>0);
 $job->execute;
 is_deeply($job->response,
 	  {status=>'OK',payload=>[],message=>'No obvious problems.'},
 	  'Mock JSON auto-link, ok.');
-# 2. Mock HTML
-$job = NNexus::Job->new('format' => 'text', 'function' => 'linkentry', 'domain' => 'Planetmath', body=>'mock body',config=>$config,annotation=>'links');
+# 2. Mock text input, embed links
+$job = NNexus::Job->new('format' => 'text', 'function' => 'linkentry', 'domain' => 'Planetmath', body=>'mock body',config=>$config,annotation=>'links',embed=>1);
 $job->execute;
 is_deeply($job->response,
 	  {status=>'OK',payload=>'mock body',message=>'No obvious problems.'},
 	  'Mock text-embed auto-link, ok.');
 
+# 3. PlanetMath HTML input, embed links
+open my $fh, "<", 't/pages/pm_gelfand_transforms.html';
+my $html_content = join('',<$fh>);
+close $fh;
+$job = NNexus::Job->new('format' => 'html', 'function' => 'linkentry', 'domain' => 'Planetmath', body=>$html_content,config=>$config,annotation=>'links',embed=>1);
+$job->execute;
+is_deeply($job->response,
+	  {status=>'OK',payload=>$html_content,message=>'No obvious problems.'},
+	  'Mock text-embed auto-link, ok.');
 
 # TODO: Expand with more meaningful tests
