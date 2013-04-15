@@ -41,7 +41,8 @@ is_deeply($job->response,
 my $db = $config->get_DB;
 my $url = 'http://planetmath.org/banachalgebra';
 my $objectid = $db->add_object_by(url=>$url,domain=>'Planetmath');
-$db->add_concept_by(concept=>'Banach algebra',
+$db->add_concept_by(concept=>'banach algebra',
+		    firstword=>'banach',
 		    category=>'46H05',
 		    objectid=>$objectid,
 		    domain=>'Planetmath',

@@ -23,7 +23,8 @@ use DBI;
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(add_object_by select_object_by select_concepts_by last_inserted_id
-               add_concept_by delete_concept_by invalidate_by reset_db);
+               add_concept_by delete_concept_by invalidate_by reset_db
+	       select_firstword_matches);
 
 ### API for Table: Object
 
@@ -68,6 +69,7 @@ sub delete_concept_by {
   my ($db, %options) = @_;
   my ($concept, $category, $objectid) = map {$options{$_}} qw(concept category objectid);
   return unless $concept && $category && $objectid; # Mandatory fields. TODO: Raise error?
+  $concept = lc($concept); # We only record lower-cased concepts, avoid oversights
   my $sth = $db->prepare("delete * from concepts where (concept = ? AND category = ? AND objectid = ?)");
   $sth->execute($concept,$category,$objectid);
   $sth->finish();
@@ -78,6 +80,7 @@ sub add_concept_by {
   my ($concept, $category, $objectid, $domain, $link, $firstword) =
     map {$options{$_}} qw(concept category objectid domain link firstword);
   return unless $concept && $category && $objectid && $link && $domain; # Mandatory fields. TODO: Raise error?
+  $concept = lc($concept); # Only record lower-cased concepts
   if ((! $firstword) && $concept=~/^((\w|\-)+)\b/) { # Grab first word if not provided
     $firstword = $1;
   }
@@ -91,10 +94,6 @@ sub add_concept_by {
 sub select_firstword_matches {
   my ($db,$word) = @_;
   my @matches = ();
-
-  # Normalize word
-  $word = get_nonpossessive($word);
-  $word = depluralize($word);
 
   my $sth = $db->prepare("SELECT firstword, concept, objectid from concepts where firstword=?");
   $sth->execute($word);

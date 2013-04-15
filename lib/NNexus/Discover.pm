@@ -148,7 +148,8 @@ sub _text_event_handler {
 # returns back the matches and position of disambiguated links of the supplied text.
 sub mine_candidates_text {
   my ($options) = @_;
-  my ($config,$domain,$body,$syns,$targetid,$nolink,$class) = map {$options->{$_}} qw(config domain body nolink targetid nolink class);
+  my ($config,$domain,$body,$syns,$targetid,$nolink,$class) =
+    map {$options->{$_}} qw(config domain body nolink targetid nolink class);
 
   my $matches = find_matches($config->get_DB, $body );
   #this matches hash now contains the candidate links for each word.
@@ -263,9 +264,42 @@ sub mine_candidates_text {
 }
 
 sub find_matches {
+  my ($db,$text) = @_;
   # TODO: We have to make a distinction between "defined concepts" and "candidate concepts" here.
   # Probably just based on whether we find a URL or not?
-  [];
+
+  my %matches;         # main matches hash (hash key is word position)
+  my %termlist = ();
+  # TODO: Upgrade the word detection to use absolute offsets, the lossy split should be refactored away
+  my $offset=0;
+  while ($text=~s/^(.*?)(\w(\w|\-){2,})//) {
+    $offset += length($1);
+    my $start_position = $offset;
+    $offset += length($2);
+    my $word = $2;
+    next unless $word =~ /\D/; # Skip pure numbers
+    # Normalize word
+    my $norm_word = lc($word);
+    $norm_word = get_nonpossessive($norm_word);
+    $norm_word = depluralize($norm_word);
+    # get all possible candidates for both posessive and plural forms of $word 
+    my @candidates = $db->select_firstword_matches($norm_word);
+    next unless @candidates; # if there are no candidates skip the word
+    print STDERR "Candidates: \n",Dumper(@candidates),"\n";
+    # Pick the right candidate...
+
+    # Increase the offset
+}
+
+  #modify the matches hash to contain the candidate link information for each term.
+  foreach my $pos (sort {$a <=> $b} keys %matches) {
+    my $matchterms = $matches{$pos}->{'term'};
+    $matchterms =~ /^([^\s]+)(\s|$)/;
+    my $fw = lc($1);
+    $matches{$pos}->{'candidates'} = $termlist{$fw}->{$matchterms};
+  }
+ # return \%matches;
+ [];
 }
 
 1;
