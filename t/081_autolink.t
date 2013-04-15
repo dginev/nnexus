@@ -37,6 +37,16 @@ is_deeply($job->response,
 	  'Mock text-embed auto-link, ok.');
 
 # 3. PlanetMath HTML input, embed links
+# We link against a single concept - Banach algebra
+my $db = $config->get_DB;
+my $url = 'http://planetmath.org/banachalgebra';
+my $objectid = $db->add_object_by(url=>$url,domain=>'Planetmath');
+$db->add_concept_by(concept=>'Banach algebra',
+		    category=>'46H05',
+		    objectid=>$objectid,
+		    domain=>'Planetmath',
+		    link=>$url);
+# Read in the HTML test
 open my $fh, "<", 't/pages/pm_gelfand_transforms.html';
 my $html_content = join('',<$fh>);
 close $fh;
