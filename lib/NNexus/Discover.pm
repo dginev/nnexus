@@ -111,7 +111,7 @@ sub mine_candidates_html {
 			   ((length($_[1])==0) && ($_[0]->{fresh_skip})));
 		     $_[0]->{annotated_body} .= $_[1];}, 'self,text'],
        'default_h' => [sub { $_[0]->{annotated_body} .= $_[1]; }, 'self, text'],
-       'text_h'      => [\&_text_event_handler, 'self,text']
+       'text_h'      => [\&_text_event_handler, 'self,text,offset']
   );
   $parser->{annotated_body} = "";
   $parser->{mined_candidates} = [];
@@ -127,7 +127,7 @@ sub mine_candidates_html {
 }
 
 sub _text_event_handler {
-  my ($self,$text) = @_;
+  my ($self,$text,$offset) = @_;
   my $state = $self->{state_information};
   # Skip if in a silly element:
   if (($self->{noparse} && ($self->{noparse}>0)) || ($text !~ /\w/)) {
@@ -141,10 +141,11 @@ sub _text_event_handler {
 			   body=>$text,
 			   class=>$state->{class}});
   $self->{annotated_body}.=$annotated_body;
+  # TODO: Add to each offset in the mine_candidates the current $offset from the HTML parsing
   push @{$self->{mined_candidates}}, @$mined_candidates;
 }
 
-# MAIN PLAIN TEXT LINKER (!!!)
+# Core Data Mining routine - inspects plain-text strings
 # returns back the matches and position of disambiguated links of the supplied text.
 sub mine_candidates_text {
   my ($options) = @_;
@@ -272,6 +273,7 @@ sub find_matches {
   my %termlist = ();
   # TODO: Upgrade the word detection to use absolute offsets, the lossy split should be refactored away
   my $offset=0;
+  # Skip to 3+ letter words
   while ($text=~s/^(.*?)(\w(\w|\-){2,})//) {
     $offset += length($1);
     my $start_position = $offset;
