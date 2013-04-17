@@ -63,8 +63,8 @@ sub mine_candidates {
   #my $start = time();
   # TODO: Assemble a blacklist and push it to 'nolink'
   #pull this blacklist into a config file
-  #	my @blacklist = ( 'g', 'and','or','i','e', 'a','means','set','sets',
-  #			'choose', 'it',  'o', 'r', 'in', 'the', 'my', 'on', 'of');
+  # my @blacklist = ( 'g', 'and','or','i','e', 'a','means','set','sets',
+  #     'choose', 'it',  'o', 'r', 'in', 'the', 'my', 'on', 'of');
   # Always return an embedded annotation with links, as well as a stand-off mined_canidates hash, containing the individual concepts with pointers.
   my ($annotated_body,$mined_candidates)=('',[]);
   if ($format eq 'html') {
@@ -98,18 +98,18 @@ sub mine_candidates_html {
     HTML::Parser->new(
       'api_version' => 3,
       'start_h' => [sub {
-		      if ($_[1]=~/^head|style|title|script|xmp|iframe|math|svg|a|(h\d+)/) {
-			$_[0]->{fresh_skip}=1;
-			$_[0]->{noparse}++;
-		      } else {
-			$_[0]->{fresh_skip}=0;
-		      }
-		      $_[0]->{annotated_body} .= $_[2];} , 'self, tagname, text'],
+          if ($_[1]=~/^head|style|title|script|xmp|iframe|math|svg|a|(h\d+)/) {
+      $_[0]->{fresh_skip}=1;
+      $_[0]->{noparse}++;
+          } else {
+      $_[0]->{fresh_skip}=0;
+          }
+          $_[0]->{annotated_body} .= $_[2];} , 'self, tagname, text'],
        'end_h' => [sub {
-		     $_[0]->{noparse}--
-		       if (($_[1]=~/^\<\/head|style|title|script|xmp|iframe|math|svg|a|(h\d+)\>$/) ||
-			   ((length($_[1])==0) && ($_[0]->{fresh_skip})));
-		     $_[0]->{annotated_body} .= $_[1];}, 'self,text'],
+         $_[0]->{noparse}--
+           if (($_[1]=~/^\<\/head|style|title|script|xmp|iframe|math|svg|a|(h\d+)\>$/) ||
+         ((length($_[1])==0) && ($_[0]->{fresh_skip})));
+         $_[0]->{annotated_body} .= $_[1];}, 'self,text'],
        'default_h' => [sub { $_[0]->{annotated_body} .= $_[1]; }, 'self, text'],
        'text_h'      => [\&_text_event_handler, 'self,text,offset']
   );
@@ -137,9 +137,9 @@ sub _text_event_handler {
   # Otherwise - discover concepts and annotate!
   my ($mined_candidates, $annotated_body) = 
     mine_candidates_text({config=>$state->{config},
-			   nolink=>$state->{nolink},
-			   body=>$text,
-			   class=>$state->{class}});
+         nolink=>$state->{nolink},
+         body=>$text,
+         class=>$state->{class}});
   $self->{annotated_body}.=$annotated_body;
   # TODO: Add to each offset in the mine_candidates the current $offset from the HTML parsing
   push @{$self->{mined_candidates}}, @$mined_candidates;
@@ -155,9 +155,9 @@ sub mine_candidates_text {
   my $matches = find_matches($config->get_DB, $body );
   #this matches hash now contains the candidate links for each word.
   # we now no longer need the terms from find_matches so we remove it.
-	
+  
   #we need to disambiguate the matches here and mark active matches. 
-  my %linked;		       #used to mark active links and targets 
+  my %linked;          #used to mark active links and targets 
   #loop through the candidate matches and disambiguate and update match hash
   # with disambiguated links
   foreach my $match (@$matches) {
@@ -168,7 +168,7 @@ sub mine_candidates_text {
     # get array of ids of qualifying entries
     #$matchterms =~ /^([^\s]+)(\s|$)/;
     #my $fw = lc($1);
-    #		my $candidates = $terms->{$fw}->{$matchterms};
+    #   my $candidates = $terms->{$fw}->{$matchterms};
     my $finals = disambiguate($config, $candidates, $matchterms, $class, $targetid);
     #print Dumper( $finals );
     $linked{$matchterms} = $finals; #mark the term as linked with the optional targets
@@ -220,7 +220,7 @@ sub mine_candidates_text {
  # # DG: ??? Domain priorities?
  #  # my $priorities = get_domain_priorities($state->{config}, $state->{domain} );
  #  my $linked_result;
- #  my @linkarray;		# array of href's
+ #  my @linkarray;    # array of href's
  #  for my $i( 0..scalar(@$matches)-1 ) {
  #    my $match = $matches->[$i];
  #    my @ltext = split(/(\W+)/, $text);
@@ -237,15 +237,15 @@ sub mine_candidates_text {
  #      my $lnk = make_link_string($state->{config}->get_DB, $linktarget, $texttolink );
  #      #print "looking at $lnk against ",$state->{domain},"\n";
  #      if ( $lnk =~ $state->{domain} ) {
- #      	#print "adding lnk = [$lnk]\n";
- #     	  push @linkarray, $lnk;
+ #        #print "adding lnk = [$lnk]\n";
+ #        push @linkarray, $lnk;
  #        delete @ltext[$pos+1..$pos+$length-1] if ($length>1);
  #        $ltext[$pos]=$lnk;
  #      }
  #       # add to links table if we have a from id
  #       # 
  #       #TODO - figure out how to do the addlinks in the database 
- #       #	addLink($targetid,$object->{'objectid'}) if ($targetid);
+ #       #  addLink($targetid,$object->{'objectid'}) if ($targetid);
  #    }
  #    my $finaltext = join('', grep (defined, @ltext));
  #    $linked_result .= $finaltext;
@@ -269,15 +269,16 @@ sub find_matches {
   # TODO: We have to make a distinction between "defined concepts" and "candidate concepts" here.
   # Probably just based on whether we find a URL or not?
 
-  my %matches;         # main matches hash (hash key is word position)
+  my @matches;
   my %termlist = ();
   # TODO: Upgrade the word detection to use absolute offsets, the lossy split should be refactored away
   my $offset=0;
   # Skip to 3+ letter words
   while ($text=~s/^(.*?)(\w(\w|\-){2,})//) {
     $offset += length($1);
-    my $start_position = $offset;
+    my $offset_begin = $offset;
     $offset += length($2);
+    my $offset_end = $offset;
     my $word = $2;
     next unless $word =~ /\D/; # Skip pure numbers
     # Normalize word
@@ -286,22 +287,62 @@ sub find_matches {
     # get all possible candidates for both posessive and plural forms of $word 
     my @candidates = $db->select_firstword_matches($norm_word);
     next unless @candidates; # if there are no candidates skip the word
-    print STDERR "Candidates: \n",Dumper(@candidates),"\n";
-    # Pick the right candidate, longest-match first:
-    
+    # Split tailwords into an array
+    foreach my $c(@candidates) {
+      $c->{concept} = $c->{firstword}." ".$c->{tailwords}; #TODO: Do we need the actual concept?
+      $c->{tailwords} = [split(/\s+/,$c->{tailwords}||'')];
+    }
 
-    # Increase the offset
-}
-
-  #modify the matches hash to contain the candidate link information for each term.
-  foreach my $pos (sort {$a <=> $b} keys %matches) {
-    my $matchterms = $matches{$pos}->{'term'};
-    $matchterms =~ /^([^\s]+)(\s|$)/;
-    my $fw = lc($1);
-    $matches{$pos}->{'candidates'} = $termlist{$fw}->{$matchterms};
+    my $inter_offset = 0;
+    my $match_offset = 0; # Record the offset of the current longest match, add to end_position when finalized    
+    my $inter_text = $text; # A copy of the text to munge around while searching.
+    my @inter_matches = grep {@{$_->{tailwords}} == 0} @candidates; # Record the current longest matches here
+    # Longest-match: 
+    # as long as:
+    #  - there is leftover tail in some candidate(s)
+    @candidates = grep {@{$_->{tailwords}} > 0} @candidates;
+    while (@candidates) {
+      #  - AND there are leftover words in current phrase
+      if ($inter_text =~ /(\s*)(\w(\w|\-)+)/) {
+        # then: pull and compare next word, reduce text and tailwords
+        # 1. Pull next.
+        my $step_offset = length($1) + length($2);
+        $inter_offset += $step_offset;
+        my $next_word = depluralize_word(get_nonpossessive($2));
+        # 2. Filter for applicable candidates
+        my @inter_candidates = grep {$_->{tailwords}->[0] eq $next_word} @candidates;
+        if (@inter_candidates) {
+          # We have indeed a longer match, remove the first tailword
+          shift @{$_->{tailwords}} foreach @inter_candidates;
+          # record intermediate longest matches - the current empty tailwords
+          my @step_matches = grep {@{$_->{tailwords}} == 0} @inter_candidates;
+          if (@step_matches > 0) {
+            @inter_matches = @step_matches;
+            $match_offset = $inter_offset;
+          }
+          # candidates for next iteration must have leftover tail words
+          @candidates = grep {@{$_->{tailwords}} > 0} @inter_candidates;
+          # Move $step_offset right the text
+          substr($inter_text,0,$step_offset)='';
+        }
+      } else {last;} # Otherwise we are done
+    }
+    # In the end, do we have one or more matches?
+    if (@inter_matches > 0) {
+      # Yes! Record offsets
+      foreach my $match(@inter_matches) {
+        $match->{offset_begin} = $offset_begin;
+        $match->{offset_end} = $offset_end + $match_offset;
+      }
+      # And push to main matches array
+      push @matches, @inter_matches;
+      # And move the text forward with the match_offset
+      substr($text,0,$match_offset)='';
+      $offset += $match_offset;
+    } else { next; } # If not, we just move on to the next word
   }
- # return \%matches;
- [];
+  print STDERR Dumper(@matches);
+  \@matches;
 }
 
 1;
