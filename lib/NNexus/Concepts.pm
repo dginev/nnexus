@@ -19,10 +19,11 @@ package NNexus::Concepts;
 use strict;
 use warnings;
 
-use NNexus::Morphology qw(is_possessive is_plural get_nonpossessive depluralize);
+use NNexus::Morphology qw(is_possessive is_plural get_nonpossessive depluralize_word);
 use Encode qw( is_utf8 );
-
 use Exporter;
+use List::MoreUtils qw(uniq);
+
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(flatten_concept_harvest diff_concept_harvests);
 
@@ -34,9 +35,11 @@ sub flatten_concept_harvest {
     my $categories = delete $c->{categories}||[];
     my @all_names = (@$synonyms, $c->{concept});
     # Extend to normalized names:
-    @all_names = @all_names,
-      (map {get_nonpossesive($_)} grep {is_possessive($_)} @all_names),
-      (map {depluralize($_)} grep {is_plural($_)} @all_names);
+    @all_names = map {
+	join(' ',map { depluralize_word(get_nonpossessive($_)) } split(/\s+/,$_))
+    } @all_names;
+    # In case some of the synonyms were misguidedly normalizing, let's get the unique elements:
+    @all_names = uniq(@all_names);
     # Flatten names
     my @synset = map {my %syn = %$c; $syn{concept}=$_; \%syn;} @all_names;
     # Flatten categories

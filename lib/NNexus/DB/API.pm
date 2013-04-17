@@ -55,7 +55,7 @@ sub select_concepts_by {
   my ($db,%options) = @_;
   my $objectid = $options{objectid};
   return unless $objectid;
-  my $sth = $db->prepare("select concept, category from concepts where (objectid = ?)");
+  my $sth = $db->prepare("select firstword,tailwords, category from concepts where (objectid = ?)");
   $sth->execute($objectid);
   my $concepts = [];
   while (my $row = $sth->fetchrow_hashref()) {
@@ -67,25 +67,33 @@ sub select_concepts_by {
 
 sub delete_concept_by {
   my ($db, %options) = @_;
-  my ($concept, $category, $objectid) = map {$options{$_}} qw(concept category objectid);
-  return unless $concept && $category && $objectid; # Mandatory fields. TODO: Raise error?
-  $concept = lc($concept); # We only record lower-cased concepts, avoid oversights
-  my $sth = $db->prepare("delete * from concepts where (concept = ? AND category = ? AND objectid = ?)");
-  $sth->execute($concept,$category,$objectid);
+  my ($firstword, $tailwords, $concept, $category, $objectid) = map {$options{$_}} qw(firstword tailwords concept category objectid);
+  if ($concept) {
+      $concept=~s/^(\w(\w|\-)*)(\s|$)//;
+      $firstword = $1;
+      $tailwords = $concept;
+      undef $concept;
+  }
+  return unless $firstword && $tailwords && $category && $objectid; # Mandatory fields. TODO: Raise error?
+  $firstword = lc($firstword); # We only record lower-cased concepts, avoid oversights
+  $tailwords = lc($tailwords); # ditto
+  my $sth = $db->prepare("delete * from concepts where (firstword = ? AND tailwords = ? AND category = ? AND objectid = ?)");
+  $sth->execute($firstword,$concept,$category,$objectid);
   $sth->finish();
 }
 
 sub add_concept_by {
   my ($db, %options) = @_;
-  my ($concept, $category, $objectid, $domain, $link, $firstword) =
-    map {$options{$_}} qw(concept category objectid domain link firstword);
+  my ($concept, $category, $objectid, $domain, $link, $firstword, $tailwords) =
+    map {$options{$_}} qw(concept category objectid domain link firstword tailwords);
   return unless $concept && $category && $objectid && $link && $domain; # Mandatory fields. TODO: Raise error?
   $concept = lc($concept); # Only record lower-cased concepts
-  if ((! $firstword) && $concept=~/^((\w|\-)+)\b/) { # Grab first word if not provided
+  if ((! $firstword) && $concept=~s/^(\w(\w|\-)*)(\s|$)//) { # Grab first word if not provided
     $firstword = $1;
+    $tailwords = $concept;
   }
-  my $sth = $db->prepare("insert into concepts (firstword, concept, category, objectid, domain, link) values (?, ?, ?, ?, ?, ?)");
-  $sth->execute($firstword, $concept, $category, $objectid, $domain, $link);
+  my $sth = $db->prepare("insert into concepts (firstword, tailwords, category, objectid, domain, link) values (?, ?, ?, ?, ?, ?)");
+  $sth->execute($firstword, $tailwords, $category, $objectid, $domain, $link);
   $sth->finish();
 }
 
@@ -95,7 +103,7 @@ sub select_firstword_matches {
   my ($db,$word) = @_;
   my @matches = ();
 
-  my $sth = $db->prepare("SELECT firstword, concept, objectid from concepts where firstword=?");
+  my $sth = $db->prepare("SELECT firstword, tailwords, objectid from concepts where firstword=?");
   $sth->execute($word);
   while ( my $row = $sth->fetchrow_hashref() ) {
     push @matches, $row;
@@ -173,7 +181,7 @@ $self->do("DROP TABLE IF EXISTS concepts;");
 $self->do("CREATE TABLE concepts (
   conceptid integer primary key AUTOINCREMENT,
   firstword varchar(50) NOT NULL,
-  concept varchar(255) NOT NULL,
+  tailwords varchar(255),
   category varchar(10) NOT NULL,
   scheme varchar(10) NOT NULL DEFAULT 'msc',
   domain varchar(50) NOT NULL,

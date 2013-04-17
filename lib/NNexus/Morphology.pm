@@ -25,7 +25,7 @@ use warnings;
 use Encode qw{is_utf8};
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(is_possessive is_plural get_nonpossessive get_possessive depluralize root pluralize);
+our @EXPORT_OK = qw(is_possessive is_plural get_nonpossessive get_possessive depluralize_word depluralize_phrase root pluralize);
 
 use utf8;
 use feature qw(switch);
@@ -33,8 +33,8 @@ use feature qw(switch);
 # 0. TODO: Think about MathML
 
 # I. Possessives
-# return true if a word is possessive (ends in 's or s')
-sub is_possessive { $_[0]  =~ /^(\w|\-)+('s|s')(\s|$)/; }
+# return true if any word is possessive (ends in 's or s')
+sub is_possessive { $_[0]  =~ /\w('s|s')(\s|$)/; }
 
 # return phrase without possessive suffix ("Euler's" becomes "Euler")
 sub get_nonpossessive {
@@ -54,7 +54,7 @@ sub get_possessive {
 # II. Plurality
 
 # predicate for plural or not
-sub is_plural { $_[0] ne depluralize($_[0]); }
+sub is_plural { $_[0] ne depluralize_phrase($_[0]); }
 
 sub pluralize {
   given ($_[0]) {
@@ -73,14 +73,14 @@ sub pluralize {
   }
 }
 
-# singularize a word... remove root and replace
-sub depluralize {
+# singularize a phrase... remove root and replace
+sub depluralize_phrase {
   given ($_[0]) {
     # "spaces of functions" depluralizes as "space of functions" for example.
     # also "proofs by induction"
     when (/(^\w[\w\s]+\w)(\s+(of|by)\s+.+)$/) {
       my ($l,$r) = ($1,$2);
-      return depluralize($l).$r;
+      return depluralize_phrase($l).$r;
     }
     when(/(.+ri)ces$/) { return "$1x"; }
     when(/(.+t)ices$/) { return "$1ex";	}
@@ -96,6 +96,23 @@ sub depluralize {
     default { return $_[0]; }
   }
 }
+
+sub depluralize_word {
+  given ($_[0]) {
+    when(! /oci|s$/) { return $_[0]; }
+    when(/(.+ri)ces$/) { return "$1x"; }
+    when(/(.+t)ices$/) { return "$1ex";	}
+    when(/(.+[aeiuo]x)es$/) { return $1; }
+    when(/(.+)ies$/) { return "$1y"; }
+    when(/(.+)ees$/) { return "$1ee"; }
+    when(/(.+)ches$/) {	return "$1ch"; }
+    when(/(.+)sses$/) {	return "$1ss"; }
+    when(/(.+ie)s$/) { return $1;	}
+    when(/(.+[^eiuos])s$/) { return $1; }
+    when(/(.+[^aeio])es$/) { return "$1e"; }
+    when(/(.+o)ci$/) { return "$1cus"; }
+    default { return $_[0]; }
+}}
 
 # III. Stemming
 

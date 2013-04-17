@@ -27,7 +27,7 @@ use utf8;
 use Data::Dumper;
 use Time::HiRes qw ( time alarm sleep );
 
-use NNexus::Morphology qw(get_nonpossessive get_possessive depluralize is_possessive is_plural);
+use NNexus::Morphology qw(get_nonpossessive get_possessive depluralize_word is_possessive is_plural);
 use NNexus::Linkpolicy qw (post_resolve_linkpolicy);
 use NNexus::Util qw(inset uniquify);
 use NNexus::Domain qw(get_domain_blacklist get_domain_priorities get_domain_hash get_domain_id);
@@ -282,13 +282,13 @@ sub find_matches {
     next unless $word =~ /\D/; # Skip pure numbers
     # Normalize word
     my $norm_word = lc($word);
-    $norm_word = get_nonpossessive($norm_word);
-    $norm_word = depluralize($norm_word);
+    $norm_word = depluralize_word(get_nonpossessive($norm_word));
     # get all possible candidates for both posessive and plural forms of $word 
     my @candidates = $db->select_firstword_matches($norm_word);
     next unless @candidates; # if there are no candidates skip the word
     print STDERR "Candidates: \n",Dumper(@candidates),"\n";
-    # Pick the right candidate...
+    # Pick the right candidate, longest-match first:
+    
 
     # Increase the offset
 }
