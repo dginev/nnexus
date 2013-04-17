@@ -66,15 +66,21 @@ sub mine_candidates {
   # my @blacklist = ( 'g', 'and','or','i','e', 'a','means','set','sets',
   #     'choose', 'it',  'o', 'r', 'in', 'the', 'my', 'on', 'of');
   # Always return an embedded annotation with links, as well as a stand-off mined_canidates hash, containing the individual concepts with pointers.
-  my ($annotated_body,$mined_candidates)=('',[]);
+  my $mined_candidates=[];
   if ($format eq 'html') {
-    ($mined_candidates,$annotated_body) = mine_candidates_html(\%options);
+    $mined_candidates = mine_candidates_html(\%options);
   } elsif ($format eq 'text') {
-    ($mined_candidates,$annotated_body) = mine_candidates_text(\%options);
+    $mined_candidates = mine_candidates_text(\%options);
   } else {
     print STDERR "Error: Unrecognized input format for auto-linking.\n";
   }
 
+  #TODO: Prune duplicates, adapt from:
+  # next if ($matched_already{$concept});
+  #  next if (inset($concept,@$nolink));
+  # TODO: Disambiguate, adapt from:
+  # my $finals = disambiguate($config, $candidates, $matchterms, $class, $targetid);
+  print STDERR Dumper($mined_candidates);
   #my $end = time();
   #my $total = $end - $start;
   my $numlinks = scalar(@$mined_candidates);
@@ -83,8 +89,7 @@ sub mine_candidates {
   if ($url) {
     # TODO: Update the links_cache for this object with the mined_candidates!
   }
-  return ($mined_candidates,$annotated_body);
-
+  return $mined_candidates;
 }
 
 sub mine_candidates_html {
@@ -99,21 +104,19 @@ sub mine_candidates_html {
       'api_version' => 3,
       'start_h' => [sub {
           if ($_[1]=~/^head|style|title|script|xmp|iframe|math|svg|a|(h\d+)/) {
-      $_[0]->{fresh_skip}=1;
-      $_[0]->{noparse}++;
+            $_[0]->{fresh_skip}=1;
+            $_[0]->{noparse}++;
           } else {
-      $_[0]->{fresh_skip}=0;
+            $_[0]->{fresh_skip}=0;
           }
-          $_[0]->{annotated_body} .= $_[2];} , 'self, tagname, text'],
-       'end_h' => [sub {
-         $_[0]->{noparse}--
-           if (($_[1]=~/^\<\/head|style|title|script|xmp|iframe|math|svg|a|(h\d+)\>$/) ||
-         ((length($_[1])==0) && ($_[0]->{fresh_skip})));
-         $_[0]->{annotated_body} .= $_[1];}, 'self,text'],
-       'default_h' => [sub { $_[0]->{annotated_body} .= $_[1]; }, 'self, text'],
-       'text_h'      => [\&_text_event_handler, 'self,text,offset']
-  );
-  $parser->{annotated_body} = "";
+      } , 'self, tagname, text'],
+      'end_h' => [sub {
+        $_[0]->{noparse}--
+          if (($_[1]=~/^\<\/head|style|title|script|xmp|iframe|math|svg|a|(h\d+)\>$/) ||
+            ((length($_[1])==0) && ($_[0]->{fresh_skip})));
+        }, 'self,text'],
+      'text_h'      => [\&_text_event_handler, 'self,text,offset']
+    );
   $parser->{mined_candidates} = [];
   $parser->{linked}={};
   $parser->{state_information}=$options; # Not pretty, but TODO: improve
@@ -123,7 +126,7 @@ sub mine_candidates_html {
   $parser->parse($body);
   $parser->eof();
 
-  return ( $parser->{mined_candidates}, $parser->{annotated_body});
+  return $parser->{mined_candidates};
 }
 
 sub _text_event_handler {
@@ -131,17 +134,18 @@ sub _text_event_handler {
   my $state = $self->{state_information};
   # Skip if in a silly element:
   if (($self->{noparse} && ($self->{noparse}>0)) || ($text !~ /\w/)) {
-    $self->{annotated_body}.=$text;
     return;
   }
   # Otherwise - discover concepts and annotate!
-  my ($mined_candidates, $annotated_body) = 
+  my $mined_candidates = 
     mine_candidates_text({config=>$state->{config},
          nolink=>$state->{nolink},
          body=>$text,
          class=>$state->{class}});
-  $self->{annotated_body}.=$annotated_body;
-  # TODO: Add to each offset in the mine_candidates the current $offset from the HTML parsing
+  foreach my $candidate(@$mined_candidates) {
+    $candidate->{offset_begin}+=$offset;
+    $candidate->{offset_end}+=$offset;
+  }
   push @{$self->{mined_candidates}}, @$mined_candidates;
 }
 
@@ -153,68 +157,7 @@ sub mine_candidates_text {
     map {$options->{$_}} qw(config domain body nolink targetid nolink class);
 
   my $matches = find_matches($config->get_DB, $body );
-  #this matches hash now contains the candidate links for each word.
-  # we now no longer need the terms from find_matches so we remove it.
   
-  #we need to disambiguate the matches here and mark active matches. 
-  my %linked;          #used to mark active links and targets 
-  #loop through the candidate matches and disambiguate and update match hash
-  # with disambiguated links
-  foreach my $match (@$matches) {
-    my $matchterms = $match->{'term'};
-    my $candidates = $match->{'candidates'};
-    next if ($linked{$matchterms});
-    next if (inset(lc($matchterms),@$nolink));
-    # get array of ids of qualifying entries
-    #$matchterms =~ /^([^\s]+)(\s|$)/;
-    #my $fw = lc($1);
-    #   my $candidates = $terms->{$fw}->{$matchterms};
-    my $finals = disambiguate($config, $candidates, $matchterms, $class, $targetid);
-    #print Dumper( $finals );
-    $linked{$matchterms} = $finals; #mark the term as linked with the optional targets
-    $matches->{'active'}=1; # turn the link "on" in the matches hash
-    $matches->{'links'} = $finals; #save the link targets in the matches hash.
-  }
-
-  #loop through the matches and delete those matches that are no longer active
-  @$matches = grep { defined $_->{'active'}} @$matches;
-
-  # TODO: This should really be an array, with unique pointers...
-  #return the matches hash which is of the form
-  #'3' => {
-  #                   'plural' => 1,
-  #                   'length' => 1,
-  #                   'possessive' => 0,
-  #                   'active' => 1,
-  #                   'links' => {
-  #                                '3' => [
-  #                                         [
-  #                                           '2586',
-  #                                           1
-  #                                         ],
-  #                                         [
-  #                                           '4609',
-  #                                           1
-  #                                         ],
-  #                                         [
-  #                                           '3569',
-  #                                           1
-  #                                         ]
-  #                                       ],
-  #                                '2' => [
-  #                                         [
-  #                                           '15598',
-  #                                           1
-  #                                         ]
-  #                                       ]
-  #                              },
-  #                   'tags' => [
-  #                               '',
-  #                               ''
-  #                             ],
-  #                   'term' => 'state'
-  #                 },
-
   # TODO: Reconceptualize
  # TODO: Belongs somewhere here:
  # # DG: ??? Domain priorities?
@@ -261,7 +204,7 @@ sub mine_candidates_text {
   #     $linked->{$matchtitle} = 1;
   #   }
   # }
-  return ($matches,$body);
+  return $matches;
 }
 
 sub find_matches {
@@ -341,7 +284,6 @@ sub find_matches {
       $offset += $match_offset;
     } else { next; } # If not, we just move on to the next word
   }
-  print STDERR Dumper(@matches);
   \@matches;
 }
 

@@ -21,7 +21,7 @@ use warnings;
 use feature qw(say switch);
 
 use NNexus::Discover qw(mine_candidates);
-use NNexus::Annotate qw(serialize_candidates);
+use NNexus::Annotate qw(serialize_concepts);
 
 sub new {
   my ($class,%opts) = @_;
@@ -62,15 +62,22 @@ sub _link_entry {
   my ($self) = @_;
   # Process in 2 Steps:
   # I. Concept Discovery
-  my ($concept_locations,$optional_serialized) =
-    NNexus::Discover::mine_candidates(config=>$self->{config},
-     body=>$self->{body}, url=>$self->{url},domain=>$self->{domain},
-     format=>$self->{format});
+  my $concepts_mined =
+    NNexus::Discover::mine_candidates(
+      config=>$self->{config},
+      body=>$self->{body},
+      url=>$self->{url},
+      domain=>$self->{domain},
+      format=>$self->{format});
   # II. Annotation
   $self->{annotation} //= 'links';
+  $self->{embed} //= 1;
   my $serialized_result = 
-    NNexus::Annotate::serialize_candidates(annotation=>$self->{annotation},
-					   serialized=>$optional_serialized);
+    NNexus::Annotate::serialize_concepts(
+      body=>$self->{body},
+      concepts=>$concepts_mined,
+      annotation=>$self->{annotation},
+      embed=>$self->{embed});
   $self->{result}={payload=>$serialized_result,message=>'No obvious problems.', status=>'OK'};
   $serialized_result;
 }

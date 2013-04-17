@@ -21,21 +21,19 @@ use warnings;
 
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(serialize_candidates);
+our @EXPORT_OK = qw(serialize_concepts);
 
-sub serialize_candidates {
+sub serialize_concepts {
   my (%options) = @_;
   # Annotation Format:
   # links - return back fully linked html
   # xml - return back the matches hash in XML format.
   # json - returns back the matches in JSON format
-  if ($options{annotation} eq 'links') {
-    # DEFAULT: embed HTML links via anchor elements (already precomputed)
-    return $options{serialized} if defined $options{serialized};
-    return "Error: serialized should be passed in, but wasn't!";
+  print STDERR "TODO: ".($options{annotation}||'unknown')."\n";
+  if ($options{embed}) {
+    return $options{body}; # Mock-up, just return what was given
   } else {
-    print STDERR "TODO: ".($options{annotation}||'unknown')."\n";
-    return [];
+    ''; # TODO: Serialize stand-off annotation to desired representation
   }
 }
 

@@ -55,7 +55,7 @@ sub select_concepts_by {
   my ($db,%options) = @_;
   my $objectid = $options{objectid};
   return unless $objectid;
-  my $sth = $db->prepare("select firstword,tailwords, category from concepts where (objectid = ?)");
+  my $sth = $db->prepare("select firstword,tailwords,link,category from concepts where (objectid = ?)");
   $sth->execute($objectid);
   my $concepts = [];
   while (my $row = $sth->fetchrow_hashref()) {
@@ -103,7 +103,7 @@ sub select_firstword_matches {
   my ($db,$word) = @_;
   my @matches = ();
 
-  my $sth = $db->prepare("SELECT firstword, tailwords, objectid from concepts where firstword=?");
+  my $sth = $db->prepare("SELECT firstword, tailwords, link, category, objectid from concepts where firstword=?");
   $sth->execute($word);
   while ( my $row = $sth->fetchrow_hashref() ) {
     push @matches, $row;
