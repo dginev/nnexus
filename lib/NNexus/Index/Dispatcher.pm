@@ -25,7 +25,8 @@ sub new {
     $index_template = NNexus::Index::Template->new;
   }
 
-  bless {index_template=>$index_template,domain=>$domain,db=>$db}, $class;
+  bless {index_template=>$index_template,domain=>$domain,db=>$db,
+	verbosity=>$options{verbosity}||0}, $class;
 }
 
 sub index_step {
@@ -34,6 +35,7 @@ sub index_step {
   my $template = $self->{index_template};
   my $db = $self->{db};
   my $domain = $self->{domain};
+  my $verbosity = $self->{verbosity};
   my $indexed_concepts = $template->index_step(%options);
   return unless defined $indexed_concepts; # Last step.
 
@@ -54,6 +56,9 @@ sub index_step {
   }
   # 3.0. Flatten out incoming synonyms and categories to individual concepts:
   my $new_concepts = flatten_concept_harvest($indexed_concepts);
+  if ($verbosity > 0) {
+    print STDERR "FlatConcepts: ".scalar(@$new_concepts)."|URL: $url\n";
+  }
   # 3.1 Compute diff between previous and new concepts
   my ($delete_concepts,$add_concepts) = diff_concept_harvests($old_concepts,$new_concepts);
   # 4. Delete no longer present concepts
