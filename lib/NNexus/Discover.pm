@@ -35,6 +35,13 @@ use NNexus::Domain qw(get_domain_blacklist get_domain_priorities get_domain_hash
 use HTML::TreeBuilder;
 use HTML::Entities;
 use URI::Escape;
+use Storable qw(dclone);
+
+use Lingua::EN::StopWordList;
+# Prepare cache for first-word concept lookup
+our $first_word_cache_template = {
+  map {$_=>[]} @{Lingua::EN::StopWordList->new->words}
+};
 
 sub mine_candidates {
   my (%options) = @_;
@@ -62,10 +69,9 @@ sub mine_candidates {
       $db->clear_linkscache_by(objectid=>$objectid);
     }
   }
-  # TODO: Assemble a blacklist and push it to 'nolink'
-  #pull this blacklist into a config file
-  # my @blacklist = ( 'g', 'and','or','i','e', 'a','means','set','sets',
-  #     'choose', 'it',  'o', 'r', 'in', 'the', 'my', 'on', 'of');
+  # Keep a cache of first words, that will simultaneously act as a blacklist.
+  # TODO: Incorporate the single words from  'nolink'
+  $options{first_word_cache} = { %$first_word_cache_template }; # Default are stopwords
   # Always return an embedded annotation with links, as well as a stand-off mined_canidates hash, containing the individual concepts with pointers.
   my $mined_candidates=[];
   if ($format eq 'html') {
@@ -136,17 +142,18 @@ sub mine_candidates_html {
 }
 
 sub _text_event_handler {
-  my ($self,$text,$offset) = @_;
+  my ($self,$body,$offset) = @_;
   my $state = $self->{state_information};
   # Skip if in a silly element:
-  if (($self->{noparse} && ($self->{noparse}>0)) || ($text !~ /\w/)) {
+  if (($self->{noparse} && ($self->{noparse}>0)) || ($body !~ /\w/)) {
     return;
   }
   # Otherwise - discover concepts and annotate!
   my $mined_candidates = 
     mine_candidates_text({config=>$state->{config},
          nolink=>$state->{nolink},
-         body=>$text,
+         body=>$body,
+	 first_word_cache=>$state->{first_word_cache},
          class=>$state->{class}});
   foreach my $candidate(@$mined_candidates) {
     $candidate->{offset_begin}+=$offset;
@@ -159,14 +166,10 @@ sub _text_event_handler {
 # returns back the matches and position of disambiguated links of the supplied text.
 sub mine_candidates_text {
   my ($options) = @_;
-  my ($config,$domain,$body,$syns,$targetid,$nolink,$class) =
-    map {$options->{$_}} qw(config domain body nolink targetid nolink class);
-  my $matches = find_matches($config->get_DB, $body );
-  return $matches;
-}
+  my ($config,$domain,$body,$syns,$targetid,$nolink,$class,$first_word_cache) =
+    map {$options->{$_}} qw(config domain body nolink targetid nolink class first_word_cache);
+  my $db=$config->get_DB;
 
-sub find_matches {
-  my ($db,$text) = @_;
   # TODO: We have to make a distinction between "defined concepts" and "candidate concepts" here.
   # Probably just based on whether we find a URL or not?
 
@@ -174,28 +177,40 @@ sub find_matches {
   my %termlist = ();
   my $offset=0;
   # Skip to 3+ letter words
-  while ($text=~s/^(.*?)(\w(\w|\-|\'){2,})//) {
+  while ($body=~s/^(.*?)(\w(\w|\-|\')+)//) {
     $offset += length($1);
     my $offset_begin = $offset;
     $offset += length($2);
     my $offset_end = $offset;
     my $word = $2;
     next unless $word =~ /\D/; # Skip pure numbers
-    # Normalize word
-    my $norm_word = lc($word);
-    $norm_word = depluralize_word(get_nonpossessive($norm_word));
-    # get all possible candidates for both posessive and plural forms of $word 
-    my @candidates = $db->select_firstword_matches($norm_word);
+    # Use a cache for first-word lookups, with the dual-role of a blacklist.
+    my $cached = $first_word_cache->{$word};
+    my @candidates;
+    if (! defined $cached) {
+      # Normalize word
+      my $norm_word = lc($word);
+      $norm_word = depluralize_word(get_nonpossessive($norm_word));
+      # get all possible candidates for both posessive and plural forms of $word 
+      @candidates = $db->select_firstword_matches($norm_word);
+      # Cache the candidates:
+      my $saved_candidates = [];
+      $saved_candidates = dclone(\@candidates) if @candidates;
+      $first_word_cache->{$word} = $saved_candidates;
+      $first_word_cache->{$norm_word} = $saved_candidates;
+    } else {
+      #Cached, clone into a new array
+      @candidates = @{ dclone($cached)} if @$cached;
+    }
     next unless @candidates; # if there are no candidates skip the word
     # Split tailwords into an array
     foreach my $c(@candidates) {
       $c->{concept} = $c->{firstword}." ".$c->{tailwords};
       $c->{tailwords} = [split(/\s+/,$c->{tailwords}||'')];
     }
-
     my $inter_offset = 0;
     my $match_offset = 0; # Record the offset of the current longest match, add to end_position when finalized    
-    my $inter_text = $text; # A copy of the text to munge around while searching.
+    my $inter_body = $body; # A copy of the text to munge around while searching.
     my @inter_matches = grep {@{$_->{tailwords}} == 0} @candidates; # Record the current longest matches here
     # Longest-match: 
     # as long as:
@@ -203,7 +218,7 @@ sub find_matches {
     @candidates = grep {@{$_->{tailwords}} > 0} @candidates;
     while (@candidates) {
       #  - AND there are leftover words in current phrase
-      if ($inter_text =~ /^(\s*)(\w(\w|\-|\')+)/) {
+      if ($inter_body =~ /^(\s*)(\w(\w|\-|\')+)/) {
         # then: pull and compare next word, reduce text and tailwords
         # 1. Pull next.
         my $step_offset = length($1) + length($2);
@@ -223,7 +238,7 @@ sub find_matches {
           # candidates for next iteration must have leftover tail words
           @candidates = grep {@{$_->{tailwords}} > 0} @inter_candidates;
           # Move $step_offset right the text
-          substr($inter_text,0,$step_offset)='';
+          substr($inter_body,0,$step_offset)='';
         } else {last;} # Last here as well.
       } else {last;} # Otherwise we are done
     }
@@ -255,7 +270,7 @@ sub find_matches {
       # And push to main matches array
       push @matches, @inter_matches;
       # And move the text forward with the match_offset
-      substr($text,0,$match_offset)='';
+      substr($body,0,$match_offset)='';
       $offset += $match_offset;
     } else { next; } # If not, we just move on to the next word
   }

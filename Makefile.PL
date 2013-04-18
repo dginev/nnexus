@@ -13,7 +13,8 @@ use FindBin;
 our $MORE_MACROS = {};
 our $MORE_MAKERULES=''; 
 
-WriteMakefile(NAME => 'NNexus',
+WriteMakefile(
+  NAME => 'NNexus',
   AUTHOR => 'Deyan Ginev <d.ginev@jacobs-university.de>',
   ABSTRACT => "NNexus autolinker",
   PREREQ_PM => { 
@@ -32,8 +33,9 @@ WriteMakefile(NAME => 'NNexus',
     'Data::Dumper'=>0,
     'HTML::Entities'=>0,
     'HTML::TreeBuilder'=>0,
-        # We also need mysql server installed,
-        # Any way to mark this in the dependencies?
-        },
-        EXE_FILES => [ 'bin/nnexus'],
-        );
+    'Lingua::EN::StopWordList'=>0,
+    # We also need mysql server installed,
+    # Any way to mark this in the dependencies?
+  },
+  EXE_FILES => [ 'bin/nnexus'],
+);
