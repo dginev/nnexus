@@ -25,7 +25,7 @@ sub index_page {
   return [] if $dom->find('#directory')->[0];
   # TODO: Support multiple MSC categories in the same page, not only [0]
   my $msc = $dom->find('meta[scheme="MSC_2000"]')->[0];
-  my $category = 'msc:'.$msc->attrs('content') if $msc;
+  my $category = $msc->attrs('content') if $msc;
   my $name = $dom->find('h1')->[0]->all_text;
   return [{
     url=>$url,

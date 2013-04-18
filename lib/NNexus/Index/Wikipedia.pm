@@ -42,7 +42,7 @@ sub index_page {
 
   my ($concept) = map {/([^\(]+)/; lc(rtrim($1));} $dom->find('span[dir="auto"]')->pluck('all_text')->each;
   my @synonyms = grep {$_ ne $concept} map {lc $_} $dom->find('p')->[0]->find('b')->pluck('all_text')->each;
-  my $categories = $self->current_categories || ['msc:00-XX'];
+  my $categories = $self->current_categories || ['00-XX'];
   return [{ url => $url,
 	 concept => $concept,
 	 categories => $categories,

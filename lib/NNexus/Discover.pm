@@ -177,7 +177,7 @@ sub mine_candidates_text {
   my %termlist = ();
   my $offset=0;
   # Skip to 3+ letter words
-  while ($body=~s/^(.*?)(\w(\w|\-|\')+)//) {
+  while ($body=~s/^(.*?)(\w(\w|[\-\+\'])+)//) {
     $offset += length($1);
     my $offset_begin = $offset;
     $offset += length($2);
@@ -218,7 +218,7 @@ sub mine_candidates_text {
     @candidates = grep {@{$_->{tailwords}} > 0} @candidates;
     while (@candidates) {
       #  - AND there are leftover words in current phrase
-      if ($inter_body =~ /^(\s*)(\w(\w|\-|\')+)/) {
+      if ($inter_body =~ /^(\s*)(\w(\w|[\-\+\'])+)/) {
         # then: pull and compare next word, reduce text and tailwords
         # 1. Pull next.
         my $step_offset = length($1) + length($2);

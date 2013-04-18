@@ -21,7 +21,7 @@ sub index_page {
   my $url = $self->current_url;
   my $dom = $self->current_dom;
   my $name;
-  my $category = 'msc:33-XX'; # Special functions? always?
+  my $category = '33-XX'; # Special functions? always?
   my (@def_links,@def_names);
   if ($url =~ /\/idx/) {
     # DLMF Index page

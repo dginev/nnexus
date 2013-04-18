@@ -69,7 +69,7 @@ sub delete_concept_by {
   my ($db, %options) = @_;
   my ($firstword, $tailwords, $concept, $category, $objectid) = map {$options{$_}} qw(firstword tailwords concept category objectid);
   if ($concept) {
-      $concept=~s/^(\w(\w|\-)*)(\s|$)//;
+      $concept=~s/^(\w(\w|[\-\+\'])*)(\s|$)//;
       $firstword = $1;
       $tailwords = $concept;
       undef $concept;
@@ -88,9 +88,13 @@ sub add_concept_by {
     map {$options{$_}} qw(concept category objectid domain link firstword tailwords);
   return unless $concept && $category && $objectid && $link && $domain; # Mandatory fields. TODO: Raise error?
   $concept = lc($concept); # Only record lower-cased concepts
-  if ((! $firstword) && $concept=~s/^(\w(\w|\-)*)(\s|$)//) { # Grab first word if not provided
+  if ((! $firstword) && $concept=~s/^(\w(\w|[\-\+\'])*)(\s|$)//) { # Grab first word if not provided
     $firstword = $1;
     $tailwords = $concept;
+    if (! $firstword) {
+      print STDERR "Error: No firstword for $concept at $link!\n\n";
+      return;
+    }
   }
   my $sth = $db->prepare("insert into concepts (firstword, tailwords, category, objectid, domain, link) values (?, ?, ?, ?, ?, ?)");
   $sth->execute($firstword, $tailwords, $category, $objectid, $domain, $link);

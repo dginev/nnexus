@@ -20,6 +20,7 @@ sub ua {$_[0]->{ua};}
 # index: Traverse a page, obtain candidate concepts and candidate further links
 sub index_step {
   my ($self,%options) = @_;
+  my $visited = $self->{visited};
   my $depth;
   # Set current if we're starting up.
   if (defined $options{start}) {
@@ -33,6 +34,9 @@ sub index_step {
   } else {
     # Otherwise, grab the next job from the queue
     my $next_step = shift @{$self->{queue}};
+    while ((ref $next_step) && ($visited->{$next_step->{url}})) {
+      $next_step = shift @{$self->{queue}};
+    }
     if (ref $next_step) {
       $self->current_url($next_step->{url});
       $self->current_categories($next_step->{categories});
@@ -45,12 +49,7 @@ sub index_step {
   # If we've visited, or we're out of urls, terminate.
   my $current_url = $self->current_url;
   return unless $current_url; # Empty return for last job
-  if (!($self->{visited}->{$current_url})) {
-    $self->{visited}->{$current_url} = 1;
-  } else {
-    # Skip to next URL.
-    return $self->index_step;
-  }
+  $visited->{$current_url} = 1; # Mark visited
   # Also skip if we're over the depth limit.
   return $self->index_step if $depth > $self->depth_limit;
   # 2.1. Prepare (or just accept) a Mojo::DOM to be analyzed

@@ -32,7 +32,7 @@ is_deeply($concepts, [{
                                       'definite integral'
                                      ],
                        'url' => 't/pages/Integral.html',
-                       'categories' => [ 'msc:00-XX' ],
+                       'categories' => [ '00-XX' ],
                        'concept' => 'integral'
                       }],
           'Wikipedia Index Template - operational');
@@ -45,14 +45,25 @@ $concepts = NNexus::Index::Planetmath->new->index_step(
   start=>$url,
   dom=>$dom);
 is_deeply($concepts,[{
-                      'url' => 't/pages/HeytingAlgebra.html',
-                      'categories' => [
-                                       'msc:06D20',
-                                       'msc:03G10'
-                                      ],
-                      'concept' => 'Heyting algebra'
-                     }
-                    ],
+		      'url' => 't/pages/HeytingAlgebra.html',
+		      'categories' => [
+				       '06D20',
+				       '03G10'
+				      ],
+		      'concept' => 'Heyting lattice'
+		     },
+		     {
+		      'synonyms' => [
+				     'pseudo-Boolean algebra'
+				    ],
+		      'url' => 't/pages/HeytingAlgebra.html',
+		      'categories' => [
+				       '06D20',
+				       '03G10'
+				      ],
+		      'concept' => 'Heyting algebra'
+		     }
+		    ],
           'Planetmath Index Template - operational');
 
 # 3. Test the MathWorld indexing
@@ -64,7 +75,7 @@ $concepts = NNexus::Index::Mathworld->new->index_step(
 is_deeply($concepts,[{
                       'url' => 't/pages/QuadraticInvariant.html',
                       'categories' => [
-                                       'msc:15A72'
+                                       '15A72'
                                       ],
                       'concept' => 'Quadratic Invariant'
                      }
@@ -81,7 +92,7 @@ $concepts = NNexus::Index::Dlmf->new->index_step(
 is_deeply($concepts,[{
                       'url' => 'http://dlmf.nist.gov/35.4',
                       'categories' => [
-                                       'msc:33-XX'
+                                       '33-XX'
                                       ],
                       'concept' => 'zonal polynomials'
                      }
