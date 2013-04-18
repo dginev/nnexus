@@ -161,55 +161,7 @@ sub mine_candidates_text {
   my ($options) = @_;
   my ($config,$domain,$body,$syns,$targetid,$nolink,$class) =
     map {$options->{$_}} qw(config domain body nolink targetid nolink class);
-
   my $matches = find_matches($config->get_DB, $body );
-  
-  # TODO: Reconceptualize
- # TODO: Belongs somewhere here:
- # # DG: ??? Domain priorities?
- #  # my $priorities = get_domain_priorities($state->{config}, $state->{domain} );
- #  my $linked_result;
- #  my @linkarray;    # array of href's
- #  for my $i( 0..scalar(@$matches)-1 ) {
- #    my $match = $matches->[$i];
- #    my @ltext = split(/(\W+)/, $text);
- #    # do the text substitution here.
- #    #loop through the text backwards
- #    foreach my $pos (sort {$b <=> $a} keys %$match) {
- #      my $length = $match->{$pos}->{'length'};
- #      my $objects = $match->{$pos}->{'links'};
- #      my $rltext = $ltext[$pos+$length-1];
- #      my $texttolink = "";
- #      $texttolink = join( '', @ltext[$pos..$pos+$length-1] );
- #      my $domainid = get_domain_id($state->{config}, $state->{domain});
- #      my $linktarget = $objects->{$domainid}[0][0];
- #      my $lnk = make_link_string($state->{config}->get_DB, $linktarget, $texttolink );
- #      #print "looking at $lnk against ",$state->{domain},"\n";
- #      if ( $lnk =~ $state->{domain} ) {
- #        #print "adding lnk = [$lnk]\n";
- #        push @linkarray, $lnk;
- #        delete @ltext[$pos+1..$pos+$length-1] if ($length>1);
- #        $ltext[$pos]=$lnk;
- #      }
- #       # add to links table if we have a from id
- #       # 
- #       #TODO - figure out how to do the addlinks in the database 
- #       #  addLink($targetid,$object->{'objectid'}) if ($targetid);
- #    }
- #    my $finaltext = join('', grep (defined, @ltext));
- #    $linked_result .= $finaltext;
- #  }
-  # # Only ANNOTATE the FIRST occurrence of each term
-  # # = delete all following duplicates
-  # my $linked = $self->{linked};
-  # foreach my $m ( @$matches ) {
-  #   print STDERR Dumper($m),"\n";
-  #   foreach my $pos (sort {$a <=> $b} keys %$m) {
-  #     my $matchtitle = $m->{$pos}->{'term'};
-  #     delete $m->{$pos} if defined $linked->{$matchtitle};
-  #     $linked->{$matchtitle} = 1;
-  #   }
-  # }
   return $matches;
 }
 
@@ -220,10 +172,9 @@ sub find_matches {
 
   my @matches;
   my %termlist = ();
-  # TODO: Upgrade the word detection to use absolute offsets, the lossy split should be refactored away
   my $offset=0;
   # Skip to 3+ letter words
-  while ($text=~s/^(.*?)(\w(\w|\-){2,})//) {
+  while ($text=~s/^(.*?)(\w(\w|\-|\'){2,})//) {
     $offset += length($1);
     my $offset_begin = $offset;
     $offset += length($2);
@@ -238,7 +189,7 @@ sub find_matches {
     next unless @candidates; # if there are no candidates skip the word
     # Split tailwords into an array
     foreach my $c(@candidates) {
-      $c->{concept} = $c->{firstword}." ".$c->{tailwords}; #TODO: Do we need the actual concept?
+      $c->{concept} = $c->{firstword}." ".$c->{tailwords};
       $c->{tailwords} = [split(/\s+/,$c->{tailwords}||'')];
     }
 
@@ -252,12 +203,12 @@ sub find_matches {
     @candidates = grep {@{$_->{tailwords}} > 0} @candidates;
     while (@candidates) {
       #  - AND there are leftover words in current phrase
-      if ($inter_text =~ /(\s*)(\w(\w|\-)+)/) {
+      if ($inter_text =~ /^(\s*)(\w(\w|\-|\')+)/) {
         # then: pull and compare next word, reduce text and tailwords
         # 1. Pull next.
         my $step_offset = length($1) + length($2);
         $inter_offset += $step_offset;
-        my $next_word = depluralize_word(get_nonpossessive($2));
+        my $next_word = depluralize_word(get_nonpossessive(lc($2)));
         # 2. Filter for applicable candidates
         my @inter_candidates = grep {$_->{tailwords}->[0] eq $next_word} @candidates;
         if (@inter_candidates) {
@@ -273,7 +224,7 @@ sub find_matches {
           @candidates = grep {@{$_->{tailwords}} > 0} @inter_candidates;
           # Move $step_offset right the text
           substr($inter_text,0,$step_offset)='';
-        }
+        } else {last;} # Last here as well.
       } else {last;} # Otherwise we are done
     }
     # In the end, do we have one or more matches?
