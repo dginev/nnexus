@@ -24,7 +24,7 @@ require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(add_object_by select_object_by select_concepts_by last_inserted_id
                add_concept_by delete_concept_by invalidate_by reset_db
-	       select_firstword_matches clear_linkcache_by add_linkcache_by);
+	       select_firstword_matches clear_linkscache_by add_linkscache_by);
 
 ### API for Table: Object
 
@@ -118,23 +118,23 @@ sub select_firstword_matches {
 
 sub invalidate_by{();}
 
-### API for Table: Linkcache
+### API for Table: Links_cache
 
-sub clear_linkcache_by {
+sub clear_linkscache_by {
   my ($db,%options) = @_;
   my $objectid = $options{objectid};
   return unless $objectid;
-  my $sth = $db->prepare("delete * from linkcache where objectid=?");
+  my $sth = $db->prepare("delete * from links_cache where objectid=?");
   $sth->execute($objectid);
   $sth->finish();
 }
 
-sub add_linkcache_by{
+sub add_linkscache_by{
   my ($db,%options) = @_;
   my $objectid = $options{objectid};
   my $conceptid = $options{conceptid};
   return unless $objectid && $conceptid;
-  my $sth = $db->prepare("insert into linkcache (conceptid,objectid) values (?,?) ");
+  my $sth = $db->prepare("insert into links_cache (conceptid,objectid) values (?,?) ");
   $sth->execute($conceptid,$objectid);
   $sth->finish();
 }
@@ -189,7 +189,7 @@ END;");
 
 # Table structure for table links_cache
 $self->do("DROP TABLE IF EXISTS links_cache;");
-$self->do("CREATE TABLE linkcache (
+$self->do("CREATE TABLE links_cache (
   objectid integer NOT NULL,
   conceptid integer NOT NULL,
   PRIMARY KEY (objectid, conceptid)

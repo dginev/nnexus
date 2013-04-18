@@ -59,7 +59,7 @@ sub mine_candidates {
       $objectid = $db->add_object_by(url=>$options{'url'},domain=>$domain);
     } else {
       # If already known, flush the links_cache for this object
-      $db->clear_linkcache_by(objectid=>$objectid);
+      $db->clear_linkscache_by(objectid=>$objectid);
     }
   }
   # TODO: Assemble a blacklist and push it to 'nolink'
@@ -90,9 +90,9 @@ sub mine_candidates {
   #TODO: Disambiguate, adapt from:
   # my $finals = disambiguate($config, $candidates, $matchterms, $class, $targetid);
 
-  # Update linkcache:
+  # Update linkscache:
   if ($objectid) {
-    $db->add_linkcache_by(objectid=>$objectid,conceptid=>$_->{conceptid})
+    $db->add_linkscache_by(objectid=>$objectid,conceptid=>$_->{conceptid})
       foreach (@$mined_candidates);
   }
   return $mined_candidates;
