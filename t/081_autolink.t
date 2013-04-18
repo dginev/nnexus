@@ -9,8 +9,7 @@ use NNexus::Job;
 use NNexus::Config;
 
 # However, we really want our own test setup:
-my $tmphandle = File::Temp->new( TEMPLATE => 'nnexusXXXXX',
-                       SUFFIX => '.db');
+my $tmphandle = File::Temp->new( TEMPLATE => 'nnexusXXXXX',SUFFIX => '.db');
 my $options = {
   "database" => {
     "dbms" => "SQLite",
@@ -53,7 +52,7 @@ $db->add_concept_by(
 open my $fh, "<", 't/pages/pm_gelfand_transforms.html';
 my $html_content = join('',<$fh>);
 close $fh;
-$job = NNexus::Job->new('format' => 'html', 'function' => 'linkentry',
+$job = NNexus::Job->new('format' => 'html', 'function' => 'linkentry', url=>'http://test081.com',
 	'domain' => 'Planetmath', body=>$html_content,config=>$config,annotation=>'links',embed=>1);
 $job->execute;
 is_deeply($job->response,

@@ -24,7 +24,7 @@ require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(add_object_by select_object_by select_concepts_by last_inserted_id
                add_concept_by delete_concept_by invalidate_by reset_db
-	       select_firstword_matches);
+	       select_firstword_matches clear_linkcache_by add_linkcache_by);
 
 ### API for Table: Object
 
@@ -55,7 +55,7 @@ sub select_concepts_by {
   my ($db,%options) = @_;
   my $objectid = $options{objectid};
   return unless $objectid;
-  my $sth = $db->prepare("select firstword,tailwords,link,category from concepts where (objectid = ?)");
+  my $sth = $db->prepare("select conceptid,firstword,tailwords,category,link from concepts where (objectid = ?)");
   $sth->execute($objectid);
   my $concepts = [];
   while (my $row = $sth->fetchrow_hashref()) {
@@ -103,7 +103,8 @@ sub select_firstword_matches {
   my ($db,$word) = @_;
   my @matches = ();
 
-  my $sth = $db->prepare("SELECT firstword, tailwords, link, category, objectid from concepts where firstword=?");
+  my $sth = $db->prepare("SELECT conceptid, firstword, tailwords, category, scheme,
+     domain, link, objectid from concepts where firstword=?");
   $sth->execute($word);
   while ( my $row = $sth->fetchrow_hashref() ) {
     push @matches, $row;
@@ -116,6 +117,27 @@ sub select_firstword_matches {
 # TODO:
 
 sub invalidate_by{();}
+
+### API for Table: Linkcache
+
+sub clear_linkcache_by {
+  my ($db,%options) = @_;
+  my $objectid = $options{objectid};
+  return unless $objectid;
+  my $sth = $db->prepare("delete * from linkcache where objectid=?");
+  $sth->execute($objectid);
+  $sth->finish();
+}
+
+sub add_linkcache_by{
+  my ($db,%options) = @_;
+  my $objectid = $options{objectid};
+  my $conceptid = $options{conceptid};
+  return unless $objectid && $conceptid;
+  my $sth = $db->prepare("insert into linkcache (conceptid,objectid) values (?,?) ");
+  $sth->execute($conceptid,$objectid);
+  $sth->finish();
+}
 
 ### Generic DB API
 
@@ -154,7 +176,7 @@ $self->do("DROP TABLE IF EXISTS objects;");
 $self->do("CREATE TABLE objects (
   objectid integer primary key AUTOINCREMENT,
   url varchar(2083) NOT NULL UNIQUE,
-  domain varchar(50) NOT NULL,
+  domain varchar(50),
  -- TODO: Do we really care about modified?
   modified timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );");

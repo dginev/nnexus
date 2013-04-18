@@ -51,16 +51,17 @@ sub mine_candidates {
   # Prepare data, if we have a URL:
   my $objectid; # undefined if we don't have a URL, we only do MoC for named resources
   if ($url) {
-    my $object = $db->select_object_by(url=>) || {};
+    my $object = $db->select_object_by(url=>$url) || {};
     $objectid = $object->{objectid} || -1;
     $domain = $object->{domain} unless defined $domain;
     # If objectid is -1 , we will also need to add_object on the url
     if ($objectid == -1) {
       $objectid = $db->add_object_by(url=>$options{'url'},domain=>$domain);
+    } else {
+      # If already known, flush the links_cache for this object
+      $db->clear_linkcache_by(objectid=>$objectid);
     }
-    # TODO: Flush the links_cache for this object!
   }
-  #my $start = time();
   # TODO: Assemble a blacklist and push it to 'nolink'
   #pull this blacklist into a config file
   # my @blacklist = ( 'g', 'and','or','i','e', 'a','means','set','sets',
@@ -74,20 +75,25 @@ sub mine_candidates {
   } else {
     print STDERR "Error: Unrecognized input format for auto-linking.\n";
   }
+  # Only mark-up first found candidate, unless requested otherwise
+  my @uniq_candidates;
+  while (@$mined_candidates) {
+    my $candidate = shift @$mined_candidates;
+    my $concept = $candidate->{concept};
+    @$mined_candidates = grep {$_->{concept} ne $concept} @$mined_candidates;
+    push @uniq_candidates, $candidate;
+  }
+  @$mined_candidates = @uniq_candidates;
 
-  #TODO: Prune duplicates, adapt from:
-  # next if ($matched_already{$concept});
+  #TODO: When do we deal with the nolink settings? 
   #  next if (inset($concept,@$nolink));
-  # TODO: Disambiguate, adapt from:
+  #TODO: Disambiguate, adapt from:
   # my $finals = disambiguate($config, $candidates, $matchterms, $class, $targetid);
-  print STDERR Dumper($mined_candidates);
-  #my $end = time();
-  #my $total = $end - $start;
-  my $numlinks = scalar(@$mined_candidates);
 
-  #print STDERR "\nMined $numlinks concepts in $total seconds.\n";
-  if ($url) {
-    # TODO: Update the links_cache for this object with the mined_candidates!
+  # Update linkcache:
+  if ($objectid) {
+    $db->add_linkcache_by(objectid=>$objectid,conceptid=>$_->{conceptid})
+      foreach (@$mined_candidates);
   }
   return $mined_candidates;
 }
@@ -272,10 +278,28 @@ sub find_matches {
     }
     # In the end, do we have one or more matches?
     if (@inter_matches > 0) {
-      # Yes! Record offsets
+      # Yes!
+      # merge multi-links into single match entry
+      # multi-link = same concept and category, different URLs 
+      # CARE: careful not to confuse with cases of different categories, which need disambiguation 
+      my @merged_matches;
+      while (@inter_matches) {
+        my $match = shift @inter_matches;
+        my $category = $match->{category};
+        my @multilinks = map {$_->{link}} grep {$_->{category} eq $category} @inter_matches;
+        @inter_matches = grep {$_->{category} ne $match->{category}} @inter_matches;
+        if (@multilinks>0) {
+          unshift @multilinks, $match->{link};
+          $match->{multilinks} = \@multilinks;
+        }
+        push @merged_matches, $match;
+      }
+      @inter_matches = @merged_matches;
+      # Record offsets:
       foreach my $match(@inter_matches) {
         $match->{offset_begin} = $offset_begin;
         $match->{offset_end} = $offset_end + $match_offset;
+        delete $match->{tailwords};
       }
       # And push to main matches array
       push @matches, @inter_matches;

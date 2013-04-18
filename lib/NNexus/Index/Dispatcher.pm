@@ -10,7 +10,7 @@ sub new {
   my ($class,%options) = @_;
   my $domain = $options{domain};
   my $db = $options{db};
-  $domain = $domain ? ucfirst(lc($domain)) : 'Planetmath';
+  $domain = $domain ? ucfirst(lc($domain)) : '';
   die ("Bad domain name: $domain; Must contain only alphanumeric characters!") if $domain =~ /\W/;
   my $index_template;
   my $eval_return = eval {require "NNexus/Index/$domain.pm"; 1; };
