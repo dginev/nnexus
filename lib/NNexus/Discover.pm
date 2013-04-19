@@ -27,7 +27,7 @@ use utf8;
 use Data::Dumper;
 use Time::HiRes qw ( time alarm sleep );
 
-use NNexus::Morphology qw(get_nonpossessive get_possessive depluralize_word is_possessive is_plural);
+use NNexus::Morphology qw(normalize_concept);
 use NNexus::Linkpolicy qw (post_resolve_linkpolicy);
 use NNexus::Util qw(inset uniquify);
 use NNexus::Domain qw(get_domain_blacklist get_domain_priorities get_domain_hash get_domain_id);
@@ -190,8 +190,7 @@ sub mine_candidates_text {
     my @candidates;
     if (! defined $cached) {
       # Normalize word
-      my $norm_word = lc($word);
-      $norm_word = depluralize_word(get_nonpossessive($norm_word));
+      my $norm_word = normalize_concept($word);
       # get all possible candidates for both posessive and plural forms of $word 
       @candidates = $db->select_firstword_matches($norm_word);
       # Cache the candidates:
@@ -223,7 +222,7 @@ sub mine_candidates_text {
         # 1. Pull next.
         my $step_offset = length($1) + length($2);
         $inter_offset += $step_offset;
-        my $next_word = depluralize_word(get_nonpossessive(lc($2)));
+        my $next_word = normalize_concept($2);
         # 2. Filter for applicable candidates
         my @inter_candidates = grep {$_->{tailwords}->[0] eq $next_word} @candidates;
         if (@inter_candidates) {

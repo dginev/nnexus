@@ -22,15 +22,18 @@ package NNexus::Morphology;
 # the package name.
 use strict;
 use warnings;
-use Encode qw{is_utf8};
+use feature qw(switch);
+
 use Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(is_possessive is_plural get_nonpossessive get_possessive
   depluralize_word depluralize_phrase root pluralize 
-  admissible_name firstword_split);
+  admissible_name firstword_split normalize_concept);
 
 use utf8;
-use feature qw(switch);
+use Encode qw{is_utf8};
+use Text::Unidecode qw/unidecode/;
+
 
 # 0. TODO: Think about MathML
 
@@ -142,10 +145,14 @@ sub root {
   }
 }
 
-# IV. Admissible concept words
+# IV. Admissible concept words and high-level api
 our $concept_word_rex = qr/\w(?:\w|[\-\+\'])+/;
 our $concept_phrase_rex = qr/$concept_word_rex(?:\s+$concept_word_rex)*/;
 sub admissible_name {$_[0]=~/^$concept_phrase_rex$/; }
+sub normalize_concept {
+  my ($concept)=@_;
+  return depluralize_word(get_nonpossessive(lc(unidecode($concept))));
+}
 sub firstword_split {
   my ($concept)=@_;
   if ($concept=~/^($concept_word_rex)\s?(.*)$/) { # Grab first word if not provided

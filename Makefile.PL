@@ -34,6 +34,7 @@ WriteMakefile(
     'HTML::Entities'=>0,
     'HTML::TreeBuilder'=>0,
     'Lingua::EN::StopWordList'=>0,
+    'Text::Unidecode'=>0,
     # We also need mysql server installed,
     # Any way to mark this in the dependencies?
   },

@@ -4,15 +4,15 @@ use strict;
 use base qw(NNexus::Index::Template);
 sub domain_root { "http://dlmf.nist.gov" }
 sub domain_base { "http://dlmf.nist.gov/" }
-sub depth_limit { 10 }
-
+sub depth_limit { 100 }
+use Data::Dumper;
 sub candidate_links {
   my ($self) = @_;
   my $url = $self->current_url;
   my $dom = $self->current_dom;
   # We only care about /idx and /not pages (index and notations)
   my @next_jobs = $dom->find('a')->each;
-  @next_jobs = map {s/^(.+)\.\///; $self->domain_base . $_; } grep {/\.\/(idx|not)(\/\w?)?$/} map { $_->{href}} @next_jobs;
+  @next_jobs = map {s/^(.+)\.\///; $self->domain_base . $_; } grep {/\.\/(idx)(\/\w?)?$/} map { $_->{href}} @next_jobs;
   \@next_jobs;
 }
 
@@ -27,9 +27,9 @@ sub index_page {
     # DLMF Index page
     my $def_spans = $dom->find('span[class="text bold"]');
     @def_links = map {s/^(.+)\.\///; $self->domain_base . $_; } map {$_->{href}} $def_spans->pluck('a')->each;
-    @def_names = map {$_->content_xml} grep {defined} $def_spans->pluck('parent')->pluck('previous')->each;
-    print "Names: ",scalar(@def_names)," Links: ",scalar(@def_links),"\n";
-  } elsif ($url =~ /\/not/) {
+    @def_names = map {my $t = $_->text; $t =~ s/\(.+\)//g; $t =~ s/\s\s+/ /g; $t;} grep {defined} $def_spans->pluck('parent')->pluck('previous')->each;
+    print "Names: ",Dumper(@def_names)," Links: ",Dumper(@def_links),"\n";
+  } elsif ($url =~ /\/not/) {return[];#temporary
     my $def_anchors = $dom->find('a[class="ref"]');
     @def_links = map {s/^(.+)\.\///; $self->domain_base . $_; } map {$_->{href}} $def_anchors->each;
     @def_names = $def_anchors->pluck('parent')->pluck('content_xml')->each;
