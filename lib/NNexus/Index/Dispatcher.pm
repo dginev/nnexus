@@ -61,22 +61,23 @@ sub index_step {
   @$new_concepts = grep {admissible_name($_->{concept})} @$new_concepts;
   if ($verbosity > 0) {
     print STDERR "FlatConcepts: ".scalar(@$new_concepts)."|URL: $url\n";
+    print STDERR Dumper($new_concepts);
   }
   # 3.1 Compute diff between previous and new concepts
   my ($delete_concepts,$add_concepts) = diff_concept_harvests($old_concepts,$new_concepts);
   # 4. Delete no longer present concepts
   my $invalidated_URLs = [];
   foreach my $delc(@$delete_concepts) {
-    $db->delete_concept_by(concept=>$delc->{concept},category=>$delc->{category},objectid=>$objectid);
+    $db->delete_concept_by(concept=>$delc->{concept},category=>$delc->{category},scheme=>$delc->{scheme},objectid=>$objectid);
     push @$invalidated_URLs,
-      $db->invalidate_by(concept=>$delc->{concept},category=>$delc->{category},objectid=>$objectid);
+      $db->invalidate_by(concept=>$delc->{concept},category=>$delc->{category},scheme=>$delc->{scheme},objectid=>$objectid);
   }
   # 5. Add newly introduced concepts
   foreach my $addc(@$add_concepts) {
     $db->add_concept_by(concept=>$addc->{concept},category=>$addc->{category},objectid=>$objectid,
-                       domain=>$domain,link=>($addc->{url}||$url));
+                       domain=>$domain,link=>($addc->{url}||$url),scheme=>$addc->{scheme});
     push @$invalidated_URLs, 
-      $db->invalidate_by(concept=>$addc->{concept},category=>$addc->{category},objectid=>$objectid);
+      $db->invalidate_by(concept=>$addc->{concept},category=>$addc->{category},scheme=>$addc->{scheme},objectid=>$objectid);
   }
   # 6. Return URLs to be invalidated as effect:
   return $invalidated_URLs;

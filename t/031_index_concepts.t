@@ -11,7 +11,7 @@ my $indexed_concepts = [{
                                       'definite integral'
                                      ],
                        'url' => 't/pages/Integral.html',
-                       'categories' => [ 'msc:00-XX' , 'msc:11-XX'],
+                       'categories' => [ '00-XX' , '11-XX'],
                        'concept' => 'integral'
                       }];
 # Test flattening of synonyms and categories
@@ -19,66 +19,66 @@ my $new_concepts = flatten_concept_harvest($indexed_concepts);
 is_deeply($new_concepts, [
           {
             'url' => 't/pages/Integral.html',
-            'category' => 'msc:00-XX',
+            'category' => '00-XX',
             'concept' => 'integration'
           },
           {
             'url' => 't/pages/Integral.html',
-            'category' => 'msc:11-XX',
+            'category' => '11-XX',
             'concept' => 'integration'
           },
           {
             'url' => 't/pages/Integral.html',
-            'category' => 'msc:00-XX',
+            'category' => '00-XX',
             'concept' => 'definite integral'
           },
           {
             'url' => 't/pages/Integral.html',
-            'category' => 'msc:11-XX',
+            'category' => '11-XX',
             'concept' => 'definite integral'
           },
           {
             'url' => 't/pages/Integral.html',
-            'category' => 'msc:00-XX',
+            'category' => '00-XX',
             'concept' => 'integral'
           },
           {
             'url' => 't/pages/Integral.html',
-            'category' => 'msc:11-XX',
+            'category' => '11-XX',
             'concept' => 'integral'
           }
         ]);
 
 
 # Test calculating delete-addition difference between two concept harvests
-my $old_concepts=[{concept=>'integration',category=>'msc:00-XX'},
-                  {concept=>'deleteme',category=>'msc:11-XX'}];
+my $old_concepts=[{concept=>'integration',category=>'00-XX'},
+                  {concept=>'deleteme',category=>'11-XX'}];
 my ($delete_concepts,$add_concepts) = diff_concept_harvests($old_concepts,$new_concepts);
-is_deeply($delete_concepts,[{concept=>'deleteme',category=>'msc:11-XX'}]);
+is_deeply($delete_concepts,[{concept=>'deleteme',category=>'11-XX'}]);
 is_deeply($add_concepts,[
           {
             'url' => 't/pages/Integral.html',
-            'category' => 'msc:11-XX',
+            'category' => '11-XX',
             'concept' => 'integration'
           },
           {
             'url' => 't/pages/Integral.html',
-            'category' => 'msc:00-XX',
+            'category' => '00-XX',
             'concept' => 'definite integral'
           },
           {
             'url' => 't/pages/Integral.html',
-            'category' => 'msc:11-XX',
+            'category' => '11-XX',
             'concept' => 'definite integral'
           },
           {
             'url' => 't/pages/Integral.html',
-            'category' => 'msc:00-XX',
+            'category' => '00-XX',
             'concept' => 'integral'
           },
           {
             'url' => 't/pages/Integral.html',
-            'category' => 'msc:11-XX',
+            'category' => '11-XX',
             'concept' => 'integral'
           }
         ]);

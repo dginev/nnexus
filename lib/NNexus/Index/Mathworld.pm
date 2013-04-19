@@ -22,8 +22,7 @@ sub index_page {
   my ($self) = @_;
   my $url = $self->current_url;
   my $dom = $self->current_dom;
-  print STDERR $dom;
-  sleep 1; # Extra slow, let's not get banned
+  sleep 2; # Extra slow, let's not get banned
   return [] if $dom->find('#directory')->[0];
   # TODO: Support multiple MSC categories in the same page, not only [0]
   my $msc = $dom->find('meta[scheme="MSC_2000"]')->[0];

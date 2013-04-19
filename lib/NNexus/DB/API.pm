@@ -56,7 +56,7 @@ sub select_concepts_by {
   my ($db,%options) = @_;
   my $objectid = $options{objectid};
   return unless $objectid;
-  my $sth = $db->prepare("select conceptid,firstword,tailwords,category,link from concepts where (objectid = ?)");
+  my $sth = $db->prepare("select * from concepts where (objectid = ?)");
   $sth->execute($objectid);
   my $concepts = [];
   while (my $row = $sth->fetchrow_hashref()) {
@@ -83,9 +83,10 @@ sub delete_concept_by {
 
 sub add_concept_by {
   my ($db, %options) = @_;
-  my ($concept, $category, $objectid, $domain, $link, $firstword, $tailwords) =
-    map {$options{$_}} qw(concept category objectid domain link firstword tailwords);
+  my ($concept, $category, $objectid, $domain, $link, $scheme, $firstword, $tailwords) =
+    map {$options{$_}} qw(concept category objectid domain link scheme firstword tailwords);
   return unless $concept && $category && $objectid && $link && $domain; # Mandatory fields. TODO: Raise error?
+  $scheme = 'msc' unless $scheme;
   $concept = lc($concept); # Only record lower-cased concepts
   if (! $firstword) {
     ($firstword,$tailwords) = firstword_split($concept); 
@@ -94,8 +95,8 @@ sub add_concept_by {
     print STDERR "Error: No firstword for $concept at $link!\n\n";
     return;
   }
-  my $sth = $db->prepare("insert into concepts (firstword, tailwords, category, objectid, domain, link) values (?, ?, ?, ?, ?, ?)");
-  $sth->execute($firstword, $tailwords, $category, $objectid, $domain, $link);
+  my $sth = $db->prepare("insert into concepts (firstword, tailwords, category, scheme, objectid, domain, link) values (?, ?, ?, ?, ?, ?, ?)");
+  $sth->execute($firstword, $tailwords, $category, $scheme, $objectid, $domain, $link);
   $sth->finish();
 }
 

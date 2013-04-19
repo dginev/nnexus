@@ -38,13 +38,15 @@ sub index_page {
   my ($self) = @_;
   my $url = $self->current_url;
   my $dom = $self->current_dom;
+  sleep 2; # Let's not get banned
   return [] if $url =~ $category_test;
 
   my ($concept) = map {/([^\(]+)/; lc(rtrim($1));} $dom->find('span[dir="auto"]')->pluck('all_text')->each;
   my @synonyms = grep {$_ ne $concept} map {lc $_} $dom->find('p')->[0]->find('b')->pluck('all_text')->each;
-  my $categories = $self->current_categories || ['00-XX'];
+  my $categories = $self->current_categories || ['XX-XX'];
   return [{ url => $url,
 	 concept => $concept,
+   scheme => 'wiki',
 	 categories => $categories,
 	 @synonyms ? (synonyms => \@synonyms) : ()
    }];
@@ -53,7 +55,7 @@ sub index_page {
 sub candidate_categories {
 	my ($self) = @_;
 	if ($self->current_url =~ /\/wiki\/Category:(.+)$/ ) {
-		return ["wiki:$1"];
+		return [$1];
 	} else {
 		return $self->current_categories;
 	}

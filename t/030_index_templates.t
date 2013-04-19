@@ -31,8 +31,9 @@ is_deeply($concepts, [{
                                       'integration',
                                       'definite integral'
                                      ],
+                       'scheme' => 'wiki',
                        'url' => 't/pages/Integral.html',
-                       'categories' => [ '00-XX' ],
+                       'categories' => [ 'XX-XX' ],
                        'concept' => 'integral'
                       }],
           'Wikipedia Index Template - operational');
