@@ -176,8 +176,9 @@ sub mine_candidates_text {
   my @matches;
   my %termlist = ();
   my $offset=0;
-  # Skip to 3+ letter words
-  while ($body=~s/^(.*?)(\w(\w|[\-\+\'])+)//) {
+  # Read one (2+ letter) word at a time
+  my $concept_word_rex = $NNexus::Morphology::concept_word_rex;
+  while ($body =~ s/^(.*?)($concept_word_rex)//) {
     $offset += length($1);
     my $offset_begin = $offset;
     $offset += length($2);
@@ -205,7 +206,6 @@ sub mine_candidates_text {
     next unless @candidates; # if there are no candidates skip the word
     # Split tailwords into an array
     foreach my $c(@candidates) {
-      $c->{concept} = $c->{firstword}." ".$c->{tailwords};
       $c->{tailwords} = [split(/\s+/,$c->{tailwords}||'')];
     }
     my $inter_offset = 0;
@@ -218,7 +218,7 @@ sub mine_candidates_text {
     @candidates = grep {@{$_->{tailwords}} > 0} @candidates;
     while (@candidates) {
       #  - AND there are leftover words in current phrase
-      if ($inter_body =~ /^(\s*)(\w(\w|[\-\+\'])+)/) {
+      if ($inter_body =~ /^(\s*)($concept_word_rex)/) {
         # then: pull and compare next word, reduce text and tailwords
         # 1. Pull next.
         my $step_offset = length($1) + length($2);

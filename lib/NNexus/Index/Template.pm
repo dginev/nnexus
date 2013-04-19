@@ -5,7 +5,7 @@ use strict;
 use NNexus::Util qw(url_canonical);
 use Mojo::DOM;
 use Mojo::UserAgent;
-use Data::Dumper;
+use Time::HiRes qw(sleep);
 
 ### EXTERNAL API
 sub new {
@@ -58,7 +58,7 @@ sub index_step {
     delete $options{dom};
   } else {
     $self->current_dom($self->ua->get($current_url)->res->dom);
-    sleep 1; # Don't overload the server
+    sleep(0.5); # Don't overload the server
   }
   # Obtain the indexer payload
   my $payload = $self->index_page;

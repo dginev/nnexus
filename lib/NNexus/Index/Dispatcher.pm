@@ -2,8 +2,9 @@ package NNexus::Index::Dispatcher;
 use NNexus::Util;
 use warnings;
 use strict;
-
+use Data::Dumper;
 use NNexus::Concepts qw(flatten_concept_harvest diff_concept_harvests);
+use NNexus::Morphology qw(admissible_name);
 
 # Dispatch to the right NNexus::Index::Domain class
 sub new {
@@ -54,8 +55,10 @@ sub index_step {
     # 2.2. Otherwise, grab all concepts defined by the object.
     $old_concepts = $db->select_concepts_by(objectid=>$objectid);
   }
-  # 3.0. Flatten out incoming synonyms and categories to individual concepts:
+  # 3.0.1 Flatten out incoming synonyms and categories to individual concepts:
   my $new_concepts = flatten_concept_harvest($indexed_concepts);
+  # 3.0.2 Make sure they're admissible names;
+  @$new_concepts = grep {admissible_name($_->{concept})} @$new_concepts;
   if ($verbosity > 0) {
     print STDERR "FlatConcepts: ".scalar(@$new_concepts)."|URL: $url\n";
   }

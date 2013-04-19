@@ -12,7 +12,7 @@ sub candidate_links {
   my $dom = $self->current_dom;
   # We only care about /idx and /not pages (index and notations)
   my @next_jobs = $dom->find('a')->each;
-  @next_jobs = map {s/^(.+)\.\///; $self->domain_base . $_; } grep {/\.\/(idx|not)/} map { $_->{href}} @next_jobs;
+  @next_jobs = map {s/^(.+)\.\///; $self->domain_base . $_; } grep {/\.\/(idx|not)(\/\w?)?$/} map { $_->{href}} @next_jobs;
   \@next_jobs;
 }
 
@@ -27,7 +27,7 @@ sub index_page {
     # DLMF Index page
     my $def_spans = $dom->find('span[class="text bold"]');
     @def_links = map {s/^(.+)\.\///; $self->domain_base . $_; } map {$_->{href}} $def_spans->pluck('a')->each;
-    @def_names = map {$_->content_xml} $def_spans->pluck('parent')->pluck('previous')->each;
+    @def_names = map {$_->content_xml} grep {defined} $def_spans->pluck('parent')->pluck('previous')->each;
     print "Names: ",scalar(@def_names)," Links: ",scalar(@def_links),"\n";
   } elsif ($url =~ /\/not/) {
     my $def_anchors = $dom->find('a[class="ref"]');

@@ -25,7 +25,9 @@ use warnings;
 use Encode qw{is_utf8};
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(is_possessive is_plural get_nonpossessive get_possessive depluralize_word depluralize_phrase root pluralize);
+our @EXPORT_OK = qw(is_possessive is_plural get_nonpossessive get_possessive
+  depluralize_word depluralize_phrase root pluralize 
+  admissible_name firstword_split);
 
 use utf8;
 use feature qw(switch);
@@ -140,7 +142,16 @@ sub root {
   }
 }
 
-
+# IV. Admissible concept words
+our $concept_word_rex = qr/\w(?:\w|[\-\+\'])+/;
+our $concept_phrase_rex = qr/$concept_word_rex(?:\s+$concept_word_rex)*/;
+sub admissible_name {$_[0]=~/^$concept_phrase_rex$/; }
+sub firstword_split {
+  my ($concept)=@_;
+  if ($concept=~/^($concept_word_rex)\s?(.*)$/) { # Grab first word if not provided
+    return ($1,$2);
+  }
+  return; }
 
 1;
 __END__

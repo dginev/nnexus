@@ -20,6 +20,7 @@ use strict;
 use warnings;
 use feature 'switch';
 use DBI;
+use NNexus::Morphology qw(firstword_split);
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(add_object_by select_object_by select_concepts_by last_inserted_id
@@ -59,6 +60,7 @@ sub select_concepts_by {
   $sth->execute($objectid);
   my $concepts = [];
   while (my $row = $sth->fetchrow_hashref()) {
+    $row->{concept} = $row->{firstword}.($row->{tailwords} ? " ".$row->{tailwords} : '');
     push @$concepts, $row;
   }
   $sth->finish();
@@ -68,17 +70,14 @@ sub select_concepts_by {
 sub delete_concept_by {
   my ($db, %options) = @_;
   my ($firstword, $tailwords, $concept, $category, $objectid) = map {$options{$_}} qw(firstword tailwords concept category objectid);
-  if ($concept) {
-      $concept=~s/^(\w(\w|[\-\+\'])*)(\s|$)//;
-      $firstword = $1;
-      $tailwords = $concept;
-      undef $concept;
+  if ($concept && (!$firstword)) {
+      ($firstword,$tailwords) = firstword_split($concept);
   }
   return unless $firstword && $tailwords && $category && $objectid; # Mandatory fields. TODO: Raise error?
   $firstword = lc($firstword); # We only record lower-cased concepts, avoid oversights
   $tailwords = lc($tailwords); # ditto
-  my $sth = $db->prepare("delete * from concepts where (firstword = ? AND tailwords = ? AND category = ? AND objectid = ?)");
-  $sth->execute($firstword,$concept,$category,$objectid);
+  my $sth = $db->prepare("delete from concepts where (firstword = ? AND tailwords = ? AND category = ? AND objectid = ?)");
+  $sth->execute($firstword,$tailwords,$category,$objectid);
   $sth->finish();
 }
 
@@ -88,13 +87,12 @@ sub add_concept_by {
     map {$options{$_}} qw(concept category objectid domain link firstword tailwords);
   return unless $concept && $category && $objectid && $link && $domain; # Mandatory fields. TODO: Raise error?
   $concept = lc($concept); # Only record lower-cased concepts
-  if ((! $firstword) && $concept=~s/^(\w(\w|[\-\+\'])*)(\s|$)//) { # Grab first word if not provided
-    $firstword = $1;
-    $tailwords = $concept;
-    if (! $firstword) {
-      print STDERR "Error: No firstword for $concept at $link!\n\n";
-      return;
-    }
+  if (! $firstword) {
+    ($firstword,$tailwords) = firstword_split($concept); 
+  } 
+  if (! $firstword) {
+    print STDERR "Error: No firstword for $concept at $link!\n\n";
+    return;
   }
   my $sth = $db->prepare("insert into concepts (firstword, tailwords, category, objectid, domain, link) values (?, ?, ?, ?, ?, ?)");
   $sth->execute($firstword, $tailwords, $category, $objectid, $domain, $link);
@@ -111,6 +109,7 @@ sub select_firstword_matches {
      domain, link, objectid from concepts where firstword=?");
   $sth->execute($word);
   while ( my $row = $sth->fetchrow_hashref() ) {
+    $row->{concept} = $row->{firstword}.($row->{tailwords} ? " ".$row->{tailwords} : '');
     push @matches, $row;
   }
   $sth->finish();
