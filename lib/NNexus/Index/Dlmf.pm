@@ -13,7 +13,7 @@ sub candidate_links {
   my $dom = $self->current_dom;
   # We only care about /idx and /not pages (index and notations)
   my @next_jobs = $dom->find('a')->each;
-  @next_jobs = map {s/^(.+)\.\///; $self->domain_base . $_; } grep {/\.\/(idx)(\/\w?)?$/} map { $_->{href}} @next_jobs;
+  @next_jobs = map {s/^(.+)\.\///; $self->domain_base . $_; } grep {/\.\/(idx|not)(\/\w?)?$/} map { $_->{href}} @next_jobs;
   \@next_jobs;
 }
 
@@ -26,11 +26,15 @@ sub index_page {
   my (@def_links,@def_names);
   if ($url =~ /\/idx/) {
     # DLMF Index page
-    my $def_spans = $dom->find('span[class="text bold"]');
+    my $def_spans = $dom->find('div > ul > li > span > span[class="text bold"]');
     @def_links = map {s/^(.+)\.\///; $self->domain_base . $_; } map {$_->{href}} $def_spans->pluck('a')->each;
-    @def_names = map {my $t = $_->text; $t =~ s/\(.+\)//g; $t =~ s/\s\s+/ /g; $t;} grep {defined} $def_spans->pluck('parent')->pluck('previous')->each;
-    print "Names: ",Dumper(@def_names)," Links: ",Dumper(@def_links),"\n";
-  } elsif ($url =~ /\/not/) {return[];#temporary
+    @def_names = map {
+        my $t = $_->children->first->content_xml;
+       $t =~ s/\(.+\)//g;
+       $t =~ s/\:(.*)$//;
+       $t;}
+        $def_spans->pluck('parent')->pluck('parent')->each;
+  } elsif ($url =~ /\/not/) {
     my $def_anchors = $dom->find('a[class="ref"]');
     @def_links = map {s/^(.+)\.\///; $self->domain_base . $_; } map {$_->{href}} $def_anchors->each;
     @def_names = $def_anchors->pluck('parent')->pluck('content_xml')->each;
