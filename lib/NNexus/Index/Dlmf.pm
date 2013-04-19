@@ -2,6 +2,7 @@ package NNexus::Index::Dlmf;
 use warnings;
 use strict;
 use base qw(NNexus::Index::Template);
+
 sub domain_root { "http://dlmf.nist.gov" }
 sub domain_base { "http://dlmf.nist.gov/" }
 sub depth_limit { 100 }

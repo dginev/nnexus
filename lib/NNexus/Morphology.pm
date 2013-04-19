@@ -151,7 +151,7 @@ our $concept_phrase_rex = qr/$concept_word_rex(?:\s+$concept_word_rex)*/;
 sub admissible_name {$_[0]=~/^$concept_phrase_rex$/; }
 sub normalize_concept {
   my ($concept)=@_;
-  return depluralize_word(get_nonpossessive(lc(unidecode($concept))));
+  return depluralize_word(get_nonpossessive(lc(unidecode($concept)))); 
 }
 sub firstword_split {
   my ($concept)=@_;
