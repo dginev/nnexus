@@ -38,11 +38,11 @@ lib
        |- DLMF.pm
    |- Concepts.pm
    |- Morphology.pm
+   |- Discover.pm
+   |- Annotate.pm
   ...
    // In progress:
    |
-   |- Discover.pm
-   |- Annotate.pm
    |- Classification.pm
    |- Crossref.pm
    |- Domain.pm
@@ -56,7 +56,7 @@ The classes under the ... separator are yet to undergo more than a shallow refac
  The only configuration really needed by the NNexus application is a specified access to an SQL backend.
  
  All NNexus initialization is automatic, with the exception of indexing which is always performed on demand and can currently only be triggered by a request to the Web service.
- Soon there will also be an admin interface that makes the indexing (and other) requests more user-friendly.
+ If there is demand, there might also be an admin interface that makes the indexing (and other) requests more user-friendly.
  
 ### Turn-key Web Service
  The main ```bin/nnexus``` executable is a ```Mojolicious::Lite``` web service, that is easily deployable independently,
@@ -70,6 +70,15 @@ The classes under the ... separator are yet to undergo more than a shallow refac
  
  Each job is a ```NNexus::Job``` object, which flexibly supports all flavours of NNexus operations - on demand (re-)indexing,
  auto-linking (in turn concept-discovery and annotation). 
+ 
+### NNexus Scripting
+
+As NNexus is now a well-packaged Perl library (and expects a CPAN release) you can use NNexus in Perl applications
+and script one-liners. For example, given a file path to a SQLite snapshot of the NNexus Index you could directly
+auto-link your files from the command-line, e.g.
+```
+perl -MNNexus -e '#TODO: Add example invocation here, prepare a test file ';
+```
  
 ### Persistence and Provenance
  Deserving no more than a passing note, the NNexus knowledge base can be stored in any SQL backend that is supported by Perl's ```DBI``` library.
