@@ -9,33 +9,31 @@ You can check out the [Manual](MANUAL.md) draft, for a technical overview of the
 
 ## Setting up the server
 
-You need Mojolicious and several other standard perl
-modules, which can be installed via your OS package manager or CPAN.
+Standard Perl installation from source:
+```
+perl Makefile.PL ; make ; make test
+```
+**NOTE:** Running perl over Makefile.PL will warn you of any missing packages you need to install, 
+either via CPAN or your OS package manager.
 
-On Debian-based systems:
+Installing prerequisites on Debian-based systems (TODO: incomplete):
 ```
 apt-get install libmojolicious-perl libxml-simple-perl \
-  libunicode-string-perl libgraph-perl libjson-perl
+  libunicode-string-perl libgraph-perl libjson-perl \
+  ...
 ```
 
 Then, in order to quickly run the server:
-
 ```
-perl Makefile.PL ; make ; make test
 morbo --listen=http://*:3001 blib/script/nnexus setup/config.json
 ```
 
 Note: While morbo is nice for development, deploying through Apache or Hypnotoad would be clearly the way to go for production use.
-Work is underway into making NNexus into a proper service that you would be able to boot via the standard
-
-```sh
-sudo service nnexus start
-```
+TODO: Add Apache deployment instructions in [the INSTALL file](INSTALL.md)
 
 ## Connecting from a client
 
-These two lines of PHP illustrate how NNexus can be used via curl:
-
+These two lines of PHP illustrate how NNexus can be used via [Planetary](https://github.com/KWARC/planetary)'s curl:
 ```php
   $data = 'function=linkentry&body=' . urlencode($text) . '&format='.$format.'&domain=planetmath';
   $content = planetary_webglue_do_post('http://127.0.0.1:3001/autolink',$data);
@@ -45,44 +43,20 @@ These two lines of PHP illustrate how NNexus can be used via curl:
 
 ## Exhaustive JSON support
 
-JSON is already the preferred representation for NNexus requests, yet the coverage of the original NNexus request types is incomplete.
-For example, sending JSON like this, as prescribed by the legaxy NNexus API:
+JSON is already the preferred representation for NNexus requests,
+yet the coverage of the original NNexus request types is incomplete.
 
-```json
-  {"function":"addobject",
-   "title":"myconcept",
-   "body":"a description or other message",
-   "objid":123,
-   "authorid":3,
-   "linkpolicy":null,
-   "classes":"11-XX",
-   "synonyms":"ourconcept, theirconcept",
-   "defines":"others",
-   "batchmode":null}
-```
-
-will add the document foo to the repository.  The terms
-"myconcept", "ourcocnept", and "theirconcept" will then be
-autolinked in the future, if you send in JSON like this:
-
+Auto-linking example:
 ```json
   {"function":"linkentry",
    "body":"Some text using myconcept, ourconcept or theirconcept",
    "format":"xhtml",
+   "embed":1,
    "nolink":null}
 ```
 
-The exact legacy API is as follows:
- There are plans to revisit and polish the API in the future, so keep an open eye on this space.
- 
-```perl
-  linkentry        : $objid $text $format $nolink
-  addobject        : $objid $title $body $authorid $linkpolicy $classes $synonyms $defines $batchmode
-  updateobject     : $objid [ $title $body $authorid $linkpolicy $classes $synonyms $defines $batchmode ]
-  updatelinkpolicy : $objid $linkpolicy
-  deleteobject     : $objid
-  checkvalid       : $objid
-```
+The NNexus legacy API is being redesigned at the moment, into a simple pair of indexing and linking workflows.
+TODO: Describe the new API when finalized.
 
 # Status
 
@@ -90,6 +64,7 @@ This is a fork and rewrite of the original NNexus code by James Gardner (pebbler
 The current refactoring is pre-alpha and is under active development. Watch this space for frequent updates.
 
 The scheduled release for the "NNexus Reloaded" milestone is June 2013.
+The release will target introducing a new CPAN library and production deployment at [PlanetMath.org](http://www.planetmath.org)
 
 # Contact
 
