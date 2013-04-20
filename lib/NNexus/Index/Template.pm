@@ -68,7 +68,8 @@ sub index_step {
   if ($depth <= $self->depth_limit) { # Don't add pointless nodes
     my $candidate_links = $self->candidate_links;
     foreach (@$candidate_links) {
-      unshift (@{$self->{queue}}, {
+      # push and shift give us breadth-first search.
+      push (@{$self->{queue}}, {
         url=>$_,
         categories=>$categories,
         depth=>$depth+1});

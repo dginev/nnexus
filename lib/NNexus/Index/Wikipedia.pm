@@ -3,6 +3,7 @@ use warnings;
 use strict;
 use base qw(NNexus::Index::Template);
 use feature 'say';
+use Data::Dumper;
 use List::MoreUtils qw(uniq);
 
 # EN.Wikipedia.org indexing template
@@ -26,7 +27,7 @@ sub candidate_links {
 
   # Also add terminal links:
   my $concepts = $dom->find('#mw-pages')->[0];
-  my @concept_links = $concepts->find('a')->each;
+  my @concept_links = $concepts->find('a')->each if defined $concepts;
   @concept_links = grep {defined && /$english_concept_test/} map {$_->{href}} @concept_links;
 
   my $candidates = [ map {$wiki_base . $_ } (@category_links, @concept_links) ];
@@ -42,7 +43,9 @@ sub index_page {
   return [] if $url =~ $category_test;
 
   my ($concept) = map {/([^\(]+)/; lc(rtrim($1));} $dom->find('span[dir="auto"]')->pluck('all_text')->each;
-  my @synonyms = grep {$_ ne $concept} map {lc $_} $dom->find('p')->[0]->find('b')->pluck('all_text')->each;
+  my @synonyms;
+  my $first_p = $dom->find('p')->[0];
+  @synonyms = (grep {$_ ne $concept} map {lc $_} $first_p->find('b')->pluck('all_text')->each) if $first_p;
   my $categories = $self->current_categories || ['XX-XX'];
   return [{ url => $url,
 	 concept => $concept,
