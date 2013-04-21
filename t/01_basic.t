@@ -9,7 +9,6 @@ my $eval_return = eval {
   use NNexus::Index::Dispatcher;
   use NNexus::Concepts;
   use NNexus::DB;
-  use NNexus::Util;
   1;
 };
 

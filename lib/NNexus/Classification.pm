@@ -20,7 +20,6 @@ use strict;
 use warnings;
 
 use Graph;
-use NNexus::Util;
 
 sub new {
   my ($class,%options) = @_;

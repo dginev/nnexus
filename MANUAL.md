@@ -28,7 +28,6 @@ lib
    |- DB
        |- API.pm
    |- Config.pm
-   |- Util.pm
    |- Index
        |- Dispatcher.pm
        |- Template.pm
@@ -44,7 +43,6 @@ lib
    // In progress:
    |
    |- Classification.pm
-   |- Crossref.pm
    |- Domain.pm
    |- LinkPolicy.pm
 ```

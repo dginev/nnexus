@@ -1,5 +1,4 @@
 package NNexus::Index::Dispatcher;
-use NNexus::Util;
 use warnings;
 use strict;
 use Data::Dumper;
