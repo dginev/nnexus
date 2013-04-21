@@ -62,6 +62,7 @@ sub index_page {
 }
 
 sub depth_limit {10000;} #We're just traversing down the list of pages, nothing dangerous here
+sub request_interval {0.5;}
 
 1;
 __END__

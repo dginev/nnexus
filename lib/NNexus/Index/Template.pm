@@ -58,7 +58,7 @@ sub index_step {
     delete $options{dom};
   } else {
     $self->current_dom($self->ua->get($current_url)->res->dom);
-    sleep(0.5); # Don't overload the server
+    sleep(request_interval()); # Don't overload the server
   }
   # Obtain the indexer payload
   my $payload = $self->index_page;
@@ -90,6 +90,7 @@ sub candidate_links {
 	# TODO: Generic implementation should simply retrieve ALL <a href>s as candidate links.
 }
 sub candidate_categories {}
+sub request_interval { 2.5; }
 
 ### SHARED METHODS
 # To be directly inherited and used by concrete classes
