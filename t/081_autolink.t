@@ -9,7 +9,7 @@ use NNexus::Job;
 use NNexus::Config;
 
 # However, we really want our own test setup:
-my $tmphandle = File::Temp->new( TEMPLATE => 'nnexusXXXXX',SUFFIX => '.db');
+my $tmphandle = File::Temp->new( TEMPLATE => 'nnexusXXXXX',SUFFIX => '.db', TMPDIR => 1);
 my $options = {
   "database" => {
     "dbms" => "SQLite",

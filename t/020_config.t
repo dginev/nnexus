@@ -13,7 +13,7 @@ ok($opts, 'Default configuration setup/config.json loads fine.');
 
 # However, we really want our own test setup:
 my $tmphandle = File::Temp->new( TEMPLATE => 'nnexusXXXXX',
-                       SUFFIX => '.db');
+                  TMPDIR => 1, SUFFIX => '.db');
 $opts = {
   "database" => {
     "dbms" => "SQLite",

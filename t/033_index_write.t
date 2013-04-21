@@ -20,7 +20,7 @@ sub local_dom {
 # Test DB setup:
 # However, we really want our own test setup:
 my $tmphandle = File::Temp->new( TEMPLATE => 'nnexusXXXXX',
-                       SUFFIX => '.db');
+                  TMPDIR => 1,SUFFIX => '.db');
 my $opts = {
   "database" => {
     "dbms" => "SQLite",
