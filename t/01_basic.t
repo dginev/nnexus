@@ -7,8 +7,14 @@ my $eval_return = eval {
   use NNexus::Config;
   use NNexus::Job;
   use NNexus::Index::Dispatcher;
+  use NNexus::Index::Template;
   use NNexus::Concepts;
   use NNexus::DB;
+  use NNexus::Discover;
+  use NNexus::Annotate;
+  use NNexus::Morphology;
+  use NNexus::Classification;
+  use NNexus;
   1;
 };
 

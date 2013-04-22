@@ -29,7 +29,6 @@ use Time::HiRes qw ( time alarm sleep );
 
 use NNexus::Morphology qw(normalize_concept);
 use NNexus::Linkpolicy qw (post_resolve_linkpolicy);
-use NNexus::Domain qw(get_domain_blacklist get_domain_priorities get_domain_hash get_domain_id);
 
 use Storable qw(dclone);
 use Lingua::EN::StopWordList;
