@@ -1,3 +1,19 @@
+# /=====================================================================\ #
+# |  NNexus Autolinker                                                  | #
+# | Template for Indexing Plug-ins, PULL API                            | #
+# |=====================================================================| #
+# | Part of the Planetary project: http://trac.mathweb.org/planetary    | #
+# |  Research software, produced as part of work done by:               | #
+# |  the KWARC group at Jacobs University                               | #
+# | Copyright (c) 2012                                                  | #
+# | Released under the MIT License (MIT)                                | #
+# |---------------------------------------------------------------------| #
+# | Adapted from the original NNexus code by                            | #
+# |                                  James Gardner and Aaron Krowne     | #
+# |---------------------------------------------------------------------| #
+# | Deyan Ginev <d.ginev@jacobs-university.de>                  #_#     | #
+# | http://kwarc.info/people/dginev                            (o o)    | #
+# \=========================================================ooo==U==ooo=/ #
 package NNexus::Index::Template;
 use warnings;
 use strict;
@@ -265,6 +281,6 @@ Deyan Ginev <d.ginev@jacobs-university.de>
 
 Research software, produced as part of work done by
 the KWARC group at Jacobs University Bremen.
-Released under the GNU Public License
+Released under the MIT license (MIT)
 
 =cut

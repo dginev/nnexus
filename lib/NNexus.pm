@@ -6,7 +6,7 @@
 # |  Research software, produced as part of work done by:               | #
 # |  the KWARC group at Jacobs University                               | #
 # | Copyright (c) 2012                                                  | #
-# | Released under the GNU Public License                               | #
+# | Released under the MIT License (MIT)                                | #
 # |---------------------------------------------------------------------| #
 # | Adapted from the original NNexus code by                            | #
 # |                                  James Gardner and Aaron Krowne     | #
@@ -27,3 +27,6 @@ use NNexus::Job;
 
 # TODO: Use a snapshot by default
 sub linkentry {return shift;} # Mockup
+
+1;
+__END__

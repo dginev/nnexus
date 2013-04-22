@@ -1,3 +1,20 @@
+# /=====================================================================\ #
+# | NNexus Autolinker                                                   | #
+# | Indexing Driver,                                                    | #
+# |   Dispatcher for Crawl, Store, Invalidation tasks                   | #
+# |=====================================================================| #
+# | Part of the Planetary project: http://trac.mathweb.org/planetary    | #
+# |  Research software, produced as part of work done by:               | #
+# |  the KWARC group at Jacobs University                               | #
+# | Copyright (c) 2012                                                  | #
+# | Released under the MIT License (MIT)                                | #
+# |---------------------------------------------------------------------| #
+# | Adapted from the original NNexus code by                            | #
+# |                                  James Gardner and Aaron Krowne     | #
+# |---------------------------------------------------------------------| #
+# | Deyan Ginev <d.ginev@jacobs-university.de>                  #_#     | #
+# | http://kwarc.info/people/dginev                            (o o)    | #
+# \=========================================================ooo==U==ooo=/ #
 package NNexus::Index::Dispatcher;
 use warnings;
 use strict;
@@ -62,7 +79,6 @@ sub index_step {
     print STDERR "FlatConcepts: ".scalar(@$new_concepts)."|URL: $url\n";
     print STDERR Dumper($new_concepts);
   }
-  use Data::Dumper;
   # 3.1 Compute diff between previous and new concepts
   my ($delete_concepts,$add_concepts) = diff_concept_harvests($old_concepts,$new_concepts);
   # 4. Delete no longer present concepts
@@ -98,22 +114,41 @@ C<NNexus::Index::Dispatcher> - High-level dispatcher to the correct domain index
 =head1 SYNOPSIS
 
 use NNexus::Index::Dispatcher;
-my $indexer = NNexus::Index::Dispatcher->new($domain);
+my $dispatcher = NNexus::Index::Dispatcher->new(db=>$db,domain=>$domain,verbosity=>0|1);
+my $invalidated_URLs = $dispatcher->index_step(%options);
+while (my $payload = $dispatcher->index_step ) {
+   push @$invalidated_URLs, @{$payload};
+}
 
 =head1 DESCRIPTION
 
-Simple interface to obtaining the correct indexer class for a given domain.
+The NNexus::Dispatcher class provides a comprehensive high-level API for indexing
+ web domains.
 
-TODO: The intention is to also extend the capabilities of the dispatcher to auto-detect and report on
-  the available domain indexers and their properties (Meta-object Programming (MOP)).
+It requires that each $domain has its own C<NNexus::Index::$domain> indexer plug-in,
+ that follows a ucfirst(lc($domain)) naming convention.
+
+Additionally, C<NNexus::Index::Dispatcher> computes the concept diffs when re-indexing,
+an already visited page and updates the database as needed. Lastly, the return value
+of an indexing step is a list of suggested URLs to be relinked, a process called
+"invalidation" in previous NNexus releases.
 
 =head2 METHODS
 
 =over 4
 
-=item C<< my $indexer = NNexus::Index::Dispatcher->new($domain); >>
+=item C<< my $dispatcher = NNexus::Index::Dispatcher->new(domain=>$domain,db=>$db,$verbosity=>0|1); >>
 
-Returns an object of NNexus::Index::ucfirst(lc($domain)) if available, or the generic Template object otherwise.
+The object constructor prepares a domain crawler object
+ ( NNexus::Index::ucfirst(lc($domain)) )
+and requires a NNexus::DB object, $db, for database interactions.
+
+The returned dispatcher object can be used to iteratively index the domain,
+via the index_step method.
+
+=item C<< my $invalidated_URLs = $dispatcher->index_step(%options); >>
+
+TODO: Continue
 
 =back
 
@@ -125,6 +160,6 @@ Deyan Ginev <d.ginev@jacobs-university.de>
 
 Research software, produced as part of work done by
 the KWARC group at Jacobs University Bremen.
-Released under the GNU Public License
+Released under the The MIT License (MIT)
 
 =cut

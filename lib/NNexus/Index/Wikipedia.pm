@@ -95,6 +95,6 @@ Deyan Ginev <d.ginev@jacobs-university.de>
 
 Research software, produced as part of work done by
 the KWARC group at Jacobs University Bremen.
-Released under the GNU Public License
+Released under the MIT License (MIT)
 
 =cut
