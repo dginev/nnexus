@@ -24,8 +24,9 @@ use NNexus::Morphology qw(firstword_split);
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(add_object_by select_object_by select_concepts_by last_inserted_id
-               add_concept_by delete_concept_by invalidate_by reset_db
-	       select_firstword_matches clear_linkscache_by add_linkscache_by);
+         add_concept_by delete_concept_by invalidate_by reset_db
+	       select_firstword_matches
+         select_linkscache_by clear_linkscache_by add_linkscache_by);
 
 ### API for Table: Object
 
@@ -41,10 +42,15 @@ sub add_object_by {
 
 sub select_object_by {
   my ($db,%options) = @_;
-  my $url = $options{url};
-  return unless $url;
-  my $sth = $db->prepare("select objectid, domain from objects where (url = ?)");
-  $sth->execute($url);
+  my ($url,$objectid) = map {$options{$_}} qw/url objectid/;
+  my $sth;
+  if ($url) {
+    $sth = $db->prepare("select objectid, domain from objects where (url = ?)");
+    $sth->execute($url); }
+  elsif ($objectid) {
+    $sth = $db->prepare("select url from objects where (objectid = ?)");
+    $sth->execute($objectid); }
+
   my $object = $sth->fetchrow_hashref;
   $sth->finish();
   return $object;
@@ -54,16 +60,28 @@ sub select_object_by {
 
 sub select_concepts_by {
   my ($db,%options) = @_;
-  my $objectid = $options{objectid};
-  return unless $objectid;
-  my $sth = $db->prepare("select * from concepts where (objectid = ?)");
-  $sth->execute($objectid);
+  my ($concept,$category,$scheme,$objectid,$firstword,$tailwords) = 
+    map {$options{$_}} qw/concept category scheme objectid firstword tailwords/;
+  if ($concept && (!$firstword)) {
+      ($firstword,$tailwords) = firstword_split($concept);
+  }
   my $concepts = [];
+  my $sth;
+  if ($firstword && $tailwords && $category && $scheme && $objectid) {
+    # Selector for invalidation
+    $sth = $db->prepare("select * from concepts where (objectid = ? AND firstword = ? AND tailwords = ? AND scheme = ? AND category = ? )");
+    $sth->execute($objectid,$firstword,$tailwords,$scheme,$category);
+  } elsif ($objectid) {
+    $sth = $db->prepare("select * from concepts where (objectid = ?)");
+    $sth->execute($objectid);
+  } else { return []; } # Garbage in - garbage out. TODO: Error message?
+
   while (my $row = $sth->fetchrow_hashref()) {
     $row->{concept} = $row->{firstword}.($row->{tailwords} ? " ".$row->{tailwords} : '');
     push @$concepts, $row;
   }
   $sth->finish();
+  
   return $concepts;
 }
 
@@ -98,6 +116,7 @@ sub add_concept_by {
   my $sth = $db->prepare("insert into concepts (firstword, tailwords, category, scheme, objectid, domain, link) values (?, ?, ?, ?, ?, ?, ?)");
   $sth->execute($firstword, $tailwords, $category, $scheme, $objectid, $domain, $link);
   $sth->finish();
+  return last_inserted_id($db);
 }
 
 # get the possible matches based on the first word of a concept
@@ -116,11 +135,6 @@ sub select_firstword_matches {
   $sth->finish();
   return @matches;
 }
-
-### API for Table: Invalidate *
-# TODO:
-
-sub invalidate_by{();}
 
 ### API for Table: Links_cache
 
@@ -143,6 +157,36 @@ sub add_linkscache_by{
   $sth->finish();
 }
 
+sub select_linkscache_by {
+  my ($db,%options)=@_;
+  my $conceptid = $options{conceptid};
+  my $objectid = $options{objectid};
+  my $sth;
+  if ($conceptid) {
+    $sth = $db->prepare("SELECT objectid from links_cache WHERE conceptid=?");
+    $sth->execute($conceptid); }
+  elsif ($objectid) {
+    $sth = $db->prepare("SELECT conceptid from links_cache WHERE objectid=?");
+    $sth->execute($objectid); }
+  else {return []; }
+  my $results = [];
+  while (my @row = $sth->fetchrow_array()) {
+    push @$results, @row;
+  }
+  $sth->finish();
+  return $results;
+}
+
+# Alias, more semantic
+sub invalidate_by { 
+  my ($db,%options)=@_;
+  my $objectids = $db->select_linkscache_by(%options); 
+  my @urls = ();
+  foreach my $objectid(@$objectids) {
+    push @urls, $db->select_object_by(objectid=>$objectid)->{url};
+  }
+  return @urls; }
+
 ### Generic DB API
 
 sub last_inserted_id {
@@ -161,7 +205,6 @@ sub last_inserted_id {
 }
 
 ### API for Initializing a SQLite Database:
-use Data::Dumper;
 sub reset_db {
 my ($self) = @_;
 $self = $self->safe; # unsafe but faster...
@@ -278,9 +321,10 @@ This class provides API methods for specific SQL queries commonly needed by NNex
 
 Adds a new object, identified by a URL and, for convenience, a domain.
 
-=item C<< $db->select_objectid_by_url($url); >>
+=item C<< $db->select_object_by(url=>$url); >>
 
-Retrieve the internal objectid of an object, identified by its URL.
+Retrieve the DB row of an object, identified by its URL.
+Returns a Perl hashref, each key being a DB column name.
 
 =back
 
