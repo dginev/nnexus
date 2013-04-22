@@ -12,11 +12,10 @@ use NNexus::Job;
 use NNexus::DB;
 use Data::Dumper;
 use Mojo::DOM;
-use File::Temp;
 my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 my $date = $mday.'-'.($mon+1).'-'.(1900+$year);
 my $dbname = "index-snapshot-$date.db";
-unlink $dbname if (-e $dbname);
+#unlink $dbname if (-e $dbname);
 my $options = {
   "database" => {
     "dbms" => "SQLite",
@@ -30,7 +29,7 @@ my $options = {
 my $db = NNexus::DB->new(%{$options->{database}});
 
 # 2. Index all sites, showing intermediate progress
-foreach my $domain(qw/Planetmath Dlmf Wikipedia Mathworld/) {
+foreach my $domain(qw/Wikipedia Planetmath Dlmf Mathworld/) {
   my $index_job = NNexus::Job->new(function=>'index',verbosity=>1,
 				   url=>'default',domain=>$domain,db=>$db);
   $index_job->execute;
@@ -39,5 +38,5 @@ foreach my $domain(qw/Planetmath Dlmf Wikipedia Mathworld/) {
 }
 
 # 3. Create DB Dump
-
+# TODO
 # Done!

@@ -1,8 +1,6 @@
 use strict;
 use warnings;
 
-
-use File::Temp;
 use NNexus::Config;
 use NNexus::Index::Dispatcher;
 use Mojo::DOM;
@@ -10,11 +8,10 @@ use Mojo::DOM;
 use Test::More tests => 3;
 
 # Prepare a DB object:
-my $tmphandle = File::Temp->new( TEMPLATE => 'nnexusXXXXX',SUFFIX => '.db', TMPDIR => 1);
 my $options = {
   "database" => {
     "dbms" => "SQLite",
-    "dbname" => $tmphandle->filename,
+    "dbname" => ':memory:',
     "dbuser" => "nnexus",
     "dbpass" => "nnexus",
     "dbhost" => "localhost",

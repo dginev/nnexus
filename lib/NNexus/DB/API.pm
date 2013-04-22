@@ -14,7 +14,6 @@
 # | Deyan Ginev <d.ginev@jacobs-university.de>                  #_#     | #
 # | http://kwarc.info/people/dginev                            (o o)    | #
 # \=========================================================ooo==U==ooo=/ #
-
 package NNexus::DB::API;
 use strict;
 use warnings;
@@ -103,12 +102,12 @@ sub add_concept_by {
   my ($db, %options) = @_;
   my ($concept, $category, $objectid, $domain, $link, $scheme, $firstword, $tailwords) =
     map {$options{$_}} qw(concept category objectid domain link scheme firstword tailwords);
-  return unless $concept && $category && $objectid && $link && $domain; # Mandatory fields. TODO: Raise error?
+  return unless (($firstword && $tailwords) || $concept) && $category && $objectid && $link && $domain; # Mandatory fields. TODO: Raise error?
   $scheme = 'msc' unless $scheme;
-  $concept = lc($concept); # Only record lower-cased concepts
   if (! $firstword) {
+    $concept = lc($concept); # Only record lower-cased concepts
     ($firstword,$tailwords) = firstword_split($concept); 
-  } 
+  }
   if (! $firstword) {
     print STDERR "Error: No firstword for $concept at $link!\n\n";
     return;
@@ -209,15 +208,6 @@ sub reset_db {
 my ($self) = @_;
 $self = $self->safe; # unsafe but faster...
 
-# Table structure for table categories
-$self->do("DROP TABLE IF EXISTS categories;");
-$self->do("CREATE TABLE categories (
-  categoryid integer primary key AUTOINCREMENT,
-  categoryname varchar(100) NOT NULL DEFAULT '',
-  externalid text,
-  scheme varchar(50) NOT NULL DEFAULT ''
-);");
-
 # Table structure for table object
 $self->do("DROP TABLE IF EXISTS objects;");
 $self->do("CREATE TABLE objects (
@@ -234,15 +224,6 @@ BEGIN
  UPDATE objects SET modified = CURRENT_TIMESTAMP WHERE objectid = old.objectid;
 END;");
 
-# Table structure for table links_cache
-$self->do("DROP TABLE IF EXISTS links_cache;");
-$self->do("CREATE TABLE links_cache (
-  objectid integer NOT NULL,
-  conceptid integer NOT NULL,
-  PRIMARY KEY (objectid, conceptid)
-);");
-
-
 # Table structure for table concept
 # A 'concept' has a 'firstword', belongs to a 'category' (e.g. 10-XX) with a certain 'scheme' (e.g. MSC) and is defined at a 'link', obtained while traversing an object known via 'objectid'. The concept inherits the 'domain' of the object (e.g. PlanetMath).
 # The distinction between link and objectid allows for a level of indirection, e.g. in DLMF, where we would obtain the 'link's that define concepts while at a higher (e.g. index) webpage, only which we would register in the object table. The reindexing should be driven by the traversal process, while the linking should use the actual obtained URL for the concept definition.
@@ -257,9 +238,9 @@ $self->do("CREATE TABLE concepts (
   link varchar(2053) NOT NULL,
   objectid int(11) NOT NULL
 );");
-$self->do("CREATE INDEX conceptidx ON concepts(firstword);");
 # TODO: Do we need this one?
 #$self->do("CREATE INDEX conceptidx ON concept(concept);");
+$self->do("CREATE INDEX conceptidx ON concepts(firstword);");
 $self->do("CREATE INDEX objectididx ON concepts(objectid);");
 
 # Table structure for table candidates
@@ -267,29 +248,30 @@ $self->do("DROP TABLE IF EXISTS candidates;");
 $self->do("CREATE TABLE candidates (
   candidateid integer primary key AUTOINCREMENT,
   firstword varchar(50) NOT NULL,
-  candidate varchar(255) NOT NULL,
+  tailwords varchar(255) NOT NULL,
   confidence real NOT NULL DEFAULT 0
 );");
 
-# Table structure for table domain
-$self->do("DROP TABLE IF EXISTS domains;");
-$self->do("CREATE TABLE domains (
-  domainid integer primary key AUTOINCREMENT,
-  name varchar(30) NOT NULL DEFAULT '' UNIQUE,
-  urltemplate varchar(100) DEFAULT NULL,
-  code varchar(2) DEFAULT NULL,
-  priority varchar(30) DEFAULT '',
-  nickname varchar(50) DEFAULT NULL
+# Table structure for table links_cache
+$self->do("DROP TABLE IF EXISTS links_cache;");
+$self->do("CREATE TABLE links_cache (
+  objectid integer NOT NULL,
+  conceptid integer NOT NULL,
+  PRIMARY KEY (objectid, conceptid)
 );");
+$self->do("CREATE INDEX linkscache_objectid_idx ON links_cache(objectid);");
+$self->do("CREATE INDEX linkscache_conceptid_idx ON links_cache(conceptid);");
 
-# Table structure for table ontology
-$self->do("DROP TABLE IF EXISTS ontology;");
-$self->do("CREATE TABLE ontology (
-  child varchar(100) DEFAULT NULL,
-  parent varchar(100) DEFAULT NULL,
-  weight int(11) DEFAULT NULL,
-  PRIMARY KEY (child, parent, weight)
+# Table structure for table dangling_cache
+$self->do("DROP TABLE IF EXISTS dangling_cache;");
+$self->do("CREATE TABLE dangling_cache (
+  objectid integer NOT NULL,
+  candidateid integer NOT NULL,
+  PRIMARY KEY (objectid, candidateid)
 );");
+$self->do("CREATE INDEX danglingcache_objectid_idx ON links_cache(objectid);");
+$self->do("CREATE INDEX danglingcache_concept_idx ON links_cache(conceptid);");
+
 }
 
 1;

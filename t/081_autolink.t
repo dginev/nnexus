@@ -2,18 +2,15 @@ use strict;
 use warnings;
 
 use Test::More tests => 3;
-use File::Temp;
-File::Temp->safe_level( File::Temp::HIGH );
 
 use NNexus::Job;
 use NNexus::Config;
 
 # However, we really want our own test setup:
-my $tmphandle = File::Temp->new( TEMPLATE => 'nnexusXXXXX',SUFFIX => '.db', TMPDIR => 1);
 my $options = {
   "database" => {
     "dbms" => "SQLite",
-    "dbname" => $tmphandle->filename,
+    "dbname" => ':memory:',
     "dbuser" => "nnexus",
     "dbpass" => "nnexus",
     "dbhost" => "localhost",

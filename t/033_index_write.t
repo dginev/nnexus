@@ -7,7 +7,6 @@ use NNexus::Job;
 use NNexus::DB;
 use Data::Dumper;
 use Mojo::DOM;
-use File::Temp;
 
 sub local_dom {
 	my ($path) = @_;
@@ -18,13 +17,10 @@ sub local_dom {
 }
 
 # Test DB setup:
-# However, we really want our own test setup:
-my $tmphandle = File::Temp->new( TEMPLATE => 'nnexusXXXXX',
-                  TMPDIR => 1,SUFFIX => '.db');
 my $opts = {
   "database" => {
     "dbms" => "SQLite",
-    "dbname" => $tmphandle->filename,
+    "dbname" => ':memory:',
     "dbuser" => "nnexus",
     "dbpass" => "nnexus",
     "dbhost" => "localhost"
