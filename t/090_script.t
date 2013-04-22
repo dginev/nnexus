@@ -7,6 +7,7 @@ use Test::More tests => 2;
 use NNexus;
 is_deeply(linkentry('mockup',format=>'text'),'mockup','Mockup of a text auto-link command');
 TODO: {
-	ok(1,"Once we have the snapshots in place:\n
-		  We need more meaningful tests, e.g. non-trivial HTML and stand-off");
+	local $TODO = "Once we have the snapshots in place:\n
+		  We need more meaningful tests, e.g. non-trivial HTML and stand-off";
+	ok(1,'TODO');
 }
