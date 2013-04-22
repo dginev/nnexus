@@ -23,9 +23,6 @@ our @ISA = qw(Exporter);
 our @EXPORT = qw(&read_json_file);
 use Data::Dumper;
 
-use NNexus::Concepts;
-use NNexus::Classification;
-use NNexus::Domain;
 use NNexus::DB;
 
 sub new {
@@ -37,7 +34,6 @@ sub new {
   }
   my $db = NNexus::DB->new(%{$opts->{database}});
   $opts->{db} = $db;
-  $opts->{classification} = NNexus::Classification->new(db=>$db, verbosity=>$opts->{verbosity});
 
   bless $opts, $class;
 }
