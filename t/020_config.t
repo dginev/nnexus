@@ -31,5 +31,3 @@ ok ($db->ping, 'SQLite database is operational');
 
 my $config=NNexus::Config->new($opts);
 ok ($config, 'Can initialize a new NNexus::Config object');
-
-sleep 10;
