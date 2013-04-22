@@ -3,6 +3,6 @@ use warnings;
 
 use Test::More tests => 1;
 TODO: {
-  local $TODO = "Stress test the NNexus::Morphology capabilities.";
+  local $TODO = "Test the disambiguation in NNexus::Discover.";
     ok(1,'TODO');
 }
