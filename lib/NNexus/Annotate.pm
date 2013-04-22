@@ -24,7 +24,7 @@ our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(serialize_concepts);
 
 use feature 'switch';
-use JSON::XS qw(encode_json);
+use Mojo::JSON 'j';
 use Data::Dumper;
 
 sub serialize_concepts {
@@ -57,9 +57,9 @@ sub serialize_concepts {
   } else {
     # stand-off case:
     given ($annotation) {
-      when ('json') { return encode_json($concepts); }
+      when ('json') { return j($concepts); }
       when ('perl') { return $concepts; }
-      default { return encode_json($concepts); }
+      default { return j($concepts); }
     };
   }
 }

@@ -22,7 +22,7 @@ use Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(&read_json_file);
 use Data::Dumper;
-
+use Mojo::JSON 'j';
 use NNexus::DB;
 
 sub new {
@@ -44,11 +44,10 @@ sub get_DB {
 
 sub read_json_file {
   my $file_name = shift;
-  use JSON::XS qw(decode_json);
   open my $fh, "<", $file_name or die "Error opening Configuration JSON file: $file_name!\n";
   my $string = join('',<$fh>);
   close $fh;
-  return decode_json($string);
+  return j($string);
 }
 
 1;
@@ -79,8 +78,6 @@ NOTE: A huge refactoring job is still ahead of this class...
 =item C<< my $config = NNexus::Config->new($opts); >>
 
 Initialize a new configuration object.
-Options are given via an optional XML::Simple object $opts, or in an XML syntax in "baseconf.xml" in the current directory.
-TODO: Add XML syntax docs somewhere here
 
 =back
 
