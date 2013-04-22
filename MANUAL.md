@@ -22,6 +22,7 @@ setup
        |- test.db
  |- config.json
 lib
+ |- NNexus.pm
  |- NNexus
    |- Job.pm
    |- DB.pm
