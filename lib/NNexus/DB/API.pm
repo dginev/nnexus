@@ -207,7 +207,8 @@ sub last_inserted_id {
 sub reset_db {
 my ($self) = @_;
 $self = $self->safe; # unsafe but faster...
-
+# Request a 20 MB cache size, reasonable on all modern systems:
+$self->do("PRAGMA cache_size = 20000; ");
 # Table structure for table object
 $self->do("DROP TABLE IF EXISTS objects;");
 $self->do("CREATE TABLE objects (
