@@ -62,7 +62,7 @@ sub mine_candidates {
       $objectid = $db->add_object_by(url=>$options{'url'},domain=>$domain);
     } else {
       # If already known, flush the links_cache for this object
-      $db->clear_linkscache_by(objectid=>$objectid);
+      $db->delete_linkscache_by(objectid=>$objectid);
     }
   }
   # Keep a cache of first words, that will simultaneously act as a blacklist.

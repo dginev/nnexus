@@ -18,25 +18,26 @@ package NNexus::DB::API;
 use strict;
 use warnings;
 use feature 'switch';
-use DBI;
-use NNexus::Morphology qw(firstword_split);
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(add_object_by select_object_by select_concepts_by last_inserted_id
          add_concept_by delete_concept_by invalidate_by reset_db
 	       select_firstword_matches
-         select_linkscache_by clear_linkscache_by add_linkscache_by);
+         select_linkscache_by delete_linkscache_by add_linkscache_by);
 
-### API for Table: Object
+use NNexus::Morphology qw(firstword_split);
+
+### API for Table: Objects
 
 sub add_object_by {
   my ($db,%options) = @_;
   my ($url, $domain) = map {$options{$_}} qw(url domain);
+  return unless $url && $domain;
   my $sth = $db->prepare("INSERT into objects (url, domain) values (?, ?)");
   $sth->execute($url,$domain);
   $sth->finish();
   # Return the object id in order to update the concepts and classification
-  return last_inserted_id($db);
+  return $db->last_inserted_id();
 }
 
 sub select_object_by {
@@ -137,7 +138,7 @@ sub select_firstword_matches {
 
 ### API for Table: Links_cache
 
-sub clear_linkscache_by {
+sub delete_linkscache_by {
   my ($db,%options) = @_;
   my $objectid = $options{objectid};
   return unless $objectid;
@@ -302,12 +303,43 @@ This class provides API methods for specific SQL queries commonly needed by NNex
 
 =item C<< $db->add_object_by(url=>$url,domain=>$domain); >>
 
-Adds a new object, identified by a URL and, for convenience, a domain.
+Adds a new object, identified by its $url and $domain.
+The $domain should match the name of the NNexus::Index::$domain
+plug-in class.
 
-=item C<< $db->select_object_by(url=>$url); >>
+=item C<< $db->select_object_by(url=>$url,objectid=>$objectid); >>
 
-Retrieve the DB row of an object, identified by its URL.
+Retrieve the DB row of an object, identified by its $url,
+OR $objectid.
 Returns a Perl hashref, each key being a DB column name.
+
+=back
+
+=head3 Table: Concepts
+
+=over 4
+
+=item C<< $db->add_concepts_by(%options); >>
+
+=item C<< $db->select_concept_by(%options); >>
+
+=item C<< $db->delete_concept_by(%options); >>
+
+=item C<< $db->select_firstword_matches($word); >>
+
+=back
+
+=head3 Table: Links_cache
+
+=over 4
+
+=item C<< $db->add_linkscache_by(%options); >>
+
+=item C<< $db->select_linkscache_by(%options); >>
+
+=item C<< $db->delete_linkscache_by(%options); >>
+
+=item C<< $db->invalidate_by(%options); >>
 
 =back
 
@@ -319,6 +351,12 @@ Returns a Perl hashref, each key being a DB column name.
 
 Return the last inserted id, in an auto-generated primary key column.
   DBMS-independent, supports MySQL and SQLite so far.
+
+=item C<< $db->reset_db; >>
+
+Reset, and if necessary initialize, a SQLite database.
+This routine holds the reference code, defining the NNexus database schema.
+NOTE: Only works for a SQLite backend.
 
 =back
 
