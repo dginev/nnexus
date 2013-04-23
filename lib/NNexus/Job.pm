@@ -71,7 +71,8 @@ sub _link_entry {
       body=>$self->{body},
       url=>$self->{url},
       domain=>$self->{domain},
-      format=>$self->{format});
+      format=>$self->{format},
+      verbosity=>$self->{verbosity});
   # II. Annotation
   $self->{annotation} //= 'links';
   $self->{embed} //= 1;

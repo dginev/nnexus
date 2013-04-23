@@ -68,6 +68,10 @@ sub mine_candidates {
   # TODO: Incorporate the single words from  'nolink'
   $options{first_word_cache} = { %$first_word_cache_template }; # Default are stopwords
   # Always return an embedded annotation with links, as well as a stand-off mined_canidates hash, containing the individual concepts with pointers.
+  my $time;
+  if ($options{verbosity}) {
+    $time = time();
+  }
   my $mined_candidates=[];
   if ($format eq 'html') {
     $mined_candidates = mine_candidates_html(\%options);
@@ -90,6 +94,9 @@ sub mine_candidates {
   #  next if (inset($concept,@$nolink));
   #TODO: Disambiguate, adapt from:
   # my $finals = disambiguate($db, $candidates, $matchterms, $class, $targetid);
+  if ($options{verbosity}) {
+    printf STDERR " Discovered %d concepts in %.3f seconds.\n",scalar(@uniq_candidates),time()-$time;
+  }
 
   # Update linkscache:
   if ($objectid) {
@@ -143,12 +150,14 @@ sub _text_event_handler {
     return;
   }
   # Otherwise - discover concepts and annotate!
+  my $time = time();
   my $mined_candidates = 
     mine_candidates_text({db=>$state->{db},
          nolink=>$state->{nolink},
          body=>$body,
 	 first_word_cache=>$state->{first_word_cache},
          class=>$state->{class}});
+  #printf STDERR " --processed textual chunk in %.3f seconds\n",time()-$time;
   foreach my $candidate(@$mined_candidates) {
     $candidate->{offset_begin}+=$offset;
     $candidate->{offset_end}+=$offset;
