@@ -41,15 +41,14 @@ our $first_word_cache_template = {
 
 sub mine_candidates {
   my (%options) = @_;
-  # State: We need a config object with a properly set database
+  # State: We need a db object with a properly set database
   # Input: We need a string representing the (HTML) body of the chunk we're
   #        mining on, as well as its URL.
   # Optional: Deprecated details such as 'domain' or 'format'.
   #           Interesting: allow 'nolink' again?
-  my ($config,$format,$body,$nolink,$url,$domain) = 
-    map {$options{$_}} qw(config format body nolink url domain);
-  die "The config key is a mandatory parameter for mine_candidates!\n" unless ref $config; # TODO: Maybe raise a better error?
-  my $db = $config->get_DB;
+  my ($db,$format,$body,$nolink,$url,$domain) = 
+    map {$options{$_}} qw(db format body nolink url domain);
+  die "The db key is a mandatory parameter for mine_candidates!\n" unless ref $db; # TODO: Maybe raise a better error?
   $format = 'html' unless defined $format;
   # Prepare data, if we have a URL:
   my $objectid; # undefined if we don't have a URL, we only do MoC for named resources
@@ -90,7 +89,7 @@ sub mine_candidates {
   #TODO: When do we deal with the nolink settings? 
   #  next if (inset($concept,@$nolink));
   #TODO: Disambiguate, adapt from:
-  # my $finals = disambiguate($config, $candidates, $matchterms, $class, $targetid);
+  # my $finals = disambiguate($db, $candidates, $matchterms, $class, $targetid);
 
   # Update linkscache:
   if ($objectid) {
@@ -102,8 +101,7 @@ sub mine_candidates {
 
 sub mine_candidates_html {
   my ($options) = @_;
-  my ($config,$domain,$body,$syns,$targetid,$class) = map {$options->{$_}} qw(config domain body nolink targetid class);
-  my $db = $config->get_DB;
+  my ($db,$domain,$body,$syns,$targetid,$class) = map {$options->{$_}} qw(db domain body nolink targetid class);
   # Current HTML Parsing strategy - fire events for all HTML tags and explicitly skip over tags that 
   # won't be of interest. We need to autolink in all textual elements.
   # TODO: Handle MathML better
@@ -146,7 +144,7 @@ sub _text_event_handler {
   }
   # Otherwise - discover concepts and annotate!
   my $mined_candidates = 
-    mine_candidates_text({config=>$state->{config},
+    mine_candidates_text({db=>$state->{db},
          nolink=>$state->{nolink},
          body=>$body,
 	 first_word_cache=>$state->{first_word_cache},
@@ -162,9 +160,8 @@ sub _text_event_handler {
 # returns back the matches and position of disambiguated links of the supplied text.
 sub mine_candidates_text {
   my ($options) = @_;
-  my ($config,$domain,$body,$syns,$targetid,$nolink,$class,$first_word_cache) =
-    map {$options->{$_}} qw(config domain body nolink targetid nolink class first_word_cache);
-  my $db=$config->get_DB;
+  my ($db,$domain,$body,$syns,$targetid,$nolink,$class,$first_word_cache) =
+    map {$options->{$_}} qw(db domain body nolink targetid nolink class first_word_cache);
 
   # TODO: We have to make a distinction between "defined concepts" and "candidate concepts" here.
   # Probably just based on whether we find a URL or not?

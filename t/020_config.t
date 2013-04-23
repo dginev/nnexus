@@ -1,10 +1,9 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 2;
 
-use NNexus::Config;
-use NNexus::Job;
+use NNexus::DB;
 
 my $options = {
   "database" => {
@@ -20,6 +19,3 @@ my $options = {
 my $db = NNexus::DB->new(%{$options->{database}});
 ok($db, 'NNexus::DB object successfully created.');
 ok ($db->ping, 'SQLite database is operational');
-
-my $config=NNexus::Config->new($options);
-ok ($config, 'Can initialize a new NNexus::Config object');

@@ -22,11 +22,29 @@ use warnings;
 use Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(linkentry);
+our ($INSTALLDIR) = grep(-d $_, map("$_/NNexus", @INC));
 
+use NNexus::DB;
 use NNexus::Job;
+our %snapshot_credentials =
+(
+ "dbms" => "SQLite",
+ "dbname" => "$INSTALLDIR/resources/database/snapshot.db",
+ "dbuser" => "nnexus",
+ "dbpass" => "nnexus",
+ "dbhost" => "localhost",
+) if $INSTALLDIR;
 
 # TODO: Use a snapshot by default
-sub linkentry {return shift;} # Mockup
+sub linkentry {
+  my ($body,%options) = @_;
+  my $db = $options{db};
+  return $body unless ($db || %snapshot_credentials);
+  $db = NNexus::DB->new(%snapshot_credentials) unless $db;
+  my $job = NNexus::Job->new(function=>'linkentry',body=>$body,db=>$db,%options);
+  $job->execute;
+  return $job->result;
+}
 
 1;
 __END__

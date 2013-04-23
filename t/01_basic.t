@@ -4,7 +4,6 @@ use warnings;
 use Test::More tests => 2;
 
 my $eval_return = eval {
-  use NNexus::Config;
   use NNexus::Job;
   use NNexus::Index::Dispatcher;
   use NNexus::Index::Template;

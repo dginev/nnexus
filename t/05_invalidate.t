@@ -1,25 +1,21 @@
 use strict;
 use warnings;
 
-use NNexus::Config;
+use NNexus::DB;
 use NNexus::Index::Dispatcher;
 use Mojo::DOM;
 
 use Test::More tests => 3;
 
 # Prepare a DB object:
-my $options = {
-  "database" => {
-    "dbms" => "SQLite",
-    "dbname" => ':memory:',
-    "dbuser" => "nnexus",
-    "dbpass" => "nnexus",
-    "dbhost" => "localhost",
-  },
-  "verbosity" => 0
-};
-my $config=NNexus::Config->new($options);
-my $db = $config->get_DB;
+my %options = (
+ "dbms" => "SQLite",
+ "dbname" => ':memory:',
+ "dbuser" => "nnexus",
+ "dbpass" => "nnexus",
+ "dbhost" => "localhost",
+ "verbosity" => 0 );
+my $db = NNexus::DB->new(%options);
 
 # Add an object O1 and its two concept definitions (C1,C2) directly to DB
 my $url = 'http://planetmath.org/O1';

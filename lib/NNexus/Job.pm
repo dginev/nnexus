@@ -57,6 +57,9 @@ sub _ok_with {
   $self->{result} = $result;
 }
 sub response { $_[0]->{result};}
+sub result { $_[0]->{result}->{payload}; }
+sub message { $_[0]->{result}->{message}; }
+sub status { $_[0]->{result}->{status}; }
 
 sub _link_entry {
   my ($self) = @_;
@@ -64,7 +67,7 @@ sub _link_entry {
   # I. Concept Discovery
   my $concepts_mined =
     NNexus::Discover::mine_candidates(
-      config=>$self->{config},
+      db=>$self->{db},
       body=>$self->{body},
       url=>$self->{url},
       domain=>$self->{domain},
@@ -116,9 +119,10 @@ C<NNexus::Job> - Class for Servicing Job Request to NNexus
 =head1 SYNOPSIS
 
     use NNexus::Job;
-    my $job = NNexus::Job->new(config=>$config,body=>$body,format=>$format,function=>$function,
+    my $job = NNexus::Job->new(db=>$db,body=>$body,format=>$format,function=>$function,
    			       domain=>$domain);
     $job->execute;
+    my $response = $job->response;
     my $result = $job->result;
     my $message = $job->message;
     my $status = $job->status;
@@ -140,7 +144,7 @@ Creates a new job object, customized via an options hash. Admissible options are
       * linkentry: Autolinks a given body returning a result in the same format
       * TODO: Add more
   - domain: Domain to use as the reference knowledge base for autolinking/indexing
-  - config: An initialized NNexus::Config object (typically internal)
+  - db: An initialized NNexus::DB object (typically internal)
 
 =item C<< $job->execute; >>
 
@@ -152,6 +156,18 @@ Retrieves the job result. Returns a hash ref with three fields:
  result: the job result (e.g. a payload for a linking job)
  message: a human-readable description of the job
  status: a machine-readable status report
+
+=item C<< $job->result; >>
+
+Shorthand for $job->response->{result};
+
+=item C<< $job->status; >>
+
+Shorthand for $job->response->{status};
+
+=item C<< $job->message; >>
+
+Shorthand for $job->response->{message};
 
 =back
 

@@ -4,23 +4,20 @@ use warnings;
 use Test::More tests => 3;
 
 use NNexus::Job;
-use NNexus::Config;
+use NNexus::DB;
 
 # However, we really want our own test setup:
-my $options = {
-  "database" => {
-    "dbms" => "SQLite",
-    "dbname" => ':memory:',
-    "dbuser" => "nnexus",
-    "dbpass" => "nnexus",
-    "dbhost" => "localhost",
-  },
+my %options = (
+  "dbms" => "SQLite",
+  "dbname" => ':memory:',
+  "dbuser" => "nnexus",
+  "dbpass" => "nnexus",
+  "dbhost" => "localhost",
   "verbosity" => 0
-};
+);
 
-my $config=NNexus::Config->new($options);
+my $db = NNexus::DB->new(%options);
 # We link against a single concept - Banach algebra
-my $db = $config->get_DB;
 my $url = 'http://planetmath.org/banachalgebra';
 my $objectid = $db->add_object_by(url=>$url,domain=>'Planetmath');
 $db->add_concept_by(
@@ -35,7 +32,7 @@ my $basic_banach_embedded = 'mock body, Banach, algebra is a failing test, so is
 # 1. Basic text input, stand-off Perl
 my $job = NNexus::Job->new('format' => 'text', 'function' => 'linkentry',
 	'domain' => 'Planetmath', body=>$basic_banach,
-  ,config=>$config,annotation=>'perl',embed=>0);
+  ,db=>$db,annotation=>'perl',embed=>0);
 $job->execute;
 is_deeply($job->response,
 	{status=>'OK',payload=>[{"link"=>"http://planetmath.org/banachalgebra","offset_begin"=>69,"scheme"=>"msc","objectid"=>1,
@@ -44,7 +41,7 @@ is_deeply($job->response,
 	'Basic Perl auto-link, ok.');
 # 2. Basic text input, embed links
 $job = NNexus::Job->new('format' => 'text', 'function' => 'linkentry',
-	'domain' => 'Planetmath', body=>$basic_banach,config=>$config,annotation=>'links',embed=>1);
+	'domain' => 'Planetmath', body=>$basic_banach,db=>$db,annotation=>'links',embed=>1);
 $job->execute;
 is_deeply($job->response,
 	{status=>'OK',payload=>$basic_banach_embedded,message=>'No obvious problems.'},
@@ -56,7 +53,7 @@ open my $fh, "<", 't/pages/pm_gelfand_transforms.html';
 my $html_content = join('',<$fh>);
 close $fh;
 $job = NNexus::Job->new('format' => 'html', 'function' => 'linkentry', url=>'http://test081.com',
-	'domain' => 'Planetmath', body=>$html_content,config=>$config,annotation=>'links',embed=>1);
+	'domain' => 'Planetmath', body=>$html_content,db=>$db,annotation=>'links',embed=>1);
 $job->execute;
 open my $rh, "<", 't/pages/pm_gelfand_transforms_result.html';
 my $html_result = join('',<$rh>);
