@@ -9,9 +9,11 @@ use FindBin;
 #======================================================================
 # Use "perl Makefile.PL <options>"
 #======================================================================
-
+our @EXCLUSIONS=();
 our $MORE_MACROS = {};
 our $MORE_MAKERULES=''; 
+
+compile_snapshot_db();
 
 WriteMakefile(
   NAME => 'NNexus',
@@ -31,4 +33,34 @@ WriteMakefile(
     'Text::Unidecode'=>0,
   },
   EXE_FILES => [ 'bin/nnexus'],
+  macro => $MORE_MACROS,
 );
+
+#**********************************************************************
+# Overriding ExtUtils::MM methods
+#**********************************************************************
+# Exclude the sources used to generate others from the build (See below).
+sub MY::libscan {
+  my($self,$path)=@_;
+  if(($path =~ /~$/) || grep($path eq $_, @EXCLUSIONS)){
+    return ""; }
+  $self->MY::SUPER::libscan($path); }
+
+# Append any additional Makefile rules added by the following.
+sub MY::postamble {
+  shift->MY::SUPER::postamble(@_) . $MORE_MAKERULES; }
+
+
+sub compile_snapshot_db {
+  push(@EXCLUSIONS,'blib/lib/NNexus/resources/database/snapshot-20-4-2013.sqlite');
+  $$MORE_MACROS{SNAPSHOT_FILE} = '$(INST_LIBDIR)/NNexus/resources/database/snapshot.db';
+  $$MORE_MACROS{DUMP_FILE} = 'lib/NNexus/resources/database/snapshot-20-4-2013.sqlite';
+  $MORE_MAKERULES .= <<'CompileSnapshot';
+
+pure_all :: $(SNAPSHOT_FILE)
+
+# Always set version if version module template is newer
+$(SNAPSHOT_FILE): $(DUMP_FILE)
+	cat $(DUMP_FILE) | sqlite3 $(SNAPSHOT_FILE)
+CompileSnapshot
+}
