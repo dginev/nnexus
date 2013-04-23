@@ -1,3 +1,19 @@
+# /=====================================================================\ #
+# | NNexus Autolinker                                                   | #
+# | Indexing Plug-in, DLMF.nist.gov domain                              | #
+# |=====================================================================| #
+# | Part of the Planetary project: http://trac.mathweb.org/planetary    | #
+# |  Research software, produced as part of work done by:               | #
+# |  the KWARC group at Jacobs University                               | #
+# | Copyright (c) 2012                                                  | #
+# | Released under the MIT License (MIT)                                | #
+# |---------------------------------------------------------------------| #
+# | Adapted from the original NNexus code by                            | #
+# |                                  James Gardner and Aaron Krowne     | #
+# |---------------------------------------------------------------------| #
+# | Deyan Ginev <d.ginev@jacobs-university.de>                  #_#     | #
+# | http://kwarc.info/people/dginev                            (o o)    | #
+# \=========================================================ooo==U==ooo=/ #
 package NNexus::Index::Dlmf;
 use warnings;
 use strict;
@@ -6,7 +22,7 @@ use base qw(NNexus::Index::Template);
 sub domain_root { "http://dlmf.nist.gov" }
 sub domain_base { "http://dlmf.nist.gov/" }
 sub depth_limit { 100 }
-use Data::Dumper;
+
 sub candidate_links {
   my ($self) = @_;
   my $url = $self->current_url;
@@ -60,11 +76,11 @@ __END__
 
 =head1 NAME
 
-C<NNexus::Index::Dlmf> - Concrete Indexer for the DLMF.nist.gov domain.
+C<NNexus::Index::Dlmf> - Indexing plug-in for the DLMF.nist.gov domain.
 
 =head1 DESCRIPTION
 
-Concrete indexer for the DLMF.nist.gov domain.
+Indexing plug-in for the DLMF.nist.gov domain.
 See C<NNexus::Index::Template> for detailed indexing documentation.
 
 =head1 AUTHOR

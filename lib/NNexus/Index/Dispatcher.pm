@@ -148,8 +148,20 @@ via the index_step method.
 
 =item C<< my $invalidated_URLs = $dispatcher->index_step(%options); >>
 
-TODO: Continue
+Performs an indexing step by:
+ - dispatches a crawl request to the domain indexer
+ - computes a diff over the previously and currently indexed
+   concepts for the given object/URL
+ - updates the Database tables
+ - Computes and returns an impact graph of previously linked objects
+   (aka "invalidation")
 
+The method accepts the following options:
+ - start - the initial URL, required for first invocation
+ - dom - optional, provides a Mojo::DOM object for the current URL
+         instead of performing an HTTP GET to retrieve it.
+ - verbosity - 0 for quiet, 1 for detailed progress messages
+ 
 =back
 
 =head1 AUTHOR

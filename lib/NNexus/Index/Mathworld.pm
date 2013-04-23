@@ -1,3 +1,19 @@
+# /=====================================================================\ #
+# | NNexus Autolinker                                                   | #
+# | Indexing Plug-in, MathWorld.wolfram.com domain                      | #
+# |=====================================================================| #
+# | Part of the Planetary project: http://trac.mathweb.org/planetary    | #
+# |  Research software, produced as part of work done by:               | #
+# |  the KWARC group at Jacobs University                               | #
+# | Copyright (c) 2012                                                  | #
+# | Released under the MIT License (MIT)                                | #
+# |---------------------------------------------------------------------| #
+# | Adapted from the original NNexus code by                            | #
+# |                                  James Gardner and Aaron Krowne     | #
+# |---------------------------------------------------------------------| #
+# | Deyan Ginev <d.ginev@jacobs-university.de>                  #_#     | #
+# | http://kwarc.info/people/dginev                            (o o)    | #
+# \=========================================================ooo==U==ooo=/ #
 package NNexus::Index::Mathworld;
 use warnings;
 use strict;
@@ -26,13 +42,15 @@ sub index_page {
   # TODO: Support multiple MSC categories in the same page, not only [0]
   my $msc = $dom->find('meta[scheme="MSC_2000"]')->[0];
   my $category = $msc->attrs('content') if $msc;
-  my $name = $dom->find('h1')->[0]->all_text;
-  return [{
-    url=>$url,
-    concept=>$name,
-    categories=>[$category ? ($category) : 'XX-XX'],
-    }];
-}
+  my $h1 = $dom->find('h1')->[0];
+  my $name = $h1->all_text if $h1;
+  $name ?
+    return [{
+      url=>$url,
+      concept=>$name,
+      categories=>[$category ? ($category) : 'XX-XX'],
+      }] :
+    return []; }
 
 sub depth_limit {10;}
 sub request_interval { 30.5; }
@@ -44,11 +62,11 @@ __END__
 
 =head1 NAME
 
-C<NNexus::Index::Mathworld> - Concrete Indexer for the mathworld.wolfram.com domain.
+C<NNexus::Index::Mathworld> - Indexing plug-in for the MathWorld.wolfram.com domain.
 
 =head1 DESCRIPTION
 
-Concrete indexer for the mathworld.wolfram.org domain.
+Indexing plug-in for the mathworld.wolfram.org domain.
 See C<NNexus::Index::Template> for detailed indexing documentation.
 
 =head1 AUTHOR

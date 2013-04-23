@@ -1,3 +1,19 @@
+# /=====================================================================\ #
+# | NNexus Autolinker                                                   | #
+# | Indexing Plug-in, PlanetMath.org domain                             | #
+# |=====================================================================| #
+# | Part of the Planetary project: http://trac.mathweb.org/planetary    | #
+# |  Research software, produced as part of work done by:               | #
+# |  the KWARC group at Jacobs University                               | #
+# | Copyright (c) 2012                                                  | #
+# | Released under the MIT License (MIT)                                | #
+# |---------------------------------------------------------------------| #
+# | Adapted from the original NNexus code by                            | #
+# |                                  James Gardner and Aaron Krowne     | #
+# |---------------------------------------------------------------------| #
+# | Deyan Ginev <d.ginev@jacobs-university.de>                  #_#     | #
+# | http://kwarc.info/people/dginev                            (o o)    | #
+# \=========================================================ooo==U==ooo=/ #
 package NNexus::Index::Planetmath;
 use warnings;
 use strict;
@@ -71,11 +87,11 @@ __END__
 
 =head1 NAME
 
-C<NNexus::Index::Planetmath> - Concrete Indexer for the PlanetMath.org domain.
+C<NNexus::Index::Planetmath> - Indexing plug-in for the PlanetMath.org domain.
 
 =head1 DESCRIPTION
 
-Concrete indexer for the PlanetMath.org domain.
+Indexing plug-in for the PlanetMath.org domain.
 See C<NNexus::Index::Template> for detailed indexing documentation.
 
 =head1 AUTHOR

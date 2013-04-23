@@ -44,7 +44,6 @@ lib
    // In progress:
    |
    |- Classification.pm
-   |- Domain.pm
    |- LinkPolicy.pm
 ```
 
