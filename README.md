@@ -1,9 +1,18 @@
 NNexus provides an API and an engine for auto-linking of mathematical concepts.
  It supports the subtasks of concept indexing, concept discovery and flexible annotation (e.g. linking).
-
+ 
 NNexus is free, libre, open-source software.
 
-You can check out the [Manual](MANUAL.md) draft, for a technical overview of the NNexus system.
+The library comes with a pre-packaged snapshot of over 10,000 concepts from PlanetMath,
+ Wikipedia, Wolfram Mathworld and DLMF. You can jump right in with a perl one-liner:
+ 
+```shell
+perl -MNNexus -e 'print linkentry(join("",<>))' < example.html > linked_example.html
+```
+
+... or read the rest of this README for installation instructions and further use cases.
+
+Feel free to check out the [Manual](MANUAL.md) draft, for a technical overview of the NNexus system.
 
 # Installation and Deployment
 
