@@ -39,8 +39,8 @@ our %snapshot_credentials =
 sub linkentry {
   my ($body,%options) = @_;
   my $db = $options{db};
-  $options{embed} = 1 unless defined $options{embed};
-  $options{format} = 'html' unless defined $options{format};
+  $options{embed} //= 1;
+  $options{format} //= 'html';
   return $body unless ($db || %snapshot_credentials);
   $db = NNexus::DB->new(%snapshot_credentials) unless $db;
   my $job = NNexus::Job->new(function=>'linkentry',body=>$body,db=>$db,%options);

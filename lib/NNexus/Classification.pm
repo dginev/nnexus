@@ -20,7 +20,7 @@ use strict;
 use warnings;
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(msc_similarity);
+our @EXPORT_OK = qw(msc_similarity disambiguate);
 
 
 # Let's do things differently here.
@@ -102,20 +102,43 @@ our $msc_to_array = {
   80=>51, 81=>52, 82=>53, 83=>54, 85=>55, 86=>56, 90=>57, 91=>58, 92=>59, 93=>60,
   94=>61, 97=>62 };
 
+sub msc_to_array { $msc_to_array->{"".substr($_[0],0,2)}; }
 sub msc_similarity {
   my ($category1, $category2) = @_;
   # Top-level MSC categories only at the moment:
-  my $top1 = substr($category1,0,2);
-  my $top2 = substr($category2,0,2);
-  # Check if we are well-defined:
-  my $index1 = $msc_to_array->{"".$top1};
-  my $index2 = $msc_to_array->{"".$top2};
+  my $index1 = msc_to_array($category1);
+  my $index2 = msc_to_array($category2);
   ((defined $index1) && (defined $index2)) ?
   # Well-defined, lookup in matrix
   return $msc_similarities->[$index1]
                           ->[$index2] :
   # Ill-defined means no similarity
   return 0; }
+
+use Data::Dumper;
+sub disambiguate {
+  my ($candidates) = @_;
+  if (0) {# disabled for now:
+    my $class_view = {};
+    my $index=0;
+    foreach my $candidate(@$candidates) {
+      next unless $candidate->{scheme} eq 'msc'; # TODO: Map everything into MSC!
+      print STDERR Dumper($candidate);
+      push @{$class_view->{msc_to_array($candidate->{category})}}, $index;
+      $index++;
+    }
+    # Discover the most similar cluster of concepts
+    print STDERR $msc_similarities->[23]->[15],"\n";
+    print STDERR Dumper($class_view);
+    # How about:
+    # - group by top-level MSC category and point into the original candidates array
+    # - also, use the similarity indeces, for faster lookups
+    # - the number of concepts in the class could be weights for the similarity metric
+    # 2 entries in class 10 , and 4 entries in class 80 = min(2,4)*similarity(10,80) / (2+4) * 1
+    # 2 in 10, 4 in 80, 3 in 53 = min(2,4)*sim(10,80) * min(2,3)*sim(10,53) * min(3,4)*sim(53,80) / (2+3+4) * 1
+  }
+  return $candidates; # mockup
+}
 
 1;
 

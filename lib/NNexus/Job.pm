@@ -22,6 +22,7 @@ use feature qw(say switch);
 
 use NNexus::Discover qw(mine_candidates);
 use NNexus::Annotate qw(serialize_concepts);
+use NNexus::Classification qw(disambiguate);
 
 sub new {
   my ($class,%opts) = @_;
@@ -73,13 +74,15 @@ sub _link_entry {
       domain=>$self->{domain},
       format=>$self->{format},
       verbosity=>$self->{verbosity});
-  # II. Annotation
+  # II. Disambiguation
+  my $concepts_refined = NNexus::Classification::disambiguate($concepts_mined);
+  # III. Annotation
   $self->{annotation} //= 'links';
   $self->{embed} //= 1;
   my $serialized_result = 
     NNexus::Annotate::serialize_concepts(
       body=>$self->{body},
-      concepts=>$concepts_mined,
+      concepts=>$concepts_refined,
       annotation=>$self->{annotation},
       embed=>$self->{embed});
   $self->{result}={payload=>$serialized_result,message=>'No obvious problems.', status=>'OK'};
