@@ -30,6 +30,7 @@ WriteMakefile(
     'Data::Dumper'=>0,
     'HTML::Parser'=>0,
     'Lingua::EN::StopWordList'=>0,
+    'List::MoreUtils'=>0,
     'Text::Unidecode'=>0,
   },
   EXE_FILES => [ 'bin/nnexus'],

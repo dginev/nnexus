@@ -93,6 +93,9 @@ our $msc_similarities = [ # 63x63 matrix, top-level MSC 2000 classes
   [0.06049483,0.02079996,0.00174317,0.00179613,0.00025653,0.00064115,0.00337673,0.00339206,0.00117948,0.00051373,0.00336093,0.00027885,0.00005553,0.00008213,0.00022975,0.00059678,0.00017619,0.00897340,0.00110538,0.00064367,0.00010881,0.00015148,0.00128667,0.00045993,0.00016756,0.00060123,0.00031932,0.00214654,0.00045398,0.00026633,0.00011249,0.00050588,0.00000000,0.00019363,0.00012445,0.00011909,0.01469944,0.00271172,0.00078964,0.00034901,0.00013958,0.00059960,0.00021871,0.00113842,0.00155304,0.00083280,0.00264640,0.00078112,0.00012488,0.00018821,0.00161540,0.00068166,0.00068706,0.00054470,0.00308205,0.00600214,0.00091412,0.00081616,0.00273120,0.00127072,0.00045164,0.00093386,1.00000000]
 ];
 
+# Precompute Logs
+our $msc_log_similarities = [map {[map {$_ ? log($_) : undef} @$_]} @$msc_similarities];
+
 our $msc_to_array = {
   '00'=>0, '01'=>1, '03'=>2, '05'=>3, '06'=>4, '08'=>5, 11=>6, 12=>7, 13=>8, 14=>9, 15=>10,
   16=>11, 17=>12, 18=>13, 19=>14, 20=>15, 22=>16, 26=>17, 28=>18, 30=>19, 31=>20,
@@ -128,14 +131,16 @@ sub disambiguate {
       $index++;
     }
     # Discover the most similar cluster of concepts
-    print STDERR $msc_similarities->[23]->[15],"\n";
     print STDERR Dumper($class_view);
     # How about:
     # - group by top-level MSC category and point into the original candidates array
     # - also, use the similarity indeces, for faster lookups
     # - the number of concepts in the class could be weights for the similarity metric
-    # 2 entries in class 10 , and 4 entries in class 80 = min(2,4)*similarity(10,80) / (2+4) * 1
-    # 2 in 10, 4 in 80, 3 in 53 = min(2,4)*sim(10,80) * min(2,3)*sim(10,53) * min(3,4)*sim(53,80) / (2+3+4) * 1
+    # 2 entries in class 10 , and 4 entries in class 80 = 2^(2+4)*sim(10,80)
+    # 2 in 10, 4 in 80, 3 in 53 = 2^(2+3+4)*sim(10,80) *sim(10,53) * sim(53,80)
+
+    # So: maximize the sum of all concepts currently grouped and all log_similarities!
+    
   }
   return $candidates; # mockup
 }
