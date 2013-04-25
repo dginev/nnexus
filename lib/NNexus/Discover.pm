@@ -81,6 +81,9 @@ sub mine_candidates {
     print STDERR "Error: Unrecognized input format for auto-linking.\n";
   }
   # Only mark-up first found candidate, unless requested otherwise
+  # TODO: This also filter away ambiguity in favour of the first found link.
+  #       That's a nice treatment as long as we don't have disambiguation working,
+  #       but ought to be corrected once we have a strategy implemented.
   my @uniq_candidates;
   while (@$mined_candidates) {
     my $candidate = shift @$mined_candidates;
@@ -116,18 +119,21 @@ sub mine_candidates_html {
     HTML::Parser->new(
       'api_version' => 3,
       'start_h' => [sub {
-          if ($_[1]=~/^head|style|title|script|xmp|iframe|math|svg|a|(h\d+)/) {
-            $_[0]->{fresh_skip}=1;
-            $_[0]->{noparse}++;
+	  my ($self,$tagname,$attr)=@_;
+          if ($tagname=~/^head|style|title|script|xmp|iframe|math|svg|a|(h\d+)$/ || 
+	      (($tagname=~/^span/) && ($attr->{class} =~ 'nolink'))) {
+            $self->{fresh_skip}=1;
+            $self->{noparse}++;
           } else {
-            $_[0]->{fresh_skip}=0;
+            $self->{fresh_skip}=0;
           }
-      } , 'self, tagname, text'],
+      } , 'self, tagname, attr'],
       'end_h' => [sub {
-        $_[0]->{noparse}--
-          if (($_[1]=~/^\<\/head|style|title|script|xmp|iframe|math|svg|a|(h\d+)\>$/) ||
-            ((length($_[1])==0) && ($_[0]->{fresh_skip})));
-        }, 'self,text'],
+        my ($self,$tagname)=@_;
+        $self->{noparse}--
+          if (($tagname=~/^head|style|title|script|xmp|iframe|math|svg|a|(h\d+)$/) ||
+            (((length($tagname)==0)||($tagname eq 'span')) && ($self->{fresh_skip})));
+        }, 'self,tagname'],
       'text_h'      => [\&_text_event_handler, 'self,text,offset']
     );
   $parser->{mined_candidates} = [];
