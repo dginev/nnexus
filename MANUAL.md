@@ -11,16 +11,6 @@ This document intends to be a high level technical overview of the redesign and 
 ```
 bin
  |- nnexus
-setup
- |- database
-   |- mysql
-       |- schema.sql
-       |- setup_nnexus_mysql.sql
-   |- SQLite
-       |- schema.sql
-       |- nnexus.db
-       |- test.db
- |- config.json
 lib
  |- NNexus.pm
  |- NNexus
@@ -28,18 +18,21 @@ lib
    |- DB.pm
    |- DB
        |- API.pm
-   |- Config.pm
    |- Index
        |- Dispatcher.pm
        |- Template.pm
        |- Planetmath.pm
        |- Wikipedia.pm
        |- Mathworld.pm
-       |- DLMF.pm
+       |- Dlmf.pm
    |- Concepts.pm
    |- Morphology.pm
    |- Discover.pm
    |- Annotate.pm
+   |- resources
+     |- database
+       |- schema.sqlite
+       |- snapshot.sqlite
   ...
    // In progress:
    |
@@ -50,11 +43,13 @@ lib
 The classes under the ... separator are yet to undergo more than a shallow refactoring pass and expect a rewrite.
 
 ### Minimal Configuration
- The ```config.json``` configuration file prepackages a default configuration for the NNexus backend, mirrored in the startup SQL script.
- The only configuration really needed by the NNexus application is a specified access to an SQL backend.
  
  All NNexus initialization is automatic, with the exception of indexing which is always performed on demand and can currently only be triggered by a request to the Web service.
  If there is demand, there might also be an admin interface that makes the indexing (and other) requests more user-friendly.
+ 
+ The default backend assumed by NNexus resides in ```lib/NNexus/resources/database/snapshot.db```, which contains a pre-packaged
+ snapshot from all recognized indexing plug-ins. A custom backend can be requested by directly specifying it in a ```NNexus::DB``` object,
+ or by providing its pathname as the first argument to the ```nnexus``` executable.
  
 ### Turn-key Web Service
  The main ```bin/nnexus``` executable is a ```Mojolicious::Lite``` web service, that is easily deployable independently,
