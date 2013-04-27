@@ -64,24 +64,24 @@ The classes under the ... separator are yet to undergo more than a shallow refac
  Each job is a ```NNexus::Job``` object, which flexibly supports all flavours of NNexus operations - on demand (re-)indexing,
  auto-linking (in turn concept-discovery and annotation). 
  
+### Use in your own Perl Application
+ The NNexus code now complies to the guidelines for writing Perl libraries, following the standard installation via:
+ ```perl Makefile.PL; make ; make test ; make install ```
+
+You can embed NNexus processing in any Perl application by using the high-level ```NNexus``` class, or the mid-level
+```NNexus::Job``` class. The library expects a CPAN release in mid-June 2013.
+
 ### NNexus Scripting
 
-As NNexus is now a well-packaged Perl library (and expects a CPAN release) you can use NNexus in Perl applications
-and script one-liners. For example, given a file path to a SQLite snapshot of the NNexus Index you could directly
-auto-link your files from the command-line, e.g.
-```
-perl -MNNexus -e '#TODO: Add example invocation here, prepare a test file ';
+As NNexus is now a well-packaged Perl library you can use it in Perl applications
+and script one-liners. For example, you could directly auto-link an HTML file with the following perl one-liner:
+
+```shell
+perl -MNNexus -e 'print linkentry(join("",<>))' < example.html > linked_example.html
 ```
  
 ### Persistence and Provenance
  Deserving no more than a passing note, the NNexus knowledge base can be stored in any SQL backend that is supported by Perl's ```DBI``` library.
-
-### Use in your own Perl Application
- The NNexus code now complies to the guidelines for writing Perl libraries, so besides having a convenient installation via:
- ```perl Makefile.PL; make ; make test ; make install ```
- 
- you can also conveniently connect to a remote backend in the cloud via ```NNexus::Config``` and use that configuration for any NNexus operation,
- executed by a ```NNexus::Job``` object. In other words, NNexus functionality is easily embeddable in arbitrary Perl code.
 
 ## Indexing Framework
  The original NNexus application was tightly coupled with the framework behind PlanetMath.org, **Noosphere**.
@@ -164,7 +164,7 @@ The different NNexus tasks (indexing, concept discovery, annotation and invalida
 ## Concept Discovery
  Discuss Longest-token matching, ideas for improvements.
  
- **TODO:** The code behind this functionality is yet to be revisted, but is on the development short-list.
+ **TODO:** The code behind this functionality has now been revisted, add text here.
  
 ## Annotation Schemes
  Talk about adding achors to HTML, JSON for editors, etc.
