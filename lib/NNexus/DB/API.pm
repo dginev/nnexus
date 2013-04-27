@@ -122,12 +122,19 @@ sub add_concept_by {
 # get the possible matches based on the first word of a concept
 # returns as an array containing a hash with newterm
 sub select_firstword_matches {
-  my ($db,$word) = @_;
+  my ($db,$word,%options) = @_;
   my @matches = ();
-
-  my $sth = $db->prepare("SELECT conceptid, firstword, tailwords, category, scheme,
-     domain, link, objectid from concepts where firstword=?");
-  $sth->execute($word);
+  my $domain = $options{domain};
+  my $sth;
+  if ($domain && ($domain ne 'all')) {
+    $sth = $db->prepare("SELECT conceptid, firstword, tailwords, category, scheme,
+      domain, link, objectid from concepts where firstword=? AND domain=?");
+    $sth->execute($word,$domain);
+  } else {
+    $sth = $db->prepare("SELECT conceptid, firstword, tailwords, category, scheme,
+      domain, link, objectid from concepts where firstword=?");
+    $sth->execute($word);
+  }
   while ( my $row = $sth->fetchrow_hashref() ) {
     $row->{concept} = $row->{firstword}.($row->{tailwords} ? " ".$row->{tailwords} : '');
     push @matches, $row;

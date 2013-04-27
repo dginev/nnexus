@@ -58,6 +58,7 @@ sub mine_candidates {
     $domain = $object->{domain} unless defined $domain;
     # If objectid is -1 , we will also need to add_object on the url
     if ($objectid == -1) {
+      # TODO: Extract the domain from the URL, this is unreliable
       $objectid = $db->add_object_by(url=>$options{'url'},domain=>$domain);
     } else {
       # If already known, flush the links_cache for this object
@@ -81,14 +82,13 @@ sub mine_candidates {
     print STDERR "Error: Unrecognized input format for auto-linking.\n";
   }
   # Only mark-up first found candidate, unless requested otherwise
-  # TODO: This also filter away ambiguity in favour of the first found link.
-  #       That's a nice treatment as long as we don't have disambiguation working,
-  #       but ought to be corrected once we have a strategy implemented.
   my @uniq_candidates;
   while (@$mined_candidates) {
     my $candidate = shift @$mined_candidates;
     my $concept = $candidate->{concept};
-    @$mined_candidates = grep {$_->{concept} ne $concept} @$mined_candidates;
+    my $link = $candidate->{link};
+    my $category = $candidate->{category};
+    @$mined_candidates = grep {($_->{concept} ne $concept) || ($_->{link} ne $link) || ($_->{category} ne $category)} @$mined_candidates;
     push @uniq_candidates, $candidate;
   }
   @$mined_candidates = @uniq_candidates;
@@ -161,7 +161,8 @@ sub _text_event_handler {
     mine_candidates_text({db=>$state->{db},
          nolink=>$state->{nolink},
          body=>$body,
-	 first_word_cache=>$state->{first_word_cache},
+         domain=>$state->{domain},
+	       first_word_cache=>$state->{first_word_cache},
          class=>$state->{class}});
   #printf STDERR " --processed textual chunk in %.3f seconds\n",time()-$time;
   foreach my $candidate(@$mined_candidates) {
@@ -200,7 +201,7 @@ sub mine_candidates_text {
       # Normalize word
       my $norm_word = normalize_concept($word);
       # get all possible candidates for both posessive and plural forms of $word 
-      @candidates = $db->select_firstword_matches($norm_word);
+      @candidates = $db->select_firstword_matches($norm_word,domain=>$domain);
       # Cache the candidates:
       my $saved_candidates = [];
       $saved_candidates = dclone(\@candidates) if @candidates;

@@ -96,7 +96,7 @@ sub _update_link_policy { $_[0]->_fail_with('Not supported yet!');}
 sub _check_valid { $_[0]->_fail_with('Not supported yet!');}
 sub _index {
   my ($self)=@_;
-  my $domain = $self->{domain} || 'Planetmath';
+  my $domain = $self->{domain} || 'all';
   my $url = $self->{url}||$self->{body};
   my $dom = $self->{dom};
   require NNexus::Index::Dispatcher;
