@@ -12,34 +12,9 @@ perl -MNNexus -e 'print linkentry(join("",<>))' < example.html > linked_example.
 
 ... or read the rest of this README for installation instructions and further use cases.
 
-Feel free to check out the [Manual](MANUAL.md) draft, for a technical overview of the NNexus system.
+The [Manual](MANUAL.md) draft contains a **technical overview** of the NNexus system.
 
-# Installation and Deployment
-
-## Prerequisite packages
-
-Installing prerequisites on Debian-based systems:
-```
-sudo apt-get install libmojolicious-perl libdbi-perl libdbd-sqlite3-perl \
-  libhtml-parser-perl liblist-moreutils-perl libtext-unidecode-perl
-```
-
-## Standard ```make``` installation
-
-We proceed with the standard Perl installation from source:
-```
-perl Makefile.PL ; make ; make test
-```
-**NOTE:** Running perl over Makefile.PL will warn you of any missing packages you need to install, 
-either via CPAN or your OS package manager.
-
-Then, in order to quickly run the server:
-```
-perl blib/script/nnexus daemon
-```
-
-Note: Deploying through Apache or Hypnotoad would be clearly the way to go for production use.
-TODO: Add Apache deployment instructions in [the INSTALL file](INSTALL.md)
+For **installation and deployment**, consult [the INSTALL file](INSTALL.md).
 
 ## Connecting from a client
 
@@ -48,15 +23,12 @@ These two lines of PHP illustrate how NNexus can be used via [Planetary](https:/
   $data = 'function=linkentry&body=' . urlencode($text) . '&format='.$format.'&domain=planetmath';
   $content = planetary_webglue_do_post('http://127.0.0.1:3000/linkentry',$data);
 ```
-
-# Future plans
-
-## Exhaustive JSON support
+## NNexus API
 
 JSON is already the preferred representation for NNexus requests,
 yet the coverage of the original NNexus request types is incomplete.
 
-Auto-linking example:
+An auto-linking example:
 ```json
   {"function":"linkentry",
    "body":"<html><body><p>Some text using myconcept, ourconcept or theirconcept</p></body></html>",
@@ -64,11 +36,11 @@ Auto-linking example:
    "embed":1,
    "nolink":null}
 ```
-**TIP:** The above JSON parameters are the defaults, so simply sending a HTTP POST request with the body to ```localhost:3000/linkentry``` would get the same result.
-
+**TIP:** The above JSON parameters are the defaults, so simply sending a HTTP POST request with the body field to
+```localhost:3000/linkentry``` would yield the same result.
 
 The NNexus legacy API is being redesigned at the moment, into a simple pair of indexing and linking workflows.
-TODO: Describe the new API when finalized.
+**TODO:** Describe the new API when finalized.
 
 # Status
 
