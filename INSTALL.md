@@ -28,7 +28,7 @@ perl blib/script/nnexus daemon
 
 However, Deploying through Apache or Hypnotoad would be clearly the way to go for production use.
 
-## Production Apache Configuration
+### Production Apache Configuration
 
 Set up virtual hosts, e.g. in
 ```
