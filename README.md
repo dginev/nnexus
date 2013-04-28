@@ -16,28 +16,29 @@ Feel free to check out the [Manual](MANUAL.md) draft, for a technical overview o
 
 # Installation and Deployment
 
-## Setting up the server
+## Prerequisite packages
 
-Standard Perl installation from source:
+Installing prerequisites on Debian-based systems:
+```
+sudo apt-get install libmojolicious-perl libdbi-perl libdbd-sqlite3-perl \
+  libhtml-parser-perl liblist-moreutils-perl libtext-unidecode-perl
+```
+
+## Standard ```make``` installation
+
+We proceed with the standard Perl installation from source:
 ```
 perl Makefile.PL ; make ; make test
 ```
 **NOTE:** Running perl over Makefile.PL will warn you of any missing packages you need to install, 
 either via CPAN or your OS package manager.
 
-Installing prerequisites on Debian-based systems (TODO: incomplete):
-```
-apt-get install libmojolicious-perl libxml-simple-perl \
-  libunicode-string-perl libgraph-perl libjson-perl \
-  ...
-```
-
 Then, in order to quickly run the server:
 ```
-morbo --listen=http://*:3001 blib/script/nnexus setup/config.json
+perl blib/script/nnexus daemon
 ```
 
-Note: While morbo is nice for development, deploying through Apache or Hypnotoad would be clearly the way to go for production use.
+Note: Deploying through Apache or Hypnotoad would be clearly the way to go for production use.
 TODO: Add Apache deployment instructions in [the INSTALL file](INSTALL.md)
 
 ## Connecting from a client
@@ -45,7 +46,7 @@ TODO: Add Apache deployment instructions in [the INSTALL file](INSTALL.md)
 These two lines of PHP illustrate how NNexus can be used via [Planetary](https://github.com/KWARC/planetary)'s curl:
 ```php
   $data = 'function=linkentry&body=' . urlencode($text) . '&format='.$format.'&domain=planetmath';
-  $content = planetary_webglue_do_post('http://127.0.0.1:3001/autolink',$data);
+  $content = planetary_webglue_do_post('http://127.0.0.1:3000/linkentry',$data);
 ```
 
 # Future plans
@@ -58,11 +59,13 @@ yet the coverage of the original NNexus request types is incomplete.
 Auto-linking example:
 ```json
   {"function":"linkentry",
-   "body":"Some text using myconcept, ourconcept or theirconcept",
-   "format":"xhtml",
+   "body":"&lt;html&gt;&lt;body&gt;&lt;p&gt;Some text using myconcept, ourconcept or theirconcept&lt;p&gt;&lt;body&gt;&lt;html&gt;",
+   "format":"html",
    "embed":1,
    "nolink":null}
 ```
+**TIP:** The above JSON parameters are the defaults, so simply sending a HTTP POST request with the body to ```localhost:3000/linkentry``` would get the same result.
+
 
 The NNexus legacy API is being redesigned at the moment, into a simple pair of indexing and linking workflows.
 TODO: Describe the new API when finalized.

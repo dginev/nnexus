@@ -27,17 +27,15 @@ use utf8;
 use Data::Dumper;
 use Time::HiRes qw ( time alarm sleep );
 
+use NNexus::StopWordList qw(stop_words_ref);
 use NNexus::Morphology qw(normalize_concept);
 use NNexus::Linkpolicy qw (post_resolve_linkpolicy);
 
 use Storable qw(dclone);
-use Lingua::EN::StopWordList;
 use HTML::Parser;
 
 # Prepare cache for first-word concept lookup
-our $first_word_cache_template = {
-  map {$_=>[]} @{Lingua::EN::StopWordList->new->words}
-};
+our $first_word_cache_template = {map {$_=>1} stop_words_ref()};
 
 sub mine_candidates {
   my (%options) = @_;
