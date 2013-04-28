@@ -159,7 +159,19 @@ To summarize:
 ### Database Schema
 The different NNexus tasks (indexing, concept discovery, annotation and invalidation) approach the knowledge base from different sides. For example, (re-)indexing needs to lookup if the object being processed is new or has been previously processed, and update it as necessary. On the other hand, invalidation and concept-discovery work on natural language fragments and are interested in doing efficient lookup for the terms already indexed. To make these processes efficient, NNexus creates a number of database indices for the fields of interest.
 
- **TODO:** Describe schema when stable
+Currently NNexus uses a SQLite RDBMS with the following tables: 
+ * ```Concepts``` - contains all concepts known to NNexus. Optimized for efficient lookup, via a split between ```firstword``` and ```tailwords``` of each concept.
+ * ```Objects``` - Resource(URL)-centric, connects URLs with efficient DB identifiers and their domains. Makes change management for re-indexing simple (delete all existing concepts and their synonyms that had been defined at the resource, add the newly indexed ones, if any).
+ * ```Links_cache``` - Change management map, between an objectid (of a linked URL) and one or more conceptid's (of the discovered concepts in that URL).
+     It is now possible to do fine-grained change management on a concept level, as the cache can be invalidated on a per-concept basis, instead of per-object.
+ * ```Dangling_cache``` - new table, similar to Links_cache but for concept **candidates** only.
+ * ```Candidates``` - new table, similar to Concepts, but contains concept candidates, identified by their first word and natural language term ('firstword' and 'tailwords' columns).
+
+**NOTE:** The ```Dangling_cache``` and ```Candidates``` tables are yet to be utilized, as we would require an implementation of term-likelihood analysis.
+
+Initially, NNexus also supported MySQL as a backend, but the modest size of the concept snapshot motivated simplifying the setup and using an SQLite database.
+On any modern machine that allows to have an in-memory database for NNexus processing, while still having persistence and provenance to the file system.
+The typical NNexus snapshot database is under 10MB in size.
 
 ## Concept Discovery
  Discuss Longest-token matching, ideas for improvements.
