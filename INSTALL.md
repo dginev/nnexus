@@ -31,8 +31,12 @@ However, Deploying through Apache or Hypnotoad would be clearly the way to go fo
 ## Production Apache Configuration
 
 Set up virtual hosts, e.g. in
- /etc/apache2/sites-available/nnexus 
- /etc/apache2/sites-enabled/nnexus 
+```
+/etc/apache2/sites-available/nnexus 
+/etc/apache2/sites-enabled/nnexus 
+```
+
+with content:
 
 ```
 <VirtualHost *:80>
