@@ -59,7 +59,7 @@ yet the coverage of the original NNexus request types is incomplete.
 Auto-linking example:
 ```json
   {"function":"linkentry",
-   "body":"&lt;html&gt;&lt;body&gt;&lt;p&gt;Some text using myconcept, ourconcept or theirconcept&lt;p&gt;&lt;body&gt;&lt;html&gt;",
+   "body":"<html><body><p>Some text using myconcept, ourconcept or theirconcept</p></body></html>",
    "format":"html",
    "embed":1,
    "nolink":null}
