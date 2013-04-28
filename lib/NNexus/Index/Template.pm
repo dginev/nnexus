@@ -105,7 +105,7 @@ sub candidate_links {
 	# TODO: Generic implementation should simply retrieve ALL <a href>s as candidate links.
 }
 sub candidate_categories {}
-sub request_interval { 2.5; }
+sub request_interval { 2; }
 
 ### SHARED METHODS
 # To be directly inherited and used by concrete classes

@@ -40,6 +40,7 @@ against
 ago
 ahead
 ain't
+al
 all
 allow
 allows

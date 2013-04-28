@@ -55,12 +55,15 @@ sub index_page {
   my ($self) = @_;
   my $url = $self->current_url;
   my $dom = $self->current_dom;
+  # Nothing to do in category pages
   return [] if $url =~ $category_test;
-
+  # We might want to index a leaf page when descending from different categories, so keep them marked as "not visited"
+  delete $self->{visited}->{$url};
   my ($concept) = map {/([^\(]+)/; lc(rtrim($1));} $dom->find('span[dir="auto"]')->pluck('all_text')->each;
   my @synonyms;
-  my $first_p = $dom->find('p')->[0];
-  @synonyms = (grep {$_ ne $concept} map {lc $_} $first_p->find('b')->pluck('all_text')->each) if $first_p;
+  # Bold entries in the first paragraph are typically synonyms.
+  my $first_p = $dom->find('p')->[0];  
+  @synonyms = (grep {(length($_)>4) && ($_ ne $concept)} map {lc $_} $first_p->children('b')->pluck('text')->each) if $first_p;
   my $categories = $self->current_categories || ['XX-XX'];
   return [{ url => $url,
 	 concept => $concept,
@@ -80,7 +83,7 @@ sub candidate_categories {
 }
 
 # The subcategories trail into unrelated topics after the 4th level...
-sub depth_limit {4;}
+sub depth_limit {10;} # But let's bite the bullet and manually strip away the ones that are pointless
 
 # Utility:
 # Right trim function to remove trailing whitespace
