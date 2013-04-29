@@ -38,7 +38,7 @@ sub index_page {
   my ($self) = @_;
   my $url = $self->current_url;
   my $dom = $self->current_dom;
-  return [] unless $self->leaf_test;
+  return [] if $dom->find('#directory')->[0];
   # TODO: Support multiple MSC categories in the same page, not only [0]
   my $msc = $dom->find('meta[scheme="MSC_2000"]')->[0];
   my $category = $msc->attrs('content') if $msc;
@@ -54,8 +54,7 @@ sub index_page {
 
 sub depth_limit {10;}
 sub request_interval { 30.5; }
-sub leaf_test { ! (defined $_[0]->current_dom->find('#directory')->[0] ) }
-
+sub leaf_test { $_[1] !~ /letters/ }
 1;
 __END__
 

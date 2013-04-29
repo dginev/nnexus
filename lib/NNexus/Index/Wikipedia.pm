@@ -84,7 +84,7 @@ sub candidate_categories {
 
 # The subcategories trail into unrelated topics after the 4th level...
 sub depth_limit {10;} # But let's bite the bullet and manually strip away the ones that are pointless
-sub leaf_test { ! ($_[1] =~ /$category_test/); }
+sub leaf_test { $_[1] !~ /$category_test/ }
 # Utility:
 # Right trim function to remove trailing whitespace
 sub rtrim {
