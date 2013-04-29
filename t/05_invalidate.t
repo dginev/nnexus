@@ -49,9 +49,10 @@ my $modified_entry_1 = <<'PM';
 </html>
 PM
 my $dom = Mojo::DOM->new($modified_entry_1);
-my $dispatcher = NNexus::Index::Dispatcher->new(db=>$db,domain=>'Planetmath',verbosity=>0);
+my $dispatcher = NNexus::Index::Dispatcher->new(db=>$db,domain=>'Planetmath',verbosity=>0,
+  start=>$url,dom=>$dom);
 #   Expect an empty list to be returned for invalidation.
-my $payload = $dispatcher->index_step(start=>$url,dom=>$dom);
+my $payload = $dispatcher->index_step();
 is_deeply($payload,[],'Nothing to invalidate, new concept was added.');
 # Trigger an index job on a new DOM of O1, renaming C1 to some new C4.
 my $modified_entry_2 = <<'PM';
@@ -63,8 +64,9 @@ my $modified_entry_2 = <<'PM';
 </html>
 PM
 $dom = Mojo::DOM->new($modified_entry_2);
-$dispatcher = NNexus::Index::Dispatcher->new(db=>$db,domain=>'Planetmath',verbosity=>0);
-$payload = $dispatcher->index_step(start=>$url,dom=>$dom);
+$dispatcher = NNexus::Index::Dispatcher->new(db=>$db,domain=>'Planetmath',verbosity=>0,
+  start=>$url,dom=>$dom);
+$payload = $dispatcher->index_step();
 #   Expect O2 to be returned for invalidation
 is_deeply($payload,['http://planetmath.org/O2'],'O2 returned for invalidation');
 # Trigger an index job on a new DOM of O1, deleting C2. 
@@ -76,8 +78,9 @@ my $modified_entry_3 = <<'PM';
 </html>
 PM
 $dom = Mojo::DOM->new($modified_entry_3);
-$dispatcher = NNexus::Index::Dispatcher->new(db=>$db,domain=>'Planetmath',verbosity=>0);
-$payload = $dispatcher->index_step(start=>$url,dom=>$dom);
+$dispatcher = NNexus::Index::Dispatcher->new(db=>$db,domain=>'Planetmath',verbosity=>0,
+  start=>$url,dom=>$dom);
+$payload = $dispatcher->index_step();
 #   Expect O3 to be return for invalidation
 is_deeply($payload,['http://planetmath.org/O3'],'O3 returned for invalidation');
 

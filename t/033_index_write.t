@@ -5,7 +5,6 @@ use Test::More tests => 6;
 
 use NNexus::Job;
 use NNexus::DB;
-use Data::Dumper;
 use Mojo::DOM;
 
 sub local_dom {
@@ -29,7 +28,7 @@ my $opts = {
 };
 
 my $db = NNexus::DB->new(%{$opts->{database}});
-use Data::Dumper;
+
 sub index_test {
   my (%options)=@_;
   # Prepare a Mojo::DOM

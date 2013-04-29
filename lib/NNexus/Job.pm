@@ -99,14 +99,14 @@ sub _index {
   my $domain = $self->{domain} || 'all';
   my $url = $self->{url}||$self->{body};
   my $dom = $self->{dom};
+  my $should_update = $self->{should_update} // 1;
   require NNexus::Index::Dispatcher;
-  my $dispatcher = NNexus::Index::Dispatcher->new(db=>$self->{db},domain=>$domain,verbosity=>$self->{verbosity});
+  my $dispatcher = NNexus::Index::Dispatcher->new(db=>$self->{db},domain=>$domain,
+    verbosity=>$self->{verbosity},should_update=>$should_update,
+    start=>$url,dom=>$dom);
   my @invalidation_suggestions;
-  my $payload = $dispatcher->index_step(start=>$url,dom=>$dom);
-  push @invalidation_suggestions, @{$payload};
-  while ($payload = $dispatcher->index_step ) {
-    push @invalidation_suggestions, @{$payload};
-  }
+  while (my $payload = $dispatcher->index_step) {
+    push @invalidation_suggestions, @{$payload}; }
   $self->_ok_with(\@invalidation_suggestions,"IndexConcepts succeeded in domain $domain, on: ".($url||'domain_root'));
 }
 

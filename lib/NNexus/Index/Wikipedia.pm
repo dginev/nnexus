@@ -19,7 +19,6 @@ use warnings;
 use strict;
 use base qw(NNexus::Index::Template);
 use feature 'say';
-use Data::Dumper;
 use List::MoreUtils qw(uniq);
 
 # EN.Wikipedia.org indexing template
@@ -32,10 +31,10 @@ our $wiki_base = 'http://en.wikipedia.org';
 # 2. Candidate links to subcategories and concept pages
 sub candidate_links {
   my ($self)=@_;
-  my $dom = $self->current_dom;
   my $url = $self->current_url;
   # Add links from subcategory pages
-  return [] unless $url =~ $category_test;
+  return [] if $self->leaf_test($url);
+  my $dom = $self->current_dom;
   my $subcategories = $dom->find('#mw-subcategories')->[0];
   return [] unless defined $subcategories;
   my @category_links = $subcategories->find('a')->each;
@@ -54,9 +53,9 @@ sub candidate_links {
 sub index_page { 
   my ($self) = @_;
   my $url = $self->current_url;
-  my $dom = $self->current_dom;
   # Nothing to do in category pages
-  return [] if $url =~ $category_test;
+  return [] unless $self->leaf_test($url);
+  my $dom = $self->current_dom;
   # We might want to index a leaf page when descending from different categories, so keep them marked as "not visited"
   delete $self->{visited}->{$url};
   my ($concept) = map {/([^\(]+)/; lc(rtrim($1));} $dom->find('span[dir="auto"]')->pluck('all_text')->each;
@@ -65,6 +64,7 @@ sub index_page {
   my $first_p = $dom->find('p')->[0];  
   @synonyms = (grep {(length($_)>4) && ($_ ne $concept)} map {lc $_} $first_p->children('b')->pluck('text')->each) if $first_p;
   my $categories = $self->current_categories || ['XX-XX'];
+
   return [{ url => $url,
 	 concept => $concept,
    scheme => 'wiki',
@@ -84,7 +84,7 @@ sub candidate_categories {
 
 # The subcategories trail into unrelated topics after the 4th level...
 sub depth_limit {10;} # But let's bite the bullet and manually strip away the ones that are pointless
-
+sub leaf_test { ! ($_[1] =~ /$category_test/); }
 # Utility:
 # Right trim function to remove trailing whitespace
 sub rtrim {

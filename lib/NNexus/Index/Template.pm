@@ -28,7 +28,25 @@ sub new {
 	my $ua = Mojo::UserAgent->new;
 	my $visited = $options{visited}||{};
 	my $queue = $options{queue}||[];
-	bless {ua=>$ua,visited=>$visited,queue=>$queue,start=>$options{start}}, $class;
+
+  my $self = bless {ua=>$ua,visited=>$visited,queue=>$queue}, $class;
+
+  # Set current if we're starting up.
+  my $first_url;
+  if (defined $options{start}) {
+    if ($options{start} eq 'default') {
+      $first_url = $self->domain_root;
+    } else {
+      $first_url = $options{start};
+    }}
+  else {
+    $first_url = $self->domain_root; }
+
+  push (@{$self->{queue}}, {
+      url=>$first_url,
+      ($options{dom} ? (dom=>$options{dom}) : ()),
+      depth=>0});
+	return $self;
 }
 sub ua {$_[0]->{ua};}
 
@@ -37,29 +55,16 @@ sub index_step {
   my ($self,%options) = @_;
   my $visited = $self->{visited};
   my $depth;
-  # Set current if we're starting up.
-  if (defined $options{start}) {
-    if ($options{start} eq 'default') {
-      $self->current_url($self->domain_root);
-    } else {
-      $self->current_url($options{start});
-    }
-    $depth=0;
-    delete $options{start};
+
+  # Grab the next job from the queue
+  my $next_step = $self->next_step;
+  if (ref $next_step) {
+    $self->current_url($next_step->{url});
+    $self->current_categories($next_step->{categories});
+    $depth = $next_step->{depth} || 0;
   } else {
-    # Otherwise, grab the next job from the queue
-    my $next_step = shift @{$self->{queue}};
-    while ((ref $next_step) && ($visited->{$next_step->{url}})) {
-      $next_step = shift @{$self->{queue}};
-    }
-    if (ref $next_step) {
-      $self->current_url($next_step->{url});
-      $self->current_categories($next_step->{categories});
-      $depth = $next_step->{depth};
-    } else {
-      # We're out of urls, last step.
-      delete $self->{current_url};
-    }
+    # We're out of urls, last step.
+    delete $self->{current_url};
   }
   # If we've visited, or we're out of urls, terminate.
   my $current_url = $self->current_url;
@@ -67,10 +72,11 @@ sub index_step {
   $visited->{$current_url} = 1; # Mark visited
   # Also skip if we're over the depth limit.
   return $self->index_step if $depth > $self->depth_limit;
+  return [] if $options{skip}; # We are skipping over this URL, return
   # 2.1. Prepare (or just accept) a Mojo::DOM to be analyzed
-  if ($options{dom}) {
-    $self->current_dom($options{dom});
-    delete $options{dom};
+  if ($next_step->{dom}) {
+    $self->current_dom($next_step->{dom});
+    delete $next_step->{dom};
   } else {
     $self->current_dom($self->ua->get($current_url)->res->dom);
     sleep($self->request_interval()); # Don't overload the server
@@ -94,6 +100,17 @@ sub index_step {
   return $payload;
 }
 
+sub next_step {
+  my ($self) = @_;
+  my $visited = $self->{visited};
+  # Otherwise, grab the next job from the queue
+  my $next_step = shift @{$self->{queue}};
+  while ((ref $next_step) && ($visited->{$next_step->{url}})) {
+    $next_step = shift @{$self->{queue}};
+  }
+  return $next_step;
+}
+
 ### PULL API
 # To be overloaded by concrete classes
 sub depth_limit {4;}
@@ -106,7 +123,8 @@ sub candidate_links {
 }
 sub candidate_categories {}
 sub request_interval { 2; }
-
+# Tests if the page is a leaf, in which case we want to skip it when should_update is 0
+sub leaf_test {0;}
 ### SHARED METHODS
 # To be directly inherited and used by concrete classes
 
@@ -174,7 +192,7 @@ This class contains the generic NNexus indexing logic, and offers the PULL API f
 
 =over 4
 
-=item C<< my $indexer = NNexus::Index::Mydomain->new(); >>
+=item C<< my $indexer = NNexus::Index::Mydomain->new(start=>'default',dom=>$dom); >>
 
 The most reliable way to instantiate a domain indexer. The 'Mydomain' string is conventionally the shorthand
 name a certain site is referred by, e.g. Planetmath, Wikipedia, Dlmf or Mathworld. 
@@ -182,7 +200,7 @@ name a certain site is referred by, e.g. Planetmath, Wikipedia, Dlmf or Mathworl
 As a handy convention, all plug-in indexer names "$domain" should be compliant with
 $domain eq ucfirst(lc($domain))
 
-=item C<< my $payload = $indexer->index_step(start=>'default',dom=>$dom); >>
+=item C<< my $payload = $indexer->index_step; >>
 
 While the index_step method is the main externally-facing interface method,
   it is also the most important shared method between all domain indexers,
@@ -196,11 +214,8 @@ The index_step method is the core of the indexing logic behind NNexus. It provid
  - The indexing is bound by depth (if requested) and keeps a cache of visited pages, avoiding loops.
  - An automatic one second sleep is triggered whenever a page is fetched, in good crawling manners.
 
-It optionally takes two parameters:
- - start - sets the URL for the first indexing step. Use 'default' for the default root page of the domain.
- - dom - optionally provides a ready Mojo::DOM object of the content behind the current URL,
-         instead of performing a regular HTTP GET to retrieve the content.
-         Useful for testing.
+The only option accepted by the method is a boolean switch "skip", which when turned on skips the next job in
+  the queue.
 
 =back
 

@@ -25,9 +25,7 @@ sub candidate_links {
   my ($self) = @_;
   my $url = $self->current_url;
   my $dom = $self->current_dom;
-  my $title = $dom->find('div[property="dct:title"]')->[0];
-  # Only concepts have titles, so consider next links IF undefined:
-  return [] if $title;
+  return [] if $self->leaf_test();
   # Encyclopedia entries are root links "/entry"
   my $content = $dom->find('div[class="view-content"]')->[0];
   my @encyclopedia_links = $content ? $content->find('a')->each : ();
@@ -44,7 +42,7 @@ sub index_page {
   my ($self) = @_;
   my $url = $self->current_url;
   my $dom = $self->current_dom->xml(1);
-  my $title = $dom->find('div[property="dct:title"]')->[0];
+  my $title = $self->leaf_test();
   # Only concepts have titles, so return an empty harvest if undefined:
   return [] unless $title;
   # Also record defined concepts
@@ -79,6 +77,8 @@ sub index_page {
 
 sub depth_limit {10000;} #We're just traversing down the list of pages, nothing dangerous here
 sub request_interval {0.5;}
+# Only concepts have titles, so consider next links IF undefined:
+sub leaf_test { $_[0]->current_dom->find('div[property="dct:title"]')->[0]; }
 
 1;
 __END__

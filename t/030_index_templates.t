@@ -18,14 +18,12 @@ sub local_dom {
 }
 
 # Testing all provided Index::Template classes
-my ($url, $dom,$concepts);
-
+my ($url, $dom,$concepts,$indexer);
 # 1. Test the Wikipedia indexing
 $url = 't/pages/Integral.html';
 $dom = local_dom($url);
-$concepts = NNexus::Index::Wikipedia->new->index_step(
-  start=>$url,
-  dom=>$dom);
+$indexer = NNexus::Index::Wikipedia->new(start=>$url, dom=>$dom);
+$concepts = $indexer->index_step;
 is_deeply($concepts, [{
                        'synonyms' => [
                                       'integration',
@@ -42,9 +40,8 @@ is_deeply($concepts, [{
 # 2. Test the PlanetMath indexing
 $url = 't/pages/HeytingAlgebra.html';
 $dom = local_dom($url);
-$concepts = NNexus::Index::Planetmath->new->index_step(
-  start=>$url,
-  dom=>$dom);
+$indexer = NNexus::Index::Planetmath->new(start=>$url,dom=>$dom);
+$concepts = $indexer->index_step;
 is_deeply($concepts,[{
 		      'url' => 't/pages/HeytingAlgebra.html',
 		      'categories' => [
@@ -70,9 +67,8 @@ is_deeply($concepts,[{
 # 3. Test the MathWorld indexing
 $url = 't/pages/QuadraticInvariant.html';
 $dom = local_dom($url);
-$concepts = NNexus::Index::Mathworld->new->index_step(
-  start=>$url,
-  dom=>$dom);
+$indexer = NNexus::Index::Mathworld->new(start=>$url,dom=>$dom);
+$concepts = $indexer->index_step;
 is_deeply($concepts,[{
                       'url' => 't/pages/QuadraticInvariant.html',
                       'categories' => [
@@ -87,9 +83,8 @@ is_deeply($concepts,[{
 $url = 't/pages/idx_Z.html';
 my $original_url = 'http://dlmf.nist.gov/idx/Z';
 $dom = local_dom($url);
-$concepts = NNexus::Index::Dlmf->new->index_step(
-  start=>$original_url,
-  dom=>$dom);
+$indexer = NNexus::Index::Dlmf->new(start=>$original_url,dom=>$dom);
+$concepts = $indexer->index_step;
 is_deeply($concepts,[{
                       'url' => 'http://dlmf.nist.gov/35.4',
                       'categories' => [

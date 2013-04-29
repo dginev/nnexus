@@ -30,47 +30,59 @@ sub new {
   $domain = $domain ? ucfirst(lc($domain)) : '';
   die ("Bad domain name: $domain; Must contain only alphanumeric characters!") if $domain =~ /\W/;
   my $index_template;
+  my $should_update = $options{should_update} // 1;
   my $eval_return = eval {require "NNexus/Index/$domain.pm"; 1; };
   if ($eval_return && (!$@)) {
-    $index_template = eval " NNexus::Index::$domain->new(); "
+    $index_template = eval {
+      "NNexus::Index::$domain"->new(start=>$options{start},dom=>$options{dom},should_update=>$should_update);
+    };
   } else {
     print STDERR "NNexus::Index::$domain not available, fallback to generic indexer.\n";
     print STDERR "Reason: $@\n" if $@;
     require NNexus::Index::Template;
     # The generic template will always fail...
     # TODO: Should we fallback to Planetmath instead?
-    $index_template = NNexus::Index::Template->new;
+    $index_template = NNexus::Index::Template->new(start=>$options{start},dom=>$options{dom},should_update=>$should_update);
   }
 
   bless {index_template=>$index_template,domain=>$domain,db=>$db,
-	verbosity=>$options{verbosity}||0}, $class;
+	verbosity=>$options{verbosity}||0,should_update=>$should_update}, $class;
 }
 
 sub index_step {
   my ($self,%options) = @_;
-  # 1. Relay the indexing request to the template, gather concepts
   my $template = $self->{index_template};
   my $db = $self->{db};
   my $domain = $self->{domain};
   my $verbosity = $options{verbosity} ? $options{verbosity} : $self->{verbosity};
+  # 1. Check if object has already been indexed:
+  my $next_step = $template->next_step;
+  return unless ref $next_step; # Done if nothing left.
+  unshift @{$template->{queue}}, $next_step; # Just peaking, keep it in the queue
+  my $url = $next_step->{url}; # Grab the next canonical URL
+  my $object = $db->select_object_by(url=>$url);
+  my $objectid = $object->{objectid};
+  my $old_concepts = [];
+  if (! $objectid) {
+    # 1.1. If not present, add it:
+    $objectid = $db->add_object_by(url=>$url,domain=>$domain);
+  } else {
+    # 1.2. Otherwise, skip if we don't want to update and leaf
+    if ((!$self->{should_update}) && $template->leaf_test($url)) {
+      # Skip leaves, when we don't want to update!
+      print STDERR "Skipping over $url\n";
+      my $indexed_concepts = $template->index_step(skip=>1);
+      return []; }
+    # 1.3. Otherwise, grab all concepts defined by the object.
+    $old_concepts = $db->select_concepts_by(objectid=>$objectid);
+  }
+  # 2. Relay the indexing request to the template, gather concepts
   my $indexed_concepts = $template->index_step(%options);
   return unless defined $indexed_concepts; # Last step.
 
   # Idea: If a page can no longer be accessed, we will never delete it from the object table,
   #       we will only empty its payload (= no concepts defined by it) from the concept table.
 
-  # 2. Check if object has already been indexed:
-  my $url = $template->current_url; # Grab the current canonical URL
-  my $object = $db->select_object_by(url=>$url);
-  my $objectid = $object->{objectid};
-  my $old_concepts = [];
-  if (! $objectid) {
-    # 2.1. If not present, add it:
-    $objectid = $db->add_object_by(url=>$url,domain=>$domain);
-  } else {
-    # 2.2. Otherwise, grab all concepts defined by the object.
-    $old_concepts = $db->select_concepts_by(objectid=>$objectid);
-  }
   # 3.0.1 Flatten out incoming synonyms and categories to individual concepts:
   my $new_concepts = flatten_concept_harvest($indexed_concepts);
   # 3.0.2 Make sure they're admissible names;
@@ -137,7 +149,8 @@ of an indexing step is a list of suggested URLs to be relinked, a process called
 
 =over 4
 
-=item C<< my $dispatcher = NNexus::Index::Dispatcher->new(domain=>$domain,db=>$db,$verbosity=>0|1); >>
+=item C<< my $dispatcher = NNexus::Index::Dispatcher->new(domain=>$domain,db=>$db,$verbosity=>0|1,
+start=>$url, dom=>$dom); >>
 
 The object constructor prepares a domain crawler object
  ( NNexus::Index::ucfirst(lc($domain)) )
@@ -145,6 +158,12 @@ and requires a NNexus::DB object, $db, for database interactions.
 
 The returned dispatcher object can be used to iteratively index the domain,
 via the index_step method.
+
+The method accepts the following options:
+ - start - the initial URL, required for first invocation
+ - dom - optional, provides a Mojo::DOM object for the current URL
+         instead of performing an HTTP GET to retrieve it.
+ - verbosity - 0 for quiet, 1 for detailed progress messages
 
 =item C<< my $invalidated_URLs = $dispatcher->index_step(%options); >>
 
@@ -156,12 +175,8 @@ Performs an indexing step by:
  - Computes and returns an impact graph of previously linked objects
    (aka "invalidation")
 
-The method accepts the following options:
- - start - the initial URL, required for first invocation
- - dom - optional, provides a Mojo::DOM object for the current URL
-         instead of performing an HTTP GET to retrieve it.
- - verbosity - 0 for quiet, 1 for detailed progress messages
- 
+Accepts no options, all customization is to be achieved through the "new" constructor.
+
 =back
 
 =head1 AUTHOR
