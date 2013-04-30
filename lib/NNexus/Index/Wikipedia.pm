@@ -21,10 +21,46 @@ use base qw(NNexus::Index::Template);
 use feature 'say';
 use List::MoreUtils qw(uniq);
 
+# 0. Special Blacklist for Wikipedia categories:
+our $wiki_category_blacklist = {map {$_=>1}
+qw(Pattern_matching Computer_algebra_systems Data_mining_and_machine_learning_software
+Audio_editors Digital_signal_processors Image_processing Speech_processing
+Speech_recognition Video_processing Voice_technology File_sharing_networks
+Computer-aided_design Geographic_information_systems Graph_drawing Researchers_in_geometric_algorithms
+Numerical_software Pattern_matching_programming_languages String_matching_algorithms
+Molecular_dynamics Internet_search_algorithms Statistical_software Buildings_and_structures_by_shape
+Numerology Telephone_numbers Audio_codecs MP3 Video_codecs Broken_block_ciphers Broken_stream_ciphers
+Ciphers OS_X_audio_editors Digital_audio_workstation_software Computer_vision
+Digital_photography Graphics_file_formats Medical_imaging Speech_processing_software 
+Speech_synthesis Video_compression BitTorrent Distributed_data_storage Gnutella
+CAD_file_formats Computer-aided_design_software Earth_sciences_graphics_software Geocodes
+GIS_file_formats GIS_software OpenStreetMap Geographic_information_systems_organizations
+Web_mapping Graph_drawing_software Data_analysis_software Econometrics_software Free_statistical_software
+Plotting_software Statistical_programming_languages Time_series_software Basilicas
+Cubic_buildings Domes Octagonal_buildings Pyramids Rotundas Round_barns Towers Twisted_buildings_and_structures
+Top_lists Bible_code Telephone_numbers_by_country North_American_Numbering_Plan Telephone_directory_publishing_companies
+Telephone_number_stubs Digital_audio_players Video_conversion_software Classical_ciphers Block_ciphers
+Stream_ciphers Uncracked_codes_and_ciphers Ableton_Live
+Applications_of_computer_vision Computer_vision_research_infrastructure Digital_cameras
+Image_sensors Photo_software Adobe_Flash Contrast_agents Electrophysiology Magnetic_resonance_imaging
+Medical_photography_and_illustration Nuclear_medicine Radiography Speech_synthesis_software
+BitTorrent_clients BitTorrent_websites Cloud_storage Distributed_data_storage_systems Free_computer-aided_design_software
+Electronic_design_automation_software Virtual_globes Geolocation ISO_3166 Lists_of_postal_codes
+Nomenclature_of_Territorial_Units_for_Statistics Spatial_databases Web_Map_Services
+Fortran R_(programming_language) Spreadsheet_software Data_visualization_software Light
+Radiation Sound Water_waves Twelve-tone_and_serial_composers Ecclesiastical_basilicas Secular_basilicas
+Aqueducts Arch_bridges Bridge-tunnels Cable-stayed_bridges Covered_bridges Girder_bridges
+Moveable_bridges Navigable_aqueducts Skew_bridges Suspension_bridges Swing_bridges Truss_bridges
+Viaducts Astronomical_observatories Covered_stadiums Geologic_domes Mosques Planetaria Octagonal_buildings_in_Canada
+Octagon_houses Octagonal_buildings_in_the_United_States Ziggurats Round_barns_in_the_United_States Towers_by_country
+Bell_towers Chimneys Clock_towers Communication_towers Defunct_towers Fictional_towers Fire_lookout_towers
+Guyed_masts Lighthouses Observation_towers Peel_towers Skyscrapers Tower_mills Water_towers Mast_stubs
+)};
+
 # EN.Wikipedia.org indexing template
 # 1. We want to start from the top-level math category
 sub domain_root { "http://en.wikipedia.org/wiki/Category:Mathematical_concepts"; }
-our $category_test = qr/\/wiki\/Category:/;
+our $category_test = qr/\/wiki\/Category:(.+)$/;
 our $english_category_test = qr/^\/wiki\/Category:/;
 our $english_concept_test = qr/^\/wiki\/[^\/\:]+$/;
 our $wiki_base = 'http://en.wikipedia.org';
@@ -33,20 +69,23 @@ sub candidate_links {
   my ($self)=@_;
   my $url = $self->current_url;
   # Add links from subcategory pages
-  return [] if $self->leaf_test($url);
-  my $dom = $self->current_dom;
-  my $subcategories = $dom->find('#mw-subcategories')->[0];
-  return [] unless defined $subcategories;
-  my @category_links = $subcategories->find('a')->each;
-  @category_links = grep {defined && /$english_category_test/} map {$_->{href}} @category_links;
+  if ($url =~ /$category_test/ ) {
+    my $category_name = $1;
+    return [] if $wiki_category_blacklist->{$category_name};
+    my $dom = $self->current_dom;
+    my $subcategories = $dom->find('#mw-subcategories')->[0];
+    return [] unless defined $subcategories;
+    my @category_links = $subcategories->find('a')->each;
+    @category_links = grep {defined && /$english_category_test/} map {$_->{href}} @category_links;
 
-  # Also add terminal links:
-  my $concepts = $dom->find('#mw-pages')->[0];
-  my @concept_links = $concepts->find('a')->each if defined $concepts;
-  @concept_links = grep {defined && /$english_concept_test/} map {$_->{href}} @concept_links;
+    # Also add terminal links:
+    my $concepts = $dom->find('#mw-pages')->[0];
+    my @concept_links = $concepts->find('a')->each if defined $concepts;
+    @concept_links = grep {defined && /$english_concept_test/} map {$_->{href}} @concept_links;
 
-  my $candidates = [ map {$wiki_base . $_ } (@category_links, @concept_links) ];
-  return $candidates;
+    my $candidates = [ map {$wiki_base . $_ } (@category_links, @concept_links) ];
+    return $candidates;
+  } else {return [];} # skip leaves
 }
 
 # Index a concept page, ignore category pages
@@ -75,7 +114,7 @@ sub index_page {
 
 sub candidate_categories {
 	my ($self) = @_;
-	if ($self->current_url =~ /\/wiki\/Category:(.+)$/ ) {
+	if ($self->current_url =~ /$category_test/ ) {
 		return [$1];
 	} else {
 		return $self->current_categories;
