@@ -55,6 +55,29 @@ Viaducts Astronomical_observatories Covered_stadiums Geologic_domes Mosques Plan
 Octagon_houses Octagonal_buildings_in_the_United_States Ziggurats Round_barns_in_the_United_States Towers_by_country
 Bell_towers Chimneys Clock_towers Communication_towers Defunct_towers Fictional_towers Fire_lookout_towers
 Guyed_masts Lighthouses Observation_towers Peel_towers Skyscrapers Tower_mills Water_towers Mast_stubs
+Molecular_topology Graph_description_languages Mathematical_chemistry Algorithm_description_languages
+Digital_signal_processing Advanced_Access_Content_System
+Error_detection_and_correction Computational_physics Pseudorandom_number_generators Algorithms_on_strings
+String_data_structures Gyroscopes Vestibular_system Balloons Dualism Dimensional_instruments Nothing Phenomena
+Space Spacetime Structure Time Tactical_formations Statistical_data_types Rotating_machines Torque Rubik%27s_Cube
+Balloons_(aircraft) Consciousness%E2%80%93matter_dualism Dichotomies Duos Technical_drawing Darkness Hesychasm
+Silence Vacuum Action Cultural_trends Earliest_phenomena Events Evolution Hazards Human_development Illusions
+Industrial_processes Life Motion  Periodic_phenomena Physical_phenomena Thermodynamic_processes Length Navigation
+Outer_space Places Abstraction Anatomy Chaos Components Conceptual_distinctions Design Geography Mental_structures
+Musical_form Objects Organizations Rhythm Skeletal_system Society Statics Systems General_relativity Special_relativity
+Time_by_country Causality Cosmology Daylight_saving_time Future Horology Interregnums Time_management Nostalgia
+Philosophy_of_time Power_(physics) Time_in_religion Time_travel Timekeeping Time_zones Epidemiology Official_statistics
+Quality_control X-ray_scattering Carousels Engines Rotary_engines Lathes Turbines Wheels Balloon-borne_experiments
+Ballooning Equal_temperaments Spiritualism Vitalism Mind%E2%80%93body_problem Art_duos Criminal_duos Entertainer_duos
+Fictional_duos Filmmaking_duos Married_couples Sibling_duos Sports_duos Writing_duos Deafness Silent_film Mime
+Behavior Creativity Determinism Fictional_activities Free_will Intention Motivation Planning Prevention Skills Fads
+Fashion Public_opinion Style Inventions Lists_of_events Fictional_events Accidents Cancelled_projects_and_events
+Causes_of_events Conflicts Controversies  Current_events Disasters  Hoaxes News Organized_events Recurring_events
+Biological_evolution Memetics Sociocultural_evolution Stellar_evolution Fire Hazardous_motor_vehicle_activities
+Natural_hazards Warning_systems Adolescence Adulthood Ageing Childhood Death Developmental_disabilities Infancy
+Parenting Personal_development Developmental_psychology Youth Magic_(illusion) Optical_illusions Abrasive_blasting
+Chemical_processes Coatings Combustion_engineering Food_processing Furnaces Glass_forming Industrial_machinery
+Joining Machining Metallurgical_processes Packaging Papermaking Photographic_processes Printing_processes
 )};
 
 # EN.Wikipedia.org indexing template
@@ -101,7 +124,7 @@ sub index_page {
   my @synonyms;
   # Bold entries in the first paragraph are typically synonyms.
   my $first_p = $dom->find('p')->[0];  
-  @synonyms = (grep {(length($_)>4) && ($_ ne $concept)} map {lc $_} $first_p->children('b')->pluck('text')->each) if $first_p;
+  @synonyms = (grep {(length($_)>4) && ($_ ne $concept)} map {lc $_} $first_p->children('b')->pluck('all_text')->each) if $first_p;
   my $categories = $self->current_categories || ['XX-XX'];
 
   return [{ url => $url,
