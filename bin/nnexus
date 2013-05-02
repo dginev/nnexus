@@ -65,7 +65,7 @@ helper prepare_job => sub {
   $parameters->{'format'} //= 'html';
   $parameters->{'embed'} //= 1;
   $parameters->{'function'} //= 'linkentry';
-  $parameters->{'domain'} //= 'planetmath';
+  $parameters->{'domain'} //= 'all';
   foreach my $key(keys %override) {
     $parameters->{$key} = $override{$key};
   }

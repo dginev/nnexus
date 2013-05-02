@@ -20,7 +20,7 @@ For **installation and deployment**, consult [the INSTALL file](INSTALL.md).
 
 These two lines of PHP illustrate how NNexus can be used via [Planetary](https://github.com/KWARC/planetary)'s curl:
 ```php
-  $data = 'function=linkentry&body=' . urlencode($text) . '&format='.$format.'&domain=planetmath';
+  $data = 'function=linkentry&body=' . urlencode($text) . '&format='.$format.'&domain=Planetmath';
   $content = planetary_webglue_do_post('http://127.0.0.1:3000/linkentry',$data);
 ```
 ## NNexus API
