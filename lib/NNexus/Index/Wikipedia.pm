@@ -78,6 +78,9 @@ Natural_hazards Warning_systems Adolescence Adulthood Ageing Childhood Death Dev
 Parenting Personal_development Developmental_psychology Youth Magic_(illusion) Optical_illusions Abrasive_blasting
 Chemical_processes Coatings Combustion_engineering Food_processing Furnaces Glass_forming Industrial_machinery
 Joining Machining Metallurgical_processes Packaging Papermaking Photographic_processes Printing_processes
+Kinematics Human_height Handedness Wave_farms_in_Denmark Wave_farms_in_the_United_Kingdom
+Crystallography Acceleration Linkages Mechanisms Robot_kinematics African_Pygmies Dwarfism
+People_with_gigantism Growth_disorders Growth_hormones Density Compositions_for_piano_left-hand_and_orchestra
 )};
 
 # EN.Wikipedia.org indexing template

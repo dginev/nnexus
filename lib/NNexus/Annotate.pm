@@ -25,6 +25,7 @@ our @EXPORT_OK = qw(serialize_concepts);
 
 use feature 'switch';
 use Mojo::JSON 'j';
+use List::MoreUtils;
 use Data::Dumper;
 
 sub serialize_concepts {
@@ -48,7 +49,25 @@ sub serialize_concepts {
         my $to = $concept->{offset_end};
         my $length = $to-$from;
         my $text = substr($body,$from,$length);
-        substr($body,$from,$length) = '<a href="'.$concept->{link}.'">'.$text.'</a>'
+        my @links = ([$concept->{link},$concept->{domain}]);
+        while (@$concepts && ($$concepts[-1]->{offset_begin} == $from)) {
+          $concept = pop @$concepts;
+          push @links, [$concept->{link},$concept->{domain}];
+        }
+        if (@links == 1) {
+          # Single link, normal anchor
+          substr($body,$from,$length) = '<a class="nnexus_concept" href="'.$links[0]->[0].'">'.$text.'</a>';
+        } else {
+          # Multi-link, menu anchor
+          substr($body,$from,$length) =
+            # Trigger menu on click
+            '<a class="nnexus_concept" href="javascript:void(0)" onClick="this.nextSibling.style.display=\'inline\'">'
+            . $text
+            . '</a>'
+            . '<sup style="display: none;">' # Hidden container for the link menu
+            . join('',map {'<a class="nnexus_concept" href="'.$_->[0].'">'.domain_tooltip($_->[1]).'</a>'} @links)
+            .'</sup>';
+        }
       }
       return $body;
     } else {
@@ -62,6 +81,17 @@ sub serialize_concepts {
       default { return j($concepts); }
     };
   }
+}
+
+our $tooltip_images = {
+ Planetmath=>'http://planetmath.org/sites/default/files/fab-favicon.ico',
+ Wikipedia=>'http://bits.wikimedia.org/favicon/wikipedia.ico',
+ Dlmf=>'http://dlmf.nist.gov/style/DLMF-16.png',
+ Mathworld=>'http://mathworld.wolfram.com/favicon_mathworld.png'
+};
+sub domain_tooltip {
+  my ($domain_name) = @_;
+  '<img src="'.$tooltip_images->{$domain_name}.'" alt="'.$domain_name.'"></img>';
 }
 
 # TODO: Given a list of internally represented annotations, serialize them to
