@@ -37,6 +37,7 @@ sub serialize_concepts {
   # perl - return back the datastructrure as-is
   my $annotation = $options{annotation};
   my $concepts = $options{concepts}; 
+  my $total_concepts = 0;
   if ($options{embed}) {
     my $body = $options{body};
     if ((!$annotation) || ($annotation eq 'links')) {
@@ -52,8 +53,10 @@ sub serialize_concepts {
         my @links = ([$concept->{link},$concept->{domain}]);
         while (@$concepts && ($$concepts[-1]->{offset_begin} == $from)) {
           $concept = pop @$concepts;
+	  next if grep {$concept->{link} eq $_->[0]} @links; # Don't duplicate URLs.
           push @links, [$concept->{link},$concept->{domain}];
         }
+	$total_concepts += scalar(@links);
         if (@links == 1) {
           # Single link, normal anchor
           substr($body,$from,$length) = '<a class="nnexus_concept" href="'.$links[0]->[0].'">'.$text.'</a>';
@@ -68,6 +71,9 @@ sub serialize_concepts {
             . join('',map {'<a class="nnexus_concept" href="'.$_->[0].'">'.domain_tooltip($_->[1]).'</a>'} @links)
             .'</sup>';
         }
+      }
+      if ($options{verbosity}) {
+	print STDERR "Final Annotation contains ",$total_concepts," concepts.\n";
       }
       return $body;
     } else {

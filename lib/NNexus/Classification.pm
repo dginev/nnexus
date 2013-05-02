@@ -25,9 +25,9 @@ our @EXPORT_OK = qw(msc_similarity disambiguate);
 
 # Let's do things differently here.
 # We will use Jan Wilken Doerrie's MSC similarity metric:
-# "we defined the similarity between two classes as the size of the
+# "we defined the similarity between two categories as the size of the
 #   intersections divided by the size of the union over the ZBL dataset"
-our $msc_similarities = [ # 63x63 matrix, top-level MSC 2000 classes
+our $msc_similarities = [ # 63x63 matrix, top-level MSC 2000 categories
   [1.00000000,0.08157364,0.05611695,0.01857567,0.00526125,0.00493453,0.02162828,0.01738086,0.01488942,0.01995192,0.01850128,0.01315144,0.01112859,0.00875912,0.00258325,0.01958233,0.01059040,0.02694878,0.00814224,0.01508530,0.00391065,0.01222424,0.00659643,0.01744963,0.02033044,0.01715241,0.00549930,0.00368565,0.00844784,0.01205280,0.00590242,0.00640019,0.00470555,0.01450557,0.01117073,0.01519435,0.01915299,0.00949692,0.02112821,0.01075672,0.00831446,0.01284788,0.02376349,0.01846751,0.02192419,0.02827359,0.06235569,0.01871924,0.02326626,0.02549734,0.01149905,0.00904571,0.02978857,0.01858157,0.01913664,0.00986617,0.00980736,0.02622097,0.02015345,0.02370473,0.02309777,0.02525110,0.06049483],
   [0.08157364,1.00000000,0.04843149,0.00532875,0.00205666,0.00135896,0.01867335,0.01162555,0.00454580,0.00914432,0.00561143,0.00339066,0.00233557,0.00318598,0.00112062,0.00596528,0.00474509,0.01721411,0.00592865,0.00682061,0.00180499,0.00344266,0.00441784,0.00357584,0.00276735,0.00367641,0.00180428,0.00557237,0.00315267,0.00397678,0.00230947,0.00158525,0.00194050,0.00436769,0.00245270,0.00323992,0.03266539,0.00462011,0.00786873,0.00592230,0.00625668,0.00554406,0.00367927,0.00894575,0.00961623,0.00339433,0.00442661,0.02332687,0.00304362,0.00367554,0.00783214,0.00359950,0.01357759,0.00583133,0.01961088,0.03410275,0.00370477,0.00360240,0.00517674,0.00367842,0.00215416,0.00470674,0.02079996],
   [0.05611695,0.04843149,1.00000000,0.01860533,0.09942421,0.05170597,0.01116272,0.02366804,0.01088601,0.00678883,0.00619870,0.01188854,0.00194541,0.03826328,0.00037826,0.03378654,0.00411333,0.01952391,0.02813212,0.00144777,0.00048211,0.00200346,0.00019596,0.00120727,0.00040013,0.00283891,0.00242860,0.00174449,0.00086392,0.00117239,0.00139450,0.00026806,0.00036410,0.01135132,0.00259196,0.00098411,0.00869706,0.00278418,0.00065182,0.04870472,0.00162055,0.00190805,0.00122017,0.01033098,0.00408488,0.00158937,0.11329349,0.00131901,0.00031955,0.00016804,0.00014428,0.00025776,0.01361661,0.00071465,0.00278636,0.00058838,0.00033706,0.01095038,0.02561634,0.00333059,0.00669844,0.02532072,0.00174317],
@@ -96,7 +96,7 @@ our $msc_similarities = [ # 63x63 matrix, top-level MSC 2000 classes
 # Precompute Logs
 our $msc_log_similarities = [map {[map {$_ ? log($_) : undef} @$_]} @$msc_similarities];
 
-our $msc_to_array = {
+our $msc_to_array_index = {
   '00'=>0, '01'=>1, '03'=>2, '05'=>3, '06'=>4, '08'=>5, 11=>6, 12=>7, 13=>8, 14=>9, 15=>10,
   16=>11, 17=>12, 18=>13, 19=>14, 20=>15, 22=>16, 26=>17, 28=>18, 30=>19, 31=>20,
   32=>21, 33=>22, 34=>23, 35=>24, 37=>25, 39=>26, 40=>27, 41=>28, 42=>29, 43=>30,
@@ -105,12 +105,12 @@ our $msc_to_array = {
   80=>51, 81=>52, 82=>53, 83=>54, 85=>55, 86=>56, 90=>57, 91=>58, 92=>59, 93=>60,
   94=>61, 97=>62 };
 
-sub msc_to_array { $msc_to_array->{"".substr($_[0],0,2)}; }
+sub msc_to_array_index { $msc_to_array_index->{"".substr($_[0],0,2)}; }
 sub msc_similarity {
   my ($category1, $category2) = @_;
   # Top-level MSC categories only at the moment:
-  my $index1 = msc_to_array($category1);
-  my $index2 = msc_to_array($category2);
+  my $index1 = msc_to_array_index($category1);
+  my $index2 = msc_to_array_index($category2);
   ((defined $index1) && (defined $index2)) ?
   # Well-defined, lookup in matrix
   return $msc_similarities->[$index1]
@@ -119,30 +119,96 @@ sub msc_similarity {
   return 0; }
 
 use Data::Dumper;
+# Discover the most similar cluster of concepts
 sub disambiguate {
   my ($candidates) = @_;
-  if (0) {# disabled for now:
-    my $class_view = {};
-    my $index=0;
-    foreach my $candidate(@$candidates) {
-      next unless $candidate->{scheme} eq 'msc'; # TODO: Map everything into MSC!
-      print STDERR Dumper($candidate);
-      push @{$class_view->{msc_to_array($candidate->{category})}}, $index;
-      $index++;
-    }
-    # Discover the most similar cluster of concepts
-    print STDERR Dumper($class_view);
-    # How about:
-    # - group by top-level MSC category and point into the original candidates array
-    # - also, use the similarity indeces, for faster lookups
-    # - the number of concepts in the class could be weights for the similarity metric
-    # 2 entries in class 10 , and 4 entries in class 80 = 2^(2+4)*sim(10,80)
-    # 2 in 10, 4 in 80, 3 in 53 = 2^(2+3+4)*sim(10,80) *sim(10,53) * sim(53,80)
-
-    # So: maximize the sum of all concepts currently grouped and all log_similarities!
-    
+  my %category_view = ();
+  # Algorithm:
+  # 0. Dropping anything uncategorized:
+  @$candidates = grep {$_->{scheme} eq 'msc'} @$candidates; # TODO: Map everything into MSC!
+  # 1. group by top-level MSC category and point into the original candidates array
+  foreach my $index(0..$#$candidates) {
+    my $candidate = $candidates->[$index];
+    # 1.1. also, use the similarity indeces, for faster lookups
+    push @{$category_view{msc_to_array_index($candidate->{category})}}, $index;
   }
-  return $candidates; # mockup
+  # 2. Greedy search through the ordered %category_view:
+  # 2.1. Precompute category weights (sum of length of concepts)
+  my @category_keys = keys %category_view;
+  my %category_weights = map {$_ => (weigh_category($category_view{$_},$candidates))} @category_keys;
+  # 2.2. Order by weights
+  my @ordered_categories = sort {$category_weights{$b} cmp $category_weights{$a}} @category_keys;
+  # 2.3. Precompute concept counts in each category (for greedy cutoff)
+  my %category_counts = map {$_ => scalar(@{$category_view{$_}})} @category_keys;
+  # print STDERR Dumper(\%category_view);
+  # print STDERR Dumper(\%category_weights);
+  # print STDERR Dumper(\%category_counts);
+  # So: maximize the sum of lengths of all concepts currently grouped and all log_similarities!
+  my $max_clique = maximize_clique(weights=>\%category_weights,counts=>\%category_counts,queue=>\@ordered_categories, );
+  # Grab the corresponding candidates from %category_view, and then splice the $candidates array:
+  my @final_candidates_indexes = map { @{$category_view{$_}} } @{$max_clique->{clique}};
+  my @final_candidates = map {$candidates->[$_]} sort @final_candidates_indexes;
+  return \@final_candidates; # mockup
+}
+
+sub weigh_category {
+  my ($concept_indexes,$candidates) = @_;
+  my $weight = 0;
+  # - Weigh by: the (sum of lengths)/4 of all concepts in the category
+  foreach my $index(@$concept_indexes) {
+    $weight += length($candidates->[$index]->{concept});
+  }
+  # Concepts of length 4 or less are less "termy" than longer concepts.
+  # TODO: How certain are we? If we're really certain long phrases are termy, we can subtract 4 rather than divide.
+  $weight = $weight - 4;
+  return $weight; }
+
+sub maximize_clique {
+  my (%options) = @_;
+  my ($weights, $counts, $queue, $score, $clique) = map {$options{$_}} qw(weights counts queue score clique);
+  my @traversal_queue = @$queue;
+  return {score=>$score,clique=>$clique} unless @traversal_queue; # Base case
+  my $greedy_bound = 0;
+  $score //= 0;
+  $clique //= [];
+  my @candidate_cliques= $score ? ({score=>$score,clique=>$clique}) : ();
+  # 2 entries in category 10 , and 4 entries in category 80 = 2^((length(a1)+length(a2)+...)/4)*sim(10,80)
+  #
+  # 2 in 10, 4 in 80, 3 in 53 = 2^(sum of lengths / 4)*sim(10,80) *sim(10,53) * sim(53,80)
+  # Take logs to simplify:
+  # (sum of lengths) / 4 -log(sim(10,80)) -log(sim(10,53)) -log(sim(53,80))
+  while(@traversal_queue) {
+    # Next extension index:
+    my $next_index = shift @traversal_queue;
+    last if $counts->{$next_index} < $greedy_bound; # Greedy, don't go beyond the bound
+    my $next_weight = $weights->{$next_index};
+    my $similarity_score=0;
+    my $well_defined = 1;
+    foreach my $category_index(@$clique) {
+      my $similarity = $msc_log_similarities->[$next_index]->[$category_index];
+      if (! $similarity) {
+	# Ill-defined, skip the $next_index
+	$well_defined = 0;
+	last;
+      }
+      $similarity_score += $similarity;
+    }
+    next if (! $well_defined);
+    my $extended_score = $score + $next_weight + $similarity_score;
+    next if $extended_score < $score; # No improvement, next
+    # Improvement! Update the score and clique
+    my $extended_clique = [@$clique,$next_index];
+    push @candidate_cliques, maximize_clique(weights=>$weights,counts=>$counts, queue=>\@traversal_queue, score=>$extended_score, clique=>$extended_clique);
+    # Heuristic: Let's be greedy here to save time. The moment a category with size N can be added
+    #  to the current cluster, don't look in categories of size N-1 or smaller in the current merge pass
+    #  (of course we look at them as further additions to the now extended cluster)
+    # Update the greedy bound:
+    $greedy_bound = $counts->{$next_index};
+  }
+
+  # We've gathered a number of candidate cliques, return the best scoring one:
+  @candidate_cliques = sort { $b->{score} <=> $a->{score} } @candidate_cliques;
+  return $candidate_cliques[0];
 }
 
 1;
