@@ -156,11 +156,12 @@ sub weigh_category {
   my $weight = 0;
   # - Weigh by: the (sum of lengths)/4 of all concepts in the category
   foreach my $index(@$concept_indexes) {
-    $weight += length($candidates->[$index]->{concept});
+    $weight += length($candidates->[$index]->{concept}) - 4;
   }
   # Concepts of length 4 or less are less "termy" than longer concepts.
   # TODO: How certain are we? If we're really certain long phrases are termy, we can subtract 4 rather than divide.
-  $weight = $weight - 4;
+  #       Though subtracting 4 is unintelligent... maybe using the "number of words" in a concept?
+  #$weight = $weight / 4;
   return $weight; }
 
 sub maximize_clique {
