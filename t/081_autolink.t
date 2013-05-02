@@ -28,7 +28,7 @@ $db->add_concept_by(
   link=>$url);
 
 my $basic_banach = 'mock body, Banach, algebra is a failing test, so is Banach, and then Banach\'s Algebra should work.';
-my $basic_banach_embedded = 'mock body, Banach, algebra is a failing test, so is Banach, and then <a href="http://planetmath.org/banachalgebra">Banach\'s Algebra</a> should work.';
+my $basic_banach_embedded = 'mock body, Banach, algebra is a failing test, so is Banach, and then <a class="nnexus_concept" href="http://planetmath.org/banachalgebra">Banach\'s Algebra</a> should work.';
 # 1. Basic text input, stand-off Perl
 my $job = NNexus::Job->new('format' => 'text', 'function' => 'linkentry',
 	'domain' => 'Planetmath', body=>$basic_banach,
@@ -60,6 +60,6 @@ my $html_result = join('',<$rh>);
 close $rh;
 is_deeply($job->response,
  	{status=>'OK',payload=>$html_result,message=>'No obvious problems.'},
- 	'Mock text-embed auto-link, ok.');
+  	'Mock text-embed auto-link, ok.');
 
 # TODO: Expand with more tests
