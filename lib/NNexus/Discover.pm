@@ -186,14 +186,13 @@ sub mine_candidates_text {
   my $offset=0;
   # Read one (2+ letter) word at a time
   my $concept_word_rex = $NNexus::Morphology::concept_word_rex;
-  while ($body =~ s/^(.*?)($concept_word_rex)//) {
+  CONCEPT_TRAVERSAL:
+  while ($body =~ s/^(.*?)($concept_word_rex)//s) {
     $offset += length($1);
     my $offset_begin = $offset;
     $offset += length($2);
     my $offset_end = $offset;
     my $word = lc($2); # lower-case to match stopwords
-    next unless $word =~ /\D/; # Skip pure numbers
-    #print STDERR "$word ";
     # Use a cache for first-word lookups, with the dual-role of a blacklist.
     my $cached = $first_word_cache->{$word};
     my @candidates;
@@ -211,77 +210,77 @@ sub mine_candidates_text {
       #Cached, clone into a new array
       @candidates = @{ dclone($cached)};
     }
-    next unless @candidates; # if there are no candidates skip the word
+    next CONCEPT_TRAVERSAL unless @candidates; # if there are no candidates skip the word
     # Split tailwords into an array
     foreach my $c(@candidates) {
-      $c->{tailwords} = [split(/\s+/,$c->{tailwords}||'')];
-    }
-    my $inter_offset = 0;
+      $c->{tailwords} = [split(/\s+/,$c->{tailwords}||'')]; }
+    my $inner_offset = 0;
     my $match_offset = 0; # Record the offset of the current longest match, add to end_position when finalized    
-    my $inter_body = $body; # A copy of the text to munge around while searching.
-    my @inter_matches = grep {@{$_->{tailwords}} == 0} @candidates; # Record the current longest matches here
+    my $inner_body = $body; # A copy of the text to munge around while searching.
+    my @inner_matches = grep {@{$_->{tailwords}} == 0} @candidates; # Record the current longest matches here
     # Longest-match: 
     # as long as:
     #  - there is leftover tail in some candidate(s)
     @candidates = grep {@{$_->{tailwords}} > 0} @candidates;
+    CANDIDATE_LOOP:
     while (@candidates) {
       #  - AND there are leftover words in current phrase
-      if ($inter_body =~ /^(\s*)($concept_word_rex)/) {
+      if ($inner_body =~ /^(\s+)($concept_word_rex)/s) {
         # then: pull and compare next word, reduce text and tailwords
         # 1. Pull next.
         my $step_offset = length($1) + length($2);
-        $inter_offset += $step_offset;
+	$inner_offset += $step_offset;
         my $next_word = normalize_concept($2);
         # 2. Filter for applicable candidates
-        my @inter_candidates = grep { ($_->{tailwords}->[0]) eq $next_word } @candidates;
-        if (scalar(@inter_candidates)) {
-          #print STDERR "OUT: ","\n\n\n" if @inter_candidates==3;
+        my @inner_candidates = grep { $_->{tailwords}->[0] eq $next_word } @candidates;
+        if (@inner_candidates) {
           # We have indeed a longer match, remove the first tailword
-          shift @{$_->{tailwords}} foreach @inter_candidates;
-          # record intermediate longest matches - the current empty tailwords
-          my @step_matches = grep {@{$_->{tailwords}} == 0} @inter_candidates;
-          if (@step_matches > 0) {
-            @inter_matches = @step_matches;
-            $match_offset = $inter_offset;
-          }
+          shift @{$_->{tailwords}} foreach @inner_candidates;
           # candidates for next iteration must have leftover tail words
-          @candidates = grep {@{$_->{tailwords}} > 0} @inter_candidates;
+          @candidates = grep {@{$_->{tailwords}} > 0} @inner_candidates;
+          # record intermediate longest matches - the current empty tailwords
+          my @step_matches = grep {@{$_->{tailwords}} == 0} @inner_candidates;
+          if (@step_matches) {
+            @inner_matches = @step_matches;
+            $match_offset = $inner_offset;
+	  }
           # Move $step_offset right the text
-          substr($inter_body,0,$step_offset)='';
-        } else {last;} # Last here as well.
-      } else {last;} # Otherwise we are done
+          substr($inner_body,0,$step_offset)='';
+        } else {last CANDIDATE_LOOP;} # Last here as well.
+      } else {last CANDIDATE_LOOP;} # Otherwise we are done
     }
     # In the end, do we have one or more matches?
-    if (@inter_matches > 0) {
+    if (@inner_matches > 0) {
       # Yes!
       # merge multi-links into single match entry
       # multi-link = same concept and category, different URLs 
       # CARE: careful not to confuse with cases of different categories, which need disambiguation 
       my @merged_matches;
-      while (@inter_matches) {
-        my $match = shift @inter_matches;
+      while (@inner_matches) {
+        my $match = shift @inner_matches;
         my $category = $match->{category};
-        my @multilinks = map {$_->{link}} grep {$_->{category} eq $category} @inter_matches;
-        @inter_matches = grep {$_->{category} ne $match->{category}} @inter_matches;
+        my @multilinks = map {$_->{link}} grep {$_->{category} eq $category} @inner_matches;
+        @inner_matches = grep {$_->{category} ne $category} @inner_matches;
         if (@multilinks>0) {
           unshift @multilinks, $match->{link};
           $match->{multilinks} = \@multilinks;
         }
         push @merged_matches, $match;
       }
-      @inter_matches = @merged_matches;
+      @inner_matches = @merged_matches;
       # Record offsets:
-      foreach my $match(@inter_matches) {
+      $offset += $match_offset;
+      $offset_end += $match_offset;
+      foreach my $match(@inner_matches) {
         $match->{offset_begin} = $offset_begin;
-        $match->{offset_end} = $offset_end + $match_offset;
+        $match->{offset_end} = $offset_end;
         delete $match->{tailwords};
       }
       # And push to main matches array
-      push @matches, @inter_matches;
+      push @matches, @inner_matches;
       # And move the text forward with the match_offset
-      substr($body,0,$match_offset)='';
-      $offset += $match_offset;
-    } else { next; } # If not, we just move on to the next word
+      substr($body,0,$match_offset)='' if $match_offset;
+    } else { next CONCEPT_TRAVERSAL; } # If not, we just move on to the next word
   }
   \@matches;
 }
