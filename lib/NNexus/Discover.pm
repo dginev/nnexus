@@ -35,8 +35,7 @@ use Storable qw(dclone);
 use HTML::Parser;
 
 # Prepare cache for first-word concept lookup
-our $first_word_cache_template = {map {$_=>1} stop_words_ref()};
-
+our $first_word_cache_template = {map { ($_,[]) } @{stop_words_ref()}};
 sub mine_candidates {
   my (%options) = @_;
   # State: We need a db object with a properly set database
@@ -182,7 +181,6 @@ sub mine_candidates_text {
 
   # TODO: We have to make a distinction between "defined concepts" and "candidate concepts" here.
   # Probably just based on whether we find a URL or not?
-
   my @matches;
   my %termlist = ();
   my $offset=0;
@@ -193,16 +191,16 @@ sub mine_candidates_text {
     my $offset_begin = $offset;
     $offset += length($2);
     my $offset_end = $offset;
-    my $word = $2;
+    my $word = lc($2); # lower-case to match stopwords
     next unless $word =~ /\D/; # Skip pure numbers
     # Use a cache for first-word lookups, with the dual-role of a blacklist.
     my $cached = $first_word_cache->{$word};
     my @candidates;
-    if (! defined $cached) {
+    if (! (ref $cached )) {
       # Normalize word
       my $norm_word = normalize_concept($word);
       # get all possible candidates for both posessive and plural forms of $word 
-      @candidates = $db->select_firstword_matches($norm_word,domain=>$domain);
+      @candidates = $db->select_firstword_matches($norm_word);
       # Cache the candidates:
       my $saved_candidates = [];
       $saved_candidates = dclone(\@candidates) if @candidates;
@@ -210,7 +208,7 @@ sub mine_candidates_text {
       $first_word_cache->{$norm_word} = $saved_candidates;
     } else {
       #Cached, clone into a new array
-      @candidates = @{ dclone($cached)} if @$cached;
+      @candidates = @{ dclone($cached)};
     }
     next unless @candidates; # if there are no candidates skip the word
     # Split tailwords into an array
@@ -235,7 +233,7 @@ sub mine_candidates_text {
         my $next_word = normalize_concept($2);
         # 2. Filter for applicable candidates
         my @inter_candidates = grep {$_->{tailwords}->[0] eq $next_word} @candidates;
-        if (@inter_candidates) {
+        if (@inter_candidates>0) {
           # We have indeed a longer match, remove the first tailword
           shift @{$_->{tailwords}} foreach @inter_candidates;
           # record intermediate longest matches - the current empty tailwords

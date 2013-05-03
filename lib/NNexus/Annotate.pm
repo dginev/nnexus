@@ -50,10 +50,13 @@ sub serialize_concepts {
         my $to = $concept->{offset_end};
         my $length = $to-$from;
         my $text = substr($body,$from,$length);
-        my @links = ([$concept->{link},$concept->{domain}]);
+        my @links;
         # Also include multilinks, if any:
+        # TODO: Filter away with "domain", if specified
         if ($concept->{multilinks}) {
-          push @links, (map {[$_,$concept->{domain}]} @{$concept->{multilinks}}); }
+          @links = map {[$_,$concept->{domain}]} @{$concept->{multilinks}}; }
+        else {
+          @links = ([$concept->{link},$concept->{domain}]); }
         while (@$concepts && ($$concepts[-1]->{offset_begin} == $from)) {
           $concept = pop @$concepts;
           next if grep {$concept->{link} eq $_->[0]} @links; # Don't duplicate URLs.
