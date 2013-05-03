@@ -148,7 +148,7 @@ sub disambiguate {
   my $max_clique = maximize_clique(weights=>\%category_weights,counts=>\%category_counts,queue=>\@ordered_categories, );
   # Grab the corresponding candidates from %category_view, and then splice the $candidates array:
   my @final_candidates_indexes = map { @{$category_view{$_}} } @{$max_clique->{clique}};
-  my @final_candidates = map {$candidates->[$_]} sort @final_candidates_indexes;
+  my @final_candidates = map {$candidates->[$_]} sort {$a<=>$b} @final_candidates_indexes;
   return \@final_candidates; # mockup
 }
 
