@@ -113,25 +113,28 @@ sub mine_candidates_html {
   # Current HTML Parsing strategy - fire events for all HTML tags and explicitly skip over tags that 
   # won't be of interest. We need to autolink in all textual elements.
   # TODO: Handle MathML better
+
   my $parser = 
     HTML::Parser->new(
       'api_version' => 3,
       'start_h' => [sub {
-	  my ($self,$tagname,$attr)=@_;
-          if ($tagname=~/^head|style|title|script|xmp|iframe|math|svg|a|(h\d+)$/ || 
-	      (($tagname=~/^span/) && ($attr->{class} =~ 'nolink'))) {
-            $self->{fresh_skip}=1;
-            $self->{noparse}++;
-          } else {
-            $self->{fresh_skip}=0;
-          }
+        my ($self,$tagname,$attr)=@_;
+        if ($tagname=~/^(head|style|title|script|xmp|iframe|math|svg|a|(h\d+))$/ || 
+         (($tagname eq 'span') && $attr->{class} && ($attr->{class} =~ 'nolink'))) {
+          $self->{fresh_skip}=1;
+          $self->{noparse}++;
+        } else {
+          $self->{fresh_skip}=0;
+        }
       } , 'self, tagname, attr'],
       'end_h' => [sub {
         my ($self,$tagname)=@_;
-        $self->{noparse}--
-          if (($tagname=~/^head|style|title|script|xmp|iframe|math|svg|a|(h\d+)$/) ||
-            (((length($tagname)==0)||($tagname eq 'span')) && ($self->{fresh_skip})));
-        }, 'self,tagname'],
+        if (($tagname=~/^(head|style|title|script|xmp|iframe|math|svg|a|(h\d+))$/) ||
+         (((length($tagname)==0)||($tagname eq 'span')) && ($self->{fresh_skip} == 1))) {
+          $self->{noparse}--;
+          $self->{fresh_skip}=0;
+        }
+      }, 'self,tagname'],
       'text_h'      => [\&_text_event_handler, 'self,text,offset']
     );
   $parser->{mined_candidates} = [];

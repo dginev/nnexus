@@ -51,12 +51,15 @@ sub serialize_concepts {
         my $length = $to-$from;
         my $text = substr($body,$from,$length);
         my @links = ([$concept->{link},$concept->{domain}]);
+        # Also include multilinks, if any:
+        if ($concept->{multilinks}) {
+          push @links, (map {[$_,$concept->{domain}]} @{$concept->{multilinks}}); }
         while (@$concepts && ($$concepts[-1]->{offset_begin} == $from)) {
           $concept = pop @$concepts;
-	  next if grep {$concept->{link} eq $_->[0]} @links; # Don't duplicate URLs.
+          next if grep {$concept->{link} eq $_->[0]} @links; # Don't duplicate URLs.
           push @links, [$concept->{link},$concept->{domain}];
         }
-	$total_concepts += scalar(@links);
+        $total_concepts += scalar(@links);
         if (@links == 1) {
           # Single link, normal anchor
           substr($body,$from,$length) = '<a class="nnexus_concept" href="'.$links[0]->[0].'">'.$text.'</a>';
@@ -73,7 +76,7 @@ sub serialize_concepts {
         }
       }
       if ($options{verbosity}) {
-	print STDERR "Final Annotation contains ",$total_concepts," concepts.\n";
+        print STDERR "Final Annotation contains ",$total_concepts," concepts.\n";
       }
       return $body;
     } else {

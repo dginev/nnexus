@@ -53,7 +53,7 @@ sub index_page {
     return []; }
 
 sub depth_limit {10;}
-sub request_interval { 30.5; }
+sub request_interval { 15; }
 sub leaf_test { $_[1] !~ /letters/ }
 1;
 __END__
