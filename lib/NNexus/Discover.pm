@@ -193,6 +193,7 @@ sub mine_candidates_text {
     my $offset_end = $offset;
     my $word = lc($2); # lower-case to match stopwords
     next unless $word =~ /\D/; # Skip pure numbers
+    #print STDERR "$word ";
     # Use a cache for first-word lookups, with the dual-role of a blacklist.
     my $cached = $first_word_cache->{$word};
     my @candidates;
@@ -232,8 +233,9 @@ sub mine_candidates_text {
         $inter_offset += $step_offset;
         my $next_word = normalize_concept($2);
         # 2. Filter for applicable candidates
-        my @inter_candidates = grep {$_->{tailwords}->[0] eq $next_word} @candidates;
-        if (@inter_candidates>0) {
+        my @inter_candidates = grep { ($_->{tailwords}->[0]) eq $next_word } @candidates;
+        if (scalar(@inter_candidates)) {
+          #print STDERR "OUT: ","\n\n\n" if @inter_candidates==3;
           # We have indeed a longer match, remove the first tailword
           shift @{$_->{tailwords}} foreach @inter_candidates;
           # record intermediate longest matches - the current empty tailwords

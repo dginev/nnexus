@@ -94,7 +94,8 @@ our $msc_similarities = [ # 63x63 matrix, top-level MSC 2000 categories
 ];
 
 # Precompute Logs
-our $msc_log_similarities = [map {[map {$_ ? log($_) : undef} @$_]} @$msc_similarities];
+sub log2 { log($_[0])/log(10); }
+our $msc_log_similarities = [map {[map {$_ ? log2($_) : undef} @$_]} @$msc_similarities];
 
 our $msc_to_array_index = {
   '00'=>0, '01'=>1, '03'=>2, '05'=>3, '06'=>4, '08'=>5, 11=>6, 12=>7, 13=>8, 14=>9, 15=>10,
