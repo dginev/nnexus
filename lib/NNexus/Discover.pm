@@ -119,7 +119,7 @@ sub mine_candidates_html {
       'api_version' => 3,
       'start_h' => [sub {
         my ($self,$tagname,$attr)=@_;
-        if ($tagname=~/^(head|style|title|script|xmp|iframe|math|svg|a|(h\d+))$/ || 
+        if ($tagname=~/^(head|style|title|script|xmp|iframe|math|svg|sup|a|(h\d+))$/ || 
          (($tagname eq 'span') && $attr->{class} && ($attr->{class} =~ 'nolink'))) {
           $self->{fresh_skip}=1;
           $self->{noparse}++;
@@ -129,7 +129,7 @@ sub mine_candidates_html {
       } , 'self, tagname, attr'],
       'end_h' => [sub {
         my ($self,$tagname)=@_;
-        if (($tagname=~/^(head|style|title|script|xmp|iframe|math|svg|a|(h\d+))$/) ||
+        if (($tagname=~/^(head|style|title|script|xmp|iframe|math|svg|sup|a|(h\d+))$/) ||
          (((length($tagname)==0)||($tagname eq 'span')) && ($self->{fresh_skip} == 1))) {
           $self->{noparse}--;
           $self->{fresh_skip}=0;

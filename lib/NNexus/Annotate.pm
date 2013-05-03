@@ -60,6 +60,8 @@ sub serialize_concepts {
           push @links, [$concept->{link},$concept->{domain}];
         }
         $total_concepts += scalar(@links);
+        if ($options{verbosity}) {
+          print STDERR "Linking \"$text\" with: ",$_->[0],"\n" foreach @links; }
         if (@links == 1) {
           # Single link, normal anchor
           substr($body,$from,$length) = '<a class="nnexus_concept" href="'.$links[0]->[0].'">'.$text.'</a>';
@@ -76,8 +78,7 @@ sub serialize_concepts {
         }
       }
       if ($options{verbosity}) {
-        print STDERR "Final Annotation contains ",$total_concepts," concepts.\n";
-      }
+        print STDERR "Final Annotation contains ",$total_concepts," concepts.\n"; }
       return $body;
     } else {
       return $body; # Fallback, just return what was given
