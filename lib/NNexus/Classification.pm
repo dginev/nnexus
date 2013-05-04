@@ -128,7 +128,7 @@ sub disambiguate {
   @$candidates = grep {$_->{scheme} eq 'msc'} @$candidates; # TODO: Map everything into MSC!
   @$candidates = grep {$_->{category} !~ /^XX/} @$candidates; # TODO: Can we do something with uncategorized concepts?
   # 1. group by top-level MSC category and point into the original candidates array
-  print STDERR "[NNexus::Classification] Eligible concepts: ",scalar(@$candidates) if $options{verbosity};
+  print STDERR "[NNexus::Classification] Eligible concepts: ",scalar(@$candidates),"\n" if $options{verbosity};
   foreach my $index(0..$#$candidates) {
     my $candidate = $candidates->[$index];
     # 1.1. also, use the similarity indeces, for faster lookups
@@ -150,7 +150,7 @@ sub disambiguate {
   # Grab the corresponding candidates from %category_view, and then splice the $candidates array:
   my @final_candidates_indexes = map { @{$category_view{$_}} } @{$max_clique->{clique}};
   my @final_candidates = map {$candidates->[$_]} sort {$a<=>$b} @final_candidates_indexes;
-  print STDERR "[NNexus::Classification] Disambiguated concepts: ",scalar(@final_candidates) if $options{verbosity};
+  print STDERR "[NNexus::Classification] Disambiguated concepts: ",scalar(@final_candidates),"\n" if $options{verbosity};
   return \@final_candidates; # mockup
 }
 

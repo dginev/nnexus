@@ -50,15 +50,16 @@ sub safe {
   if (defined $self->{handle} && $self->{handle}->ping) {
     return $self->{handle};
   } else {
-    my $dbh = DBI->connect("DBI:". $self->{'dbms'} .
-			   ":" . $self->{'dbname'},
-			   $self->{'dbuser'},
-			   $self->{'dbpass'},
+    my $dbh = DBI->connect("DBI:". $self->{dbms} .
+			   ":" . $self->{dbname},
+			   $self->{dbuser},
+			   $self->{dbpass},
 			   {
 			    host => $self->{'dbhost'},
 			    RaiseError => 1,
           AutoCommit => 1
 			   }) || die "Could not connect to database: $DBI::errstr";
+    $dbh->do('PRAGMA cache_size=50000;') if $self->{dbms} eq 'SQLite';
     $self->{handle}=$dbh;
     $self->_recover_cache;
     return $dbh;
