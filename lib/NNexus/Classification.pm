@@ -119,16 +119,16 @@ sub msc_similarity {
   # Ill-defined means no similarity
   return 0; }
 
-use Data::Dumper;
 # Discover the most similar cluster of concepts
 sub disambiguate {
-  my ($candidates) = @_;
+  my ($candidates,%options) = @_;
   my %category_view = ();
   # Algorithm:
   # 0. Dropping anything uncategorized:
   @$candidates = grep {$_->{scheme} eq 'msc'} @$candidates; # TODO: Map everything into MSC!
   @$candidates = grep {$_->{category} !~ /^XX/} @$candidates; # TODO: Can we do something with uncategorized concepts?
   # 1. group by top-level MSC category and point into the original candidates array
+  print STDERR "[NNexus::Classification] Eligible concepts: ",scalar(@$candidates) if $options{verbosity};
   foreach my $index(0..$#$candidates) {
     my $candidate = $candidates->[$index];
     # 1.1. also, use the similarity indeces, for faster lookups
@@ -150,6 +150,7 @@ sub disambiguate {
   # Grab the corresponding candidates from %category_view, and then splice the $candidates array:
   my @final_candidates_indexes = map { @{$category_view{$_}} } @{$max_clique->{clique}};
   my @final_candidates = map {$candidates->[$_]} sort {$a<=>$b} @final_candidates_indexes;
+  print STDERR "[NNexus::Classification] Disambiguated concepts: ",scalar(@final_candidates) if $options{verbosity};
   return \@final_candidates; # mockup
 }
 
@@ -190,9 +191,9 @@ sub maximize_clique {
     foreach my $category_index(@$clique) {
       my $similarity = $msc_log_similarities->[$next_index]->[$category_index];
       if (! $similarity) {
-	# Ill-defined, skip the $next_index
-	$well_defined = 0;
-	last;
+        # Ill-defined, skip the $next_index
+        $well_defined = 0;
+        last;
       }
       $similarity_score += $similarity;
     }
@@ -215,5 +216,58 @@ sub maximize_clique {
 }
 
 1;
-
 __END__
+
+=pod 
+
+=head1 NAME
+
+C<NNexus::Classification> - Dismabiguation logic for NNexus concept harvests
+
+=head1 SYNOPSIS
+
+    use NNexus::Classification qw(disambiguate msc_similarity);
+    my $concepts_refined = disambiguate($concept_harvest,%options);
+    my $similarity_score = msc_similarity($category1,$category2);
+
+=head1 DESCRIPTION
+
+NNexus::Classification contains disambiguation and clustering algorithms for determining a subset of
+  "relevant" concept candidates from a given concept harvest. Relevance is determined heuristically.
+  The current algorithm considers two facets of "relevance":
+
+  1. Relevant candidates come from empirically similar domains of knowledge.
+  
+  To this extent, a similarity metric has been extracted from 3+ million mathematical reviews
+  in Zentrallblatt Math, each annotated with categories from the Math Subject Classification.
+
+  2. Technical terms are more likely to be relevant. Consequently:
+   - The more words in a candidate, the more likely that it is a term
+   - The more characters in a candidate, the more likely that it is a term
+
+=head2 METHODS
+
+=over 4
+
+=item C<< my $concepts_refined = disambiguate($concept_harvest,%options); >>
+
+  Disambiguates a concept harvest, as returned by NNexus::Discover, following the
+  algorithm in the description.
+
+  Currently the only accepted option is a boolean value for "verbosity".
+
+=item C<< my $similarity_score = msc_similarity($category1,$category2); >>
+
+=back
+
+=head1 AUTHOR
+
+Deyan Ginev <d.ginev@jacobs-university.de>
+
+=head1 COPYRIGHT
+
+ Research software, produced as part of work done by 
+ the KWARC group at Jacobs University Bremen.
+ Released under the MIT License (MIT)
+
+=cut

@@ -75,7 +75,7 @@ sub _link_entry {
       format=>$self->{format},
       verbosity=>$self->{verbosity});
   # II. Disambiguation
-  my $concepts_refined = NNexus::Classification::disambiguate($concepts_mined);
+  my $concepts_refined = NNexus::Classification::disambiguate($concepts_mined,verbosity=>$self->{verbosity});
   # III. Annotation
   $self->{annotation} //= 'links';
   $self->{embed} //= 1;
@@ -146,10 +146,19 @@ Creates a new job object, customized via an options hash. Admissible options are
   - body: The textual payload to be autolinked/indexed/etc.
   - format: The format of the given body. Supported: tex|html
   - function: Operation to be performed. 
-      * linkentry: Autolinks a given body returning a result in the same format
-      * TODO: Add more
+    * linkentry: Autolinks a given body returning a result in the same format
+    * index: Indexes a given web resource (URL), given by the "url" option
+  - url: 
+    * for function "index": URL at which to begin an indexing job 
+    * for function "linkentry": URL to record for change management and invalidation
   - domain: Domain to use as the reference knowledge base for autolinking/indexing
+  - anntation: serialization format for annotation (links, JSON, RDFa)
+  - embed: boolean for embedded or stand-off annotations
   - db: An initialized NNexus::DB object (typically internal)
+  - verbosity: boolean switching verbose logging on and off
+  - dom: (optional) overrides the Mojo::DOM object for the given "url" (function=index)
+  - should_update: boolean switching between updating all indexed objects (default) or 
+     only indexing new objects instead. (function=index)
 
 =item C<< $job->execute; >>
 

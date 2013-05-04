@@ -111,3 +111,59 @@ sub domain_tooltip {
 #    the desired format (links, xml, json)
 
 1;
+__END__
+
+=pod 
+
+=head1 NAME
+
+C<NNexus::Annotate> - Class for serializing NNexus concepts into annotations
+
+=head1 SYNOPSIS
+
+    use NNexus::Annotate qw(serialize_concepts);
+    my $serialized_result = serialize_concepts(
+      body=>$original_concept_source,
+      concepts=>$discovered_concepts,
+      annotation=>$annotation_format,
+      embed=>$boolean,
+      verbosity=>$boolean;
+
+=head1 DESCRIPTION
+
+NNexus::Annotate provides fleixble annotation capabilities for serializing NNexus concept harvests.
+  It includes support for embedded and stand-off annotation in a variety of annotation formats.
+  Currently, the supported annotation forms are (one or more of) links, JSON, RDFa.
+
+The embedded links serialization comes with support for embedding multi-links.
+
+=head2 METHODS
+
+=over 4
+
+=item C<< my $serialized_result = serialize_concepts(%options); >>
+
+Main serialization API, taking in a reference to an array of NNexus concepts,
+ and producing the desired annotation serialization.
+
+The available options are:
+ - concepts - (required) the arrayref of concept hashes
+ - body - (optional) the original HTML/text source the concepts were discovered from.
+          required when "embed" is turned on
+ - embed - boolean switch between embedded and stand-off annotation. Embedding by default
+ - annotation - desired annotation format - currently one or more of "links" (default), "JSON" and/or "RDFa"
+ - verbosity - boolean switch turning verbosity on or off (default).
+
+=back
+
+=head1 AUTHOR
+
+Deyan Ginev <d.ginev@jacobs-university.de>
+
+=head1 COPYRIGHT
+
+ Research software, produced as part of work done by 
+ the KWARC group at Jacobs University Bremen.
+ Released under the MIT License (MIT)
+
+=cut
