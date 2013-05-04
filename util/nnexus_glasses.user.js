@@ -7,22 +7,20 @@
 // @include http://en.wikipedia.org/*
 // @include http://arxmliv.kwarc.info/files/*
 // ==/UserScript==
-window.onload = function() {
-	var body = document.getElementsByTagName("body")[0];
-	if (! body) {body = document.documentElement;}
-	var markup = body.innerHTML;
-	var params = "body="+encodeURIComponent(markup);
-	// Localhost for now, expect support at http://nnexus.mathweb.org
-	var url = "http://nnexus.mathweb.org/linkentry";
-	req = new XMLHttpRequest();
-	req.open("POST",url,true);
-	req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	req.setRequestHeader("Content-length", params.length);
-	req.onreadystatechange = function () {
-		if (req.readyState === 4) {
-			var response = JSON.parse(req.responseText);
-			body.innerHTML = response.payload;
-		}
-	};
-	req.send(params);
-}
+var body = document.getElementsByTagName("body")[0];
+if (! body) {body = document.documentElement;}
+var markup = body.innerHTML;
+var params = "body="+encodeURIComponent(markup);
+// Localhost for now, expect support at http://nnexus.mathweb.org
+var url = "http://nnexus.mathweb.org/linkentry";
+req = new XMLHttpRequest();
+req.open("POST",url,true);
+req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+req.setRequestHeader("Content-length", params.length);
+req.onreadystatechange = function () {
+	if (req.readyState === 4) {
+		var response = JSON.parse(req.responseText);
+		body.innerHTML = response.payload;
+	}
+};
+req.send(params);	
