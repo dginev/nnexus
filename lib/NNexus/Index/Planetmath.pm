@@ -24,8 +24,8 @@ our $pm_base="http://planetmath.org";
 sub candidate_links {
   my ($self) = @_;
   my $url = $self->current_url;
+  return [] if $self->leaf_test($url);
   my $dom = $self->current_dom;
-  return [] if $self->leaf_test();
   # Encyclopedia entries are root links "/entry"
   my $content = $dom->find('div[class="view-content"]')->[0];
   my @encyclopedia_links = $content ? $content->find('a')->each : ();
@@ -37,20 +37,23 @@ sub candidate_links {
   my $candidates = [ map { $pm_base . $_ } (@nav_links, @encyclopedia_links ) ];
   return $candidates
 }
-
+use Data::Dumper;
 sub index_page {
   my ($self) = @_;
   my $url = $self->current_url;
+  return [] unless $self->leaf_test($url);
   my $dom = $self->current_dom->xml(1);
-  my $title = $self->leaf_test();
-  # Only concepts have titles, so return an empty harvest if undefined:
+  my $title = $dom->find('div[property="dct:title"]')->[0];
   return [] unless $title;
-  # Also record defined concepts
-  my @defined_concepts = $dom->find('div[property="pm:defines"]')->each;
   $title = $title->attrs('content');
+  # Only concepts have titles, so return an empty harvest if undefined:
+  # Also record defined concepts
+  my $content_div = $dom->find('section[class="ltx_document"]')->[0];
+  return [] unless $content_div;
+  my @defined_concepts = $content_div->find('div[property="pm:defines"]')->each;
   my @categories = grep {length($_)>0} map {s/^msc\://; $_;}
-    map {$_->attrs('resource')} $dom->find('div[class="ltx_rdf"][property="dct:subject"]')->each;
-  my @synonyms = map {$_->attrs('content')} $dom->find('div[class="ltx_rdf"][property="pm:synonym"]')->each;
+    map {$_->attrs('resource')} $content_div->find('div[class="ltx_rdf"][property="dct:subject"]')->each;
+  my @synonyms = map {$_->attrs('content')} $content_div->find('div[class="ltx_rdf"][property="pm:synonym"]')->each;
 
   my @harvest;
   @categories = ('XX-XX') unless @categories;
@@ -78,7 +81,7 @@ sub index_page {
 sub depth_limit {10000;} #We're just traversing down the list of pages, nothing dangerous here
 sub request_interval {0.5;}
 # Only concepts have titles, so consider next links IF undefined:
-sub leaf_test { $_[0]->current_dom->find('div[property="dct:title"]')->[0]; }
+sub leaf_test { $_[1] !~ /\/articles/; }
 
 1;
 __END__
