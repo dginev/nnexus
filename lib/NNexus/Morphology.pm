@@ -34,7 +34,6 @@ use utf8;
 use Encode qw{is_utf8};
 use Text::Unidecode qw/unidecode/;
 
-
 # 0. TODO: Think about MathML
 
 # I. Possessives
@@ -45,16 +44,14 @@ sub is_possessive { $_[0]  =~ /\w('s|s')(\s|$)/; }
 sub get_nonpossessive {
   my ($word) = @_;
   $word =~ s/'s(\s|$)/$1/ || $word =~ s/s'(\s|$)/s$1/;
-  $word;
-}
+  $word; }
 
 # return first word with possessive suffix ("Euler" becomes "Euler's")
 sub get_possessive {
   my ($word) = @_;
   $word =~ s/^(\w+)/$1'/;
   $word =~ s/^(\w+[^s])'/$1's/;
-  $word;
-}
+  $word; }
 
 # II. Plurality
 
@@ -74,9 +71,7 @@ sub pluralize {
     when(/(.+)us$/) { return "$1i"; }
     when(/(.+)ch$/) { return "$1ches"; }
     when(/(.+)ss$/) { return "$1sses"; }
-    default { return $_[0].'s'; }
-  }
-}
+    default { return $_[0].'s'; } } }
 
 # singularize a phrase... remove root and replace
 sub depluralize_phrase {
@@ -98,9 +93,7 @@ sub depluralize_phrase {
     when(/(.+ie)s$/) { return $1;	}
     when(/(.+[^eiuos])s$/) { return $1; }
     when(/(.+[^aeio])es$/) { return "$1e"; }
-    default { return $_[0]; }
-  }
-}
+    default { return $_[0]; } } }
 
 sub depluralize_word {
   given ($_[0]) {
@@ -116,8 +109,7 @@ sub depluralize_word {
     when(/(.+[^eiuos])s$/) { return $1; }
     when(/(.+[^aeio])es$/) { return "$1e"; }
     when(/(.+o)ci$/) { return "$1cus"; }
-    default { return $_[0]; }
-}}
+    default { return $_[0]; } }}
 
 # III. Stemming
 
@@ -127,8 +119,7 @@ sub fake_stem {
   $word = get_nonpossessive($word);
   $word = root($word);
   $word =~ s/'//g;
-  return $word;
-}
+  return $word; }
 
 # get the non-plural root for a word
 sub root {
@@ -142,17 +133,15 @@ sub root {
     when(/(.+[^eiuos])s$/) { return $1;	}
     when(/(.+[^aeio])es$/) { return "$1e"; }
     default { return $_[0]; }
-  }
-}
+  } }
 
 # IV. Admissible concept words and high-level api
-our $concept_word_rex = qr/\w(?:\w|[\-\+\'])+/;
+our $concept_word_rex = qr/\w(?:\w|[\-\+\'])*/;
 our $concept_phrase_rex = qr/$concept_word_rex(?:\s+$concept_word_rex)*/;
 sub admissible_name {$_[0]=~/^$concept_phrase_rex$/; }
 sub normalize_concept {
   my ($concept)=@_;
-  return depluralize_word(get_nonpossessive(lc(unidecode($concept)))); 
-}
+  return depluralize_word(get_nonpossessive(lc(unidecode($concept))));  }
 sub firstword_split {
   my ($concept)=@_;
   if ($concept=~/^($concept_word_rex)\s?(.*)$/) { # Grab first word if not provided
