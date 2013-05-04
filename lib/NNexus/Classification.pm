@@ -127,6 +127,7 @@ sub disambiguate {
   # Algorithm:
   # 0. Dropping anything uncategorized:
   @$candidates = grep {$_->{scheme} eq 'msc'} @$candidates; # TODO: Map everything into MSC!
+  @$candidates = grep {$_->{category} !~ /^XX/} @$candidates; # TODO: Can we do something with uncategorized concepts?
   # 1. group by top-level MSC category and point into the original candidates array
   foreach my $index(0..$#$candidates) {
     my $candidate = $candidates->[$index];
