@@ -1,35 +1,38 @@
 use NNexus::DB;
 use warnings;
 use strict;
-
-my $wikidb = NNexus::DB->new(    "dbms" => "SQLite",
-    "dbname" => 'index-snapshot-20-4-2013.db',
+my $stamp = "4-2013";
+my $snapshot_name = "index-snapshot-$stamp.db";
+unlink($snapshot_name) if -e $snapshot_name;
+my $snapshotdb = NNexus::DB->new("dbms" => "SQLite",
+    "dbname" => $snapshot_name,
     "dbuser" => "nnexus",
     "dbpass" => "nnexus",
     "dbhost" => "localhost");
-my $restdb = NNexus::DB->new(    "dbms" => "SQLite",
-    "dbname" => 'index-snapshot-19-4-2013.db',
+my @databases = map {NNexus::DB->new("dbms" => "SQLite",
+    "dbname" => "$_.db",
     "dbuser" => "nnexus",
     "dbpass" => "nnexus",
-    "dbhost" => "localhost");
+    "dbhost" => "localhost");} qw/Planetmath Mathworld Wikipedia Dlmf/;
 
-# Move Planetmath , Dlmf and Mathworld domains into the $wikidb database.
-use Data::Dumper;
-foreach my $domain(qw/Planetmath Dlmf Mathworld/) {
-	my $sth = $restdb->prepare("select * from objects where domain=?");
-	$sth->execute($domain);
+# Move individual snapshots into a common snapshot database.
+$snapshotdb->safe->begin_work;
+foreach my $db(@databases) {
+	my $sth = $db->prepare("select * from objects");
+	$sth->execute();
 	while (my $object = $sth->fetchrow_hashref) {
 		# Add the object to the Wiki snapshot
-		my $new_objectid = $wikidb->add_object_by(%$object);
+		my $new_objectid = $snapshotdb->add_object_by(%$object);
 		# Grab the defined concepts:
-		my $conch = $restdb->prepare("select * from concepts where objectid=? AND domain=?");
-		$conch->execute($object->{objectid},$domain);
+		my $conch = $db->prepare("select * from concepts where objectid=?");
+		$conch->execute($object->{objectid});
 		while (my $concept = $conch->fetchrow_hashref() ) {
 			# Insert in the wikidb
 			$concept->{objectid} = $new_objectid;
-			$wikidb->add_concept_by(%$concept);
+			$snapshotdb->add_concept_by(%$concept);
 		}
 		$conch->finish();
 	}
 	$sth->finish();
 }
+$snapshotdb->safe->commit;
