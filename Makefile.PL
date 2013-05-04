@@ -58,6 +58,6 @@ pure_all :: $(SNAPSHOT_FILE)
 
 # Always set version if version module template is newer
 $(SNAPSHOT_FILE): $(DUMP_FILE)
-	cat $(DUMP_FILE) | sqlite3 $(SNAPSHOT_FILE)
+	perl -e 'unlink shift' $(SNAPSHOT_FILE); cat $(DUMP_FILE) | sqlite3 $(SNAPSHOT_FILE)
 CompileSnapshot
 }
