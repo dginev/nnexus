@@ -41,12 +41,12 @@ $db->add_linkscache_by(objectid=>$O2_id,conceptid=>$C1_id);
 $db->add_linkscache_by(objectid=>$O3_id,conceptid=>$C2_id);
 # Trigger an index job on a new DOM of O1, adding a new concept C3.
 my $modified_entry_1 = <<'PM';
-<html>
+<html><section class="ltx_document">
 <div class="ltx_rdf" property="dct:title" content="Banach algebra"/>
 <div class="ltx_rdf" resource="msc:46H05" property="dct:subject"/>
 <div class="ltx_rdf" property="pm:defines" content="pmconcept:Dirichlet problem"/>
 <div class="ltx_rdf" property="pm:defines" content="pmconcept:Third concept"/>
-</html>
+</section></html>
 PM
 my $dom = Mojo::DOM->new($modified_entry_1);
 my $dispatcher = NNexus::Index::Dispatcher->new(db=>$db,domain=>'Planetmath',verbosity=>0,
@@ -56,12 +56,12 @@ my $payload = $dispatcher->index_step();
 is_deeply($payload,[],'Nothing to invalidate, new concept was added.');
 # Trigger an index job on a new DOM of O1, renaming C1 to some new C4.
 my $modified_entry_2 = <<'PM';
-<html>
+<html><section class="ltx_document">
 <div class="ltx_rdf" property="dct:title" content="Banach theorem"/>
 <div class="ltx_rdf" resource="msc:46H05" property="dct:subject"/>
 <div class="ltx_rdf" property="pm:defines" content="pmconcept:Dirichlet problem"/>
 <div class="ltx_rdf" property="pm:defines" content="pmconcept:Third concept"/>
-</html>
+</section></html>
 PM
 $dom = Mojo::DOM->new($modified_entry_2);
 $dispatcher = NNexus::Index::Dispatcher->new(db=>$db,domain=>'Planetmath',verbosity=>0,
@@ -71,11 +71,11 @@ $payload = $dispatcher->index_step();
 is_deeply($payload,['http://planetmath.org/O2'],'O2 returned for invalidation');
 # Trigger an index job on a new DOM of O1, deleting C2. 
 my $modified_entry_3 = <<'PM';
-<html>
+<html><section class="ltx_document">
 <div class="ltx_rdf" property="dct:title" content="Banach theorem"/>
 <div class="ltx_rdf" resource="msc:46H05" property="dct:subject"/>
 <div class="ltx_rdf" property="pm:defines" content="pmconcept:Third concept"/>
-</html>
+</section></html>
 PM
 $dom = Mojo::DOM->new($modified_entry_3);
 $dispatcher = NNexus::Index::Dispatcher->new(db=>$db,domain=>'Planetmath',verbosity=>0,

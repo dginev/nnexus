@@ -1,273 +1,222 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1 plus MathML 2.0//EN" "http://www.w3.org/Math/DTD/mathml2/xhtml-math11-f.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:m="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg">
 <head>
 <title>DLMF: Index Z</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<link rel="top" href=".././" title="DLMF">
-<link rel="copyright" href=".././about/notices" title="Copyright">
-<link rel="search" href=".././search/search" title="Search">
-<link rel="index" href=".././idx/" title="Index">
-<link rel="icon" href=".././style/DLMF-16.png" type="image/png">
-<link rel="prev" href=".././idx/W" title="Index W">
-<link rel="next" href=".././not/" title="Notations *">
-<meta name="keywords" lang="en-us" content="Coulomb functions, Descartes’ rule of signs, Horner’s scheme, Laplace integral, analytic properties, applications, approximations, asymptotic expansions, asymptotic expansions for large order, asymptotic expansions for large zeros, beta integral, bounds, common, complex, computation, conditioning, definition, degrees two, three, four, discriminant, distribution, division algorithm, double, elementary properties, elementary symmetric functions, error bounds, explicit formulas, extended, forward differences, interlacing, mean-value, monotonicity, multiplicity, normalization, notation, of cross-products, orthogonality, purely imaginary, relation to inverse phase functions, resolvent cubic, roots of constants, roots of unity, simple, summation, tables, ultraspherical polynomials, uniform, with respect to order (, zero potential, zeros of Bessel functions (including derivatives), zeros of analytic functions, zeros of cylinder functions (including derivatives), zeros of polynomials, zeta function, zonal polynomials, zonal spherical harmonics">
+<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8"/>
+<link rel="shortcut icon" href=".././style/DLMF-16.png" type="image/png"/>
 <script type="text/javascript"><!--
-	  var PATH="DLMF:/idx/Z";
-	  var ROOT=".././";
-	//-->
-	</script><link rel="stylesheet" type="text/css" href=".././style/DLMF.css">
-<link rel="stylesheet" type="text/css" media="print" href=".././style/print.css">
-<script src=".././style/jquery.js" type="text/javascript"><!-- non-empty so ie6 will accept it --></script><script src=".././style/DLMF.js" type="text/javascript"><!-- non-empty so ie6 will accept it --></script>
+	var PATH="DLMF:/idx/Z";
+	var ROOT=".././";
+      //--></script>
+
+<script type="text/javascript" src=".././style/jquery.js"><!-- non-empty so ie6 will accept it --></script>
+<script type="text/javascript" src=".././style/DLMF.js"><!-- non-empty so ie6 will accept it --></script>
+<link rel="stylesheet" type="text/css" href=".././style/LaTeXML.css"/><link rel="stylesheet" type="text/css" href=".././style/DLMF.css"/>
+<link rel="stylesheet" type="text/css" href=".././style/print.css" media="print"/>
+<link rel="top" href=".././" title="DLMF"/>
+<link rel="copyright" href=".././about/notices" title="Copyright"/>
+<link rel="search" href=".././search/search" title="Search"/>
+<link rel="help" href=".././help/" title="Help"/>
+<link rel="up" href=".././idx/." title="Index"/>
+<link rel="start" href=".././" title=""/>
+<link rel="prev" href=".././idx/W" title="Index W ‣ Index"/>
+<link rel="next" href=".././not/" title="Notations"/>
+<link rel="index" href=".././idx/B" title="Index B ‣ Index"/>
+<link rel="index" href=".././idx/C" title="Index C ‣ Index"/>
+<link rel="index" href=".././idx/D" title="Index D ‣ Index"/>
+<link rel="index" href=".././idx/E" title="Index E ‣ Index"/>
+<link rel="index" href=".././idx/F" title="Index F ‣ Index"/>
+<link rel="index" href=".././idx/G" title="Index G ‣ Index"/>
+<link rel="index" href=".././idx/H" title="Index H ‣ Index"/>
+<link rel="index" href=".././idx/I" title="Index I ‣ Index"/>
+<link rel="index" href=".././idx/J" title="Index J ‣ Index"/>
+<link rel="index" href=".././idx/K" title="Index K ‣ Index"/>
+<link rel="index" href=".././idx/L" title="Index L ‣ Index"/>
+<link rel="index" href=".././idx/M" title="Index M ‣ Index"/>
+<link rel="index" href=".././idx/N" title="Index N ‣ Index"/>
+<link rel="index" href=".././idx/O" title="Index O ‣ Index"/>
+<link rel="index" href=".././idx/P" title="Index P ‣ Index"/>
+<link rel="index" href=".././idx/Q" title="Index Q ‣ Index"/>
+<link rel="index" href=".././idx/R" title="Index R ‣ Index"/>
+<link rel="index" href=".././idx/S" title="Index S ‣ Index"/>
+<link rel="index" href=".././idx/T" title="Index T ‣ Index"/>
+<link rel="index" href=".././idx/U" title="Index U ‣ Index"/>
+<link rel="index" href=".././idx/V" title="Index V ‣ Index"/>
+<link rel="index" href=".././idx/W" title="Index W ‣ Index"/>
+<link rel="document" href=".././front/foreword" title="Foreword"/>
+<link rel="document" href=".././front/preface" title="Preface"/>
+<link rel="document" href=".././front/introduction" title="Mathematical Introduction"/>
+<link rel="chapter" href=".././1" title="Chapter 1 Algebraic and Analytic Methods"/>
+<link rel="chapter" href=".././2" title="Chapter 2 Asymptotic Approximations"/>
+<link rel="chapter" href=".././3" title="Chapter 3 Numerical Methods"/>
+<link rel="chapter" href=".././4" title="Chapter 4 Elementary Functions"/>
+<link rel="chapter" href=".././5" title="Chapter 5 Gamma Function"/>
+<link rel="chapter" href=".././6" title="Chapter 6 Exponential, Logarithmic, Sine, and Cosine Integrals"/>
+<link rel="chapter" href=".././7" title="Chapter 7 Error Functions, Dawson’s and Fresnel Integrals"/>
+<link rel="chapter" href=".././8" title="Chapter 8 Incomplete Gamma and Related Functions"/>
+<link rel="chapter" href=".././9" title="Chapter 9 Airy and Related Functions"/>
+<link rel="chapter" href=".././10" title="Chapter 10 Bessel Functions"/>
+<link rel="chapter" href=".././11" title="Chapter 11 Struve and Related Functions"/>
+<link rel="chapter" href=".././12" title="Chapter 12 Parabolic Cylinder Functions"/>
+<link rel="chapter" href=".././13" title="Chapter 13 Confluent Hypergeometric Functions"/>
+<link rel="chapter" href=".././14" title="Chapter 14 Legendre and Related Functions"/>
+<link rel="chapter" href=".././15" title="Chapter 15 Hypergeometric Function"/>
+<link rel="chapter" href=".././16" title="Chapter 16 Generalized Hypergeometric Functions and Meijer G-Function"/>
+<link rel="chapter" href=".././17" title="Chapter 17 q-Hypergeometric and Related Functions"/>
+<link rel="chapter" href=".././18" title="Chapter 18 Orthogonal Polynomials"/>
+<link rel="chapter" href=".././19" title="Chapter 19 Elliptic Integrals"/>
+<link rel="chapter" href=".././20" title="Chapter 20 Theta Functions"/>
+<link rel="chapter" href=".././21" title="Chapter 21 Multidimensional Theta Functions"/>
+<link rel="chapter" href=".././22" title="Chapter 22 Jacobian Elliptic Functions"/>
+<link rel="chapter" href=".././23" title="Chapter 23 Weierstrass Elliptic and Modular Functions"/>
+<link rel="chapter" href=".././24" title="Chapter 24 Bernoulli and Euler Polynomials"/>
+<link rel="chapter" href=".././25" title="Chapter 25 Zeta and Related Functions"/>
+<link rel="chapter" href=".././26" title="Chapter 26 Combinatorial Analysis"/>
+<link rel="chapter" href=".././27" title="Chapter 27 Functions of Number Theory"/>
+<link rel="chapter" href=".././28" title="Chapter 28 Mathieu Functions and Hill’s Equation"/>
+<link rel="chapter" href=".././29" title="Chapter 29 Lamé Functions"/>
+<link rel="chapter" href=".././30" title="Chapter 30 Spheroidal Wave Functions"/>
+<link rel="chapter" href=".././31" title="Chapter 31 Heun Functions"/>
+<link rel="chapter" href=".././32" title="Chapter 32 Painlevé Transcendents"/>
+<link rel="chapter" href=".././33" title="Chapter 33 Coulomb Functions"/>
+<link rel="chapter" href=".././34" title="Chapter 34 3j6j9j Symbols"/>
+<link rel="chapter" href=".././35" title="Chapter 35 Functions of Matrix Argument"/>
+<link rel="chapter" href=".././36" title="Chapter 36 Integrals with Coalescing Saddles"/>
+<link rel="bibliography" href=".././bib/" title="Bibliography"/>
+<link rel="index" href=".././idx/." title="Index"/>
+<link rel="glossary" href=".././not/" title="Notations"/>
+<link rel="document" href=".././software/" title="Software Index"/>
+<link rel="document" href=".././errata/" title="Errata"/>
+<link rel="document" href=".././help/" title="Need Help?"/>
+<link rel="document" href=".././search/" title="Advanced Search"/>
+<link rel="document" href=".././about/" title="About the Project"/>
+<meta name="keywords" xml:lang="en-us" content="Coulomb functions, Descartes’ rule of signs, Horner’s scheme, Laplace integral, analytic properties, applications, approximations, asymptotic expansions, asymptotic expansions for large order, asymptotic expansions for large zeros, beta integral, bounds, common, complex, computation, conditioning, definition, degrees two, three, four, discriminant, distribution, division algorithm, double, elementary properties, elementary symmetric functions, error bounds, explicit formulas, extended, forward differences, interlacing, mean-value, monotonicity, multiplicity, normalization, notation, of cross-products, orthogonality, purely imaginary, relation to inverse phase functions, resolvent cubic, roots of constants, roots of unity, simple, summation, tables, ultraspherical polynomials, uniform, with respect to order (, zero potential, zeros of Bessel functions (including derivatives), zeros of analytic functions, zeros of cylinder functions (including derivatives), zeros of polynomials, zeta function, zonal polynomials, zonal spherical harmonics"/>
 </head>
 <body class="color_default textfont_default titlefont_default fontsize_default navbar_default">
-      <div class="navbar">
-<div class="navitem logo"><a class="dlmflogo" href=".././"><img src=".././style/DLMFLogo.png" width="135" height="106" alt="Digital Library of Mathematical Functions"></a></div>
-<div class="navitem links"><form method="get" action=".././search/search"><ul>
+<div class="ltx_page_navbar">
+<div class="ltx_page_navitem"><a href=".././"><img src=".././style/DLMFLogo.png" width="105" height="82" alt="Digital Library of Mathematical Functions"/></a></div>
+<div class="ltx_page_navitem"><form method="get" action=".././search/search">
+<ul>
 <li><a href=".././idx/">Index</a></li>
 <li><a href=".././not/">Notations</a></li>
-<li><small><input type="text" name="q" value="" size="6" class="navitem_search"><button type="submit">Search</button></small></li>
+<li><small><input type="text" name="q" value="" size="6" class="ltx_page_navitem_search"/><button type="submit">Search</button></small></li>
 <li><a href=".././help/">Need Help?</a></li>
 <li><a href=".././help/cite">How to Cite</a></li>
 <li><a href=".././help/customize">Customize</a></li>
-</ul></form></div>
-<div class="navitem sponsors">
+</ul></form>
+</div>
+<div class="ltx_page_navsponsors">
 <div><a href=".././about/">About the Project</a></div>
-<a href="http://www.nist.gov/"><img src=".././style/nistidc.png" width="130" height="50" alt="NIST"></a>
+<a href="http://www.nist.gov/"><img src=".././style/nistidc.png" width="100" height="38" alt="NIST"/></a>
 </div>
 </div>
-      <div class="main">
-<div class="header">
-<a class="Lnav" href=".././idx/W" title="Index W"><span class="arrow"><span>⇐ </span></span><span class="text reftitle">Index W</span></a><a class="Rnav" href=".././not/" title="Notations *"><span class="text reftitle">Notations *</span><span class="arrow"><span> ⇒</span></span></a>
+<div class="ltx_page_main">
+<div class="ltx_page_header"><a href=".././idx/." title="Index" class="ltx_ref" rel="up"><span class="ltx_text ltx_ref_title">Index</span></a><a href=".././idx/W" title="Index W ‣ Index" class="ltx_ref" rel="prev"><span class="ltx_text ltx_ref_title">Index W</span></a><a href=".././not/" title="Notations" class="ltx_ref" rel="next"><span class="ltx_text ltx_ref_title">Notations</span></a>
 </div>
-<div class="content"><div class="index">
-<h1 class="title index-title">Index Z</h1>
-<div class="veryshorttoc">♦<a href=".././idx/." title="Index A" class="ref">A</a>♦<a href=".././idx/B" title="Index B" class="ref">B</a>♦<a href=".././idx/C" title="Index C" class="ref">C</a>♦<a href=".././idx/D" title="Index D" class="ref">D</a>♦<a href=".././idx/E" title="Index E" class="ref">E</a>♦<a href=".././idx/F" title="Index F" class="ref">F</a>♦<a href=".././idx/G" title="Index G" class="ref">G</a>♦<a href=".././idx/H" title="Index H" class="ref">H</a>♦<a href=".././idx/I" title="Index I" class="ref">I</a>♦<a href=".././idx/J" title="Index J" class="ref">J</a>♦<a href=".././idx/K" title="Index K" class="ref">K</a>♦<a href=".././idx/L" title="Index L" class="ref">L</a>♦<a href=".././idx/M" title="Index M" class="ref">M</a>♦<a href=".././idx/N" title="Index N" class="ref">N</a>♦<a href=".././idx/O" title="Index O" class="ref">O</a>♦<a href=".././idx/P" title="Index P" class="ref">P</a>♦<a href=".././idx/Q" title="Index Q" class="ref">Q</a>♦<a href=".././idx/R" title="Index R" class="ref">R</a>♦<a href=".././idx/S" title="Index S" class="ref">S</a>♦<a href=".././idx/T" title="Index T" class="ref">T</a>♦<a href=".././idx/U" title="Index U" class="ref">U</a>♦<a href=".././idx/V" title="Index V" class="ref">V</a>♦<a href=".././idx/W" title="Index W" class="ref">W</a>♦Z♦</div>
-<div class="columns">
-<div class="column1"><ul class="indexlist">
-<li id="zeropotential" class="indexentry">
-<span class="indexphrase">zero potential</span><ul class="indexlist"><li id="zeropotential.Coulombfunctions" class="indexentry">
-<span class="indexphrase">Coulomb functions</span><span class="indexrefs"><span class="text"> </span><a href=".././33.22#P1.tab1" title="¶ k Scaling ‣ §33.22(ii) Definitions of Variables ‣ §33.22 Particle Scattering and Atomic and Molecular Spectra ‣ Physical Applications ‣ Chapter 33 Coulomb Functions" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§33.22(ii)</span></a>, <a href=".././33.22#P2.tab1" title="¶ Z Scaling ‣ §33.22(ii) Definitions of Variables ‣ §33.22 Particle Scattering and Atomic and Molecular Spectra ‣ Physical Applications ‣ Chapter 33 Coulomb Functions" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§33.22(ii)</span></a>, <a href=".././33.22#P3.tab1" title="¶ ⁢ⅈk Scaling ‣ §33.22(ii) Definitions of Variables ‣ §33.22 Particle Scattering and Atomic and Molecular Spectra ‣ Physical Applications ‣ Chapter 33 Coulomb Functions" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§33.22(ii)</span></a></span>
-</li></ul>
-</li>
-<li id="zerosofanalyticfunctions" class="indexentry">
-<span class="indexphrase">zeros of analytic functions</span><ul class="indexlist">
-<li id="zerosofanalyticfunctions.computation" class="indexentry">
-<span class="indexphrase">computation</span><span class="indexrefs"><span class="text"> </span><a href=".././3.8" title="§3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ref"><span class="text reftag">§3.8</span></a>, <a href=".././3.8#P10" title="¶ Example. Wilkinson’s Polynomial ‣ §3.8(vi) Conditioning of Zeros ‣ §3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§3.8(vi)</span></a></span>
-</li>
-<li id="zerosofanalyticfunctions.conditioning" class="indexentry">
-<span class="indexphrase">conditioning</span><span class="indexrefs"><span class="text"> </span><a href=".././3.8#vi" title="§3.8(vi) Conditioning of Zeros ‣ §3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ref"><span class="text reftag">§3.8(vi)</span></a></span>
-</li>
-<li id="zerosofanalyticfunctions.multiplicity" class="indexentry">
-<span class="indexphrase">multiplicity</span><span class="indexrefs"><span class="text"> </span><a href=".././1.10#P2.p1" title="¶ Zeros ‣ §1.10(i) Taylor’s Theorem for Complex Variables ‣ §1.10 Functions of a Complex Variable ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§1.10(i)</span></a>, <a href=".././3.8" title="§3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ref"><span class="text reftag">§3.8</span></a></span>
-</li>
-<li id="zerosofanalyticfunctions.simple" class="indexentry">
-<span class="indexphrase">simple</span><span class="indexrefs"><span class="text"> </span><a href=".././3.8" title="§3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ref"><span class="text reftag">§3.8</span></a></span>
-</li>
+<div class="ltx_page_content">
+<div class="ltx_index">
+<h1 class="ltx_title ltx_title_index">Index Z</h1>
+
+<div class="ltx_toc_verycompact">♦<a href=".././idx/." title="Index" class="ltx_ref">A</a>♦<a href=".././idx/B" title="Index B ‣ Index" class="ltx_ref">B</a>♦<a href=".././idx/C" title="Index C ‣ Index" class="ltx_ref">C</a>♦<a href=".././idx/D" title="Index D ‣ Index" class="ltx_ref">D</a>♦<a href=".././idx/E" title="Index E ‣ Index" class="ltx_ref">E</a>♦<a href=".././idx/F" title="Index F ‣ Index" class="ltx_ref">F</a>♦<a href=".././idx/G" title="Index G ‣ Index" class="ltx_ref">G</a>♦<a href=".././idx/H" title="Index H ‣ Index" class="ltx_ref">H</a>♦<a href=".././idx/I" title="Index I ‣ Index" class="ltx_ref">I</a>♦<a href=".././idx/J" title="Index J ‣ Index" class="ltx_ref">J</a>♦<a href=".././idx/K" title="Index K ‣ Index" class="ltx_ref">K</a>♦<a href=".././idx/L" title="Index L ‣ Index" class="ltx_ref">L</a>♦<a href=".././idx/M" title="Index M ‣ Index" class="ltx_ref">M</a>♦<a href=".././idx/N" title="Index N ‣ Index" class="ltx_ref">N</a>♦<a href=".././idx/O" title="Index O ‣ Index" class="ltx_ref">O</a>♦<a href=".././idx/P" title="Index P ‣ Index" class="ltx_ref">P</a>♦<a href=".././idx/Q" title="Index Q ‣ Index" class="ltx_ref">Q</a>♦<a href=".././idx/R" title="Index R ‣ Index" class="ltx_ref">R</a>♦<a href=".././idx/S" title="Index S ‣ Index" class="ltx_ref">S</a>♦<a href=".././idx/T" title="Index T ‣ Index" class="ltx_ref">T</a>♦<a href=".././idx/U" title="Index U ‣ Index" class="ltx_ref">U</a>♦<a href=".././idx/V" title="Index V ‣ Index" class="ltx_ref">V</a>♦<a href=".././idx/W" title="Index W ‣ Index" class="ltx_ref">W</a>♦Z♦</div>
+<div class="ltx_page_columns">
+<div class="ltx_page_column1">
+<ul class="ltx_indexlist">
+<li id="zeropotential" class="ltx_indexentry"><span class="ltx_indexphrase">zero potential</span>
+<ul class="ltx_indexlist">
+<li id="zeropotential.Coulombfunctions" class="ltx_indexentry"><span class="ltx_indexphrase">Coulomb functions</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././33.22#P1.tab1" title="¶ k Scaling ‣ §33.22(ii) Definitions of Variables ‣ §33.22 Particle Scattering and Atomic and Molecular Spectra ‣ Physical Applications ‣ Chapter 33 Coulomb Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§33.22(ii)</span></a>, <a href=".././33.22#P2.tab1" title="¶ Z Scaling ‣ §33.22(ii) Definitions of Variables ‣ §33.22 Particle Scattering and Atomic and Molecular Spectra ‣ Physical Applications ‣ Chapter 33 Coulomb Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§33.22(ii)</span></a>, <a href=".././33.22#P3.tab1" title="¶ ⁢ⅈk Scaling ‣ §33.22(ii) Definitions of Variables ‣ §33.22 Particle Scattering and Atomic and Molecular Spectra ‣ Physical Applications ‣ Chapter 33 Coulomb Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§33.22(ii)</span></a></span></li></ul></li>
+<li id="zerosofanalyticfunctions" class="ltx_indexentry"><span class="ltx_indexphrase">zeros of analytic functions</span>
+<ul class="ltx_indexlist">
+<li id="zerosofanalyticfunctions.computation" class="ltx_indexentry"><span class="ltx_indexphrase">computation</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././3.8" title="§3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§3.8</span></a>, <a href=".././3.8#P10" title="¶ Example. Wilkinson’s Polynomial ‣ §3.8(vi) Conditioning of Zeros ‣ §3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§3.8(vi)</span></a></span></li>
+<li id="zerosofanalyticfunctions.conditioning" class="ltx_indexentry"><span class="ltx_indexphrase">conditioning</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././3.8#vi" title="§3.8(vi) Conditioning of Zeros ‣ §3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§3.8(vi)</span></a></span></li>
+<li id="zerosofanalyticfunctions.multiplicity" class="ltx_indexentry"><span class="ltx_indexphrase">multiplicity</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././1.10#P2.p1" title="¶ Zeros ‣ §1.10(i) Taylor’s Theorem for Complex Variables ‣ §1.10 Functions of a Complex Variable ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§1.10(i)</span></a>, <a href=".././3.8" title="§3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§3.8</span></a></span></li>
+<li id="zerosofanalyticfunctions.simple" class="ltx_indexentry"><span class="ltx_indexphrase">simple</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././3.8" title="§3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§3.8</span></a></span></li></ul></li>
+<li id="zerosofBesselfunctions" class="ltx_indexentry"><span class="ltx_indexphrase">zeros of Bessel functions (including derivatives)</span>
+<ul class="ltx_indexlist">
+<li id="zerosofBesselfunctions.analyticproperties" class="ltx_indexentry"><span class="ltx_indexphrase">analytic properties</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#ii" title="§10.21(ii) Analytic Properties ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(ii)</span></a>, <a href=".././10.21#SS2.p5" title="§10.21(ii) Analytic Properties ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(ii)</span></a></span></li>
+<li id="zerosofBesselfunctions.approximations" class="ltx_indexentry"><span class="ltx_indexphrase">approximations</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.76#P2" title="¶ Real Variable and Order : Zeros ‣ §10.76(ii) Bessel Functions, Hankel Functions, and Modified Bessel Functions ‣ §10.76 Approximations ‣ Computation ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§10.76(ii)</span></a></span></li>
+<li id="zerosofBesselfunctions.asymptoticexpansionsforlargeorder" class="ltx_indexentry"><span class="ltx_indexphrase">asymptotic expansions for large order</span>
+<ul class="ltx_indexlist">
+<li id="zerosofBesselfunctions.asymptoticexpansionsforlargeorder.uniform" class="ltx_indexentry"><span class="ltx_indexphrase">uniform</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#viii" title="§10.21(viii) Uniform Asymptotic Approximations for Large Order ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(viii)</span></a></span></li></ul></li>
+<li id="zerosofBesselfunctions.asymptoticexpansionsforlargezeros" class="ltx_indexentry"><span class="ltx_indexphrase">asymptotic expansions for large zeros</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#vi" title="§10.21(vi) McMahon’s Asymptotic Expansions for Large Zeros ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(vi)</span></a></span>
+<ul class="ltx_indexlist">
+<li id="zerosofBesselfunctions.asymptoticexpansionsforlargezeros.errorbounds" class="ltx_indexentry"><span class="ltx_indexphrase">error bounds</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#SS6.p5" title="§10.21(vi) McMahon’s Asymptotic Expansions for Large Zeros ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(vi)</span></a></span></li></ul></li>
+<li id="zerosofBesselfunctions.bounds" class="ltx_indexentry"><span class="ltx_indexphrase">bounds</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#v" title="§10.21(v) Inequalities ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(v)</span></a></span></li>
+<li id="zerosofBesselfunctions.common" class="ltx_indexentry"><span class="ltx_indexphrase">common</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#SS1.p9" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(i)</span></a></span></li>
+<li id="zerosofBesselfunctions.complex" class="ltx_indexentry"><span class="ltx_indexphrase">complex</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#P3.p1" title="¶ Zeros of -0zJ⁢ⅈ1zJ and&#10;-nzJ⁢ⅈ+n1zJ ‣ §10.21(ix) Complex Zeros ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§10.21(ix)</span></a>, <a href=".././10.21#SS1.p6" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(i)</span></a>, <a href=".././10.21#ix" title="§10.21(ix) Complex Zeros ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(ix)</span></a></span></li>
+<li id="zerosofBesselfunctions.computation" class="ltx_indexentry"><span class="ltx_indexphrase">computation</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.74#P3.p1" title="¶ Multiple Zeros ‣ §10.74(vi) Zeros and Associated Values ‣ §10.74 Methods of Computation ‣ Computation ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§10.74(vi)</span></a>, <a href=".././10.74#vi" title="§10.74(vi) Zeros and Associated Values ‣ §10.74 Methods of Computation ‣ Computation ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.74(vi)</span></a></span></li>
+<li id="zerosofBesselfunctions.distribution" class="ltx_indexentry"><span class="ltx_indexphrase">distribution</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#i" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(i)</span></a>, <a href=".././10.21#SS13.p1" title="§10.21(xiii) Rayleigh Function ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(xiii)</span></a>, <a href=".././10.21#ix" title="§10.21(ix) Complex Zeros ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(ix)</span></a></span></li>
+<li id="zerosofBesselfunctions.double" class="ltx_indexentry"><span class="ltx_indexphrase">double</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#SS1.p8" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(i)</span></a></span></li>
+<li id="zerosofBesselfunctions.interlacing" class="ltx_indexentry"><span class="ltx_indexphrase">interlacing</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#SS1.p3" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(i)</span></a></span></li>
+<li id="zerosofBesselfunctions.monotonicity" class="ltx_indexentry"><span class="ltx_indexphrase">monotonicity</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#iv" title="§10.21(iv) Monotonicity Properties ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(iv)</span></a></span></li>
+<li id="zerosofBesselfunctions.notation" class="ltx_indexentry"><span class="ltx_indexphrase">notation</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#SS1.p2" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(i)</span></a></span></li>
+<li id="zerosofBesselfunctions.ofcrossproducts" class="ltx_indexentry"><span class="ltx_indexphrase">of cross-products</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#x" title="§10.21(x) Cross-Products ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(x)</span></a></span>
+<ul class="ltx_indexlist">
+<li id="zerosofBesselfunctions.ofcrossproducts.asymptoticexpansions" class="ltx_indexentry"><span class="ltx_indexphrase">asymptotic expansions</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#x" title="§10.21(x) Cross-Products ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(x)</span></a></span></li></ul></li>
+<li id="zerosofBesselfunctions.purelyimaginary" class="ltx_indexentry"><span class="ltx_indexphrase">purely imaginary</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#SS1.p6" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(i)</span></a>, <a href=".././10.21#v" title="§10.21(v) Inequalities ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(v)</span></a></span></li>
+<li id="zerosofBesselfunctions.relationtoinversephasefunctions" class="ltx_indexentry"><span class="ltx_indexphrase">relation to inverse phase functions</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#SS2.p3" title="§10.21(ii) Analytic Properties ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(ii)</span></a></span></li>
+<li id="zerosofBesselfunctions.tables" class="ltx_indexentry"><span class="ltx_indexphrase">tables</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.75#iii" title="§10.75(iii) Zeros and Associated Values of the Bessel Functions, Hankel&#10;Functions, and their Derivatives ‣ §10.75 Tables ‣ Computation ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.75(iii)</span></a>, <a href=".././4.46" title="§4.46 Tables ‣ Computation ‣ Chapter 4 Elementary Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§4.46</span></a></span></li>
+<li id="zerosofBesselfunctions.withrespecttoordernuzeros" class="ltx_indexentry"><span class="ltx_indexphrase">with respect to order (<math xmlns="http://www.w3.org/1998/Math/MathML" class="ltx_Math" alttext="\nu" display="inline" altimg="m49.png" altimg-width="14" altimg-height="12" altimg-valign="-2"><mi href=".././10.1#p2.t1.r5">ν</mi></math>-zeros)</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#xiv" title="§10.21(xiv) ν-Zeros ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(xiv)</span></a></span></li></ul></li>
+<li id="zerosofcylinderfunctions" class="ltx_indexentry"><span class="ltx_indexphrase">zeros of cylinder functions (including derivatives)</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#i" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(i)</span></a>, <a href=".././10.21#SS7.p4" title="§10.21(vii) Asymptotic Expansions for Large Order ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(vii)</span></a></span>
+<ul class="ltx_indexlist">
+<li id="zerosofcylinderfunctions.analyticproperties" class="ltx_indexentry"><span class="ltx_indexphrase">analytic properties</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#ii" title="§10.21(ii) Analytic Properties ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(ii)</span></a></span></li>
+<li id="zerosofcylinderfunctions.asymptoticexpansionsforlargeorder" class="ltx_indexentry"><span class="ltx_indexphrase">asymptotic expansions for large order</span>
+<ul class="ltx_indexlist">
+<li id="zerosofcylinderfunctions.asymptoticexpansionsforlargeorder.uniform" class="ltx_indexentry"><span class="ltx_indexphrase">uniform</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#vii" title="§10.21(vii) Asymptotic Expansions for Large Order ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(vii)</span></a></span></li></ul></li>
+<li id="zerosofcylinderfunctions.asymptoticexpansionsforlargezeros" class="ltx_indexentry"><span class="ltx_indexphrase">asymptotic expansions for large zeros</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#vi" title="§10.21(vi) McMahon’s Asymptotic Expansions for Large Zeros ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(vi)</span></a></span></li>
+<li id="zerosofcylinderfunctions.forwarddifferences" class="ltx_indexentry"><span class="ltx_indexphrase">forward differences</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#SS2.p5" title="§10.21(ii) Analytic Properties ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(ii)</span></a></span></li>
+<li id="zerosofcylinderfunctions.interlacing" class="ltx_indexentry"><span class="ltx_indexphrase">interlacing</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#SS1.p3" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(i)</span></a></span></li>
+<li id="zerosofcylinderfunctions.monotonicity" class="ltx_indexentry"><span class="ltx_indexphrase">monotonicity</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#iv" title="§10.21(iv) Monotonicity Properties ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(iv)</span></a></span></li>
+<li id="zerosofcylinderfunctions.relationtoinversephasefunctions" class="ltx_indexentry"><span class="ltx_indexphrase">relation to inverse phase functions</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././10.21#SS2.p3" title="§10.21(ii) Analytic Properties ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§10.21(ii)</span></a></span></li></ul></li>
 </ul>
-</li>
-<li id="zerosofBesselfunctions" class="indexentry">
-<span class="indexphrase">zeros of Bessel functions (including derivatives)</span><ul class="indexlist">
-<li id="zerosofBesselfunctions.analyticproperties" class="indexentry">
-<span class="indexphrase">analytic properties</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#ii" title="§10.21(ii) Analytic Properties ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(ii)</span></a>, <a href=".././10.21#SS2.p5" title="§10.21(ii) Analytic Properties ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(ii)</span></a></span>
-</li>
-<li id="zerosofBesselfunctions.approximations" class="indexentry">
-<span class="indexphrase">approximations</span><span class="indexrefs"><span class="text"> </span><a href=".././10.76#P2" title="¶ Real Variable and Order : Zeros ‣ §10.76(ii) Bessel Functions, Hankel Functions, and Modified Bessel Functions ‣ §10.76 Approximations ‣ Computation ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§10.76(ii)</span></a></span>
-</li>
-<li id="zerosofBesselfunctions.asymptoticexpansionsforlargeorder" class="indexentry">
-<span class="indexphrase">asymptotic expansions for large order</span><ul class="indexlist"><li id="zerosofBesselfunctions.asymptoticexpansionsforlargeorder.uniform" class="indexentry">
-<span class="indexphrase">uniform</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#viii" title="§10.21(viii) Uniform Asymptotic Approximations for Large Order ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(viii)</span></a></span>
-</li></ul>
-</li>
-<li id="zerosofBesselfunctions.asymptoticexpansionsforlargezeros" class="indexentry">
-<span class="indexphrase">asymptotic expansions for large zeros</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#vi" title="§10.21(vi) McMahon’s Asymptotic Expansions for Large Zeros ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(vi)</span></a></span><ul class="indexlist"><li id="zerosofBesselfunctions.asymptoticexpansionsforlargezeros.errorbounds" class="indexentry">
-<span class="indexphrase">error bounds</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#SS6.p5" title="§10.21(vi) McMahon’s Asymptotic Expansions for Large Zeros ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(vi)</span></a></span>
-</li></ul>
-</li>
-<li id="zerosofBesselfunctions.bounds" class="indexentry">
-<span class="indexphrase">bounds</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#v" title="§10.21(v) Inequalities ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(v)</span></a></span>
-</li>
-<li id="zerosofBesselfunctions.common" class="indexentry">
-<span class="indexphrase">common</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#SS1.p9" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(i)</span></a></span>
-</li>
-<li id="zerosofBesselfunctions.complex" class="indexentry">
-<span class="indexphrase">complex</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#P3.p1" title="¶ Zeros of -0zJ⁢ⅈ1zJ and
--nzJ⁢ⅈ+n1zJ ‣ §10.21(ix) Complex Zeros ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§10.21(ix)</span></a>, <a href=".././10.21#SS1.p6" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(i)</span></a>, <a href=".././10.21#ix" title="§10.21(ix) Complex Zeros ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(ix)</span></a></span>
-</li>
-<li id="zerosofBesselfunctions.computation" class="indexentry">
-<span class="indexphrase">computation</span><span class="indexrefs"><span class="text"> </span><a href=".././10.74#P3.p1" title="¶ Multiple Zeros ‣ §10.74(vi) Zeros and Associated Values ‣ §10.74 Methods of Computation ‣ Computation ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§10.74(vi)</span></a>, <a href=".././10.74#vi" title="§10.74(vi) Zeros and Associated Values ‣ §10.74 Methods of Computation ‣ Computation ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.74(vi)</span></a></span>
-</li>
-<li id="zerosofBesselfunctions.distribution" class="indexentry">
-<span class="indexphrase">distribution</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#i" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(i)</span></a>, <a href=".././10.21#SS13.p1" title="§10.21(xiii) Rayleigh Function ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(xiii)</span></a>, <a href=".././10.21#ix" title="§10.21(ix) Complex Zeros ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(ix)</span></a></span>
-</li>
-<li id="zerosofBesselfunctions.double" class="indexentry">
-<span class="indexphrase">double</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#SS1.p8" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(i)</span></a></span>
-</li>
-<li id="zerosofBesselfunctions.interlacing" class="indexentry">
-<span class="indexphrase">interlacing</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#SS1.p3" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(i)</span></a></span>
-</li>
-<li id="zerosofBesselfunctions.monotonicity" class="indexentry">
-<span class="indexphrase">monotonicity</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#iv" title="§10.21(iv) Monotonicity Properties ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(iv)</span></a></span>
-</li>
-<li id="zerosofBesselfunctions.notation" class="indexentry">
-<span class="indexphrase">notation</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#SS1.p2" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(i)</span></a></span>
-</li>
-<li id="zerosofBesselfunctions.ofcrossproducts" class="indexentry">
-<span class="indexphrase">of cross-products</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#x" title="§10.21(x) Cross-Products ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(x)</span></a></span><ul class="indexlist"><li id="zerosofBesselfunctions.ofcrossproducts.asymptoticexpansions" class="indexentry">
-<span class="indexphrase">asymptotic expansions</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#x" title="§10.21(x) Cross-Products ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(x)</span></a></span>
-</li></ul>
-</li>
-<li id="zerosofBesselfunctions.purelyimaginary" class="indexentry">
-<span class="indexphrase">purely imaginary</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#SS1.p6" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(i)</span></a>, <a href=".././10.21#v" title="§10.21(v) Inequalities ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(v)</span></a></span>
-</li>
-<li id="zerosofBesselfunctions.relationtoinversephasefunctions" class="indexentry">
-<span class="indexphrase">relation to inverse phase functions</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#SS2.p3" title="§10.21(ii) Analytic Properties ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(ii)</span></a></span>
-</li>
-<li id="zerosofBesselfunctions.tables" class="indexentry">
-<span class="indexphrase">tables</span><span class="indexrefs"><span class="text"> </span><a href=".././10.75#iii" title="§10.75(iii) Zeros and Associated Values of the Bessel Functions, Hankel
-Functions, and their Derivatives ‣ §10.75 Tables ‣ Computation ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.75(iii)</span></a>, <a href=".././4.46" title="§4.46 Tables ‣ Computation ‣ Chapter 4 Elementary Functions" class="ref"><span class="text reftag">§4.46</span></a></span>
-</li>
-<li id="zerosofBesselfunctions.withrespecttoordernuzeros" class="indexentry">
-<span class="indexphrase">with respect to order (<img src=".././idx/m49.png" width="14" height="11" alt="\nu" class="math" style="vertical-align:-2px;">-zeros)</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#xiv" title="§10.21(xiv) ν-Zeros ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(xiv)</span></a></span>
-</li>
-</ul>
-</li>
-<li id="zerosofcylinderfunctions" class="indexentry">
-<span class="indexphrase">zeros of cylinder functions (including derivatives)</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#i" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(i)</span></a>, <a href=".././10.21#SS7.p4" title="§10.21(vii) Asymptotic Expansions for Large Order ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(vii)</span></a></span><ul class="indexlist">
-<li id="zerosofcylinderfunctions.analyticproperties" class="indexentry">
-<span class="indexphrase">analytic properties</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#ii" title="§10.21(ii) Analytic Properties ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(ii)</span></a></span>
-</li>
-<li id="zerosofcylinderfunctions.asymptoticexpansionsforlargeorder" class="indexentry">
-<span class="indexphrase">asymptotic expansions for large order</span><ul class="indexlist"><li id="zerosofcylinderfunctions.asymptoticexpansionsforlargeorder.uniform" class="indexentry">
-<span class="indexphrase">uniform</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#vii" title="§10.21(vii) Asymptotic Expansions for Large Order ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(vii)</span></a></span>
-</li></ul>
-</li>
-<li id="zerosofcylinderfunctions.asymptoticexpansionsforlargezeros" class="indexentry">
-<span class="indexphrase">asymptotic expansions for large zeros</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#vi" title="§10.21(vi) McMahon’s Asymptotic Expansions for Large Zeros ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(vi)</span></a></span>
-</li>
-<li id="zerosofcylinderfunctions.forwarddifferences" class="indexentry">
-<span class="indexphrase">forward differences</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#SS2.p5" title="§10.21(ii) Analytic Properties ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(ii)</span></a></span>
-</li>
-<li id="zerosofcylinderfunctions.interlacing" class="indexentry">
-<span class="indexphrase">interlacing</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#SS1.p3" title="§10.21(i) Distribution ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(i)</span></a></span>
-</li>
-<li id="zerosofcylinderfunctions.monotonicity" class="indexentry">
-<span class="indexphrase">monotonicity</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#iv" title="§10.21(iv) Monotonicity Properties ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(iv)</span></a></span>
-</li>
-<li id="zerosofcylinderfunctions.relationtoinversephasefunctions" class="indexentry">
-<span class="indexphrase">relation to inverse phase functions</span><span class="indexrefs"><span class="text"> </span><a href=".././10.21#SS2.p3" title="§10.21(ii) Analytic Properties ‣ §10.21 Zeros ‣ Bessel and Hankel Functions ‣ Chapter 10 Bessel Functions" class="ref"><span class="text reftag">§10.21(ii)</span></a></span>
-</li>
-</ul>
-</li>
-</ul></div>
-<div class="column2"><ul class="indexlist">
-<li id="zerosofpolynomials" class="indexentry">
-<span class="indexphrase">zeros of polynomials</span><span class="indexrefs">, <span class="text italic">see also </span><a href=".././idx/S#stablepolynomials" title="Index S" class="ref">stable polynomials.</a></span><ul class="indexlist">
-<li id="zerosofpolynomials.computation" class="indexentry">
-<span class="indexphrase">computation</span><span class="indexrefs"><span class="text"> </span><a href=".././3.8#P9" title="¶ Example ‣ §3.8(iv) Zeros of Polynomials ‣ §3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§3.8(iv)</span></a>, <a href=".././3.8#iv" title="§3.8(iv) Zeros of Polynomials ‣ §3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ref"><span class="text reftag">§3.8(iv)</span></a></span>
-</li>
-<li id="zerosofpolynomials.conditioning" class="indexentry">
-<span class="indexphrase">conditioning</span><span class="indexrefs"><span class="text"> </span><a href=".././3.8#vi" title="§3.8(vi) Conditioning of Zeros ‣ §3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ref"><span class="text reftag">§3.8(vi)</span></a></span>
-</li>
-<li id="zerosofpolynomials.degreestwothreefour" class="indexentry">
-<span class="indexphrase">degrees two, three, four</span><span class="indexrefs"><span class="text"> </span><a href=".././1.11#iii" title="§1.11(iii) Polynomials of Degrees Two, Three, and Four ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ref"><span class="text reftag">§1.11(iii)</span></a></span>
-</li>
-<li id="zerosofpolynomials.Descartesruleofsigns" class="indexentry">
-<span class="indexphrase">Descartes’ rule of signs</span><span class="indexrefs"><span class="text"> </span><a href=".././1.11#P3" title="¶ Descartes’ Rule of Signs ‣ §1.11(ii) Elementary Properties ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§1.11(ii)</span></a></span>
-</li>
-<li id="zerosofpolynomials.discriminant" class="indexentry">
-<span class="indexphrase">discriminant</span><span class="indexrefs"><span class="text"> </span><a href=".././1.11#P4.p3" title="¶ Example ‣ §1.11(ii) Elementary Properties ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§1.11(ii)</span></a></span>
-</li>
-<li id="zerosofpolynomials.distribution" class="indexentry">
-<span class="indexphrase">distribution</span><span class="indexrefs"><span class="text"> </span><a href=".././1.11#P4.p4" title="¶ Example ‣ §1.11(ii) Elementary Properties ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§1.11(ii)</span></a>, <a href=".././1.11#ii" title="§1.11(ii) Elementary Properties ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ref"><span class="text reftag">§1.11(ii)</span></a></span>
-</li>
-<li id="zerosofpolynomials.divisionalgorithm" class="indexentry">
-<span class="indexphrase">division algorithm</span><span class="indexrefs"><span class="text"> </span><a href=".././1.11#i" title="§1.11(i) Division Algorithm ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ref"><span class="text reftag">§1.11(i)</span></a></span>
-</li>
-<li id="zerosofpolynomials.elementaryproperties" class="indexentry">
-<span class="indexphrase">elementary properties</span><span class="indexrefs"><span class="text"> </span><a href=".././1.11#ii" title="§1.11(ii) Elementary Properties ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ref"><span class="text reftag">§1.11(ii)</span></a></span>
-</li>
-<li id="zerosofpolynomials.elementarysymmetricfunctions" class="indexentry">
-<span class="indexphrase">elementary symmetric functions</span><span class="indexrefs"><span class="text"> </span><a href=".././1.11#P4.p3" title="¶ Example ‣ §1.11(ii) Elementary Properties ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§1.11(ii)</span></a></span>
-</li>
-<li id="zerosofpolynomials.explicitformulas" class="indexentry">
-<span class="indexphrase">explicit formulas</span><span class="indexrefs"><span class="text"> </span><a href=".././3.8#iv" title="§3.8(iv) Zeros of Polynomials ‣ §3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ref"><span class="text reftag">§3.8(iv)</span></a></span>
-</li>
-<li id="zerosofpolynomials.Hornersscheme" class="indexentry">
-<span class="indexphrase">Horner’s scheme</span><span class="indexrefs"><span class="text"> </span><a href=".././1.11#P1" title="¶ Horner’s Scheme ‣ §1.11(i) Division Algorithm ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§1.11(i)</span></a></span><ul class="indexlist"><li id="zerosofpolynomials.Hornersscheme.extended" class="indexentry">
-<span class="indexphrase">extended</span><span class="indexrefs"><span class="text"> </span><a href=".././1.11#P2" title="¶ Extended Horner Scheme ‣ §1.11(i) Division Algorithm ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§1.11(i)</span></a></span>
-</li></ul>
-</li>
-<li id="zerosofpolynomials.resolventcubic" class="indexentry">
-<span class="indexphrase">resolvent cubic</span><span class="indexrefs"><span class="text"> </span><a href=".././1.11#P8.p2" title="¶ Quartic Equations ‣ §1.11(iii) Polynomials of Degrees Two, Three, and Four ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§1.11(iii)</span></a></span>
-</li>
-<li id="zerosofpolynomials.rootsofconstants" class="indexentry">
-<span class="indexphrase">roots of constants</span><span class="indexrefs"><span class="text"> </span><a href=".././1.11#iv" title="§1.11(iv) Roots of Unity and of Other Constants ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ref"><span class="text reftag">§1.11(iv)</span></a></span>
-</li>
-<li id="zerosofpolynomials.rootsofunity" class="indexentry">
-<span class="indexphrase">roots of unity</span><span class="indexrefs"><span class="text"> </span><a href=".././1.11#iv" title="§1.11(iv) Roots of Unity and of Other Constants ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ref"><span class="text reftag">§1.11(iv)</span></a></span>
-</li>
-</ul>
-</li>
-<li id="zetafunction" class="indexentry">
-<span class="indexphrase">zeta function</span><span class="indexrefs">, <span class="text italic">see </span><a href=".././idx/H#Hurwitzzetafunction" title="Index H" class="ref">Hurwitz zeta function</a>, <a href=".././idx/J#Jacobiszetafunction" title="Index J" class="ref">Jacobi’s zeta function</a>, <a href=".././idx/P#periodiczetafunction" title="Index P" class="ref">periodic zeta function</a>, <a href=".././idx/R#Riemannzetafunction" title="Index R" class="ref">Riemann zeta function</a>, <span class="text italic">and </span><a href=".././idx/W#Weierstrasszetafunction" title="Index W" class="ref">Weierstrass zeta function.</a></span>
-</li>
-<li id="zonalpolynomials" class="indexentry">
-<span class="indexphrase">zonal polynomials</span><span class="indexrefs"><span class="text"> </span><span class="text bold"><a href=".././35.4" title="§35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ref"><span class="text reftag">§35.4</span></a></span></span><ul class="indexlist">
-<li id="zonalpolynomials.applications" class="indexentry">
-<span class="indexphrase">applications</span><span class="indexrefs"><span class="text"> </span><a href=".././35.9" title="§35.9 Applications ‣ Applications ‣ Chapter 35 Functions of Matrix Argument" class="ref"><span class="text reftag">§35.9</span></a></span>
-</li>
-<li id="zonalpolynomials.betaintegral" class="indexentry">
-<span class="indexphrase">beta integral</span><span class="indexrefs"><span class="text"> </span><a href=".././35.4#P5" title="¶ Laplace and Beta Integrals ‣ §35.4(ii) Properties ‣ §35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§35.4(ii)</span></a></span>
-</li>
-<li id="zonalpolynomials.definition" class="indexentry">
-<span class="indexphrase">definition</span><span class="indexrefs"><span class="text"> </span><a href=".././35.4#SS1.p3" title="§35.4(i) Definitions ‣ §35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ref"><span class="text reftag">§35.4(i)</span></a></span>
-</li>
-<li id="zonalpolynomials.Laplaceintegral" class="indexentry">
-<span class="indexphrase">Laplace integral</span><span class="indexrefs"><span class="text"> </span><a href=".././35.4#P5" title="¶ Laplace and Beta Integrals ‣ §35.4(ii) Properties ‣ §35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§35.4(ii)</span></a></span>
-</li>
-<li id="zonalpolynomials.meanvalue" class="indexentry">
-<span class="indexphrase">mean-value</span><span class="indexrefs"><span class="text"> </span><a href=".././35.4#P4" title="¶ Mean-Value ‣ §35.4(ii) Properties ‣ §35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§35.4(ii)</span></a></span>
-</li>
-<li id="zonalpolynomials.normalization" class="indexentry">
-<span class="indexphrase">normalization</span><span class="indexrefs"><span class="text"> </span><a href=".././35.4#P1" title="¶ Normalization ‣ §35.4(ii) Properties ‣ §35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§35.4(ii)</span></a></span>
-</li>
-<li id="zonalpolynomials.notation" class="indexentry">
-<span class="indexphrase">notation</span><span class="indexrefs"><span class="text"> </span><a href=".././35.4#SS1.p3" title="§35.4(i) Definitions ‣ §35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ref"><span class="text reftag">§35.4(i)</span></a></span>
-</li>
-<li id="zonalpolynomials.orthogonality" class="indexentry">
-<span class="indexphrase">orthogonality</span><span class="indexrefs"><span class="text"> </span><a href=".././35.4#P2" title="¶ Orthogonal Invariance ‣ §35.4(ii) Properties ‣ §35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§35.4(ii)</span></a></span>
-</li>
-<li id="zonalpolynomials.summation" class="indexentry">
-<span class="indexphrase">summation</span><span class="indexrefs"><span class="text"> </span><a href=".././35.4#P3" title="¶ Summation ‣ §35.4(ii) Properties ‣ §35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§35.4(ii)</span></a></span>
-</li>
-<li id="zonalpolynomials.tables" class="indexentry">
-<span class="indexphrase">tables</span><span class="indexrefs"><span class="text"> </span><a href=".././35.11" title="§35.11 Tables ‣ Computation ‣ Chapter 35 Functions of Matrix Argument" class="ref"><span class="text reftag">§35.11</span></a></span>
-</li>
-</ul>
-</li>
-<li id="zonalsphericalharmonics" class="indexentry">
-<span class="indexphrase">zonal spherical harmonics</span><ul class="indexlist"><li id="zonalsphericalharmonics.ultrasphericalpolynomials" class="indexentry">
-<span class="indexphrase">ultraspherical polynomials</span><span class="indexrefs"><span class="text"> </span><a href=".././18.38#P6" title="¶ Zonal Spherical Harmonics ‣ §18.38(ii) Classical OP’s: Other Applications ‣ §18.38 Mathematical Applications ‣ Applications ‣ Chapter 18 Orthogonal Polynomials" class="ref"><span class="text reftag">¶</span> ‣ <span class="text reftag">§18.38(ii)</span></a></span>
-</li></ul>
-</li>
-</ul></div>
 </div>
-<div class="floatclear"></div>
-</div></div>
-<div class="contentbottom"> </div>
-<div class="footer">
-<span><a href=".././about/notices">© 2010–2012 NIST</a> /
-	<a href=".././about/notices#S3">Privacy Policy</a> /
-	<a href=".././about/notices#S2">Disclaimer</a> /
-	<a href="mailto:DLMF-feedback@nist.gov">Feedback</a>;
-	   Version 1.0.5;
-	    Release date 2012-10-01
-	Math-Image version (See <a href=".././help/mathml">MathML</a>)
-      .
-	
-	    A <a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.cambridge.org/catalogue/catalogue.asp?isbn=9780521192255">Printed Companion</a> is available.
-	  </span><a class="Lnav" href=".././idx/W" title="Index W"><span class="arrow"><span>⇐ </span></span><span class="text reftitle">Index W</span></a><a class="Rnav" href=".././not/" title="Notations *"><span class="text reftitle">Notations *</span><span class="arrow"><span> ⇒</span></span></a>
+<div class="ltx_page_column2">
+<ul class="ltx_indexlist">
+<li id="zerosofpolynomials" class="ltx_indexentry"><span class="ltx_indexphrase">zeros of polynomials</span><span class="ltx_indexrefs">, <span class="ltx_text ltx_font_italic">see also </span><a href=".././idx/S#stablepolynomials" title="Index S ‣ Index" class="ltx_ref">stable polynomials.</a></span>
+<ul class="ltx_indexlist">
+<li id="zerosofpolynomials.computation" class="ltx_indexentry"><span class="ltx_indexphrase">computation</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././3.8#P9" title="¶ Example ‣ §3.8(iv) Zeros of Polynomials ‣ §3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§3.8(iv)</span></a>, <a href=".././3.8#iv" title="§3.8(iv) Zeros of Polynomials ‣ §3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§3.8(iv)</span></a></span></li>
+<li id="zerosofpolynomials.conditioning" class="ltx_indexentry"><span class="ltx_indexphrase">conditioning</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././3.8#vi" title="§3.8(vi) Conditioning of Zeros ‣ §3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§3.8(vi)</span></a></span></li>
+<li id="zerosofpolynomials.degreestwothreefour" class="ltx_indexentry"><span class="ltx_indexphrase">degrees two, three, four</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././1.11#iii" title="§1.11(iii) Polynomials of Degrees Two, Three, and Four ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§1.11(iii)</span></a></span></li>
+<li id="zerosofpolynomials.Descartesruleofsigns" class="ltx_indexentry"><span class="ltx_indexphrase">Descartes’ rule of signs</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././1.11#P3" title="¶ Descartes’ Rule of Signs ‣ §1.11(ii) Elementary Properties ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§1.11(ii)</span></a></span></li>
+<li id="zerosofpolynomials.discriminant" class="ltx_indexentry"><span class="ltx_indexphrase">discriminant</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././1.11#P4.p3" title="¶ Example ‣ §1.11(ii) Elementary Properties ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§1.11(ii)</span></a></span></li>
+<li id="zerosofpolynomials.distribution" class="ltx_indexentry"><span class="ltx_indexphrase">distribution</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././1.11#P4.p4" title="¶ Example ‣ §1.11(ii) Elementary Properties ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§1.11(ii)</span></a>, <a href=".././1.11#ii" title="§1.11(ii) Elementary Properties ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§1.11(ii)</span></a></span></li>
+<li id="zerosofpolynomials.divisionalgorithm" class="ltx_indexentry"><span class="ltx_indexphrase">division algorithm</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././1.11#i" title="§1.11(i) Division Algorithm ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§1.11(i)</span></a></span></li>
+<li id="zerosofpolynomials.elementaryproperties" class="ltx_indexentry"><span class="ltx_indexphrase">elementary properties</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././1.11#ii" title="§1.11(ii) Elementary Properties ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§1.11(ii)</span></a></span></li>
+<li id="zerosofpolynomials.elementarysymmetricfunctions" class="ltx_indexentry"><span class="ltx_indexphrase">elementary symmetric functions</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././1.11#P4.p3" title="¶ Example ‣ §1.11(ii) Elementary Properties ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§1.11(ii)</span></a></span></li>
+<li id="zerosofpolynomials.explicitformulas" class="ltx_indexentry"><span class="ltx_indexphrase">explicit formulas</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././3.8#iv" title="§3.8(iv) Zeros of Polynomials ‣ §3.8 Nonlinear Equations ‣ Areas ‣ Chapter 3 Numerical Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§3.8(iv)</span></a></span></li>
+<li id="zerosofpolynomials.Hornersscheme" class="ltx_indexentry"><span class="ltx_indexphrase">Horner’s scheme</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././1.11#P1" title="¶ Horner’s Scheme ‣ §1.11(i) Division Algorithm ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§1.11(i)</span></a></span>
+<ul class="ltx_indexlist">
+<li id="zerosofpolynomials.Hornersscheme.extended" class="ltx_indexentry"><span class="ltx_indexphrase">extended</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././1.11#P2" title="¶ Extended Horner Scheme ‣ §1.11(i) Division Algorithm ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§1.11(i)</span></a></span></li></ul></li>
+<li id="zerosofpolynomials.resolventcubic" class="ltx_indexentry"><span class="ltx_indexphrase">resolvent cubic</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././1.11#P8.p2" title="¶ Quartic Equations ‣ §1.11(iii) Polynomials of Degrees Two, Three, and Four ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§1.11(iii)</span></a></span></li>
+<li id="zerosofpolynomials.rootsofconstants" class="ltx_indexentry"><span class="ltx_indexphrase">roots of constants</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././1.11#iv" title="§1.11(iv) Roots of Unity and of Other Constants ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§1.11(iv)</span></a></span></li>
+<li id="zerosofpolynomials.rootsofunity" class="ltx_indexentry"><span class="ltx_indexphrase">roots of unity</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././1.11#iv" title="§1.11(iv) Roots of Unity and of Other Constants ‣ §1.11 Zeros of Polynomials ‣ Areas ‣ Chapter 1 Algebraic and Analytic Methods" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§1.11(iv)</span></a></span></li></ul></li>
+<li id="zetafunction" class="ltx_indexentry"><span class="ltx_indexphrase">zeta function</span><span class="ltx_indexrefs">, <span class="ltx_text ltx_font_italic">see </span><a href=".././idx/H#Hurwitzzetafunction" title="Index H ‣ Index" class="ltx_ref">Hurwitz zeta function</a>, <a href=".././idx/J#Jacobiszetafunction" title="Index J ‣ Index" class="ltx_ref">Jacobi’s zeta function</a>, <a href=".././idx/P#periodiczetafunction" title="Index P ‣ Index" class="ltx_ref">periodic zeta function</a>, <a href=".././idx/R#Riemannzetafunction" title="Index R ‣ Index" class="ltx_ref">Riemann zeta function</a>, <span class="ltx_text ltx_font_italic">and </span><a href=".././idx/W#Weierstrasszetafunction" title="Index W ‣ Index" class="ltx_ref">Weierstrass zeta function.</a></span></li>
+<li id="zonalpolynomials" class="ltx_indexentry"><span class="ltx_indexphrase">zonal polynomials</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><span class="ltx_text ltx_font_bold"><a href=".././35.4" title="§35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§35.4</span></a></span></span>
+<ul class="ltx_indexlist">
+<li id="zonalpolynomials.applications" class="ltx_indexentry"><span class="ltx_indexphrase">applications</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././35.9" title="§35.9 Applications ‣ Applications ‣ Chapter 35 Functions of Matrix Argument" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§35.9</span></a></span></li>
+<li id="zonalpolynomials.betaintegral" class="ltx_indexentry"><span class="ltx_indexphrase">beta integral</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././35.4#P5" title="¶ Laplace and Beta Integrals ‣ §35.4(ii) Properties ‣ §35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§35.4(ii)</span></a></span></li>
+<li id="zonalpolynomials.definition" class="ltx_indexentry"><span class="ltx_indexphrase">definition</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././35.4#SS1.p3" title="§35.4(i) Definitions ‣ §35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§35.4(i)</span></a></span></li>
+<li id="zonalpolynomials.Laplaceintegral" class="ltx_indexentry"><span class="ltx_indexphrase">Laplace integral</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././35.4#P5" title="¶ Laplace and Beta Integrals ‣ §35.4(ii) Properties ‣ §35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§35.4(ii)</span></a></span></li>
+<li id="zonalpolynomials.meanvalue" class="ltx_indexentry"><span class="ltx_indexphrase">mean-value</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././35.4#P4" title="¶ Mean-Value ‣ §35.4(ii) Properties ‣ §35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§35.4(ii)</span></a></span></li>
+<li id="zonalpolynomials.normalization" class="ltx_indexentry"><span class="ltx_indexphrase">normalization</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././35.4#P1" title="¶ Normalization ‣ §35.4(ii) Properties ‣ §35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§35.4(ii)</span></a></span></li>
+<li id="zonalpolynomials.notation" class="ltx_indexentry"><span class="ltx_indexphrase">notation</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././35.4#SS1.p3" title="§35.4(i) Definitions ‣ §35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§35.4(i)</span></a></span></li>
+<li id="zonalpolynomials.orthogonality" class="ltx_indexentry"><span class="ltx_indexphrase">orthogonality</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././35.4#P2" title="¶ Orthogonal Invariance ‣ §35.4(ii) Properties ‣ §35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§35.4(ii)</span></a></span></li>
+<li id="zonalpolynomials.summation" class="ltx_indexentry"><span class="ltx_indexphrase">summation</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././35.4#P3" title="¶ Summation ‣ §35.4(ii) Properties ‣ §35.4 Partitions and Zonal Polynomials ‣ Properties ‣ Chapter 35 Functions of Matrix Argument" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§35.4(ii)</span></a></span></li>
+<li id="zonalpolynomials.tables" class="ltx_indexentry"><span class="ltx_indexphrase">tables</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././35.11" title="§35.11 Tables ‣ Computation ‣ Chapter 35 Functions of Matrix Argument" class="ltx_ref"><span class="ltx_text ltx_ref_tag">§35.11</span></a></span></li></ul></li>
+<li id="zonalsphericalharmonics" class="ltx_indexentry"><span class="ltx_indexphrase">zonal spherical harmonics</span>
+<ul class="ltx_indexlist">
+<li id="zonalsphericalharmonics.ultrasphericalpolynomials" class="ltx_indexentry"><span class="ltx_indexphrase">ultraspherical polynomials</span><span class="ltx_indexrefs"><span class="ltx_text"> </span><a href=".././18.38#P6" title="¶ Zonal Spherical Harmonics ‣ §18.38(ii) Classical OP’s: Other Applications ‣ §18.38 Mathematical Applications ‣ Applications ‣ Chapter 18 Orthogonal Polynomials" class="ltx_ref"><span class="ltx_text ltx_ref_tag">¶</span> ‣ <span class="ltx_text ltx_ref_tag">§18.38(ii)</span></a></span></li></ul></li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="ltx_page_footer"><span><a href=".././about/notices">© 2010–2013 NIST</a> / <a href=".././about/notices#S3">Privacy Policy</a> / <a href=".././about/notices#S2">Disclaimer</a> / <a href="mailto:DLMF-feedback@nist.gov">Feedback</a>;
+ Version 1.0.6;
+Release date 2013-05-06.
+	A <a href="http://www.nist.gov/cgi-bin/exit_nist.cgi?url=http://www.cambridge.org/catalogue/catalogue.asp?isbn=9780521192255">Printed Companion</a>is available.</span>
+<a href=".././idx/W" title="Index W ‣ Index" class="ltx_ref" rel="prev"><span class="ltx_text ltx_ref_title">Index W</span></a><a href=".././not/" title="Notations" class="ltx_ref" rel="next"><span class="ltx_text ltx_ref_title">Notations</span></a>
 </div>
 </div>
 </body>
-    </html>
+</html>
