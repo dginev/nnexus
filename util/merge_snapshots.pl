@@ -1,6 +1,12 @@
-use NNexus::DB;
+# Execute from the root NNexus directory as:
+# perl util/merge_snapshots.pl
+# .. given you already have the *.db files in the root directory.
+# (feel free to improve!)
 use warnings;
 use strict;
+use NNexus::DB;
+
+# ON CHANGE: Update $stamp in the Perl packages as well (NNexus.pm and bin/nnexus)
 my $stamp = "4-2013";
 my $snapshot_name = "index-snapshot-$stamp.db";
 unlink($snapshot_name) if -e $snapshot_name;
@@ -36,3 +42,7 @@ foreach my $db(@databases) {
 	$sth->finish();
 }
 $snapshotdb->safe->commit;
+$snapshotdb->disconnect;
+# Write down a dump:
+
+`sqlite3 $snapshot_name .dump > lib/NNexus/resources/database/snapshot-$stamp.sqlite`;
