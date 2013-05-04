@@ -85,6 +85,7 @@ sub _link_entry {
       concepts=>$concepts_refined,
       annotation=>$self->{annotation},
       embed=>$self->{embed},
+      domain=>$self->{domain},
       verbosity=>$self->{verbosity});
   $self->{result}={payload=>$serialized_result,message=>'No obvious problems.', status=>'OK'};
   $serialized_result;

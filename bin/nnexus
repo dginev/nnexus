@@ -62,10 +62,11 @@ helper prepare_job => sub {
   }
   my $parameters = { @$get_params, @$post_params };
   # Currently , we only support :
-  $parameters->{'format'} //= 'html';
-  $parameters->{'embed'} //= 1;
-  $parameters->{'function'} //= 'linkentry';
-  $parameters->{'domain'} //= 'all';
+  $parameters->{format} //= 'html';
+  $parameters->{embed} //= 1;
+  $parameters->{function} //= 'linkentry';
+  $parameters->{domain} //= 'all';
+  
   foreach my $key(keys %override) {
     $parameters->{$key} = $override{$key};
   }

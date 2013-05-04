@@ -35,8 +35,10 @@ sub serialize_concepts {
   # xml - return back the matches hash in XML format.
   # json - returns back the matches in JSON format
   # perl - return back the datastructrure as-is
-  my $annotation = $options{annotation};
-  my $concepts = $options{concepts}; 
+  my ($annotation,$concepts,$domain) = map {$options{$_}} qw/annotation concepts domain/;
+  if ($domain && (lc($domain) ne 'all')) {
+    # Filter by domain:
+    @$concepts = grep {$_->{domain} eq $domain} @$concepts; }
   my $total_concepts = 0;
   if ($options{embed}) {
     my $body = $options{body};
@@ -127,6 +129,7 @@ C<NNexus::Annotate> - Class for serializing NNexus concepts into annotations
       concepts=>$discovered_concepts,
       annotation=>$annotation_format,
       embed=>$boolean,
+      domain=>$target_domain,
       verbosity=>$boolean;
 
 =head1 DESCRIPTION
@@ -151,6 +154,7 @@ The available options are:
  - body - (optional) the original HTML/text source the concepts were discovered from.
           required when "embed" is turned on
  - embed - boolean switch between embedded and stand-off annotation. Embedding by default
+ - domain - if defined and not set to "all", will only serialize concepts from the given $domain.
  - annotation - desired annotation format - currently one or more of "links" (default), "JSON" and/or "RDFa"
  - verbosity - boolean switch turning verbosity on or off (default).
 
