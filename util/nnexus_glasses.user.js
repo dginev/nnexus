@@ -24,3 +24,21 @@ req.onreadystatechange = function () {
 	}
 };
 req.send(params);	
+
+// Style the links
+function addCss(cssString) {
+	var head = document.getElementsByTagName('head')[0];
+	if (!head) {return};
+	var newCss = document.createElement('style');
+	newCss.type = "text/css";
+	newCss.innerHTML = cssString;
+	head.appendChild(newCss);
+}
+addCss('a.nnexus_concept:link {color:#FFCC00;}\
+a.nnexus_concept:visited {color:#995C00;}\
+a.nnexus_concept:hover {color:#FF9900;}\
+a.nnexus_concept:active {}\
+a.nnexus_concepts:link {color:#FF944D;}\
+a.nnexus_concepts:visited {color:#B26836;}\
+a.nnexus_concepts:hover {color:#E68545;}\
+a.nnexus_concepts:active {}'); 

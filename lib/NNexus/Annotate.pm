@@ -74,7 +74,7 @@ sub serialize_concepts {
           # Multi-link, menu anchor
           substr($body,$from,$length) =
             # Trigger menu on click
-            '<a class="nnexus_concept" href="javascript:void(0)" onclick="this.nextSibling.style.display=\'inline\'">'
+            '<a class="nnexus_concepts" href="javascript:void(0)" onclick="this.nextSibling.style.display=\'inline\'">'
             . $text
             . '</a>'
             . '<sup style="display: none;">' # Hidden container for the link menu
