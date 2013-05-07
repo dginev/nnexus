@@ -6,6 +6,7 @@
 // @include http://planetmath.org/*
 // @include http://en.wikipedia.org/*
 // @include http://arxmliv.kwarc.info/files/*
+// @include http://www.zentralblatt-math.org/zbmath/*
 // ==/UserScript==
 var body = document.getElementsByTagName("body")[0];
 if (! body) {body = document.documentElement;}
