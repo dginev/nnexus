@@ -8,6 +8,7 @@
 // @include http://arxmliv.kwarc.info/files/*
 // @include http://www.zentralblatt-math.org/zbmath/*
 // @include http://www.zentralblatt-math.org/zmath/*
+// @include http://search.mathweb.org/zbl-sandbox/*
 // ==/UserScript==
 var body = document.getElementsByTagName("body")[0];
 if (! body) {body = document.documentElement;}
