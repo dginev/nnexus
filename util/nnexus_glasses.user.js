@@ -7,6 +7,7 @@
 // @include http://en.wikipedia.org/*
 // @include http://arxmliv.kwarc.info/files/*
 // @include http://www.zentralblatt-math.org/zbmath/*
+// @include http://www.zentralblatt-math.org/zmath/*
 // ==/UserScript==
 var body = document.getElementsByTagName("body")[0];
 if (! body) {body = document.documentElement;}
@@ -35,11 +36,11 @@ function addCss(cssString) {
 	newCss.innerHTML = cssString;
 	head.appendChild(newCss);
 }
-addCss('a.nnexus_concept:link {color:#FFCC00;}\
-a.nnexus_concept:visited {color:#995C00;}\
-a.nnexus_concept:hover {color:#FF9900;}\
+addCss('a.nnexus_concept:link {color:#FFCC00 !important;}\
+a.nnexus_concept:visited {color:#995C00 !important;}\
+a.nnexus_concept:hover {color:#FF9900 !important;}\
 a.nnexus_concept:active {}\
-a.nnexus_concepts:link {color:#FF944D;}\
-a.nnexus_concepts:visited {color:#B26836;}\
-a.nnexus_concepts:hover {color:#E68545;}\
+a.nnexus_concepts:link {color:#FF944D !important;}\
+a.nnexus_concepts:visited {color:#B26836 !important;}\
+a.nnexus_concepts:hover {color:#E68545 !important;}\
 a.nnexus_concepts:active {}'); 
