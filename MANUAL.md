@@ -28,16 +28,12 @@ lib
    |- Concepts.pm
    |- Morphology.pm
    |- Discover.pm
+   |- Classification.pm
    |- Annotate.pm
    |- resources
      |- database
        |- schema.sqlite
        |- snapshot.sqlite
-  ...
-   // In progress:
-   |
-   |- Classification.pm
-   |- LinkPolicy.pm
 ```
 
 The classes under the ... separator are yet to undergo more than a shallow refactoring pass and expect a rewrite.
