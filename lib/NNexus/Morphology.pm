@@ -145,7 +145,7 @@ sub normalize_concept {
 sub firstword_split {
   my ($concept)=@_;
   if ($concept=~/^($concept_word_rex)\s?(.*)$/) { # Grab first word if not provided
-    return ($1,$2);
+    return ($1,($2||''));
   }
   return; }
 

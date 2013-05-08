@@ -67,7 +67,7 @@ sub select_concepts_by {
   }
   my $concepts = [];
   my $sth;
-  if ($firstword && $tailwords && $category && $scheme && $objectid) {
+  if ($firstword && $category && $scheme && $objectid) {
     # Selector for invalidation
     $sth = $db->prepare("select * from concepts where (objectid = ? AND firstword = ? AND tailwords = ? AND scheme = ? AND category = ? )");
     $sth->execute($objectid,$firstword,$tailwords,$scheme,$category);
@@ -77,6 +77,7 @@ sub select_concepts_by {
   } else { return []; } # Garbage in - garbage out. TODO: Error message?
 
   while (my $row = $sth->fetchrow_hashref()) {
+    $row->{tailwords} //= '';
     $row->{concept} = $row->{firstword}.($row->{tailwords} ? " ".$row->{tailwords} : '');
     push @$concepts, $row;
   }
@@ -91,9 +92,9 @@ sub delete_concept_by {
   if ($concept && (!$firstword)) {
       ($firstword,$tailwords) = firstword_split($concept);
   }
-  return unless $firstword && $tailwords && $category && $objectid; # Mandatory fields. TODO: Raise error?
+  return unless $firstword && $category && $objectid; # Mandatory fields. TODO: Raise error?
   $firstword = lc($firstword); # We only record lower-cased concepts, avoid oversights
-  $tailwords = lc($tailwords); # ditto
+  $tailwords = lc($tailwords)||''; # ditto
   my $sth = $db->prepare("delete from concepts where (firstword = ? AND tailwords = ? AND category = ? AND objectid = ?)");
   $sth->execute($firstword,$tailwords,$category,$objectid);
   $sth->finish();
@@ -103,7 +104,7 @@ sub add_concept_by {
   my ($db, %options) = @_;
   my ($concept, $category, $objectid, $domain, $link, $scheme, $firstword, $tailwords) =
     map {$options{$_}} qw(concept category objectid domain link scheme firstword tailwords);
-  return unless (($firstword && $tailwords) || $concept) && $category && $objectid && $link && $domain; # Mandatory fields. TODO: Raise error?
+  return unless ($firstword || $concept) && $category && $objectid && $link && $domain; # Mandatory fields. TODO: Raise error?
   $scheme = 'msc' unless $scheme;
   if (! $firstword) {
     $concept = lc($concept); # Only record lower-cased concepts
@@ -326,7 +327,7 @@ Returns a Perl hashref, each key being a DB column name.
 
 =over 4
 
-=item C<< $db->add_concepts_by(%options); >>
+=item C<< $db->add_concept_by(%options); >>
 
 =item C<< $db->select_concept_by(%options); >>
 

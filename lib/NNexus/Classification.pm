@@ -106,7 +106,7 @@ our $msc_to_array_index = {
   80=>51, 81=>52, 82=>53, 83=>54, 85=>55, 86=>56, 90=>57, 91=>58, 92=>59, 93=>60,
   94=>61, 97=>62 };
 
-sub msc_to_array_index { $msc_to_array_index->{"".substr($_[0],0,2)}; }
+sub msc_to_array_index { length($_[0]) && $msc_to_array_index->{"".substr($_[0],0,2)}; }
 sub msc_similarity {
   my ($category1, $category2) = @_;
   # Top-level MSC categories only at the moment:
