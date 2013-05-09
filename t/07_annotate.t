@@ -1,8 +1,113 @@
 use strict;
 use warnings;
 
-use Test::More tests => 1;
-TODO: {
-  local $TODO = "Stress test the NNexus::Annotate capabilities.";
-    ok(1,'TODO');
-}
+use Test::More tests => 3;
+use NNexus::Annotate qw(serialize_concepts);
+
+my $body = "Simple testing sentence. We want Banach's algebra linked, \nalso Abelian groups.";
+my $text_concepts = [
+	{	concept=>'Banach\'s algebra',
+		offset_begin=>33,
+		offset_end=>49,
+		domain=>'Planetmath',
+		link=>'http://planetmath.org/banachalgebra'
+	},
+	{	concept=>'Abelian groups',
+		offset_begin=>64,
+		offset_end=>78,
+		domain=>'Mathworld',
+		link=>'http://mathworld.wolfram.com/AbelianGroup.html'
+	},
+	{	concept=>'Abelian groups',
+		offset_begin=>64,
+		offset_end=>78,
+		domain=>'Planetmath',
+		multilinks=>[
+			'http://planetmath.org/abeliangroup',
+			'http://planetmath.org/group']
+	}
+];
+my $annotated_text = <<'ANNOTATED_TEXT';
+Simple testing sentence. We want <a class="nnexus_concept" href="http://planetmath.org/banachalgebra">Banach's algebra</a> linked, 
+also <a class="nnexus_concepts" href="javascript:void(0)" onclick="this.nextSibling.style.display='inline'">Abelian groups</a><sup style="display: none;"><a class="nnexus_concept" href="http://planetmath.org/abeliangroup"><img src="http://planetmath.org/sites/default/files/fab-favicon.ico" alt="Planetmath"></img></a><a class="nnexus_concept" href="http://planetmath.org/group"><img src="http://planetmath.org/sites/default/files/fab-favicon.ico" alt="Planetmath"></img></a><a class="nnexus_concept" href="http://mathworld.wolfram.com/AbelianGroup.html"><img src="http://mathworld.wolfram.com/favicon_mathworld.png" alt="Mathworld"></img></a></sup>.
+ANNOTATED_TEXT
+chomp($annotated_text); # No artificial newline
+
+is_deeply(
+	serialize_concepts(
+		domain=>'all',
+		embed=>1,
+		annotation=>'html',
+		format=>'text',
+		body=>$body,
+		concepts=>$text_concepts),
+	$annotated_text,
+	'Embed HTML links in plain text');
+
+
+my $html_body = <<'HTML_BODY';
+<html>
+	<body>
+		<p>Simple testing sentence.</p>
+		<p>We want <b>Banach's algebra</b> linked, 
+			also <b>Abelian groups</b>.</p>
+	</body>
+</html>
+HTML_BODY
+chomp($html_body); # Disregard spurious newline
+my $html_concepts = [
+	{	concept=>'Banach\'s algebra',
+		offset_begin=>65,
+		offset_end=>81,
+		domain=>'Planetmath',
+		link=>'http://planetmath.org/banachalgebra'
+	},
+	{	concept=>'Abelian groups',
+		offset_begin=>106,
+		offset_end=>120,
+		domain=>'Mathworld',
+		link=>'http://mathworld.wolfram.com/AbelianGroup.html'
+	},
+	{	concept=>'Abelian groups',
+		offset_begin=>106,
+		offset_end=>120,
+		domain=>'Planetmath',
+		multilinks=>[
+			'http://planetmath.org/abeliangroup',
+			'http://planetmath.org/group']
+	}
+];
+my $annotated_html = <<'ANNOTATED_HTML';
+<html>
+	<body>
+		<p>Simple testing sentence.</p>
+		<p>We want <b><a class="nnexus_concept" href="http://planetmath.org/banachalgebra">Banach's algebra</a></b> linked, 
+			also <b><a class="nnexus_concepts" href="javascript:void(0)" onclick="this.nextSibling.style.display='inline'">Abelian groups</a><sup style="display: none;"><a class="nnexus_concept" href="http://planetmath.org/abeliangroup"><img src="http://planetmath.org/sites/default/files/fab-favicon.ico" alt="Planetmath"></img></a><a class="nnexus_concept" href="http://planetmath.org/group"><img src="http://planetmath.org/sites/default/files/fab-favicon.ico" alt="Planetmath"></img></a><a class="nnexus_concept" href="http://mathworld.wolfram.com/AbelianGroup.html"><img src="http://mathworld.wolfram.com/favicon_mathworld.png" alt="Mathworld"></img></a></sup></b>.</p>
+	</body>
+</html>
+ANNOTATED_HTML
+chomp($annotated_html); # No artificial newline
+is_deeply(
+	serialize_concepts(
+		domain=>'all',
+		embed=>1,
+		annotation=>'html',
+		format=>'html',
+		body=>$html_body,
+		concepts=>$html_concepts),
+	$annotated_html,
+	'Embed HTML links in a simple HTML document.');
+
+my $standoff_json = <<'JSON';
+[{"link":"http:\/\/planetmath.org\/banachalgebra","domain":"Planetmath","offset_end":81,"offset_begin":65,"concept":"Banach's algebra"},{"link":"http:\/\/mathworld.wolfram.com\/AbelianGroup.html","domain":"Mathworld","offset_end":120,"offset_begin":106,"concept":"Abelian groups"},{"domain":"Planetmath","offset_end":120,"offset_begin":106,"concept":"Abelian groups","multilinks":["http:\/\/planetmath.org\/abeliangroup","http:\/\/planetmath.org\/group"]}]
+JSON
+chomp($standoff_json); # No artifical newline
+is_deeply(
+	serialize_concepts(
+		domain=>"all",
+		embed=>0,
+		annotation=>"json",
+		concepts=>$html_concepts),
+	$standoff_json,
+	'Stand-off JSON annotation');
+

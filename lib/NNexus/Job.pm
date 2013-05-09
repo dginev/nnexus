@@ -77,7 +77,7 @@ sub _link_entry {
   # II. Disambiguation
   my $concepts_refined = NNexus::Classification::disambiguate($concepts_mined,verbosity=>$self->{verbosity});
   # III. Annotation
-  $self->{annotation} //= 'links';
+  $self->{annotation} //= 'html';
   $self->{embed} //= 1;
   my $serialized_result = 
     NNexus::Annotate::serialize_concepts(

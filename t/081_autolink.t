@@ -41,7 +41,7 @@ is_deeply($job->response,
 	'Basic Perl auto-link, ok.');
 # 2. Basic text input, embed links
 $job = NNexus::Job->new('format' => 'text', 'function' => 'linkentry',
-	'domain' => 'Planetmath', body=>$basic_banach,db=>$db,annotation=>'links',embed=>1);
+	'domain' => 'Planetmath', body=>$basic_banach,db=>$db,annotation=>'html',embed=>1);
 $job->execute;
 is_deeply($job->response,
 	{status=>'OK',payload=>$basic_banach_embedded,message=>'No obvious problems.'},
@@ -53,7 +53,7 @@ open my $fh, "<", 't/pages/pm_gelfand_transforms.html';
 my $html_content = join('',<$fh>);
 close $fh;
 $job = NNexus::Job->new('format' => 'html', 'function' => 'linkentry', url=>'http://test081.com',
-	'domain' => 'Planetmath', body=>$html_content,db=>$db,annotation=>'links',embed=>1);
+	'domain' => 'Planetmath', body=>$html_content,db=>$db,annotation=>'html',embed=>1);
 $job->execute;
 open my $rh, "<", 't/pages/pm_gelfand_transforms_result.html';
 my $html_result = join('',<$rh>);

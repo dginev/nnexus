@@ -253,14 +253,16 @@ sub mine_candidates_text {
     if (@inner_matches > 0) {
       # Yes!
       # merge multi-links into single match entry
-      # multi-link = same concept and category, different URLs 
+      # multi-link = same concept, category and domain, different URLs 
       # CARE: careful not to confuse with cases of different categories, which need disambiguation 
       my @merged_matches;
       while (@inner_matches) {
         my $match = shift @inner_matches;
         my $category = $match->{category};
-        my @multilinks = map {$_->{link}} grep {$_->{category} eq $category} @inner_matches;
-        @inner_matches = grep {$_->{category} ne $category} @inner_matches;
+        my $domain = $match->{domain};
+        my @multilinks = map {$_->{link}} 
+          grep {($_->{category} eq $category) && ($_->{domain} eq $domain)} @inner_matches;
+        @inner_matches = grep {($_->{category} ne $category) || ($_->{domain} ne $domain)} @inner_matches;
         if (@multilinks>0) {
           unshift @multilinks, $match->{link};
           $match->{multilinks} = \@multilinks;
