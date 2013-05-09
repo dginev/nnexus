@@ -27,14 +27,16 @@ use feature 'switch';
 use Mojo::JSON 'j';
 use List::MoreUtils;
 use Data::Dumper;
+$Data::Dumper::Sortkeys =1;
 
 sub serialize_concepts {
   my (%options) = @_;
   # Annotation Format:
-  # HTML - return back fully linked html
-  # xml - return back the matches hash in XML format.
-  # json - returns back the matches in JSON format
-  # perl - return back the datastructrure as-is
+  # HTML - fully linked html
+  # HTML+RDFa - fully linked html with RDFa annotations
+  # xml - the matches hash in XML format.
+  # json - the matches in JSON format
+  # perl - Dump the datastructrure as-is
   my ($annotation,$concepts,$domain) = map {$options{$_}} qw/annotation concepts domain/;
   $concepts = [@$concepts]; # Clone top-level array
   $annotation = lc($annotation);
@@ -44,7 +46,7 @@ sub serialize_concepts {
   my $total_concepts = 0;
   if ($options{embed}) {
     my $body = $options{body};
-    if ((!$annotation) || ($annotation eq 'html')) {
+    if ((!$annotation) || ($annotation =~ /^html/)) {
       # embed HTML links
       # Enhance the text between the offset with a link pointing to the URL
       # TODO: Multi-link cases need special treatment
@@ -54,6 +56,9 @@ sub serialize_concepts {
         my $to = $concept->{offset_end};
         my $length = $to-$from;
         my $text = substr($body,$from,$length);
+	my $rdfa_annotation = '';
+	if ($annotation eq 'html+rdfa') {
+	  $rdfa_annotation = 'property="http://purl.org/dc/terms/relation" '; }
         my @links;
         # Also include multilinks, if any:
         # TODO: Filter away with "domain", if specified
@@ -71,7 +76,7 @@ sub serialize_concepts {
           print STDERR "Linking \"$text\" with: ",$_->[0],"\n" foreach @links; }
         if (@links == 1) {
           # Single link, normal anchor
-          substr($body,$from,$length) = '<a class="nnexus_concept" href="'.$links[0]->[0].'">'.$text.'</a>';
+          substr($body,$from,$length) = '<a class="nnexus_concept" '.$rdfa_annotation.'href="'.$links[0]->[0].'">'.$text.'</a>';
         } else {
           # Multi-link, menu anchor
           substr($body,$from,$length) =
@@ -80,7 +85,7 @@ sub serialize_concepts {
             . $text
             . '</a>'
             . '<sup style="display: none;">' # Hidden container for the link menu
-            . join('',map {'<a class="nnexus_concept" href="'.$_->[0].'">'.domain_tooltip($_->[1]).'</a>'} @links)
+            . join('',map {'<a class="nnexus_concept" '.$rdfa_annotation.'href="'.$_->[0].'">'.domain_tooltip($_->[1]).'</a>'} @links)
             .'</sup>';
         }
       }
@@ -94,7 +99,7 @@ sub serialize_concepts {
     # stand-off case:
     given ($annotation) {
       when ('json') { return j($concepts); }
-      when ('perl') { return $concepts; }
+      when ('perl') { return Dumper($concepts); }
       # TODO: Think of Markdown annotations
       # TODO: Stand-off HTML links
       # TODO: Embedded JSON and RDFa
@@ -141,7 +146,7 @@ C<NNexus::Annotate> - Class for serializing NNexus concepts into annotations
 
 NNexus::Annotate provides fleixble annotation capabilities for serializing NNexus concept harvests.
   It includes support for embedded and stand-off annotation in a variety of annotation formats.
-  Currently, the supported annotation forms are (one or more of) HTML, JSON, RDFa.
+  Currently, the supported annotation forms are (one or more of) HTML, JSON, RDFa, Perl.
 
 The embedded links serialization comes with support for embedding multi-links.
 
@@ -160,7 +165,7 @@ The available options are:
           required when "embed" is turned on
  - embed - boolean switch between embedded and stand-off annotation. Embedding by default
  - domain - if defined and not set to "all", will only serialize concepts from the given $domain.
- - annotation - desired annotation format - currently one or more of "HTML" (default), "JSON" and/or "RDFa"
+ - annotation - desired annotation format - currently one or more of "HTML" (default), "HTML+RDFa", "JSON"
  - verbosity - boolean switch turning verbosity on or off (default).
 
 =back

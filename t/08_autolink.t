@@ -30,13 +30,15 @@ $db->add_concept_by(
 my $basic_banach = 'mock body, Banach, algebra is a failing test, so is Banach, and then Banach\'s Algebra should work.';
 my $basic_banach_embedded = 'mock body, Banach, algebra is a failing test, so is Banach, and then <a class="nnexus_concept" href="http://planetmath.org/banachalgebra">Banach\'s Algebra</a> should work.';
 # 1. Basic text input, stand-off Perl
+use Data::Dumper;
+$Data::Dumper::Sortkeys =1;
 my $job = NNexus::Job->new('format' => 'text', 'function' => 'linkentry',
 	'domain' => 'Planetmath', body=>$basic_banach,
   ,db=>$db,annotation=>'perl',embed=>0);
 $job->execute;
 is_deeply($job->response,
-	{status=>'OK',payload=>[{"link"=>"http://planetmath.org/banachalgebra","offset_begin"=>69,"scheme"=>"msc","objectid"=>1,
-  "firstword"=>"banach","conceptid"=>1,"domain"=>"Planetmath","offset_end"=>85,"category"=>"46H05","concept"=>"banach algebra"}],
+	{status=>'OK',payload=>Dumper([{"link"=>"http://planetmath.org/banachalgebra","offset_begin"=>69,"scheme"=>"msc","objectid"=>1,
+  "firstword"=>"banach","conceptid"=>1,"domain"=>"Planetmath","offset_end"=>85,"category"=>"46H05","concept"=>"banach algebra"}]),
   message=>'No obvious problems.'},
 	'Basic Perl auto-link, ok.');
 # 2. Basic text input, embed links

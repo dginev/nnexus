@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 5;
 use NNexus::Annotate qw(serialize_concepts);
 
 my $body = "Simple testing sentence. We want Banach's algebra linked, \nalso Abelian groups.";
@@ -98,6 +98,27 @@ is_deeply(
 	$annotated_html,
 	'Embed HTML links in a simple HTML document.');
 
+my $annotated_htmlrdfa = <<'ANNOTATED_HTMLRDFA';
+<html>
+	<body>
+		<p>Simple testing sentence.</p>
+		<p>We want <b><a class="nnexus_concept" property="http://purl.org/dc/terms/relation" href="http://planetmath.org/banachalgebra">Banach's algebra</a></b> linked, 
+			also <b><a class="nnexus_concepts" href="javascript:void(0)" onclick="this.nextSibling.style.display='inline'">Abelian groups</a><sup style="display: none;"><a class="nnexus_concept" property="http://purl.org/dc/terms/relation" href="http://planetmath.org/abeliangroup"><img src="http://planetmath.org/sites/default/files/fab-favicon.ico" alt="Planetmath"></img></a><a class="nnexus_concept" property="http://purl.org/dc/terms/relation" href="http://planetmath.org/group"><img src="http://planetmath.org/sites/default/files/fab-favicon.ico" alt="Planetmath"></img></a><a class="nnexus_concept" property="http://purl.org/dc/terms/relation" href="http://mathworld.wolfram.com/AbelianGroup.html"><img src="http://mathworld.wolfram.com/favicon_mathworld.png" alt="Mathworld"></img></a></sup></b>.</p>
+	</body>
+</html>
+ANNOTATED_HTMLRDFA
+chomp($annotated_htmlrdfa); # No artificial newline
+is_deeply(
+	serialize_concepts(
+		domain=>'all',
+		embed=>1,
+		annotation=>'HTML+RDFa',
+		format=>'html',
+		body=>$html_body,
+		concepts=>$html_concepts),
+	$annotated_htmlrdfa,
+	'Embed HTML+RDFa links in a simple HTML document.');
+
 my $standoff_json = <<'JSON';
 [{"link":"http:\/\/planetmath.org\/banachalgebra","domain":"Planetmath","offset_end":81,"offset_begin":65,"concept":"Banach's algebra"},{"link":"http:\/\/mathworld.wolfram.com\/AbelianGroup.html","domain":"Mathworld","offset_end":120,"offset_begin":106,"concept":"Abelian groups"},{"domain":"Planetmath","offset_end":120,"offset_begin":106,"concept":"Abelian groups","multilinks":["http:\/\/planetmath.org\/abeliangroup","http:\/\/planetmath.org\/group"]}]
 JSON
@@ -110,4 +131,15 @@ is_deeply(
 		concepts=>$html_concepts),
 	$standoff_json,
 	'Stand-off JSON annotation');
+
+use Data::Dumper;
+$Data::Dumper::Sortkeys =1;
+is_deeply(
+	serialize_concepts(
+		domain=>"all",
+		embed=>0,
+		annotation=>"perl",
+		concepts=>$html_concepts),
+	Dumper($html_concepts),
+	'Stand-off Perl annotation');
 
