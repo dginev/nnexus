@@ -2,6 +2,8 @@
 
 ## The NNexus Perl library
 
+NNexus is a Perl library requiring perl 5.10 or later.
+
 ### Prerequisites
 
 Installing prerequisites on Debian-based systems:
