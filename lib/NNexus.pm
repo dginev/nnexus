@@ -21,7 +21,7 @@ use warnings;
 
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT = qw(linkentry);
+our @EXPORT = qw(linkentry indexentry);
 our ($INSTALLDIR) = grep(-d $_, map("$_/NNexus", @INC));
 
 use NNexus::DB;
@@ -35,15 +35,24 @@ our %snapshot_credentials =
  "dbhost" => "localhost",
 ) if $INSTALLDIR;
 
-# TODO: Use a snapshot by default
 sub linkentry {
   my ($body,%options) = @_;
-  my $db = $options{db};
+  my $db = delete $options{db};
   $options{embed} //= 1;
   $options{format} //= 'html';
   return $body unless ($db || %snapshot_credentials);
   $db = NNexus::DB->new(%snapshot_credentials) unless $db;
   my $job = NNexus::Job->new(function=>'linkentry',body=>$body,db=>$db,%options);
+  $job->execute;
+  return $job->result;
+}
+
+sub indexentry {
+  my (%options) = @_;
+  my $db = delete $options{db};
+  return [] unless ($db || %snapshot_credentials);
+  $db = NNexus::DB->new(%snapshot_credentials) unless $db;
+  my $job = NNexus::Job->new(function=>'index',db=>$db,%options);
   $job->execute;
   return $job->result;
 }
