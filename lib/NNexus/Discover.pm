@@ -47,6 +47,7 @@ sub mine_candidates {
     map {$options{$_}} qw(db format body nolink url domain);
   die "The db key is a mandatory parameter for mine_candidates!\n" unless ref $db; # TODO: Maybe raise a better error?
   $format = 'html' unless defined $format;
+  return [] unless $body;
   # Prepare data, if we have a URL:
   my $objectid; # undefined if we don't have a URL, we only do MoC for named resources
   if ($url) {
@@ -112,7 +113,7 @@ sub mine_candidates_html {
   # Current HTML Parsing strategy - fire events for all HTML tags and explicitly skip over tags that 
   # won't be of interest. We need to autolink in all textual elements.
   # TODO: Handle MathML better
-
+  return [] unless $body;
   my $parser = 
     HTML::Parser->new(
       'api_version' => 3,

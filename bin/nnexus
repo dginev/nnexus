@@ -93,31 +93,15 @@ post '/linkentry' => sub {
   $_[0]->res->headers->header('Access-Control-Allow-Origin' => '*');
   $_[0]->render_json($job->response,status=>200);
 };
-post '/addobject' => sub {
-  my $job = $_[0]->prepare_job(function=>'addobject');
+
+post '/indexentry' => sub {
+  my $job = $_[0]->prepare_job(function=>'index');
   $job->execute;
-  $_[0]->render(json=>$job->response);
+  $_[0]->res->headers->header('Access-Control-Allow-Origin' => '*');
+  $_[0]->render_json($job->response,status=>200);
 };
-post '/updateobject' => sub {
-  my $job = $_[0]->prepare_job(function=>'updateobject');
-  $job->execute;
-  $_[0]->render(json=>$job->response);
-};
-post '/deleteobject' => sub {
-  my $job = $_[0]->prepare_job(function=>'deleteobject');
-  $job->execute;
-  $_[0]->render(json=>$job->response);
-};
-post '/updatelinkpolicy' => sub {
-  my $job = $_[0]->prepare_job(function=>'updatelinkpolicy');
-  $job->execute;
-  $_[0]->render(json=>$job->response);
-};
-post '/checkvalid' => sub {
-  my $job = $_[0]->prepare_job(function=>'checkvalid');
-  $job->execute;
-  $_[0]->render(json=>$job->response);
-};
+
+
 
 app->start;
 

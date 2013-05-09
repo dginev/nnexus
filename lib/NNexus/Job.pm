@@ -20,6 +20,7 @@ use strict;
 use warnings;
 use feature qw(say switch);
 
+use Mojo::DOM;
 use NNexus::Discover qw(mine_candidates);
 use NNexus::Annotate qw(serialize_concepts);
 use NNexus::Classification qw(disambiguate);
@@ -35,11 +36,6 @@ sub execute {
   my ($self) = @_;
   given ($self->{function}) {
     when('linkentry') {$self->_link_entry;}
-    when('addobject') {$self->_add_object;}
-    when('updateobject') {$self->_update_object;}
-    when('deleteobject') {$self->_delete_object;}
-    when('updatelinkpolicy') {$self->_update_link_policy;}
-    when('checkvalid') {$self->_check_valid;}
     when('index') {$self->_index;}
     default {$self->_fail_with("Invalid action, aborting!"); }
   }
@@ -91,16 +87,14 @@ sub _link_entry {
   $serialized_result;
 }
 
-sub _add_object { $_[0]->_fail_with('Not supported yet!');}
-sub _update_object { $_[0]->_fail_with('Not supported yet!');}
-sub _delete_object { $_[0]->_fail_with('Not supported yet!');}
-sub _update_link_policy { $_[0]->_fail_with('Not supported yet!');}
-sub _check_valid { $_[0]->_fail_with('Not supported yet!');}
 sub _index {
   my ($self)=@_;
   my $domain = $self->{domain} || 'all';
   my $url = $self->{url}||$self->{body};
   my $dom = $self->{dom};
+  if ($dom && (! ref $dom)) { # Text:
+    $dom = Mojo::DOM->new($dom);
+  }
   my $should_update = $self->{should_update} // 1;
   require NNexus::Index::Dispatcher;
   my $dispatcher = NNexus::Index::Dispatcher->new(db=>$self->{db},domain=>$domain,
