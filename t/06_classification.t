@@ -32,18 +32,27 @@ my $candidates = [
 	{ concept=>"A",
 		scheme=>"msc",
 		category=>"00-XX",
+		link=>'http://planetmath.org/A'
 	},
 	{ concept=>"B",
 		scheme=>"msc",
 		category=>"00-XX",
+		link=>'http://planetmath.org/B'
 	},
 	{ concept=>"group",
 		scheme=>"msc",
 		category=>"00-XX",
+		link=>'http://planetmath.org/group'
 	},
 	{ concept=>"banach algebra",
 		scheme=>'msc',
-		category=>"46H05"
+		category=>"46H05",
+		link=>'http://planetmath.org/banachalgebra'
+	},
+	{ concept=>"banach algebra",
+		scheme=>'msc',
+		category=>"46H07",
+		link=>'http://planetmath.org/banachalgebra'
 	},
 	{ concept=>"banach algebra",
 		category=>"Banach_algebras",
@@ -55,5 +64,6 @@ my $cluster = disambiguate($candidates,verbosity=>0);
 is_deeply($cluster,[
 	{ concept=>"banach algebra",
 		scheme=>'msc',
-		category=>"46H05"
+		category=>"46H05",
+		link=>'http://planetmath.org/banachalgebra'
 	}],'Disambiguation succeeded.');

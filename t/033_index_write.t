@@ -57,3 +57,7 @@ index_test(
 index_test(
   url=>'t/pages/QuadraticInvariant.html',
   domain=>'mathworld');
+
+# Count the concepts in the DB are what we expect
+
+# Reindex, check count changes and differences are enforced

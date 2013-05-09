@@ -131,8 +131,13 @@ sub disambiguate {
   print STDERR "[NNexus::Classification] Eligible concepts: ",scalar(@$candidates),"\n" if $options{verbosity};
   foreach my $index(0..$#$candidates) {
     my $candidate = $candidates->[$index];
+    my $link = $candidate->{link};
+    my $msc_index = msc_to_array_index($candidate->{category});
+    # 1.0. Skip fine-grained distinctions on the MSC class from the same URL (for now at least)
+    #      45H07 and 45H05 are just "45" with the current metric, so we only need one of them
+    next if ($link && (grep {($candidates->[$_]->{link}||'') eq $link} @{$category_view{$msc_index}}));
     # 1.1. also, use the similarity indeces, for faster lookups
-    push @{$category_view{msc_to_array_index($candidate->{category})}}, $index;
+    push @{$category_view{$msc_index}}, $index;
   }
   # 2. Greedy search through the ordered %category_view:
   # 2.1. Precompute category weights (sum of length of concepts)
