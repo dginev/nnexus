@@ -143,6 +143,7 @@ sub mine_candidates_html {
   $parser->unbroken_text;
   $parser->xml_mode;
   $parser->empty_element_tags(1);
+  $parser->utf8_mode(1);
   $parser->parse($body);
   $parser->eof();
 
