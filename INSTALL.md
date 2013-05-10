@@ -38,7 +38,7 @@ Set up virtual hosts, e.g. in
 /etc/apache2/sites-enabled/nnexus 
 ```
 
-with content:
+with content (please adjust to suit):
 
 ```
 <VirtualHost *:80>
@@ -62,3 +62,5 @@ with content:
     CustomLog /var/log/apache2/nnexus.access.log combined
 </VirtualHost>
 ```
+
+Available paths are then: `nnexus.example.com/autolink`, `nnexus.example.com/linkentry`, and `nnexus.example.com/indexentry`.
