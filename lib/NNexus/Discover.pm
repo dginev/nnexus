@@ -89,12 +89,12 @@ sub mine_candidates {
     @$mined_candidates = grep {($_->{concept} ne $concept) || ($_->{link} ne $link) || ($_->{category} ne $category)} @$mined_candidates;
     push @uniq_candidates, $candidate;
   }
+  # Also, don't add self-links, coming from $url
+  @uniq_candidates = grep {$_->{link} ne $url} @uniq_candidates if $url;
   @$mined_candidates = @uniq_candidates;
 
   #TODO: When do we deal with the nolink settings? 
   #  next if (inset($concept,@$nolink));
-  #TODO: Disambiguate, adapt from:
-  # my $finals = disambiguate($db, $candidates, $matchterms, $class, $targetid);
   if ($options{verbosity}) {
     printf STDERR " Discovered %d concepts in %.3f seconds.\n",scalar(@uniq_candidates),time()-$time;
   }

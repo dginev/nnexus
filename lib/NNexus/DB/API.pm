@@ -150,7 +150,7 @@ sub delete_linkscache_by {
   my ($db,%options) = @_;
   my $objectid = $options{objectid};
   return unless $objectid;
-  my $sth = $db->prepare("delete * from links_cache where objectid=?");
+  my $sth = $db->prepare("delete from links_cache where objectid=?");
   $sth->execute($objectid);
   $sth->finish();
 }
