@@ -29,7 +29,7 @@ WriteMakefile(
     'List::MoreUtils'=>0,
     'Text::Unidecode'=>0,
   },
-  EXE_FILES => [ 'bin/nnexus'],
+  EXE_FILES => ['bin/nnexus'],
   macro => $MORE_MACROS,
 );
 
@@ -49,9 +49,9 @@ sub MY::postamble {
 
 
 sub compile_snapshot_db {
-  push(@EXCLUSIONS,'blib/lib/NNexus/resources/database/snapshot-4-2013.sqlite');
+  push(@EXCLUSIONS,'blib/lib/NNexus/resources/database/snapshot-5-2013.sqlite');
   $$MORE_MACROS{SNAPSHOT_FILE} = '$(INST_LIBDIR)/NNexus/resources/database/snapshot.db';
-  $$MORE_MACROS{DUMP_FILE} = 'lib/NNexus/resources/database/snapshot-4-2013.sqlite';
+  $$MORE_MACROS{DUMP_FILE} = 'lib/NNexus/resources/database/snapshot-5-2013.sqlite';
   $MORE_MAKERULES .= <<'CompileSnapshot';
 
 pure_all :: $(SNAPSHOT_FILE)
