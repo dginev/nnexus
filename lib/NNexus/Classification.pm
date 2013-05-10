@@ -21,7 +21,7 @@ use warnings;
 use Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(msc_similarity disambiguate);
-
+use List::Util qw(max min);
 
 # Let's do things differently here.
 # We will use Jan Wilken Doerrie's MSC similarity metric:
@@ -93,9 +93,12 @@ our $msc_similarities = [ # 63x63 matrix, top-level MSC 2000 categories
   [0.06049483,0.02079996,0.00174317,0.00179613,0.00025653,0.00064115,0.00337673,0.00339206,0.00117948,0.00051373,0.00336093,0.00027885,0.00005553,0.00008213,0.00022975,0.00059678,0.00017619,0.00897340,0.00110538,0.00064367,0.00010881,0.00015148,0.00128667,0.00045993,0.00016756,0.00060123,0.00031932,0.00214654,0.00045398,0.00026633,0.00011249,0.00050588,0.00000000,0.00019363,0.00012445,0.00011909,0.01469944,0.00271172,0.00078964,0.00034901,0.00013958,0.00059960,0.00021871,0.00113842,0.00155304,0.00083280,0.00264640,0.00078112,0.00012488,0.00018821,0.00161540,0.00068166,0.00068706,0.00054470,0.00308205,0.00600214,0.00091412,0.00081616,0.00273120,0.00127072,0.00045164,0.00093386,1.00000000]
 ];
 
-# Precompute Logs
+# Precompute Logs, make a finite penalty for 0 entries, where logs would be undefined
 sub log2 { log($_[0])/log(10); }
-our $msc_log_similarities = [map {[map {$_ ? log2($_) : undef} @$_]} @$msc_similarities];
+our $msc_log_similarities = [map {[map {$_ ? log($_) : undef} @$_]} @$msc_similarities];
+our $underflow_penalty = min(grep {defined} map {@$_} @$msc_log_similarities) - 1;
+# We only do this once, so no need to overoptimize
+$msc_log_similarities = [map {[map {$_ ? log($_) : $underflow_penalty} @$_]} @$msc_similarities];
 
 our $msc_to_array_index = {
   '00'=>0, '01'=>1, '03'=>2, '05'=>3, '06'=>4, '08'=>5, 11=>6, 12=>7, 13=>8, 14=>9, 15=>10,
@@ -106,6 +109,11 @@ our $msc_to_array_index = {
   80=>51, 81=>52, 82=>53, 83=>54, 85=>55, 86=>56, 90=>57, 91=>58, 92=>59, 93=>60,
   94=>61, 97=>62 };
 
+# Until we have some metric that determines the term-likelihood of a given word,
+# we will use a simple threshold on the number of characters in a concept,
+# bailing out on words that are not long enough, as they are most likely to
+# have informal uses. For the moment, 7 seems a good value.
+our $word_length_threshold = 7;
 sub msc_to_array_index { defined $_[0] ? $msc_to_array_index->{"".substr($_[0],0,2)} : undef; }
 sub msc_similarity {
   my ($category1, $category2) = @_;
@@ -127,6 +135,7 @@ sub disambiguate {
   # 0. Dropping anything uncategorized:
   @$candidates = grep {$_->{scheme} eq 'msc'} @$candidates; # TODO: Map everything into MSC!
   @$candidates = grep {$_->{category} !~ /^XX/} @$candidates; # TODO: Can we do something with uncategorized concepts?
+  @$candidates = grep {length($_->{concept}) >= $word_length_threshold} @$candidates; # TEMPORARY: We really need term-likelihood here
   # 1. group by top-level MSC category and point into the original candidates array
   print STDERR "[NNexus::Classification] Eligible concepts: ",scalar(@$candidates),"\n" if $options{verbosity};
   foreach my $index(0..$#$candidates) {
@@ -145,13 +154,13 @@ sub disambiguate {
   my %category_weights = map {$_ => (weigh_category($category_view{$_},$candidates))} @category_keys;
   # 2.2. Order by weights
   my @ordered_categories = sort {$category_weights{$b} cmp $category_weights{$a}} @category_keys;
-  # 2.3. Precompute concept counts in each category (for greedy cutoff)
-  my %category_counts = map {$_ => scalar(@{$category_view{$_}})} @category_keys;
+  # 2.3. Precompute concept sizes in each category (for greedy cutoff)
+  my %category_sizes = map {$_ => scalar(@{$category_view{$_}})} @category_keys;
   # print STDERR Dumper(\%category_view);
   # print STDERR Dumper(\%category_weights);
-  # print STDERR Dumper(\%category_counts);
+  # print STDERR Dumper(\%category_sizes);
   # So: maximize the sum of lengths of all concepts currently grouped and all log_similarities!
-  my $max_clique = maximize_clique(weights=>\%category_weights,counts=>\%category_counts,queue=>\@ordered_categories, );
+  my $max_clique = maximize_clique(weights=>\%category_weights,sizes=>\%category_sizes,queue=>\@ordered_categories, );
   # Grab the corresponding candidates from %category_view, and then splice the $candidates array:
   my @final_candidates_indexes = map { @{$category_view{$_}} } @{$max_clique->{clique}};
   my @final_candidates = map {$candidates->[$_]} sort {$a<=>$b} @final_candidates_indexes;
@@ -164,7 +173,11 @@ sub weigh_category {
   my $weight = 0;
   # - Weigh by: the (sum of lengths)/4 of all concepts in the category
   foreach my $index(@$concept_indexes) {
-    $weight += length($candidates->[$index]->{concept}) - 4;
+    my $current_concept = $candidates->[$index]->{concept};
+    my $current_weight = length($current_concept) - $word_length_threshold;
+    # Possible Alternatives: geometric via division:
+    # my $current_weight = length($current_concept) / $word_length_threshold;
+    $weight += $current_weight;
   }
   # Concepts of length 4 or less are less "termy" than longer concepts.
   # TODO: How certain are we? If we're really certain long phrases are termy, we can subtract 4 rather than divide.
@@ -174,13 +187,14 @@ sub weigh_category {
 
 sub maximize_clique {
   my (%options) = @_;
-  my ($weights, $counts, $queue, $score, $clique) = map {$options{$_}} qw(weights counts queue score clique);
+  my ($weights, $sizes, $queue, $score, $size, $clique) = map {$options{$_}} qw(weights sizes queue score size clique);
   my @traversal_queue = @$queue;
-  return {score=>$score,clique=>$clique} unless @traversal_queue; # Base case
+  return {score=>$score,size=>$size,clique=>$clique} unless @traversal_queue; # Base case
   my $greedy_bound = 0;
   $score //= 0;
+  $size //= 0;
   $clique //= [];
-  my @candidate_cliques= $score ? ({score=>$score,clique=>$clique}) : ();
+  my @candidate_cliques= $score ? ({score=>$score,size=>$size,clique=>$clique}) : ();
   # 2 entries in category 10 , and 4 entries in category 80 = 2^((length(a1)+length(a2)+...)/4)*sim(10,80)
   #
   # 2 in 10, 4 in 80, 3 in 53 = 2^(sum of lengths / 4)*sim(10,80) *sim(10,53) * sim(53,80)
@@ -189,8 +203,9 @@ sub maximize_clique {
   while(@traversal_queue) {
     # Next extension index:
     my $next_index = shift @traversal_queue;
-    last if $counts->{$next_index} < $greedy_bound; # Greedy, don't go beyond the bound
+    last if $sizes->{$next_index} < $greedy_bound; # Greedy, don't go beyond the bound
     my $next_weight = $weights->{$next_index};
+    my $next_size = $sizes->{$next_index};
     my $similarity_score=0;
     my $well_defined = 1;
     foreach my $category_index(@$clique) {
@@ -204,19 +219,28 @@ sub maximize_clique {
     }
     next if (! $well_defined);
     my $extended_score = $score + $next_weight + $similarity_score;
-    next if $extended_score < $score; # No improvement, next
+    my $extended_size = $size + $next_size;
+    # DEPRECATED: Maximizing score
+     next if $extended_score < $score; # No improvement, next
+    # NEW: Maximizing clique, while keeping a positive score
+    #next if $extended_score <= 0;
     # Improvement! Update the score and clique
     my $extended_clique = [@$clique,$next_index];
-    push @candidate_cliques, maximize_clique(weights=>$weights,counts=>$counts, queue=>\@traversal_queue, score=>$extended_score, clique=>$extended_clique);
+    push @candidate_cliques, maximize_clique(weights=>$weights, sizes=>$sizes, queue=>\@traversal_queue,
+                                             score=>$extended_score, size=>$extended_size, clique=>$extended_clique);
     # Heuristic: Let's be greedy here to save time. The moment a category with size N can be added
     #  to the current cluster, don't look in categories of size N-1 or smaller in the current merge pass
     #  (of course we look at them as further additions to the now extended cluster)
     # Update the greedy bound:
-    $greedy_bound = $counts->{$next_index};
+    $greedy_bound = $sizes->{$next_index};
   }
 
-  # We've gathered a number of candidate cliques, return the best scoring one:
-  @candidate_cliques = sort { $b->{score} <=> $a->{score} } @candidate_cliques;
+  # DEPRECATED: Maximizing score 
+  # # We've gathered a number of candidate cliques, return the best scoring one:
+   @candidate_cliques = sort { $b->{score} <=> $a->{score} } @candidate_cliques;
+  # We've gathered a number of candidate cliques, return the one with most concepts:
+  #@candidate_cliques = sort { $b->{size} <=> $a->{size} } @candidate_cliques;
+
   return $candidate_cliques[0];
 }
 
