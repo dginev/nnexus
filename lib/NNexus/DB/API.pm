@@ -136,9 +136,12 @@ sub select_firstword_matches {
       domain, link, objectid from concepts where firstword=?");
     $sth->execute($word);
   }
-  while ( my $row = $sth->fetchrow_hashref() ) {
-    $row->{concept} = $row->{firstword}.($row->{tailwords} ? " ".$row->{tailwords} : '');
-    push @matches, $row;
+
+  my %row;
+  $sth->bind_columns( \( @row{ @{$sth->{NAME_lc} } } ));
+  while ($sth->fetch) {
+    $row{concept} = $row{firstword}.($row{tailwords} ? " ".$row{tailwords} : '');
+    push @matches, {%row};
   }
   $sth->finish();
   return @matches;
