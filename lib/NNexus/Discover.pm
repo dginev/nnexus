@@ -34,6 +34,35 @@ use NNexus::Linkpolicy qw (post_resolve_linkpolicy);
 use Storable qw(dclone);
 use HTML::Parser;
 
+# Reusable parser object (TODO: What happens if we thread/fork ?)
+our $HTML_Parser = 
+    HTML::Parser->new(
+      'api_version' => 3,
+      'start_h' => [sub {
+        my ($self,$tagname,$attr)=@_;
+        if ($tagname=~/^(head|style|title|script|xmp|iframe|math|svg|sup|a|(h\d+))$/ || 
+         (($tagname eq 'span') && $attr->{class} && ($attr->{class} =~ 'nolink'))) {
+          $self->{fresh_skip}=1;
+          $self->{noparse}++;
+        } else {
+          $self->{fresh_skip}=0;
+        }
+      } , 'self, tagname, attr'],
+      'end_h' => [sub {
+        my ($self,$tagname)=@_;
+        if (($tagname=~/^(head|style|title|script|xmp|iframe|math|svg|sup|a|(h\d+))$/) ||
+         (((length($tagname)==0)||($tagname eq 'span')) && ($self->{fresh_skip} == 1))) {
+          $self->{noparse}--;
+          $self->{fresh_skip}=0;
+        }
+      }, 'self,tagname'],
+      'text_h'      => [\&_text_event_handler, 'self,text,offset']
+    );
+$HTML_Parser->unbroken_text;
+$HTML_Parser->xml_mode;
+$HTML_Parser->attr_encoded(1);
+$HTML_Parser->empty_element_tags(1);
+
 # Prepare cache for first-word concept lookup
 our $first_word_cache_template = {map { ($_,[]) } @{stop_words_ref()}};
 sub mine_candidates {
@@ -114,39 +143,12 @@ sub mine_candidates_html {
   # won't be of interest. We need to autolink in all textual elements.
   # TODO: Handle MathML better
   return [] unless $body;
-  my $parser = 
-    HTML::Parser->new(
-      'api_version' => 3,
-      'start_h' => [sub {
-        my ($self,$tagname,$attr)=@_;
-        if ($tagname=~/^(head|style|title|script|xmp|iframe|math|svg|sup|a|(h\d+))$/ || 
-         (($tagname eq 'span') && $attr->{class} && ($attr->{class} =~ 'nolink'))) {
-          $self->{fresh_skip}=1;
-          $self->{noparse}++;
-        } else {
-          $self->{fresh_skip}=0;
-        }
-      } , 'self, tagname, attr'],
-      'end_h' => [sub {
-        my ($self,$tagname)=@_;
-        if (($tagname=~/^(head|style|title|script|xmp|iframe|math|svg|sup|a|(h\d+))$/) ||
-         (((length($tagname)==0)||($tagname eq 'span')) && ($self->{fresh_skip} == 1))) {
-          $self->{noparse}--;
-          $self->{fresh_skip}=0;
-        }
-      }, 'self,tagname'],
-      'text_h'      => [\&_text_event_handler, 'self,text,offset']
-    );
-  $parser->{mined_candidates} = [];
-  $parser->{linked}={};
-  $parser->{state_information}=$options; # Not pretty, but TODO: improve
-  $parser->unbroken_text;
-  $parser->xml_mode;
-  $parser->empty_element_tags(1);
-  $parser->parse($body);
-  $parser->eof();
 
-  return $parser->{mined_candidates};
+  $HTML_Parser->{mined_candidates} = [];
+  $HTML_Parser->{state_information}=$options; # Not pretty, but TODO: improve
+  $HTML_Parser->parse($body);
+  $HTML_Parser->eof();
+  return $HTML_Parser->{mined_candidates};
 }
 
 sub _text_event_handler {

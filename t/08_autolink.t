@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 
 use NNexus::Job;
 use NNexus::DB;
@@ -64,4 +64,16 @@ is_deeply($job->response,
  	{status=>'OK',payload=>$html_result,message=>'No obvious problems.'},
   	'Mock text-embed auto-link, ok.');
 
+# 4. UTF-8 test (seems to be the best place to include that)
+# No concepts here - we just want the same thing out that we put in.
+open $fh, "<", 't/pages/utf8.html';
+my $utf8_content = join('',<$fh>);
+close $fh;
+my $utf8_saved = $utf8_content;
+$job = NNexus::Job->new('format' => 'html', 'function' => 'linkentry',
+  'domain' => 'Planetmath', body=>$utf8_content,db=>$db,annotation=>'html',embed=>1);
+$job->execute;
+is_deeply($job->response,
+  {status=>'OK',payload=>$utf8_saved,message=>'No obvious problems.'},
+    'Mock text-embed auto-link, ok.');
 # TODO: Expand with more tests
