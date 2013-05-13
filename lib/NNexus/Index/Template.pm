@@ -21,6 +21,7 @@ use strict;
 use Mojo::DOM;
 use Mojo::UserAgent;
 use Time::HiRes qw(sleep);
+use NNexus::Morphology qw(canonicalize_url);
 
 ### EXTERNAL API
 sub new {
@@ -43,7 +44,7 @@ sub new {
     $first_url = $self->domain_root; }
 
   push (@{$self->{queue}}, {
-      url=>$first_url,
+      url=>canonicalize_url($first_url),
       ($options{dom} ? (dom=>$options{dom}) : ()),
       depth=>0});
 	return $self;
@@ -91,7 +92,7 @@ sub index_step {
     foreach (@$candidate_links) {
       # push and shift give us breadth-first search.
       push (@{$self->{queue}}, {
-        url=>$_,
+        url=>canonicalize_url($_),
         categories=>$categories,
         depth=>$depth+1});
     }
@@ -129,27 +130,9 @@ sub leaf_test {0;}
 # To be directly inherited and used by concrete classes
 
 # Getter or Setter for the current URL/DOM/Categories
-sub current_url { $_[1] ? $_[0]->{current_url} = _url_canonical($_[1]) : $_[0]->{current_url}; }
+sub current_url { $_[1] ? $_[0]->{current_url} = $_[1] : $_[0]->{current_url}; }
 sub current_dom { $_[1] ? $_[0]->{current_dom} = $_[1] : $_[0]->{current_dom}; }
 sub current_categories {$_[1] ? $_[0]->{current_categories} = $_[1] : $_[0]->{current_categories};}
-
-# Internal utilities:
-# Canonicalize absolute URLs, borrowed from LaTeXML::Util::Pathname
-our $PROTOCOL_RE = '(?:https?)(?=:)';
-sub _url_canonical {
-  my ($pathname) = @_;
-  my $urlprefix= undef;
-  if($pathname =~ s|^($PROTOCOL_RE//[^/]*)/?|/|){
-    $urlprefix = $1; }
-
-  if($pathname =~ m|//+/|){
-    Carp::cluck "Recursive pathname? : $pathname\n"; }
-##  $pathname =~ s|//+|/|g;
-  $pathname =~ s|/\./|/|g;
-  # Collapse any foo/.. patterns, but not ../..
-  while($pathname =~ s|/(?!\.\./)[^/]+/\.\.(/\|$)|$1|){}
-  $pathname =~ s|^\./||;
-  (defined $urlprefix ? $urlprefix . $pathname : $pathname); }
 
 1;
 __END__

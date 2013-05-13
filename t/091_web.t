@@ -31,6 +31,6 @@ $t->post_ok('/indexentry' => form => {url=>'http://planetmath.org/mockup',domain
   ->json_content_is({
   	payload => [],
   	status=>'OK',
-  	message=>"IndexConcepts succeeded in domain Planetmath, on: http://planetmath.org/mockup"});
+  	message=>"IndexConcepts succeeded in domain Planetmath, on http://planetmath.org/mockup"});
 
 done_testing();

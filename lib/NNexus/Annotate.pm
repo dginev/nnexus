@@ -43,6 +43,13 @@ sub serialize_concepts {
   if ($domain && (lc($domain) ne 'all')) {
     # Filter by domain:
     @$concepts = grep {$_->{domain} eq $domain} @$concepts; }
+  # Add the http:// prefix to all links and multilinks:
+  foreach my $concept(@$concepts) {
+    my $link = $concept->{link};
+    my $multilinks = $concept->{multilinks};
+    $concept->{link} = 'http://'.$link if ($link && $link !~ /^http/);
+    @{$concept->{multilinks}} = map {$_ !~ /^http/ ? 'http://'.$_ : $_} @$multilinks if defined $multilinks;
+  }
   my $total_concepts = 0;
   if ($options{embed}) {
     my $body = $options{body};
@@ -56,9 +63,9 @@ sub serialize_concepts {
         my $to = $concept->{offset_end};
         my $length = $to-$from;
         my $text = substr($body,$from,$length);
-	my $rdfa_annotation = '';
-	if ($annotation eq 'html+rdfa') {
-	  $rdfa_annotation = 'property="http://purl.org/dc/terms/relation" '; }
+        my $rdfa_annotation = '';
+        if ($annotation eq 'html+rdfa') {
+          $rdfa_annotation = 'property="http://purl.org/dc/terms/relation" '; }
         my @links;
         # Also include multilinks, if any:
         # TODO: Filter away with "domain", if specified

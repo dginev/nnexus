@@ -10,21 +10,21 @@ my $text_concepts = [
 		offset_begin=>33,
 		offset_end=>49,
 		domain=>'Planetmath',
-		link=>'http://planetmath.org/banachalgebra'
+		link=>'planetmath.org/banachalgebra'
 	},
 	{	concept=>'Abelian groups',
 		offset_begin=>64,
 		offset_end=>78,
 		domain=>'Mathworld',
-		link=>'http://mathworld.wolfram.com/AbelianGroup.html'
+		link=>'mathworld.wolfram.com/AbelianGroup.html'
 	},
 	{	concept=>'Abelian groups',
 		offset_begin=>64,
 		offset_end=>78,
 		domain=>'Planetmath',
 		multilinks=>[
-			'http://planetmath.org/abeliangroup',
-			'http://planetmath.org/group']
+			'planetmath.org/abeliangroup',
+			'planetmath.org/group']
 	}
 ];
 my $annotated_text = <<'ANNOTATED_TEXT';
@@ -60,21 +60,21 @@ my $html_concepts = [
 		offset_begin=>65,
 		offset_end=>81,
 		domain=>'Planetmath',
-		link=>'http://planetmath.org/banachalgebra'
+		link=>'planetmath.org/banachalgebra'
 	},
 	{	concept=>'Abelian groups',
 		offset_begin=>106,
 		offset_end=>120,
 		domain=>'Mathworld',
-		link=>'http://mathworld.wolfram.com/AbelianGroup.html'
+		link=>'mathworld.wolfram.com/AbelianGroup.html'
 	},
 	{	concept=>'Abelian groups',
 		offset_begin=>106,
 		offset_end=>120,
 		domain=>'Planetmath',
 		multilinks=>[
-			'http://planetmath.org/abeliangroup',
-			'http://planetmath.org/group']
+			'planetmath.org/abeliangroup',
+			'planetmath.org/group']
 	}
 ];
 my $annotated_html = <<'ANNOTATED_HTML';

@@ -27,8 +27,9 @@ use feature qw(switch);
 use Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(is_possessive is_plural get_nonpossessive get_possessive
-  depluralize_word depluralize_phrase root pluralize 
-  admissible_name firstword_split normalize_concept);
+  depluralize_word depluralize_phrase root pluralize undetermine_word
+  admissible_name firstword_split normalize_word
+  canonicalize_url);
 
 use utf8;
 use Encode qw{is_utf8};
@@ -135,19 +136,51 @@ sub root {
     default { return $_[0]; }
   } }
 
+# Remove determiners from a word:
+sub undetermine_word {
+  my ($concept) = @_;
+  $concept =~ s/^(?:an?|the)(?:\s+|$)//;
+  return $concept;
+}
+
 # IV. Admissible concept words and high-level api
 our $concept_word_rex = qr/\w(?:\w|[\-\+\'])*/;
 our $concept_phrase_rex = qr/$concept_word_rex(?:\s+$concept_word_rex)*/;
 sub admissible_name {$_[0]=~/^$concept_phrase_rex$/; }
-sub normalize_concept {
+sub normalize_word {
   my ($concept)=@_;
-  return depluralize_word(get_nonpossessive(lc(unidecode($concept))));  }
+  return depluralize_word(
+          get_nonpossessive(
+            undetermine_word(
+              lc(
+                unidecode(
+                  $concept
+         )))));  }
+
 sub firstword_split {
   my ($concept)=@_;
   if ($concept=~/^($concept_word_rex)\s?(.*)$/) { # Grab first word if not provided
     return ($1,($2||''));
   }
   return; }
+
+# Not the ideal place for it but... closest that comes to mind!
+# Internal utilities:
+# Canonicalize absolute URLs, borrowed from LaTeXML::Util::Pathname
+our $PROTOCOL_RE = '(?:https?)(?=:)';
+sub canonicalize_url {
+  my ($pathname) = @_;
+  my $urlprefix= undef;
+  if($pathname =~ s|^($PROTOCOL_RE)://||){
+    $urlprefix = $1; }
+  $pathname =~ s|/\./|/|g;
+  # Collapse any foo/.. patterns, but not ../..
+  while($pathname =~ s|/(?!\.\./)[^/]+/\.\.(/\|$)|$1|){}
+  $pathname =~ s|^\./||;
+  $pathname =~ s|^www.||;
+  # Deprecated: We don't want the prefix, keeps the index smaller
+  #(defined $urlprefix ? $urlprefix . $pathname : $pathname); }
+  $pathname; }
 
 1;
 __END__

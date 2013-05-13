@@ -18,7 +18,7 @@ my %options = (
 my $db = NNexus::DB->new(%options);
 
 # Add an object O1 and its two concept definitions (C1,C2) directly to DB
-my $url = 'http://planetmath.org/O1';
+my $url = 'planetmath.org/O1';
 my $O1_id = $db->add_object_by(url=>$url,domain=>'Planetmath'); #01
 my $C1_id = $db->add_concept_by(
   concept=>'banach algebra', # C1
@@ -33,8 +33,8 @@ my $C2_id = $db->add_concept_by(
   domain=>'Planetmath',
   link=>$url); 
 
-my $O2_id =  $db->add_object_by(url=>'http://planetmath.org/O2',domain=>'Planetmath'); #02
-my $O3_id =  $db->add_object_by(url=>'http://planetmath.org/O3',domain=>'Planetmath'); #03
+my $O2_id =  $db->add_object_by(url=>'planetmath.org/O2',domain=>'Planetmath'); #02
+my $O3_id =  $db->add_object_by(url=>'planetmath.org/O3',domain=>'Planetmath'); #03
 # Add a linkcache between a second object O2 and one of the concepts (C1) to DB
 $db->add_linkscache_by(objectid=>$O2_id,conceptid=>$C1_id);
 # Add a linkcache between a third object O3 and the second concept (C2) to DB

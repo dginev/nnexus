@@ -110,6 +110,8 @@ sub index_step {
     push @$invalidated_URLs, 
       $db->invalidate_by(conceptid=>$addc_id);
   }
+  # Add the http:// prefix before returning:
+  @$invalidated_URLs = map {'http://'.$_} @$invalidated_URLs;
   # 6. Return URLs to be invalidated as effect:
   return $invalidated_URLs;
 }

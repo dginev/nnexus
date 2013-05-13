@@ -24,11 +24,13 @@ use Mojo::DOM;
 use NNexus::Discover qw(mine_candidates);
 use NNexus::Annotate qw(serialize_concepts);
 use NNexus::Classification qw(disambiguate);
+use NNexus::Morphology qw(canonicalize_url);
 
 sub new {
   my ($class,%opts) = @_;
   $opts{format} = lc($opts{format}||'html');
   $opts{result} = {};
+  $opts{url} = canonicalize_url($opts{url}) if $opts{url};
   bless \%opts, $class;
 }
 
@@ -103,7 +105,8 @@ sub _index {
   my @invalidation_suggestions;
   while (my $payload = $dispatcher->index_step) {
     push @invalidation_suggestions, @{$payload}; }
-  $self->_ok_with(\@invalidation_suggestions,"IndexConcepts succeeded in domain $domain, on: ".($url||'domain_root'));
+  my $report_url = ($url ne 'default') ? "http://$url" : 'the default domain root';
+  $self->_ok_with(\@invalidation_suggestions,"IndexConcepts succeeded in domain $domain, on $report_url");
 }
 
 1;

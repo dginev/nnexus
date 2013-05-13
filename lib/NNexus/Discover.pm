@@ -28,7 +28,7 @@ use Data::Dumper;
 use Time::HiRes qw ( time alarm sleep );
 
 use NNexus::StopWordList qw(stop_words_ref);
-use NNexus::Morphology qw(normalize_concept);
+use NNexus::Morphology qw(normalize_word);
 use NNexus::Linkpolicy qw (post_resolve_linkpolicy);
 
 use Storable qw(dclone);
@@ -199,7 +199,7 @@ sub mine_candidates_text {
     my @candidates;
     if (! (ref $cached )) {
       # Normalize word
-      my $norm_word = normalize_concept($word);
+      my $norm_word = normalize_word($word);
       # get all possible candidates for both posessive and plural forms of $word 
       @candidates = $db->select_firstword_matches($norm_word);
       # Cache the candidates:
@@ -231,7 +231,7 @@ sub mine_candidates_text {
         # 1. Pull next.
         my $step_offset = length($1) + length($2);
 	$inner_offset += $step_offset;
-        my $next_word = normalize_concept($2);
+        my $next_word = normalize_word($2);
         # 2. Filter for applicable candidates
         my @inner_candidates = grep { $_->{tailwords}->[0] eq $next_word } @candidates;
         if (@inner_candidates) {
