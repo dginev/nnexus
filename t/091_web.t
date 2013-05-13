@@ -9,7 +9,7 @@ use Test::Mojo;
 $ENV{MOJO_MODE} = 'test';
 require "$FindBin::Bin/../blib/script/nnexus";
 
-is($Mojolicious::VERSION > 3.9, 1, "New enough Mojolicious installed, at least 3.9.");
+is($Mojolicious::VERSION >= 3.9, 1, "New enough Mojolicious installed, at least 3.9.");
 
 my $t = Test::Mojo->new;
 # Start off with a mockup

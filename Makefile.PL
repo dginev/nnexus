@@ -20,6 +20,7 @@ WriteMakefile(
   AUTHOR => 'Deyan Ginev <d.ginev@jacobs-university.de>',
   ABSTRACT => "NNexus autolinker",
   PREREQ_PM => { 
+    'Mojolicious'=>3.9,
     'Mojolicious::Lite'=>0,
     'Mojo::JSON'=>0,
     'Mojo::DOM'=>0,
