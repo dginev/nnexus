@@ -64,7 +64,7 @@ sub _link_entry {
   my ($self) = @_;
   # Process in 2 Steps:
   # I. Concept Discovery
-  my $concepts_mined =
+  my ($concepts_mined,$text_length) =
     NNexus::Discover::mine_candidates(
       db=>$self->{db},
       body=>$self->{body},
@@ -73,7 +73,10 @@ sub _link_entry {
       format=>$self->{format},
       verbosity=>$self->{verbosity});
   # II. Disambiguation
-  my $concepts_refined = NNexus::Classification::disambiguate($concepts_mined,verbosity=>$self->{verbosity});
+  my $concepts_refined = NNexus::Classification::disambiguate(
+    $concepts_mined,
+    text_length=>$text_length,
+    verbosity=>$self->{verbosity});
   # III. Annotation
   $self->{annotation} //= 'html';
   $self->{embed} //= 1;

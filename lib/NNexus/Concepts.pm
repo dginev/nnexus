@@ -25,7 +25,7 @@ use Exporter;
 use List::MoreUtils qw(uniq);
 
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(flatten_concept_harvest diff_concept_harvests);
+our @EXPORT_OK = qw(flatten_concept_harvest diff_concept_harvests clone_concepts);
 
 sub flatten_concept_harvest {
   my ($indexed_concepts) = @_;
@@ -71,6 +71,12 @@ sub diff_concept_harvests {
     }
   }
   return ($delete_concepts,$add_concepts);
+}
+
+sub clone_concepts {
+  my ($concepts) = @_;
+  # Shallow clone suffices
+  [map { {%$_} } @$concepts];
 }
 
 1;

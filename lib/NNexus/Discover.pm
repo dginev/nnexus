@@ -30,8 +30,8 @@ use Time::HiRes qw ( time alarm sleep );
 use NNexus::StopWordList qw(stop_words_ref);
 use NNexus::Morphology qw(normalize_word);
 use NNexus::Linkpolicy qw (post_resolve_linkpolicy);
+use NNexus::Concepts qw(clone_concepts);
 
-use Storable qw(dclone);
 use HTML::Parser;
 
 # Reusable parser object (TODO: What happens if we thread/fork ?)
@@ -76,7 +76,7 @@ sub mine_candidates {
     map {$options{$_}} qw(db format body nolink url domain);
   die "The db key is a mandatory parameter for mine_candidates!\n" unless ref $db; # TODO: Maybe raise a better error?
   $format = 'html' unless defined $format;
-  return [] unless $body;
+  return ([],0) unless $body;
   # Prepare data, if we have a URL:
   my $objectid; # undefined if we don't have a URL, we only do MoC for named resources
   if ($url) {
@@ -101,10 +101,11 @@ sub mine_candidates {
     $time = time();
   }
   my $mined_candidates=[];
+  my $text_length=0;
   if ($format eq 'html') {
-    $mined_candidates = mine_candidates_html(\%options);
+    ($mined_candidates,$text_length) = mine_candidates_html(\%options);
   } elsif ($format eq 'text') {
-    $mined_candidates = mine_candidates_text(\%options);
+    ($mined_candidates,$text_length) = mine_candidates_text(\%options);
   } else {
     print STDERR "Error: Unrecognized input format for auto-linking.\n";
   }
@@ -133,7 +134,7 @@ sub mine_candidates {
     $db->add_linkscache_by(objectid=>$objectid,conceptid=>$_->{conceptid})
       foreach (@$mined_candidates);
   }
-  return $mined_candidates;
+  return ($mined_candidates,$text_length);
 }
 
 sub mine_candidates_html {
@@ -142,13 +143,14 @@ sub mine_candidates_html {
   # Current HTML Parsing strategy - fire events for all HTML tags and explicitly skip over tags that 
   # won't be of interest. We need to autolink in all textual elements.
   # TODO: Handle MathML better
-  return [] unless $body;
+  return ([],0) unless $body;
 
   $HTML_Parser->{mined_candidates} = [];
+  $HTML_Parser->{text_length} = 0;
   $HTML_Parser->{state_information}=$options; # Not pretty, but TODO: improve
   $HTML_Parser->parse($body);
   $HTML_Parser->eof();
-  return $HTML_Parser->{mined_candidates};
+  return ($HTML_Parser->{mined_candidates},$HTML_Parser->{text_length});
 }
 
 sub _text_event_handler {
@@ -160,7 +162,7 @@ sub _text_event_handler {
   }
   # Otherwise - discover concepts and annotate!
   my $time = time();
-  my $mined_candidates = 
+  my ($mined_candidates,$chunk_length) = 
     mine_candidates_text({db=>$state->{db},
          nolink=>$state->{nolink},
          body=>$body,
@@ -173,6 +175,7 @@ sub _text_event_handler {
     $candidate->{offset_end}+=$offset;
   }
   push @{$self->{mined_candidates}}, @$mined_candidates;
+  $self->{text_length} += $chunk_length;
 }
 
 # Core Data Mining routine - inspects plain-text strings
@@ -187,6 +190,7 @@ sub mine_candidates_text {
   my @matches;
   my %termlist = ();
   my $offset=0;
+  my $text_length = length($body);
   # Read one (2+ letter) word at a time
   my $concept_word_rex = $NNexus::Morphology::concept_word_rex;
   CONCEPT_TRAVERSAL:
@@ -198,20 +202,19 @@ sub mine_candidates_text {
     my $word = lc($2); # lower-case to match stopwords
     # Use a cache for first-word lookups, with the dual-role of a blacklist.
     my $cached = $first_word_cache->{$word};
-    my @candidates;
+    my @candidates=();
     if (! (ref $cached )) {
       # Normalize word
       my $norm_word = normalize_word($word);
       # get all possible candidates for both posessive and plural forms of $word 
       @candidates = $db->select_firstword_matches($norm_word);
       # Cache the candidates:
-      my $saved_candidates = [];
-      $saved_candidates = dclone(\@candidates) if @candidates;
+      my $saved_candidates = clone_concepts(\@candidates); # Clone the candidates
       $first_word_cache->{$word} = $saved_candidates;
       $first_word_cache->{$norm_word} = $saved_candidates;
     } else {
       #Cached, clone into a new array
-      @candidates = @{ dclone($cached)};
+      @candidates = @{ clone_concepts($cached)};
     }
     next CONCEPT_TRAVERSAL unless @candidates; # if there are no candidates skip the word
     # Split tailwords into an array
@@ -287,7 +290,7 @@ sub mine_candidates_text {
       substr($body,0,$match_offset)='' if $match_offset;
     } else { next CONCEPT_TRAVERSAL; } # If not, we just move on to the next word
   }
-  \@matches;
+  return (\@matches,$text_length);
 }
 
 1;

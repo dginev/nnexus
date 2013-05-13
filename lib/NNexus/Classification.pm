@@ -94,7 +94,7 @@ our $msc_similarities = [ # 63x63 matrix, top-level MSC 2000 categories
 ];
 
 # Precompute Logs, make a finite penalty for 0 entries, where logs would be undefined
-sub log2 { log($_[0])/log(10); }
+sub log10 { log($_[0])/log(10); }
 our $msc_log_similarities = [map {[map {$_ ? log($_) : undef} @$_]} @$msc_similarities];
 our $underflow_penalty = min(grep {defined} map {@$_} @$msc_log_similarities) - 1;
 # We only do this once, so no need to overoptimize
@@ -131,6 +131,7 @@ sub msc_similarity {
 sub disambiguate {
   my ($candidates,%options) = @_;
   my %category_view = ();
+  #print STDERR "\n Text length: ",($options{text_length}||0),"\n";
   # Algorithm:
   # 0. Dropping anything uncategorized:
   @$candidates = grep {$_->{scheme} eq 'msc'} @$candidates; # TODO: Map everything into MSC!
