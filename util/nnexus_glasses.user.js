@@ -3,18 +3,17 @@
 // @namespace http://nnexus.mathweb.org
 // @description Enables a NNexus auto-link pass over each page in the namespace
 // @include http://dlmf.nist.gov/*
-// @include http://planetmath.org/*
-// @include http://en.wikipedia.org/*
-// @include http://arxmliv.kwarc.info/files/*
 // @include http://www.zentralblatt-math.org/zbmath/*
 // @include http://www.zentralblatt-math.org/zmath/*
+// @include http://en.wikipedia.org/*
+// @include http://arxmliv.kwarc.info/files/*
 // @include http://search.mathweb.org/zbl-sandbox/*
 // ==/UserScript==
 var body = document.getElementsByTagName("body")[0];
 if (! body) {body = document.documentElement;}
 var markup = body.innerHTML;
+// Prepare page for auto-linking at the showcase server
 var params = "body="+encodeURIComponent(markup);
-// Localhost for now, expect support at http://nnexus.mathweb.org
 var url = "http://nnexus.mathweb.org/linkentry";
 req = new XMLHttpRequest();
 req.open("POST",url,true);
@@ -23,6 +22,7 @@ req.setRequestHeader("Content-length", params.length);
 req.onreadystatechange = function () {
 	if (req.readyState === 4) {
 		var response = JSON.parse(req.responseText);
+		// Rewrite the page with the now embedded NNexus links
 		body.innerHTML = response.payload;
 	}
 };
