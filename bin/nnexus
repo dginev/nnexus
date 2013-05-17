@@ -26,7 +26,8 @@ use Encode;
 use NNexus::Job;
 use NNexus::DB;
 
-our $version = '0.1';
+our $version = '2.0';
+our $modern_mojo = ($Mojolicious::VERSION >= 4);
 # Configuration is server-level
 my $opts;
 if ($ARGV[0] && -e $ARGV[0]) {
@@ -85,20 +86,26 @@ post '/autolink' => sub {
   my $job = $_[0]->prepare_job(function=>'linkentry');
   $job->execute;
   $_[0]->res->headers->header('Access-Control-Allow-Origin' => '*');
-  $_[0]->render(json=>$job->response);
+  $modern_mojo ?
+    $_[0]->render(json=>$job->response) :
+    $_[0]->render_json($job->response,status=>200); 
 };
 post '/linkentry' => sub {
   my $job = $_[0]->prepare_job(function=>'linkentry');
   $job->execute;
   $_[0]->res->headers->header('Access-Control-Allow-Origin' => '*');
-  $_[0]->render_json($job->response,status=>200);
+  $modern_mojo ?
+  $_[0]->render(json=>$job->response) :
+  $_[0]->render_json($job->response,status=>200); 
 };
 
 post '/indexentry' => sub {
   my $job = $_[0]->prepare_job(function=>'index');
   $job->execute;
   $_[0]->res->headers->header('Access-Control-Allow-Origin' => '*');
-  $_[0]->render_json($job->response,status=>200);
+  $modern_mojo ?
+  $_[0]->render(json=>$job->response) :
+  $_[0]->render_json($job->response,status=>200); 
 };
 
 
