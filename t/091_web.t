@@ -46,7 +46,7 @@ if ($Mojolicious::VERSION < 4) {
       payload => 'test <a class="nnexus_concept" href="http://planetmath.org/banachalgebra">banach algebra</a> here.',
       status=>'OK',
       message=>"No obvious problems."});
-
+    
   # Try indexing something empty
   $t->post_ok('/indexentry' => form => {url=>'http://planetmath.org/mockup',domain=>"Planetmath",dom=>"mockup"})
     ->status_is(200)
