@@ -262,6 +262,7 @@ sub mine_candidates_text {
       # multi-link = same concept, category and domain, different URLs 
       # CARE: careful not to confuse with cases of different categories, which need disambiguation 
       my @merged_matches;
+      #print STDERR Dumper(\@inner_matches);
       while (@inner_matches) {
         my $match = shift @inner_matches;
         my $category = $match->{category};

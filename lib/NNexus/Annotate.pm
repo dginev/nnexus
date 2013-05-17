@@ -28,6 +28,7 @@ use Mojo::JSON 'j';
 use List::MoreUtils;
 use Data::Dumper;
 $Data::Dumper::Sortkeys =1;
+use NNexus::Concepts qw(links_from_concept);
 
 sub serialize_concepts {
   my (%options) = @_;
@@ -59,24 +60,25 @@ sub serialize_concepts {
       # TODO: Multi-link cases need special treatment
       while (@$concepts) {
         my $concept = pop @$concepts; # Need to traverse right-to-left to keep the offsets accurate.
+        #print STDERR Dumper($concept);
         my $from = $concept->{offset_begin};
         my $to = $concept->{offset_end};
+        my $domain = $concept->{domain};
         my $length = $to-$from;
         my $text = substr($body,$from,$length);
         my $rdfa_annotation = '';
         if ($annotation eq 'html+rdfa') {
           $rdfa_annotation = 'property="http://purl.org/dc/terms/relation" '; }
-        my @links;
-        # Also include multilinks, if any:
-        # TODO: Filter away with "domain", if specified
-        if ($concept->{multilinks}) {
-          @links = map {[$_,$concept->{domain}]} @{$concept->{multilinks}}; }
-        else {
-          @links = ([$concept->{link},$concept->{domain}]); }
+        my @links = map {[$_ , $domain ]} (links_from_concept($concept));
         while (@$concepts && ($$concepts[-1]->{offset_begin} == $from)) {
           $concept = pop @$concepts;
-          next if grep {$concept->{link} eq $_->[0]} @links; # Don't duplicate URLs.
-          push @links, [$concept->{link},$concept->{domain}];
+          $domain = $concept->{domain};
+          my @next_links = map {[$_ , $domain ]} (links_from_concept($concept));
+          while (@next_links) {
+            my $next_link = shift @next_links;
+            next if (grep {$_->[0] eq $next_link->[0]} @links);
+            push @links, $next_link;
+          }
         }
         $total_concepts += scalar(@links);
         if ($options{verbosity}) {

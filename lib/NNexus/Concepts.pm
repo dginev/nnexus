@@ -25,7 +25,7 @@ use Exporter;
 use List::MoreUtils qw(uniq);
 
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(flatten_concept_harvest diff_concept_harvests clone_concepts);
+our @EXPORT_OK = qw(flatten_concept_harvest diff_concept_harvests clone_concepts links_from_concept);
 
 sub flatten_concept_harvest {
   my ($indexed_concepts) = @_;
@@ -78,6 +78,21 @@ sub clone_concepts {
   # Shallow clone suffices
   [map { {%$_} } @$concepts];
 }
+
+sub links_from_concept {
+  my ($concept) = @_;
+  my @links = ();
+  @links = ($concept->{link}) if $concept->{link};
+  # Also include multilinks, if any:
+  if ($concept->{multilinks}) {
+    my @multi = @{$concept->{multilinks}};
+    while (@multi) {
+      my $next_link = shift @multi;
+      next if (grep {$_ eq $next_link} @links);
+      push @links, $next_link;
+    }
+  }
+  return @links; }
 
 1;
 
