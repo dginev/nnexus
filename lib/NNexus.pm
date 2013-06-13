@@ -24,6 +24,9 @@ our @ISA = qw(Exporter);
 our @EXPORT = qw(linkentry indexentry);
 our ($INSTALLDIR) = grep(-d $_, map("$_/NNexus", @INC));
 
+use vars qw($VERSION);
+$VERSION  = "2.0alpha";
+
 use NNexus::DB;
 use NNexus::Job;
 our %snapshot_credentials =

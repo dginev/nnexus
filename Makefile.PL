@@ -19,6 +19,7 @@ WriteMakefile(
   NAME => 'NNexus',
   AUTHOR => 'Deyan Ginev <d.ginev@jacobs-university.de>',
   ABSTRACT => "NNexus autolinker",
+  VERSION_FROM => 'lib/NNexus.pm',
   PREREQ_PM => { 
     'Mojolicious'=>3.9,
     'Mojolicious::Lite'=>0,

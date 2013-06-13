@@ -26,7 +26,6 @@ use Encode;
 use NNexus::Job;
 use NNexus::DB;
 
-our $version = '2.0';
 our $modern_mojo = ($Mojolicious::VERSION >= 4);
 # Configuration is server-level
 my $opts;
