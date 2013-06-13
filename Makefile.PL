@@ -53,12 +53,15 @@ sub compile_snapshot_db {
   push(@EXCLUSIONS,'blib/lib/NNexus/resources/database/snapshot-5-2013.sqlite');
   $$MORE_MACROS{SNAPSHOT_FILE} = '$(INST_LIBDIR)/NNexus/resources/database/snapshot.db';
   $$MORE_MACROS{DUMP_FILE} = 'lib/NNexus/resources/database/snapshot-5-2013.sqlite';
+  $$MORE_MACROS{SQLITE} = 'sqlite3';
   $MORE_MAKERULES .= <<'CompileSnapshot';
 
 pure_all :: $(SNAPSHOT_FILE)
 
 # Always set version if version module template is newer
 $(SNAPSHOT_FILE): $(DUMP_FILE)
-	perl -e 'unlink shift' $(SNAPSHOT_FILE); cat $(DUMP_FILE) | sqlite3 $(SNAPSHOT_FILE)
+	$(PERLRUN) -e "unlink shift" $(SNAPSHOT_FILE)
+	$(SQLITE) $(SNAPSHOT_FILE) < $(DUMP_FILE)
+
 CompileSnapshot
 }
