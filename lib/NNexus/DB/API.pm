@@ -18,6 +18,7 @@ package NNexus::DB::API;
 use strict;
 use warnings;
 use feature 'switch';
+
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(add_object_by select_object_by select_concepts_by last_inserted_id
@@ -294,17 +295,21 @@ __END__
 
 =head1 NAME
 
-C<NNexus::DB::API> - API routines for commonly used NNexus queries
+C<NNexus::DB::API> - Routines for commonly used NNexus queries
 
 =head1 SYNOPSIS
 
     use NNexus::DB;
-    my $db = NNexus::DB->new(%options);
+    $db = NNexus::DB->new(%options);
     $db->method(@arguments);
 
 =head1 DESCRIPTION
 
 This class provides API methods for specific SQL queries commonly needed by NNexus.
+
+The intended design of the C<NNexus::DB> family of classes is to encapsulate all
+  raw verbatim SQL statements and stick to safe method-dispatch for database interactions
+  from the other NNexus classes.
 
 =head2 METHODS
 
@@ -314,14 +319,14 @@ This class provides API methods for specific SQL queries commonly needed by NNex
 
 =item C<< $db->add_object_by(url=>$url,domain=>$domain); >>
 
-Adds a new object, identified by its $url and $domain.
-The $domain should match the name of the NNexus::Index::$domain
+Adds a new object, identified by its C<$url> and C<$domain>.
+The C<$domain> should match the name of the C<NNexus::Index::$domain>
 plug-in class.
 
 =item C<< $db->select_object_by(url=>$url,objectid=>$objectid); >>
 
-Retrieve the DB row of an object, identified by its $url,
-OR $objectid.
+Retrieve the DB row of an object, identified by its C<$url>,
+OR C<$objectid>.
 Returns a Perl hashref, each key being a DB column name.
 
 =back
@@ -370,6 +375,10 @@ This routine holds the reference code, defining the NNexus database schema.
 NOTE: Only works for a SQLite backend.
 
 =back
+
+=head1 SEE ALSO
+
+L<NNexus::DB>
 
 =head1 AUTHOR
 

@@ -99,7 +99,7 @@ post '/linkentry' => sub {
 };
 
 post '/indexentry' => sub {
-  my $job = $_[0]->prepare_job(function=>'index');
+  my $job = $_[0]->prepare_job(function=>'indexentry');
   $job->execute;
   $_[0]->res->headers->header('Access-Control-Allow-Origin' => '*');
   $modern_mojo ?

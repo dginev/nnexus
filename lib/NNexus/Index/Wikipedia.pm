@@ -164,12 +164,17 @@ __END__
 
 =head1 NAME
 
-C<NNexus::Index::Wikipedia> - Indexing plug-in for the (English) Wikipedia.org domain.
+C<NNexus::Index::Wikipedia> - Indexing plug-in for the (English) L<Wikipedia.org|http://wikipedia.org> domain.
 
 =head1 DESCRIPTION
 
 Indexing plug-in for the (English) Wikipedia.org domain.
-See C<NNexus::Index::Template> for detailed indexing documentation.
+
+See L<NNexus::Index::Template> for detailed indexing documentation.
+
+=head1 SEE ALSO
+
+L<NNexus::Index::Template>
 
 =head1 AUTHOR
 
@@ -177,8 +182,8 @@ Deyan Ginev <d.ginev@jacobs-university.de>
 
 =head1 COPYRIGHT
 
-Research software, produced as part of work done by
-the KWARC group at Jacobs University Bremen.
-Released under the MIT License (MIT)
+ Research software, produced as part of work done by
+ the KWARC group at Jacobs University Bremen.
+ Released under the MIT License (MIT)
 
 =cut

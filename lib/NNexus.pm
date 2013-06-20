@@ -14,7 +14,6 @@
 # | Deyan Ginev <d.ginev@jacobs-university.de>                  #_#     | #
 # | http://kwarc.info/people/dginev                            (o o)    | #
 # \=========================================================ooo==U==ooo=/ #
-
 package NNexus;
 use strict;
 use warnings;
@@ -25,7 +24,7 @@ our @EXPORT = qw(linkentry indexentry);
 our ($INSTALLDIR) = grep(-d $_, map("$_/NNexus", @INC));
 
 use vars qw($VERSION);
-$VERSION  = "2.0alpha";
+$VERSION  = "2.0alpha2";
 
 use NNexus::DB;
 use NNexus::Job;
@@ -55,10 +54,63 @@ sub indexentry {
   my $db = delete $options{db};
   return [] unless ($db || %snapshot_credentials);
   $db = NNexus::DB->new(%snapshot_credentials) unless $db;
-  my $job = NNexus::Job->new(function=>'index',db=>$db,%options);
+  my $job = NNexus::Job->new(function=>'indexentry',db=>$db,%options);
   $job->execute;
   return $job->result;
 }
 
 1;
 __END__
+
+=pod 
+
+=head1 NAME
+
+C<NNexus> - Procedural API for NNexus indexing, auto-linking and annotation.
+
+=head1 SYNOPSIS
+
+  use NNexus;
+  $annotated_text = linkentry($text,%options);
+  $invalidated_urls = indexentry($url,%options);
+
+=head1 DESCRIPTION
+
+This class provides a high-level user-facing procedural API for NNexus processing.
+  Useful for Perl scripting, for example:
+  
+  perl -MNNexus -e 'print linkentry(join("",<>))' < example.html > linked_example.html
+
+=head2 METHODS
+
+=over 4
+
+=item C<< $annotated_text = linkentry($text,%options); >>
+
+Wikifies/auto-links the provided $text against the default NNexus database, unless otherwise specified.
+  The accepted %options are all accepted options of the L<NNexus::Job> new constructor.
+
+=item C<< $invalidated_urls = indexentry($url,%options); >>
+
+Indexes a new entry located at the provided $url,
+ invalidates the current auto-link jobs known to the default database
+ and returns the entries to be invalidated.
+ The accepted %options are all accepted options of the L<NNexus::Job> new constructor.
+
+=back
+
+=head1 SEE ALSO
+
+L<NNexus::Job>, L<nnexus>, L<The NNexus Manual|https://github.com/dginev/nnexus/blob/master/MANUAL.md>
+
+=head1 AUTHOR
+
+Deyan Ginev <d.ginev@jacobs-university.de>
+
+=head1 COPYRIGHT
+
+ Research software, produced as part of work done by 
+ the KWARC group at Jacobs University Bremen.
+ Released under the MIT License (MIT)
+
+=cut

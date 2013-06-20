@@ -14,7 +14,6 @@
 # | Deyan Ginev <d.ginev@jacobs-university.de>                  #_#     | #
 # | http://kwarc.info/people/dginev                            (o o)    | #
 # \=========================================================ooo==U==ooo=/ #
-
 package NNexus::Annotate;
 use strict;
 use warnings;
@@ -142,14 +141,14 @@ C<NNexus::Annotate> - Class for serializing NNexus concepts into annotations
 
 =head1 SYNOPSIS
 
-    use NNexus::Annotate qw(serialize_concepts);
-    my $serialized_result = serialize_concepts(
-      body=>$original_concept_source,
-      concepts=>$discovered_concepts,
-      annotation=>$annotation_format,
-      embed=>$boolean,
-      domain=>$target_domain,
-      verbosity=>$boolean;
+  use NNexus::Annotate qw(serialize_concepts);
+  $serialized_result = serialize_concepts(
+    body=>$original_concept_source,
+    concepts=>$discovered_concepts,
+    annotation=>$annotation_format,
+    embed=>$boolean,
+    domain=>$target_domain,
+    verbosity=>$boolean);
 
 =head1 DESCRIPTION
 
@@ -163,19 +162,41 @@ The embedded links serialization comes with support for embedding multi-links.
 
 =over 4
 
-=item C<< my $serialized_result = serialize_concepts(%options); >>
+=item C<< $serialized_result = serialize_concepts(%options); >>
 
 Main serialization API, taking in a reference to an array of NNexus concepts,
- and producing the desired annotation serialization.
-
+  and producing the desired annotation serialization.
+  
 The available options are:
- - concepts - (required) the arrayref of concept hashes
- - body - (optional) the original HTML/text source the concepts were discovered from.
-          required when "embed" is turned on
- - embed - boolean switch between embedded and stand-off annotation. Embedding by default
- - domain - if defined and not set to "all", will only serialize concepts from the given $domain.
- - annotation - desired annotation format - currently one or more of "HTML" (default), "HTML+RDFa", "JSON"
- - verbosity - boolean switch turning verbosity on or off (default).
+
+=over 2
+
+=item *
+
+concepts: (required) the arrayref of concept hashes
+
+=item *
+
+body: (optional) the original HTML/text source the concepts were discovered from.
+    required when "embed" is turned on
+
+=item *
+
+embed: boolean switch between embedded and stand-off annotation. Embedding by default
+
+=item *
+
+domain: if defined and not set to "all", will only serialize concepts from the given $domain.
+
+=item *
+
+annotation: desired annotation format - currently one or more of "HTML" (default), "HTML+RDFa", "JSON"
+
+=item *
+
+verbosity: boolean switch turning verbosity on or off (default).
+
+=back
 
 =back
 

@@ -34,7 +34,7 @@ sub index_test {
   # Prepare a Mojo::DOM
   my $url = $options{url}; 
   my $dom = local_dom($url) if ($url && ($url ne 'default'));
-  my $index_job = NNexus::Job->new(function=>'index',
+  my $index_job = NNexus::Job->new(function=>'indexentry',
                                    url=>$url,dom=>$dom,domain=>$options{domain},db=>$db);
   $index_job->execute;
   

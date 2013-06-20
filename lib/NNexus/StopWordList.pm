@@ -702,4 +702,48 @@ z
 /];}
 
 1;
+
 __END__
+
+
+=pod 
+
+=head1 NAME
+
+C<NNexus::StopWordList> - A stop word list for mathematical texts
+
+=head1 SYNOPSIS
+
+  use NNexus::StopWordList;
+  $stop_words_hashref = stop_words_ref();
+
+=head1 DESCRIPTION
+
+This class provides an example stopword list for the specific domain of
+mathematical texts. It builds on the excellent list from L<Lingua::EN::StopWordList>
+with a number of modifications particular to mathematical discourse.
+
+The modifications have been collected during the development of PlanetMath.org and NNexus
+since their inception. Currently, this module contains almost exactly 700 words.
+
+=head1 METHODS
+
+=over 4
+
+=item C<< $stop_words_hashref = stop_words_ref(); >>
+
+Each call creates a new stopwords hash and returns a reference to it.
+
+=back
+
+=head1 AUTHOR
+
+Deyan Ginev <d.ginev@jacobs-university.de>
+
+=head1 COPYRIGHT
+
+ Research software, produced as part of work done by 
+ the KWARC group at Jacobs University Bremen.
+ Released under the MIT License (MIT)
+
+=cut

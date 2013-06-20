@@ -14,14 +14,13 @@
 # | Deyan Ginev <d.ginev@jacobs-university.de>                  #_#     | #
 # | http://kwarc.info/people/dginev                            (o o)    | #
 # \=========================================================ooo==U==ooo=/ #
-
 package NNexus::Discover;
 use strict;
 use warnings;
 
 use Exporter;
 our @ISA = qw(Exporter);
-our @EXPORT_OK = qw(mine_candidates mine_concepts);
+our @EXPORT_OK = qw(mine_candidates);
 use Encode qw/is_utf8/;
 use utf8;
 use Data::Dumper;
@@ -29,7 +28,6 @@ use Time::HiRes qw ( time alarm sleep );
 
 use NNexus::StopWordList qw(stop_words_ref);
 use NNexus::Morphology qw(normalize_word);
-use NNexus::Linkpolicy qw (post_resolve_linkpolicy);
 use NNexus::Concepts qw(clone_concepts);
 
 use HTML::Parser;
@@ -297,3 +295,68 @@ sub mine_candidates_text {
 1;
 
 __END__
+
+=pod 
+
+=head1 NAME
+
+C<NNexus::Discover> - Concept discovery for plain-text and HTML entries
+
+=head1 SYNOPSIS
+
+  use NNexus::Discover qw(mine_candidates);
+  ($concepts_mined,$text_length) =
+    mine_candidates(
+      db=>$db,
+      body=>$body,
+      url=>$url,
+      domain=>$domain,
+      format=>'text|html',
+      verbosity=>$verbosity);
+
+=head1 DESCRIPTION
+
+C<NNexus::Discover> provides a single concept discovery routine,
+  parametric in:
+
+=over 4
+
+=item *
+
+db: Database object from NNexus::DB
+
+=item *
+
+body: The textual/HTML body to be analyzed
+
+=item *
+
+url: The resource locator of the given body (optional, for invalidation)
+
+=item *
+
+domain: request a specific domain of the NNexus index
+  from which to seek concept definitions
+  (optional, default: all)
+
+=item *
+
+format: Specify whether the given body is plain-text or an HTML document
+
+=item *
+
+verbosity: If true, prints verbose messages, quiet otherwise.
+
+=back
+
+=head1 AUTHOR
+
+Deyan Ginev <d.ginev@jacobs-university.de>
+
+=head1 COPYRIGHT
+
+ Research software, produced as part of work done by 
+ the KWARC group at Jacobs University Bremen.
+ Released under the MIT License (MIT)
+
+=cut

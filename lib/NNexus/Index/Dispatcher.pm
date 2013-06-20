@@ -127,57 +127,86 @@ C<NNexus::Index::Dispatcher> - High-level dispatcher to the correct domain index
 
 =head1 SYNOPSIS
 
-use NNexus::Index::Dispatcher;
-my $dispatcher = NNexus::Index::Dispatcher->new(db=>$db,domain=>$domain,verbosity=>0|1);
-my $invalidated_URLs = $dispatcher->index_step(%options);
-while (my $payload = $dispatcher->index_step ) {
-   push @$invalidated_URLs, @{$payload};
+  use NNexus::Index::Dispatcher;
+  $dispatcher = NNexus::Index::Dispatcher->new(db=>$db,domain=>$domain,verbosity=>0|1);
+  $invalidated_URLs = $dispatcher->index_step(%options);
+  while (my $payload = $dispatcher->index_step ) {
+     push @$invalidated_URLs, @{$payload};
 }
 
 =head1 DESCRIPTION
 
-The NNexus::Dispatcher class provides a comprehensive high-level API for indexing
+The C<NNexus::Dispatcher> class provides a comprehensive high-level API for indexing
  web domains.
 
-It requires that each $domain has its own C<NNexus::Index::$domain> indexer plug-in,
- that follows a ucfirst(lc($domain)) naming convention.
+It requires that each C<$domain> has its own C<NNexus::Index::$domain> indexer plug-in,
+ that follows a C<ucfirst(lc($domain))> naming convention.
 
 Additionally, C<NNexus::Index::Dispatcher> computes the concept diffs when re-indexing,
-an already visited page and updates the database as needed. Lastly, the return value
-of an indexing step is a list of suggested URLs to be relinked, a process called
-"invalidation" in previous NNexus releases.
+  an already visited page and updates the database as needed. Lastly, the return value
+  of an indexing step is a list of suggested URLs to be relinked, a process called
+  "invalidation" in previous NNexus releases.
 
 =head2 METHODS
 
 =over 4
 
-=item C<< my $dispatcher = NNexus::Index::Dispatcher->new(domain=>$domain,db=>$db,$verbosity=>0|1,
+=item C<< $dispatcher = NNexus::Index::Dispatcher->new(domain=>$domain,db=>$db,$verbosity=>0|1,
 start=>$url, dom=>$dom); >>
 
 The object constructor prepares a domain crawler object
- ( NNexus::Index::ucfirst(lc($domain)) )
-and requires a NNexus::DB object, $db, for database interactions.
+ ( C<NNexus::Index::ucfirst(lc($domain))> )
+  and requires a L<NNexus::DB> object, C<$db>, for database interactions.
 
 The returned dispatcher object can be used to iteratively index the domain,
-via the index_step method.
+  via the F<index_step> method.
 
 The method accepts the following options:
- - start - the initial URL, required for first invocation
- - dom - optional, provides a Mojo::DOM object for the current URL
+
+=over 2
+
+=item *
+
+start: the initial URL, required for first invocation
+
+=item *
+
+dom: optional, provides a L<Mojo::DOM> object for the current URL
          instead of performing an HTTP GET to retrieve it.
- - verbosity - 0 for quiet, 1 for detailed progress messages
 
-=item C<< my $invalidated_URLs = $dispatcher->index_step(%options); >>
+=item *
 
-Performs an indexing step by:
- - dispatches a crawl request to the domain indexer
- - computes a diff over the previously and currently indexed
+verbosity: 0 for quiet, 1 for detailed progress messages
+
+=back
+
+=item C<< $invalidated_URLs = $dispatcher->index_step(%options); >>
+
+Performs an indexing step as follows:
+
+=over 2
+
+=item *
+
+Dispatches a crawl request to the domain indexer
+
+=item *
+
+Computes a diff over the previously and currently indexed
    concepts for the given object/URL
- - updates the Database tables
- - Computes and returns an impact graph of previously linked objects
+
+=item *
+
+Updates the Database tables
+
+=item *
+
+Computes and returns an impact graph of previously linked objects
    (aka "invalidation")
 
-Accepts no options, all customization is to be achieved through the "new" constructor.
+=back
+
+Accepts no options, all customization is to be achieved through the F<new> constructor.
 
 =back
 
@@ -187,8 +216,8 @@ Deyan Ginev <d.ginev@jacobs-university.de>
 
 =head1 COPYRIGHT
 
-Research software, produced as part of work done by
-the KWARC group at Jacobs University Bremen.
-Released under the The MIT License (MIT)
+  Research software, produced as part of work done by
+  the KWARC group at Jacobs University Bremen.
+  Released under the The MIT License (MIT)
 
 =cut

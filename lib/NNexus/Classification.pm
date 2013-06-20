@@ -14,7 +14,6 @@
 # | Deyan Ginev <d.ginev@jacobs-university.de>                  #_#     | #
 # | http://kwarc.info/people/dginev                            (o o)    | #
 # \=========================================================ooo==U==ooo=/ #
-
 package NNexus::Classification;
 use strict;
 use warnings;
@@ -256,37 +255,43 @@ C<NNexus::Classification> - Dismabiguation logic for NNexus concept harvests
 
 =head1 SYNOPSIS
 
-    use NNexus::Classification qw(disambiguate msc_similarity);
-    my $concepts_refined = disambiguate($concept_harvest,%options);
-    my $similarity_score = msc_similarity($category1,$category2);
+  use NNexus::Classification qw(disambiguate msc_similarity);
+  $concepts_refined = disambiguate($concept_harvest,%options);
+  $similarity_score = msc_similarity($category1,$category2);
 
 =head1 DESCRIPTION
 
 NNexus::Classification contains disambiguation and clustering algorithms for determining a subset of
   "relevant" concept candidates from a given concept harvest. Relevance is determined heuristically.
-  The current algorithm considers two facets of "relevance":
-
-  1. Relevant candidates come from empirically similar domains of knowledge.
   
+The current algorithm considers two facets of "relevance":
+  
+  1. Relevant candidates come from empirically similar domains of knowledge.
+    
   To this extent, a similarity metric has been extracted from 3+ million mathematical reviews
   in Zentrallblatt Math, each annotated with categories from the Math Subject Classification.
 
   2. Technical terms are more likely to be relevant. Consequently:
-   - The more words in a candidate, the more likely that it is a term
-   - The more characters in a candidate, the more likely that it is a term
+  - The more words in a candidate, the more likely that it is a term
+  - The more characters in a candidate, the more likely that it is a term
 
 =head2 METHODS
 
 =over 4
 
-=item C<< my $concepts_refined = disambiguate($concept_harvest,%options); >>
+=item C<< $concepts_refined = disambiguate($concept_harvest,%options); >>
 
-  Disambiguates a concept harvest, as returned by NNexus::Discover, following the
+Disambiguates a concept harvest, as returned by NNexus::Discover, following the
   algorithm in the description.
 
-  Currently the only accepted option is a boolean value for "verbosity".
+Currently the only accepted option is a boolean value for "verbosity".
 
-=item C<< my $similarity_score = msc_similarity($category1,$category2); >>
+=item C<< $similarity_score = msc_similarity($category1,$category2); >>
+
+Retrieves the ZBL similarity score of two MSC categories given via the standard
+  L<MSC naming scheme|http://www.ams.org/mathscinet/msc/> (e.g. 00-XX, 15Axx, 15B33)
+  
+Note that currently the similarity metric only covers the top-level MSC categories.
 
 =back
 

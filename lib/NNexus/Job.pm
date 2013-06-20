@@ -14,7 +14,6 @@
 # | Deyan Ginev <d.ginev@jacobs-university.de>                  #_#     | #
 # | http://kwarc.info/people/dginev                            (o o)    | #
 # \=========================================================ooo==U==ooo=/ #
-
 package NNexus::Job;
 use strict;
 use warnings;
@@ -38,7 +37,7 @@ sub execute {
   my ($self) = @_;
   given ($self->{function}) {
     when('linkentry') {$self->_link_entry;}
-    when('index') {$self->_index;}
+    when('indexentry') {$self->_index_entry;}
     default {$self->_fail_with("Invalid action, aborting!"); }
   }
 }
@@ -92,7 +91,7 @@ sub _link_entry {
   $serialized_result;
 }
 
-sub _index {
+sub _index_entry {
   my ($self)=@_;
   my $domain = $self->{domain} || 'all';
   my $url = $self->{url}||$self->{body};
@@ -120,18 +119,24 @@ __END__
 
 =head1 NAME
 
-C<NNexus::Job> - Class for Servicing Job Request to NNexus
+C<NNexus::Job> - Low-level API for servicing Job Requests to NNexus
 
 =head1 SYNOPSIS
 
-    use NNexus::Job;
-    my $job = NNexus::Job->new(db=>$db,body=>$body,format=>$format,function=>$function,
-   			       domain=>$domain);
-    $job->execute;
-    my $response = $job->response;
-    my $result = $job->result;
-    my $message = $job->message;
-    my $status = $job->status;
+  use NNexus::Job;
+  $job = NNexus::Job->new(
+    db=>$db,
+    body=>$body,
+    format=>$format,
+    function=>$function,
+    domain=>$domain);
+  
+  $job->execute;
+  
+  $response = $job->response;
+  $result = $job->result;
+  $message = $job->message;
+  $status = $job->status;
 
 =head1 DESCRIPTION
 
@@ -141,50 +146,124 @@ This class serves as an encapsulation for users' NNexus requests, driven by a mi
 
 =over 4
 
-=item C<< my $job = NNexus::Job->new(%options); >>
+=item C<< $job = NNexus::Job->new(%options); >>
 
 Creates a new job object, customized via an options hash. Admissible options are:
-  - body: The textual payload to be autolinked/indexed/etc.
-  - format: The format of the given body. Supported: tex|html
-  - function: Operation to be performed. 
-    * linkentry: Autolinks a given body returning a result in the same format
-    * index: Indexes a given web resource (URL), given by the "url" option
-  - url: 
-    * for function "index": URL at which to begin an indexing job 
-    * for function "linkentry": URL to record for change management and invalidation
-  - domain: Domain to use as the reference knowledge base for autolinking/indexing
-  - anntation: serialization format for annotation (links, JSON, RDFa)
-  - embed: boolean for embedded or stand-off annotations
-  - db: An initialized NNexus::DB object (typically internal)
-  - verbosity: boolean switching verbose logging on and off
-  - dom: (optional) overrides the Mojo::DOM object for the given "url" (function=index)
-  - should_update: boolean switching between updating all indexed objects (default) or 
-     only indexing new objects instead. (function=index)
+
+=over 2
+
+=item *
+
+body: The textual payload to be autolinked/indexed/etc.
+
+=item *
+
+format: The format of the given body. Supported: tex|html
+
+=item *
+
+function: Operation to be performed. Currently supported: 
+
+=over 2
+
+=item 
+
+linkentry: Autolinks a given body returning a result in the same format
+
+=item 
+
+indexentry: Indexes a given web resource (URL), given by the "url" option
+
+=back
+
+=item *
+
+url
+
+=over 2
+
+=item
+
+for function "indexentry": URL at which to begin an indexing job 
+
+=item
+
+for function "linkentry": URL to record for change management and invalidation
+
+=back
+
+=item *
+
+domain: Domain to use as the reference knowledge base for autolinking/indexing
+
+=item *
+
+anntation: serialization format for annotation (links, JSON, RDFa)
+
+=item *
+
+embed: boolean for embedded or stand-off annotations
+
+=item *
+
+db: An initialized NNexus::DB object (typically internal)
+
+=item *
+
+verbosity: boolean switching verbose logging on and off
+
+=item *
+
+dom: (optional) overrides the L<Mojo::DOM> object for the given C<url> (C<function='indexentry'>)
+
+=item *
+
+should_update: boolean switching between updating all indexed objects (default) or 
+     only indexing new objects instead. (C<function='indexentry'>)
+
+=back
 
 =item C<< $job->execute; >>
 
 Executes the job prepared by the new method.
 
-=item C<< $job->response; >>
+=item C<< $response = $job->response; >>
 
 Retrieves the job result. Returns a hash ref with three fields:
- result: the job result (e.g. a payload for a linking job)
- message: a human-readable description of the job
- status: a machine-readable status report
 
-=item C<< $job->result; >>
+=over 2
 
-Shorthand for $job->response->{result};
+=item *
 
-=item C<< $job->status; >>
+result: the job result (e.g. a payload for a linking job)
 
-Shorthand for $job->response->{status};
+=item *
 
-=item C<< $job->message; >>
+message: a human-readable description of the job
 
-Shorthand for $job->response->{message};
+=item *
+
+status: a machine-readable status report
 
 =back
+
+=item C<< $result = $job->result; >>
+
+Shorthand for C<$job-E<gt>response-E<gt>{result}>
+
+=item C<< $status = $job->status; >>
+
+Shorthand for C<$job-E<gt>response-E<gt>{status}>
+
+=item C<< $message = $job->message; >>
+
+Shorthand for C<$job-E<gt>response-E<gt>{message}>
+
+=back
+
+=head1 SEE ALSO
+
+L<NNexus>, L<nnexus>, L<The NNexus Manual|https://github.com/dginev/nnexus/blob/master/MANUAL.md>
 
 =head1 AUTHOR
 

@@ -76,12 +76,17 @@ __END__
 
 =head1 NAME
 
-C<NNexus::Index::Dlmf> - Indexing plug-in for the DLMF.nist.gov domain.
+C<NNexus::Index::Dlmf> - Indexing plug-in for the L<DLMF.nist.gov|http://dlmf.nist.gov> domain.
 
 =head1 DESCRIPTION
 
 Indexing plug-in for the DLMF.nist.gov domain.
-See C<NNexus::Index::Template> for detailed indexing documentation.
+
+See L<NNexus::Index::Template> for detailed indexing documentation.
+
+=head1 SEE ALSO
+
+L<NNexus::Index::Template>
 
 =head1 AUTHOR
 
@@ -89,8 +94,8 @@ Deyan Ginev <d.ginev@jacobs-university.de>
 
 =head1 COPYRIGHT
 
-Research software, produced as part of work done by
-the KWARC group at Jacobs University Bremen.
-Released under the MIT license (MIT)
+  Research software, produced as part of work done by
+  the KWARC group at Jacobs University Bremen.
+  Released under the MIT license (MIT)
 
 =cut

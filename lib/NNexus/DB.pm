@@ -14,7 +14,6 @@
 # | Deyan Ginev <d.ginev@jacobs-university.de>                  #_#     | #
 # | http://kwarc.info/people/dginev                            (o o)    | #
 # \=========================================================ooo==U==ooo=/ #
-
 package NNexus::DB;
 use strict;
 use warnings;
@@ -127,11 +126,11 @@ C<NNexus::DB> - DBI interface for NNexus, provides one DBI handle per NNexus::DB
 =head1 SYNOPSIS
 
   use NNexus::DB;
-  my $db = NNexus::DB(dbuser=>'nnexus',dbpass=>'pass',dbname=>"nnexus",dbhost=>"localhost", dbms=>"mysql");
-  my $connection_alive = $db->ping;
-  my $statement_handle = $db->prepare('DBI sql statement');
+  $db = NNexus::DB(dbuser=>'nnexus',dbpass=>'pass',dbname=>"nnexus",dbhost=>"localhost", dbms=>"mysql");
+  $connection_alive = $db->ping;
+  $statement_handle = $db->prepare('DBI sql statement');
   $db->execute('DBI sql statement');
-  my $disconnect_successful = $db->done;
+  $disconnect_successful = $db->done;
 
 =head1 DESCRIPTION
 
@@ -145,38 +144,44 @@ The documentation assumes basic familiarity with DBI.
 
 =over 4
 
-=item C<< my $db = NNexus::Job->new(%options); >>
+=item C<< $db = NNexus::Job->new(%options); >>
 
-Creates a new NNexus::DB object.
+Creates a new C<NNexus::DB> object.
   Required options are dbuser, dbpass, dbname, dbhost and dbms, so that
   the database connection can be successfully created.
 
-=item C<< my $response = $db->DBI_handle_command; >>
+=item C<< $response = $db->DBI_handle_command; >>
 
-The NNexus::DB methods are interfaces to their counterparts in DBI, with the addition of a query cache and
+The C<NNexus::DB> methods are interfaces to their counterparts in L<DBI>, with the addition of a query cache and
   a safety mechanism that auto-vivifies the connection when needed.
 
-The "safe" adverb returns a DBI handle, taking extra care that the handle is properly connected to
+=item C<< $sth = $db->safe; >>
+
+The F<safe> adverb returns a L<DBI> handle, taking extra care that the handle is properly connected to
   the respective DB backend.
-  While you could take the DBI handle and use it directly (it is the return value of the do method),
+  While you could take the L<DBI> handle and use it directly (it is the return value of the F<safe> method),
   avoid that approach.
 
-  Instead, always invoke DBI commands through NNexus::DB (or use the "safe" adverb to get a handle),
-  e.g. C<$db->execute>, C<$db->prepare> or C<$sth = $db->safe>
-  The cache of prepared statements is also rejuvenated whenever a new DBI handle is auto-created.
+Instead, always invoke L<DBI> commands through the C<NNexus::DB> object or explicitly use the F<safe> adverb to get a handle,
+  e.g. C<$db-<gt>execute>, C<$db-<gt>prepare> or C<$sth = $db-<gt>safe>
+  The cache of prepared statements is also rejuvenated whenever a new L<DBI> handle is auto-created.
 
-=item C<< my $disconnect_successful = $db->done; >>
+=item C<< $disconnect_successful = $db->done; >>
 
-Disconnects from the backend and destroys the DBI handle.
-  Note that the cache of prepared statements will be kept and rejuvenated
-  when a new DBI handle is initialized.
+Disconnects from the backend and destroys the L<DBI> handle.
+  Note that the cache of prepared statements will be rejuvenated
+  when a new L<DBI> handle is initialized.
 
-=item C<< my $statement_handle = $db->prepare; >>
+=item C<< $statement_handle = $db->prepare; >>
 
-Cached preparation of SQL statements. Internally uses the do adverb, to ensure robustness.
-  Each SQL query and its DBI statement handle is cached, to avoid multiple prepare calls on the same query string.
+Cached preparation of SQL statements. Internally uses the F<safe> adverb, to ensure robustness.
+  Each SQL query and its L<DBI> statement handle is cached, to avoid multiple prepare calls on the same query string.
 
 =back
+
+=head1 SEE ALSO
+
+L<NNexus::DB::API>, L<DBI>
 
 =head1 AUTHOR
 
@@ -184,8 +189,8 @@ Deyan Ginev <d.ginev@jacobs-university.de>
 
 =head1 COPYRIGHT
 
-Research software, produced as part of work done by
-the KWARC group at Jacobs University Bremen.
-Released under the MIT license (MIT)
+ Research software, produced as part of work done by
+ the KWARC group at Jacobs University Bremen.
+ Released under the MIT license (MIT)
 
 =cut

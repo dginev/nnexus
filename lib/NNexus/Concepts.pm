@@ -14,7 +14,6 @@
 # | Deyan Ginev <d.ginev@jacobs-university.de>                  #_#     | #
 # | http://kwarc.info/people/dginev                            (o o)    | #
 # \=========================================================ooo==U==ooo=/ #
-
 package NNexus::Concepts;
 use strict;
 use warnings;
@@ -97,3 +96,90 @@ sub links_from_concept {
 1;
 
 __END__
+
+=pod 
+
+=head1 NAME
+
+C<NNexus::Concepts> - API for Manipulation of NNexus Concepts and Concept harvests
+
+=head1 SYNOPSIS
+
+  use NNexus::Concepts qw(flatten_concept_harvest diff_concept_harvests clone_concepts links_from_concept);
+  $new_concepts = flatten_concept_harvest($indexed_concepts);
+  ($delete_concepts,$add_concepts) = diff_concept_harvests($old_concepts,$new_concepts);
+  $cloned_concepts = clone_concepts($concepts);
+  @links = links_from_concept($concept);
+
+=head1 DESCRIPTION
+
+This package contains a range of convenience utilities for accessing and mainpulating NNexus concepts,
+  realized via Perl hash references.
+
+An Indexed concept is a hashref of the form:
+
+  {
+    categories => [ list of categories ],
+    scheme => 'categorization scheme',
+    concept => 'natural language word or phrase',
+    synonyms => [ list of synonym words and phrases ],
+    url => 'http://example.com'
+  }
+
+A Flattened concept is a simplified hashref of the form:
+
+  {
+    category => 'a single category',
+    scheme => 'categorization scheme',
+    concept => 'natural language word or phrase'
+    url => 'http://example.com'
+  } 
+
+Another finer point is that when a concept is being registered,
+  its resource/object of origin is contained in a hash key "url".
+  When it is being registered and later retrieved from the NNexus
+  knowledge base, that key is renamed to "link" and potentially
+  "multilinks", when several URLs exist for the same concept.
+  The distinction is useful to discern between the processing stages,
+  but could also be refactored away at a later stage.
+
+=head2 METHODS
+
+=over 4
+
+=item C<< $new_concepts = flatten_concept_harvest($indexed_concepts); >>
+
+Given a list of indexed concepts with their synonyms, this routine flattens
+  them into a simple array of concepts and performs morphological normalization on
+  the natural language phrases, as provided by L<NNexus::Morphology>.
+
+=item C<< ($delete_concepts,$add_concepts) = diff_concept_harvests($old_concepts,$new_concepts); >>
+
+Given two arrays of old and new (flattened) concepts, the routine computes their difference,
+  returning a list of concepts to be deleted (i.e. exclusively old) and a list of concepts
+  to be added (i.e. exclusively new).
+
+=item C<< $cloned_concepts = clone_concepts($concepts); >>
+
+Clones the concept hash and returns the new hash reference.
+  Works on an array reference of concepts, as we tend to clone in bulk.
+
+=item C<< @links = links_from_concept($concept); >>
+
+Smart extraction of links from a concept hashref, supports both
+  the single "link" key as well as the bulk "multilinks" field.
+  Returns an array of URL strings.
+
+=back
+
+=head1 AUTHOR
+
+Deyan Ginev <d.ginev@jacobs-university.de>
+
+=head1 COPYRIGHT
+
+ Research software, produced as part of work done by 
+ the KWARC group at Jacobs University Bremen.
+ Released under the MIT License (MIT)
+
+=cut

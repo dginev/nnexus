@@ -8,6 +8,10 @@ my $eval_return = eval {
   use NNexus::Job;
   use NNexus::Index::Dispatcher;
   use NNexus::Index::Template;
+  use NNexus::Index::Wikipedia;
+  use NNexus::Index::Planetmath;
+  use NNexus::Index::Dlmf;
+  use NNexus::Index::Mathworld;
   use NNexus::Concepts;
   use NNexus::DB;
   use NNexus::Discover;

@@ -25,10 +25,10 @@ use NNexus::Morphology qw(canonicalize_url);
 
 ### EXTERNAL API
 sub new {
-	my ($class,%options) = @_;
-	my $ua = Mojo::UserAgent->new;
-	my $visited = $options{visited}||{};
-	my $queue = $options{queue}||[];
+  my ($class,%options) = @_;
+  my $ua = Mojo::UserAgent->new;
+  my $visited = $options{visited}||{};
+  my $queue = $options{queue}||[];
 
   my $self = bless {ua=>$ua,visited=>$visited,queue=>$queue}, $class;
 
@@ -47,7 +47,7 @@ sub new {
       url=>canonicalize_url($first_url),
       ($options{dom} ? (dom=>$options{dom}) : ()),
       depth=>0});
-	return $self;
+  return $self;
 }
 sub ua {$_[0]->{ua};}
 
@@ -119,8 +119,8 @@ sub domain_root {q{};} # To be overriden in the concrete classes
 # TODO: Rename index_page to candidate_concepts ? Or index_links / index_categories instead?
 sub index_page {[];} # To be overriden in the concrete classes
 sub candidate_links {
-	[];
-	# TODO: Generic implementation should simply retrieve ALL <a href>s as candidate links.
+  [];
+  # TODO: Generic implementation should simply retrieve ALL <a href>s as candidate links.
 }
 sub candidate_categories {}
 sub request_interval { 2; }
@@ -145,59 +145,91 @@ C<NNexus::Index::Template> - Foundation Template for NNexus Domain Indexers
 
 =head1 SYNOPSIS
 
-package NNexus::Index::Mydomain;
-use base qw(NNexus::Index::Template);
+  package NNexus::Index::Mydomain;
+  use base qw(NNexus::Index::Template);
+  
+  # Instantiate the PULL API methods
+  sub domain_root { 'http://mydomain.com' }
+  sub candidate_links { ... }
+  sub index_page { ... }
+  sub depth_limit { 10; }
+  
+  1;
 
-# Instantiate the PULL API methods
-sub domain_root { 'http://mydomain.com' }
-sub candidate_links { ... }
-sub index_page { ... }
-sub depth_limit { 10; }
-
-1;
-
-# You can now invoke an indexing run from your own code:
-my $indexer = NNexus::Index::Mydomain;
-my $first_payload = $indexer->index_step('start'=>'default');
-while (my $concept_payload = $indexer->index_step ) {
- # Do something with the indexed concepts...
-}
+  # You can now invoke an indexing run from your own code:
+  $indexer = NNexus::Index::Mydomain;
+  $first_payload = $indexer->index_step('start'=>'default');
+  while (my $concept_payload = $indexer->index_step ) {
+    # Do something with the indexed concepts...
+  }
 
 =head1 DESCRIPTION
 
 This class contains the generic NNexus indexing logic, and offers the PULL API for concrete domain indexers.
   There are three categories of methods:
-  - External API - public methods, to be used to set up and drive the indexing process
-  - Shared methods - defining the generic crawl process and logic, shared by all domain indexers
-  - PULL API - per-page data-mining methods, to be overloaded by concrete domain indexers
+
+=over 2
+
+=item *
+
+External API - public methods, to be used to set up and drive the indexing process
+
+=item *
+
+Shared methods - defining the generic crawl process and logic, shared by all domain indexers
+
+=item *
+
+PULL API - per-page data-mining methods, to be overloaded by concrete domain indexers
+
+=back 
 
 =head2 EXTERNAL API
 
 =over 4
 
-=item C<< my $indexer = NNexus::Index::Mydomain->new(start=>'default',dom=>$dom); >>
+=item C<< $indexer = NNexus::Index::Mydomain->new(start=>'default',dom=>$dom); >>
 
-The most reliable way to instantiate a domain indexer. The 'Mydomain' string is conventionally the shorthand
-name a certain site is referred by, e.g. Planetmath, Wikipedia, Dlmf or Mathworld. 
+The most reliable way to instantiate a domain indexer. The 'Mydomain' string is conventionally
+  the shorthand name a certain site is referred by, e.g. Planetmath, Wikipedia, Dlmf or Mathworld. 
 
-As a handy convention, all plug-in indexer names "$domain" should be compliant with
-$domain eq ucfirst(lc($domain))
+As a handy convention, all plug-in indexer names C<$domain> should be compliant with
+  C<$domain eq ucfirst(lc($domain))>
 
-=item C<< my $payload = $indexer->index_step; >>
+=item C<< $payload = $indexer->index_step; >>
 
 While the index_step method is the main externally-facing interface method,
   it is also the most important shared method between all domain indexers,
   as it automates the crawling and PULL processes.
 
 The index_step method is the core of the indexing logic behind NNexus. It provides:
- - Automatic crawling under the specified 'start' domain root.
- - Fine-tuning of crawl targets. 'start' can be both the 'default' for the domain, as well as any specific URL.
- - Indexing as iteration. Each NNexus indexer object contains an iterator, which can be stepped through.
-   The traversal is left-to-right and depth-first.
- - The indexing is bound by depth (if requested) and keeps a cache of visited pages, avoiding loops.
- - An automatic one second sleep is triggered whenever a page is fetched, in good crawling manners.
 
-The only option accepted by the method is a boolean switch "skip", which when turned on skips the next job in
+=over 2
+
+=item *
+
+Automatic crawling under the specified C<start> domain root.
+
+=item *
+
+Fine-tuning of crawl targets. C<start> can be both the C<default> for the domain, as well as any specific URL.
+
+=item *
+
+Indexing as iteration. Each NNexus indexer object contains an iterator, which can be stepped through.
+   The traversal is left-to-right and depth-first.
+
+=item *
+
+The indexing is bound by depth (if requested) and keeps a cache of visited pages, avoiding loops.
+
+=item *
+
+An automatic one second sleep is triggered whenever a page is fetched, in good crawling manners.
+
+=back
+
+The only option accepted by the method is a boolean switch C<skip>, which when turned on skips the next job in
   the queue.
 
 =back
@@ -206,29 +238,29 @@ The only option accepted by the method is a boolean switch "skip", which when tu
 
 =over 4
 
-=item C<< my $url = $self->current_url >>
+=item C<< $url = $self->current_url >>
 
 Getter, provides the current URL of the page being indexed. 
   Dually acts as a setter when an argument is provided,
-  mainly set from the index_step method.
+  mainly set from the F<index_step> method.
 
-=item C<< my $dom = $self->current_dom >>
+=item C<< $dom = $self->current_dom >>
 
-Getter, provides the current Mojo::DOM of the page being indexed. 
+Getter, provides the current L<Mojo::DOM> of the page being indexed. 
   Dually acts as a setter when an argument is provided,
-  mainly set from the index_step method.
+  mainly set from the F<index_step> method.
 
-=item C<< my $dom = $self->current_categories >>
+=item C<< $dom = $self->current_categories >>
 
 Getter, provides the current categories of the page being indexed. 
   Dually acts as a setter when an argument is provided,
-  mainly set from the index_step method.
+  mainly set from the F<index_step> method.
 
 The categories are a reference to an array of strings, ideally of MSC classes.
 
 The main use of this method is for sites setup similarly to Wikipedia, where a sub-categorization scheme
   is being traversed and the current categories need to be remembered whenever a new leaf concept page is entered.
-  See NNexus::Index::Wikipedia for examples.
+  See L<NNexus::Index::Wikipedia> for examples.
 
 =back
 
@@ -247,17 +279,15 @@ Sets the default start URL for an indexing process of the entire domain.
 
 Using the information provided by the shared methods,
   datamine zero or more candidate links for further indexing.
-
   The expected return value is a reference to an array of absolute URL strings.
   
 =item C<< sub index_page {...} >>
 
 Using the information provided by the shared methods,
   datamine zero or more candidate concepts for NNexus indexing.
-  
   The expected return value is a reference to an array of hash-references,
   each hash-reference being a concept hash datastructure, specified as:
-  	
+    
   { concept => 'concept name',
     url => 'origin url',
     synonyms => [ qw(list of synonyms) ],
@@ -270,8 +300,7 @@ Using the information provided by the shared methods,
 Propose candidate categories for the current page, using the shared methods.
   Useful in cases where the category information of a concept is not recorded in the same page, but
   has to be inferred instead, as is the case for Wikipedia's traversal process.
-  
-  See Index::Template::Wikipedia for an example of overriding candidate_categories.
+  See L<Index::Template::Wikipedia> for an example of overriding F<candidate_categories>.
 
 =item C<< sub depth_limit { $depth; } >>
 
@@ -281,9 +310,9 @@ An integer constant specifying a depth-limit for the crawling process, wrt to th
 
 =item C<< sub request_interval { $seconds; } >>
 
- Any Time::Hiress admissible constant amount of $seconds.
- To be used for putting the current process to sleep, in order to
- avoid overloading the indexed server, as well as to avoid getting banned.
+Any L<Time::Hires> admissible constant amount of C<$seconds>.
+  To be used for putting the current process to sleep, in order to
+  avoid overloading the indexed server, as well as to avoid getting banned.
 
 =back
 
@@ -293,8 +322,8 @@ Deyan Ginev <d.ginev@jacobs-university.de>
 
 =head1 COPYRIGHT
 
-Research software, produced as part of work done by
-the KWARC group at Jacobs University Bremen.
-Released under the MIT license (MIT)
+ Research software, produced as part of work done by
+ the KWARC group at Jacobs University Bremen.
+ Released under the MIT license (MIT)
 
 =cut

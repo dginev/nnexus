@@ -18,8 +18,6 @@ package NNexus::Morphology;
 ###########################################################################
 #	text morphology 
 ###########################################################################
-# this code is verbatim from Aaron Krowne's Noosphere project except for changing
-# the package name.
 use strict;
 use warnings;
 use feature qw(switch);
@@ -30,12 +28,21 @@ our @EXPORT_OK = qw(is_possessive is_plural get_nonpossessive get_possessive
   depluralize_word depluralize_phrase root pluralize undetermine_word
   admissible_name firstword_split normalize_word
   canonicalize_url);
+our %EXPORT_TAGS = (all=>qw(is_possessive is_plural get_nonpossessive get_possessive
+  depluralize_word depluralize_phrase root pluralize undetermine_word
+  admissible_name firstword_split normalize_word
+  canonicalize_url));
 
 use utf8;
 use Encode qw{is_utf8};
 use Text::Unidecode qw/unidecode/;
 
-# 0. TODO: Think about MathML
+# TODO: Think about MathML
+
+# 0. Define what we consider admissible and grammatical words and phrases, for the NNexus use case 
+our $concept_word_rex = qr/\w(?:\w|[\-\+\'])*/;
+our $concept_phrase_rex = qr/$concept_word_rex(?:\s+$concept_word_rex)*/;
+
 
 # I. Possessives
 # return true if any word is possessive (ends in 's or s')
@@ -50,8 +57,8 @@ sub get_nonpossessive {
 # return first word with possessive suffix ("Euler" becomes "Euler's")
 sub get_possessive {
   my ($word) = @_;
-  $word =~ s/^(\w+)/$1'/;
-  $word =~ s/^(\w+[^s])'/$1's/;
+  $word =~ s/^($concept_word_rex)/$1'/;
+  $word =~ s/^($concept_word_rex[^s])'/$1's/;
   $word; }
 
 # II. Plurality
@@ -62,7 +69,7 @@ sub is_plural { $_[0] ne depluralize_phrase($_[0]); }
 sub pluralize {
   given ($_[0]) {
     # "root of unity" pluralizes as "roots of unity" for example
-    when (/(\w+)(\s+(of|by)\s+.+)/)	{ return pluralize($1).$2; }
+    when (/($concept_word_rex)(\s+(of|by)\s+.+)/)	{ return pluralize($1).$2; }
     # normal pluralization
     when (/(.+ri)x$/) {	return "$1ces"; }
     when (/(.+t)ex$/) { return "$1ices"; }
@@ -114,14 +121,6 @@ sub depluralize_word {
 
 # III. Stemming
 
-# fake_stem - really elementary "stemming" algorithm
-sub fake_stem {
-  my $word = shift;
-  $word = get_nonpossessive($word);
-  $word = root($word);
-  $word =~ s/'//g;
-  return $word; }
-
 # get the non-plural root for a word
 sub root {
   given ($_[0]) {
@@ -144,8 +143,6 @@ sub undetermine_word {
 }
 
 # IV. Admissible concept words and high-level api
-our $concept_word_rex = qr/\w(?:\w|[\-\+\'])*/;
-our $concept_phrase_rex = qr/$concept_word_rex(?:\s+$concept_word_rex)*/;
 sub admissible_name {$_[0]=~/^$concept_phrase_rex$/; }
 sub normalize_word {
   my ($concept)=@_;
@@ -184,3 +181,126 @@ sub canonicalize_url {
 
 1;
 __END__
+
+=pod 
+
+=head1 NAME
+
+C<NNexus::Morphology> - Basic morphological and canonicalization routines
+
+=head1 SYNOPSIS
+
+  use NNexus::Morphology qw(:all);
+
+  # Possessives
+  $boolean = is_possessive($phrase);
+  $nonpossesive_phrase = get_nonpossessive($phrase);
+  $possessive_phrase = get_possessive($word);
+
+  # Plurals
+  $boolean = is_plural($word);
+  $plural_phrase = pluralize($phrase);
+  $singular_phrase = depluralize_phrase($phrase);
+  $singular_word = depluralize_word($word);
+  
+  # Determiners
+  $noun = undetermine_word($noun_phrase);
+
+  # Roots
+  $root = root($word);
+
+  # Phrase manipulation
+  ($firstword,$tailphrase) = firstword_split($phrase);
+  
+  # Web and NNexus Resources
+  $canonical_url = canonicalize_url($raw_url);
+  $boolean = admissible_name($word);
+  $normalized_word = normalize_word($word);
+
+=head1 DESCRIPTION
+
+The C<NNexus::Morphology> module provides basic support for morphological operations on English words and phrases.
+  While it does not at all claim good linguistic accuracy and recall, it serves the intended purpose of normalizing
+  candidate concepts in NNexus to a standard infinitive-like form, free of basic inflections.
+
+In addition the module contains normalization routines for web resources, as well as admissibility checks for words it considers grammatical.
+
+=head2 METHODS
+
+=over 4
+
+=item C<< $boolean = is_possessive($phrase); >>
+
+Returns true if the given phrase is possessive, false otherwise.
+
+=item C<< $nonpossesive_phrase = get_nonpossessive($phrase); >>
+
+Removes possessives from a phrase, if any. Only inspects the leading word.
+
+=item C<< $possessive_phrase = get_possessive($phrase); >>
+
+Adds a possessive suffix to the leading word of a given phrase, or single word.
+
+=item C<<$boolean = is_plural($word); >>
+
+True if word on input is plural, false otherwise.
+
+=item C<< $plural_phrase = pluralize($phrase); >>
+
+Returns the plural of a (noun) phrase, e.g.
+  "law of identity" would become "laws of identity"
+
+=item C<< $singular_phrase = depluralize_phrase($phrase); >>
+
+Returns the singular of a (noun) phrase, e.g.
+  "laws of identity" would become "law of identity"
+
+=item C<< $singular_word = depluralize_word($word); >>
+
+Returns the singular of a word
+
+=item C<< $undetermined_noun_phrase = undetermine_word($noun_phrase); >>
+
+Removes determiners from a noun phrase.
+
+=item C<< $root = root($word); >>
+
+Heuristic stemming algorithm, returns the root of a given word.
+
+=item C<< ($firstword,$tailphrase) = firstword_split($phrase); >>
+
+Given a phrase, splits out the first word and returns it
+  together with the remaining tail of the phrase.
+
+=item C<< $canonical_url = canonicalize_url($raw_url); >>
+
+Transforms a URL to a minimized canonical representation, 
+  suitable for storage into the NNexus Database.
+
+=item C<< $boolean = admissible_name($word); >>
+
+Returns true if the word is admissible and false otherwise.
+  Currently checks for leftover bad markup, such as LaTeX
+  math mode and macros.
+
+=item C<< $normalized_word = normalize_word($word); >>
+
+High-level API to normalize a word down to a canonical representation,
+  which could be then matched against the NNexus database.
+
+Performs: unicode-to-ascii dumbing down, lower casing, removal of determiners,
+  possessives and plurals.
+
+=back
+
+=head1 AUTHOR
+
+Deyan Ginev <d.ginev@jacobs-university.de>
+
+=head1 COPYRIGHT
+
+ Research software, produced as part of work done by 
+ the KWARC group at Jacobs University Bremen.
+ Released under the MIT License (MIT)
+
+=cut
