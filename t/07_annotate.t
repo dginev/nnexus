@@ -3,7 +3,8 @@ use warnings;
 
 use Test::More tests => 5;
 use NNexus::Annotate qw(serialize_concepts);
-
+use Mojo::JSON;
+my $json  = Mojo::JSON->new;
 my $body = "Simple testing sentence. We want Banach's algebra linked, \nalso Abelian groups.";
 my $text_concepts = [
 	{	concept=>'Banach\'s algebra',
@@ -119,21 +120,40 @@ is_deeply(
 	$annotated_htmlrdfa,
 	'Embed HTML+RDFa links in a simple HTML document.');
 
-my $standoff_json = <<'JSON';
-[{"link":"http:\/\/planetmath.org\/banachalgebra","domain":"Planetmath","offset_end":81,"offset_begin":65,"concept":"Banach's algebra"},{"link":"http:\/\/mathworld.wolfram.com\/AbelianGroup.html","domain":"Mathworld","offset_end":120,"offset_begin":106,"concept":"Abelian groups"},{"domain":"Planetmath","offset_end":120,"offset_begin":106,"concept":"Abelian groups","multilinks":["http:\/\/planetmath.org\/abeliangroup","http:\/\/planetmath.org\/group"]}]
-JSON
-chomp($standoff_json); # No artifical newline
+# We need to compare the Perl datastructures and not the JSON strict directly,
+# as from Perl 5.18 the order of hash keys is randomized differently at every run
+my $standoff_json = [{
+	"link"=>"http:\/\/planetmath.org\/banachalgebra",
+	"domain"=>"Planetmath",
+	"offset_end"=>81,
+	"offset_begin"=>65,
+	"concept"=>"Banach's algebra"},
+	{"link"=>"http:\/\/mathworld.wolfram.com\/AbelianGroup.html",
+	"domain"=>"Mathworld",
+	"offset_end"=>120,
+	"offset_begin"=>106,
+	"concept"=>"Abelian groups"},
+	{"domain"=>"Planetmath",
+	"offset_end"=>120,
+	"offset_begin"=>106,
+	"concept"=>"Abelian groups",
+	"multilinks"=>["http:\/\/planetmath.org\/abeliangroup","http:\/\/planetmath.org\/group"]
+	}];
+
 is_deeply(
-	serialize_concepts(
-		domain=>"all",
-		embed=>0,
-		annotation=>"json",
-		concepts=>$html_concepts),
+	$json->decode(
+		serialize_concepts(
+			domain=>"all",
+			embed=>0,
+			annotation=>"json",
+			concepts=>$html_concepts)),
 	$standoff_json,
 	'Stand-off JSON annotation');
 
 use Data::Dumper;
 $Data::Dumper::Sortkeys =1;
+# We use Data Dumper's Sortkeys to neutralize the Perl 5.18 hash key randomness
+# TODO: Is this in any way needed/important/useful ?
 is_deeply(
 	serialize_concepts(
 		domain=>"all",
