@@ -34,8 +34,13 @@ sub new {
   $options{query_cache} = $input{query_cache} || {};
   $options{handle} = $input{handle};
   my $self = bless \%options, $class;
-  if (($options{dbms} eq 'SQLite') && ((! -e $options{dbname})||(-z $options{dbname}))) {
+  if (($options{dbms} eq 'SQLite') && ((! -f $options{dbname})||(-z $options{dbname}))) {
     # Auto-vivify a new SQLite database, if not already created
+    if (! -f $options{dbname}) {
+      # Touch a file if it doesn't exist
+      my $now = time;
+      utime $now, $now, $options{dbname}; 
+    }
     $self->reset_db;
   }
   return $self;
