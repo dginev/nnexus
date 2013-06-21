@@ -101,7 +101,7 @@ Indexes a new entry located at the provided $url,
 
 =head1 SEE ALSO
 
-L<NNexus::Job>, L<nnexus>, L<The NNexus Manual|https://github.com/dginev/nnexus/blob/master/MANUAL.md>
+L<NNexus::Job>, L<nnexus>, L<NNexus::Manual>
 
 =head1 AUTHOR
 

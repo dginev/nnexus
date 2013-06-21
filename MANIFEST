@@ -16,6 +16,8 @@ lib/NNexus/Index/Template.pm
 lib/NNexus/Index/Wikipedia.pm
 lib/NNexus/Job.pm
 lib/NNexus/Morphology.pm
+lib/NNexus/Cookbook.pm
+lib/NNexus/Manual.pm
 lib/NNexus/resources/database/schema.sqlite
 lib/NNexus/resources/database/snapshot-5-2013.sqlite
 lib/NNexus/resources/README.txt
@@ -23,7 +25,6 @@ lib/NNexus/StopWordList.pm
 LICENSE
 Makefile.PL
 MANIFEST			This list of files
-MANUAL.md
 README.md
 t/01_basic.t
 t/020_config.t

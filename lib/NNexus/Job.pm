@@ -263,7 +263,7 @@ Shorthand for C<$job-E<gt>response-E<gt>{message}>
 
 =head1 SEE ALSO
 
-L<NNexus>, L<nnexus>, L<The NNexus Manual|https://github.com/dginev/nnexus/blob/master/MANUAL.md>
+L<NNexus>, L<nnexus>, L<NNexus::Manual>
 
 =head1 AUTHOR
 
