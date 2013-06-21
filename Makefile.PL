@@ -63,7 +63,7 @@ pure_all :: $(SNAPSHOT_FILE)
 
 # Always set version if version module template is newer
 $(SNAPSHOT_FILE): $(DUMP_FILE)
-	$(PERLRUN) -e "unlink shift" $(SNAPSHOT_FILE)
+	$(PERLRUN) -e '$$file = shift; unlink $$file; $$now = time; utime $$now, $$now, $$file;' $(SNAPSHOT_FILE)
 	$(PERLRUN) -MDBI -e 'my $(DBH) = DBI->connect( "dbi:SQLite:".shift ); open(IN,"<",shift); for (split(/;\n(?!END)/,join("",<IN>))) {$(DBH)->do($(IT));} close IN; $(DBH)->disconnect;' $(SNAPSHOT_FILE) $(DUMP_FILE)
 
 CompileSnapshot
