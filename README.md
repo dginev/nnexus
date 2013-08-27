@@ -1,3 +1,5 @@
+[![Build Status](https://secure.travis-ci.org/dginev/nnexus.png?branch=master)](http://travis-ci.org/dginev/nnexus)
+
 NNexus provides an API and an engine for auto-linking of mathematical concepts.
  It supports the subtasks of concept indexing, concept discovery and flexible annotation (e.g. linking).
  
