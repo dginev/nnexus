@@ -16,8 +16,7 @@ my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 my $date = $mday.'-'.($mon+1).'-'.(1900+$year);
 
 my $domain = ucfirst(lc(shift));
-#my $dbname = "wiki-$date.db";
-my $dbname = "$domain.db";
+my $dbname = "$domain-$date.db";
 #unlink $dbname if (-e $dbname);
 my $options = {
   "database" => {
@@ -32,7 +31,7 @@ my $options = {
 my $db = NNexus::DB->new(%{$options->{database}});
 
 # 2. Index all sites, showing intermediate progress
-my $index_job = NNexus::Job->new(function=>'index',verbosity=>1,
+my $index_job = NNexus::Job->new(function=>'indexentry',verbosity=>1,
 		   url=>'default',domain=>$domain,db=>$db,should_update=>0);
 $index_job->execute;
 my $response = $index_job->response;
