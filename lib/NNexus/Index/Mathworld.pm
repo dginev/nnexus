@@ -31,8 +31,7 @@ sub candidate_links {
   return [] unless $directory; # Only index the alphabetical indices
   my @next_jobs = $directory->find('a')->each;
   @next_jobs = map { $self->domain_base . $_ } grep {defined } map {$_->{href}} @next_jobs;
-  \@next_jobs;
-}
+  \@next_jobs; }
 
 sub index_page {
   my ($self) = @_;
@@ -41,7 +40,7 @@ sub index_page {
   return [] if $dom->find('#directory')->[0];
   # TODO: Support multiple MSC categories in the same page, not only [0]
   my $msc = $dom->find('meta[scheme="MSC_2000"]')->[0];
-  my $category = $msc->attrs('content') if $msc;
+  my $category = $msc->attr('content') if $msc;
   my $h1 = $dom->find('h1')->[0];
   my $name = $h1->all_text if $h1;
   $name ?

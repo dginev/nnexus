@@ -35,9 +35,8 @@ sub candidate_links {
   my @nav_links = $navigation ? $navigation->find('a')->each : ();
   @nav_links = grep {defined && /^\/articles\?section=All/} map {$_->{href}} @nav_links;
   my $candidates = [ map { $pm_base . $_ } (@nav_links, @encyclopedia_links ) ];
-  return $candidates
-}
-use Data::Dumper;
+  return $candidates; }
+
 sub index_page {
   my ($self) = @_;
   my $url = $self->current_url;
@@ -45,20 +44,20 @@ sub index_page {
   my $dom = $self->current_dom->xml(1);
   my $title = $dom->find('div[property="dct:title"]')->[0];
   return [] unless $title;
-  $title = $title->attrs('content');
+  $title = $title->attr('content');
   # Only concepts have titles, so return an empty harvest if undefined:
   # Also record defined concepts
   my $content_div = $dom->find('section[class="ltx_document"]')->[0];
   return [] unless $content_div;
   my @defined_concepts = $content_div->find('div[property="pm:defines"]')->each;
   my @categories = grep {length($_)>0} map {s/^msc\://; $_;}
-    map {$_->attrs('resource')} $content_div->find('div[class="ltx_rdf"][property="dct:subject"]')->each;
-  my @synonyms = map {$_->attrs('content')} $content_div->find('div[class="ltx_rdf"][property="pm:synonym"]')->each;
+    map {$_->attr('resource')} $content_div->find('div[class="ltx_rdf"][property="dct:subject"]')->each;
+  my @synonyms = map {$_->attr('content')} $content_div->find('div[class="ltx_rdf"][property="pm:synonym"]')->each;
 
   my @harvest;
   @categories = ('XX-XX') unless @categories;
   foreach my $defined(@defined_concepts) {
-    my $name = $defined->attrs('content');
+    my $name = $defined->attr('content');
     $name =~ s/^pmconcept\://;
     # TODO: No special chars
     # Wild chars in synonyms - people use TeX math syntax, e.g. ^, $, + ... should we LaTeXML-convert?
@@ -75,8 +74,7 @@ sub index_page {
 		  categories=>\@categories,
 		  synonyms=>\@synonyms
 		 };
-  return \@harvest;
-}
+  return \@harvest; }
 
 sub depth_limit {10000;} #We're just traversing down the list of pages, nothing dangerous here
 sub request_interval {0.5;}
