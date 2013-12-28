@@ -1,6 +1,8 @@
 bin/nnexus
 COPYING
 INSTALL.md
+pod/Cookbook.pod
+pod/Manual.pod
 lib/NNexus.pm
 lib/NNexus/Annotate.pm
 lib/NNexus/Classification.pm
@@ -16,8 +18,6 @@ lib/NNexus/Index/Template.pm
 lib/NNexus/Index/Wikipedia.pm
 lib/NNexus/Job.pm
 lib/NNexus/Morphology.pm
-lib/NNexus/Cookbook.pm
-lib/NNexus/Manual.pm
 lib/NNexus/resources/database/schema.sqlite
 lib/NNexus/resources/database/snapshot-5-2013.sqlite
 lib/NNexus/resources/README.txt

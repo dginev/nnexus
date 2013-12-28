@@ -14,11 +14,11 @@ perl -MNNexus -e 'print linkentry(join("",<>))' < example.html > linked_example.
 
 ... or read the rest of this README for installation instructions and further use cases.
 
-The [Manual](MANUAL.md) draft contains a **technical overview** of the NNexus system.
+The [Manual](pod/Manual.pod) draft contains a **technical overview** of the NNexus system.
 
 For **installation and deployment**, consult [the INSTALL file](INSTALL.md).
 
-## Connecting from a client
+## Using NNexus as a Web Service
 
 These two lines of PHP illustrate how NNexus can be used via [Planetary](https://github.com/KWARC/planetary)'s curl:
 ```php
@@ -41,16 +41,18 @@ An auto-linking example:
 **TIP:** The above JSON parameters are the defaults, so simply sending a HTTP POST request with the body field to
 ```localhost:3000/linkentry``` would yield the same result.
 
-The NNexus legacy API is being redesigned at the moment, into a simple pair of indexing and linking workflows.
-**TODO:** Describe the new API when finalized.
+The NNexus legacy API has been redesigned, into a simple pair of indexing and linking workflows,
+ detailed in the "Indexing Framework" and "Annotation Schemes" chapters in the [Manual](pod/Manual.pod).
 
 # Status
 
 This is a fork and rewrite of the original NNexus code by James Gardner (pebbler@gmail.com).
-The current refactoring is pre-alpha and is under active development. Watch this space for frequent updates.
+The current refactoring is in **early beta** and is under active development. Watch this space for frequent updates.
 
-The scheduled release for the "NNexus Reloaded" milestone is June 2013.
-The release will target introducing a new CPAN library and production deployment at [PlanetMath.org](http://www.planetmath.org)
+The next scheduled release for the "NNexus 2.3" milestone is January 2014.
+NNexus is already registered as a CPAN library and is used in production at [PlanetMath.org](http://www.planetmath.org)
+
+The current development emphasis falls on improving linking accuracy as well as maintenance patches.
 
 # Contact
 
