@@ -42,7 +42,7 @@ An auto-linking example:
 ```localhost:3000/linkentry``` would yield the same result.
 
 The NNexus legacy API has been redesigned, into a simple pair of indexing and linking workflows,
- detailed in the "Indexing Framework" and "Annotation Schemes" chapters in the [Manual](pod/Manual.pod).
+ detailed in the "[Indexing Framework](pod/Manual.pod#indexing-framework)" and "[Annotation Schemes](pod/Manual.pod#annotation-schemes)" chapters in the manual.
 
 # Status
 
