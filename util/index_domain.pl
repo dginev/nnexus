@@ -16,7 +16,7 @@ my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
 my $date = $mday.'-'.($mon+1).'-'.(1900+$year);
 
 my $domain = ucfirst(lc(shift));
-my $dbname = "$domain-$date.db";
+my $dbname = "$domain.db";
 #unlink $dbname if (-e $dbname);
 my $options = {
   "database" => {
