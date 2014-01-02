@@ -83,7 +83,8 @@ Crystallography Acceleration Linkages Mechanisms Robot_kinematics African_Pygmie
 People_with_gigantism Growth_disorders Growth_hormones Density Compositions_for_piano_left-hand_and_orchestra
 Transformation_in_fiction Bermuda_Triangle Fictional_shapeshifters Metamorphoses_in_Greek_mythology 
 Wave_power Wave_farms Celestial_coordinate_system Dimers_(chemistry) Fictional_cubes Graph_databases Hemispheres
-Majority Monte_Carlo_software Natural_phenol_dimers Resource_Description_Framework
+Majority Monte_Carlo_software Natural_phenol_dimers Resource_Description_Framework Fictional_family_trees Family_trees
+Bible_genealogy
 )};
 
 # EN.Wikipedia.org indexing template
