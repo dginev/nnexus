@@ -67,15 +67,14 @@ sub index_step {
     # 1.1. If not present, add it:
     $objectid = $db->add_object_by(url=>$url,domain=>$domain);
   } else {
-    # 1.2. Otherwise, skip if we don't want to update and leaf
-    if ((!$self->{should_update}) && $template->leaf_test($url)) {
-      # Skip leaves, when we don't want to update!
-      print STDERR "Skipping over $url\n";
-      my $indexed_concepts = $template->index_step(skip=>1);
-      return []; }
-    # 1.3. Otherwise, grab all concepts defined by the object.
+    # 1.2. If already indexed, grab all concepts defined by the object.
     $old_concepts = $db->select_concepts_by(objectid=>$objectid);
-  }
+    # 1.3. Skip if we don't want to update and the URL is a leaf with some already known concepts
+    if ((!$self->{should_update}) && $template->leaf_test($url) && scalar(@$old_concepts)) {
+        # Skip leaves, when we don't want to update!
+        print STDERR "Skipping over $url\n";
+        my $indexed_concepts = $template->index_step(skip=>1);
+        return []; } }
   # 2. Relay the indexing request to the template, gather concepts
   my $indexed_concepts = $template->index_step(%options);
   return unless defined $indexed_concepts; # Last step.
