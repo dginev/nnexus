@@ -1,6 +1,7 @@
 blib/
 .build/
 _build/
+_Inline/
 cover_db/
 inc/
 Build
