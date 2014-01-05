@@ -6,8 +6,8 @@ use warnings;
 use strict;
 use NNexus::DB;
 
-# ON CHANGE: Update $stamp in the Perl packages as well (NNexus.pm and bin/nnexus)
-my $stamp = "4-2013";
+# ON CHANGE: Update $stamp in Makefile.PL
+my $stamp = "1-2014";
 my $snapshot_name = "index-snapshot-$stamp.db";
 unlink($snapshot_name) if -e $snapshot_name;
 my $snapshotdb = NNexus::DB->new("dbms" => "SQLite",
