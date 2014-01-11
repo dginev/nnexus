@@ -50,8 +50,8 @@ sub index_page {
   # Nothing to do in category pages
   return [] if ((! $self->leaf_test($url)) || ($url =~ /All\+Pages$/));
   my $dom = $self->current_dom;
-  
-  my ($concept) = map {lc($_)} $dom->find('h1')->text->each;
+  my $h1 = $dom->find('h1')->[0];
+  my $concept = $h1 && lc($h1->text);
   my $categories = $self->current_categories || ['XX-XX'];
 
   return [{ url => $url,
