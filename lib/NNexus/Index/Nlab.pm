@@ -18,6 +18,7 @@ package NNexus::Index::Nlab;
 use warnings;
 use strict;
 use base qw(NNexus::Index::Template);
+use List::MoreUtils qw(uniq);
 
 # 1. We want to start from the All Pages entry point, containing the list of all categories
 sub domain_root { "http://ncatlab.org/nlab/show/All+Pages"; }
@@ -32,13 +33,13 @@ sub candidate_links {
   if ($url =~ /$category_test/ ) {
     my $dom = $self->current_dom;
     my @anchors = map {$_->find('a')->each} $dom->find('li[class="page"]')->each;
-    my @concept_pages = map {$nlab_base . $_} grep {defined} map {$_->{'href'}} @anchors;
+    my @concept_pages = uniq(map {$nlab_base . $_} grep {defined} map {$_->{'href'}} @anchors);
     return \@concept_pages; }
   elsif ($url =~ /All\+Pages$/) {
     # First page, collect all categories:
     my $dom = $self->current_dom;
     my @anchors = $dom->find('ul')->[0]->find('a')->each;
-    my @category_pages = map {$nlab_base . $_} grep {defined} map {$_->{'href'}} @anchors;
+    my @category_pages = uniq(map {$nlab_base . $_} grep {defined} map {$_->{'href'}} @anchors);
     return \@category_pages; }
   else {return [];} # skip leaves
 }
