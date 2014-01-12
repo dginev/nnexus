@@ -19,8 +19,7 @@ my @databases = map {NNexus::DB->new("dbms" => "SQLite",
     "dbname" => "$_.db",
     "dbuser" => "nnexus",
     "dbpass" => "nnexus",
-    "dbhost" => "localhost");} qw/Planetmath Mathworld Wikipedia Dlmf/;
-
+    "dbhost" => "localhost");} qw/Planetmath Mathworld Wikipedia Dlmf Nlab Encyclopediaofmath/;
 # Move individual snapshots into a common snapshot database.
 $snapshotdb->safe->begin_work;
 foreach my $db(@databases) {
