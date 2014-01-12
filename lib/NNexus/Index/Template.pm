@@ -20,6 +20,7 @@ use strict;
 
 use Mojo::DOM;
 use Mojo::UserAgent;
+use Mojo::UserAgent::CookieJar;
 use Time::HiRes qw(sleep);
 use NNexus::Morphology qw(canonicalize_url);
 
@@ -27,6 +28,8 @@ use NNexus::Morphology qw(canonicalize_url);
 sub new {
   my ($class,%options) = @_;
   my $ua = Mojo::UserAgent->new;
+  $ua->max_redirects(2)->connect_timeout(10)->request_timeout(20);
+  $ua->cookie_jar(Mojo::UserAgent::CookieJar->new);
   my $visited = $options{visited}||{};
   my $queue = $options{queue}||[];
 
