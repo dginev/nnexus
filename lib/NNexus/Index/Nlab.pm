@@ -19,6 +19,7 @@ use warnings;
 use strict;
 use base qw(NNexus::Index::Template);
 use List::MoreUtils qw(uniq);
+use URI::Escape;
 
 # 1. We want to start from the All Pages entry point, containing the list of all categories
 sub domain_root { "http://ncatlab.org/nlab/show/All+Pages"; }
@@ -33,13 +34,13 @@ sub candidate_links {
   if ($url =~ /$category_test/ ) {
     my $dom = $self->current_dom;
     my @anchors = map {$_->find('a')->each} $dom->find('li[class="page"]')->each;
-    my @concept_pages = uniq(map {$nlab_base . $_} grep {defined} map {$_->{'href'}} @anchors);
+    my @concept_pages = uniq(map {$nlab_base . uri_unescape($_)} grep {defined} map {$_->{'href'}} @anchors);
     return \@concept_pages; }
   elsif ($url =~ /All\+Pages$/) {
     # First page, collect all categories:
     my $dom = $self->current_dom;
     my @anchors = $dom->find('ul')->[0]->find('a')->each;
-    my @category_pages = uniq(map {$nlab_base . $_} grep {defined} map {$_->{'href'}} @anchors);
+    my @category_pages = uniq(map {$nlab_base . uri_unescape($_)} grep {defined} map {$_->{'href'}} @anchors);
     return \@category_pages; }
   else {return [];} # skip leaves
 }
@@ -47,7 +48,7 @@ sub candidate_links {
 # Index a concept page, ignore category pages
 sub index_page { 
   my ($self) = @_;
-  my $url = $self->current_url;
+  my $url = uri_unescape($self->current_url);
   # Nothing to do in category pages
   return [] if ((! $self->leaf_test($url)) || ($url =~ /All\+Pages$/));
   my $dom = $self->current_dom;
@@ -62,11 +63,11 @@ sub index_page {
    }]; }
 
 sub candidate_categories {
-	my ($self) = @_;
-	if ($self->current_url =~ /$category_test/ ) {
+  my ($self) = @_;
+  if ($self->current_url =~ /$category_test/ ) {
     my $category_name = $1;
     $category_name =~ s/\+/ /g;
-		return [$category_name]; }
+    return [$category_name]; }
   else {
 		return $self->current_categories; }}
 

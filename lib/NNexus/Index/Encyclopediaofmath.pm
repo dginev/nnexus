@@ -19,6 +19,8 @@ use warnings;
 use strict;
 use base qw(NNexus::Index::Template);
 use List::MoreUtils qw(uniq);
+use URI::Escape;
+
 # 1. We want to start from the All Pages entry point, containing the list of all categories
 sub domain_root { "http://www.encyclopediaofmath.org/index.php/Special:AllPages"; }
 our $eom_base = 'http://www.encyclopediaofmath.org';
@@ -43,13 +45,13 @@ sub candidate_links {
     my @category_pages=();
     if ($category_table) {
       my @anchors = $category_table->find('a')->each;
-      @category_pages = uniq(map {$eom_base . $_} grep {defined} map {$_->{'href'}} @anchors); }
+      @category_pages = uniq(map {$eom_base . uri_unescape($_)} grep {defined} map {$_->{'href'}} @anchors); }
     return \@category_pages; }
   elsif ($url =~ /Special\:AllPages$/) {
     # First page, collect all categories:
     my $dom = $self->current_dom;
     my @anchors = $dom->find('table[class="allpageslist"]')->[0]->find('a')->each;
-    my @category_pages = uniq(map {$eom_base . $_} grep {defined} map {$_->{'href'}} @anchors);
+    my @category_pages = uniq(map {$eom_base . uri_unescape($_)} grep {defined} map {$_->{'href'}} @anchors);
     return \@category_pages; }
   else {return [];} # skip leaves
 }
@@ -68,7 +70,7 @@ sub index_page {
     my @anchors = $concept_table->find('a')->each;
     @concepts = map {
       { 
-        url => $eom_base . $_->{'href'},
+        url => $eom_base . uri_unescape($_->{'href'}),
         concept => $_->{'title'},
         categories => ['XX-XX']
       }}
