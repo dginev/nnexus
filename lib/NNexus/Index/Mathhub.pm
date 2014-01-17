@@ -44,7 +44,7 @@ sub index_page {
   # Nothing to do in top page
   return [] if $url =~ /smglom\/source$/;
   my $dom = $self->current_dom;
-  my @spans = grep {$_->{'jobad:href'}} $dom->find('p[class="ltx_p"] span')->each;
+  my @spans = grep {$_->{'jobad:href'}} $dom->find('p[class="ltx_p"] u > i > span')->each;
   my @concepts = map {
     {
       url => $url,
@@ -56,6 +56,8 @@ sub index_page {
   return \@concepts; }
 
 1;
+
+sub request_interval { 0.2; }
 
 __END__
 
