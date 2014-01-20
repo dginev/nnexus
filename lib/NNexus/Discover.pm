@@ -92,7 +92,9 @@ sub mine_candidates {
   }
   # Keep a cache of first words, that will simultaneously act as a blacklist.
   # TODO: Incorporate the single words from  'nolink'
-  $options{first_word_cache} = { %$first_word_cache_template }; # Default are stopwords
+  # Experiment: Use a global first_word cache
+  $options{first_word_cache} = $first_word_cache_template; # Default are stopwords, keep a global cache
+  # $options{first_word_cache} = { %$first_word_cache_template }; # Default are stopwords
   # Always return an embedded annotation with links, as well as a stand-off mined_canidates hash, containing the individual concepts with pointers.
   my $time;
   if ($options{verbosity}) {

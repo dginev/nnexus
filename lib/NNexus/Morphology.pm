@@ -144,15 +144,20 @@ sub undetermine_word {
 
 # IV. Admissible concept words and high-level api
 sub admissible_name {$_[0]=~/^$concept_phrase_rex$/; }
+our %normalized_words = ();
 sub normalize_word {
   my ($concept)=@_;
-  return depluralize_word(
-          get_nonpossessive(
-            undetermine_word(
-              lc(
-                unidecode(
-                  $concept
-         )))));  }
+  my $normalized_concept = $normalized_words{$concept};
+  return $normalized_concept if $normalized_concept;
+  $normalized_concept=
+    depluralize_word(
+      get_nonpossessive(
+        undetermine_word(
+          lc(
+            unidecode(
+              $concept)))));
+  $normalized_words{$concept} = $normalized_concept;
+  return $normalized_concept; }
 
 sub firstword_split {
   my ($concept)=@_;
