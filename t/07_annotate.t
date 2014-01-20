@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More tests => 4;
 use NNexus::Annotate qw(serialize_concepts);
 use Mojo::JSON;
 my $json  = Mojo::JSON->new;
@@ -141,25 +141,10 @@ my $standoff_json = [{
 	}];
 
 is_deeply(
-	$json->decode(
 		serialize_concepts(
 			domain=>"all",
 			embed=>0,
 			annotation=>"json",
-			concepts=>$html_concepts)),
+			concepts=>$html_concepts),
 	$standoff_json,
 	'Stand-off JSON annotation');
-
-use Data::Dumper;
-$Data::Dumper::Sortkeys =1;
-# We use Data Dumper's Sortkeys to neutralize the Perl 5.18 hash key randomness
-# TODO: Is this in any way needed/important/useful ?
-is_deeply(
-	serialize_concepts(
-		domain=>"all",
-		embed=>0,
-		annotation=>"perl",
-		concepts=>$html_concepts),
-	Dumper($html_concepts),
-	'Stand-off Perl annotation');
-

@@ -23,7 +23,6 @@ our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(serialize_concepts);
 
 use feature 'switch';
-use Mojo::JSON 'j';
 use List::MoreUtils;
 use Data::Dumper;
 $Data::Dumper::Sortkeys =1;
@@ -106,12 +105,12 @@ sub serialize_concepts {
   } else {
     # stand-off case:
     given ($annotation) {
-      when ('json') { return j($concepts); }
-      when ('perl') { return Dumper($concepts); }
+      when ('json') { return $concepts; }
+      # when ('perl') { return Dumper($concepts); } #TODO: Why is this relevant? Testing?
       # TODO: Think of Markdown annotations
       # TODO: Stand-off HTML links
       # TODO: Embedded JSON and RDFa
-      default { return j($concepts); }
+      default { return $concepts; }
     };
   }
 }

@@ -37,8 +37,8 @@ my $job = NNexus::Job->new('format' => 'text', 'function' => 'linkentry',
   ,db=>$db,annotation=>'perl',embed=>0);
 $job->execute;
 is_deeply($job->response,
-	{status=>'OK',payload=>Dumper([{"link"=>"http://planetmath.org/banachalgebra","offset_begin"=>69,"scheme"=>"msc","objectid"=>1,
-  "firstword"=>"banach","conceptid"=>1,"domain"=>"Planetmath","offset_end"=>85,"category"=>"46H05","concept"=>"banach algebra"}]),
+	{status=>'OK',payload=>[{"link"=>"http://planetmath.org/banachalgebra","offset_begin"=>69,"scheme"=>"msc","objectid"=>1,
+  "firstword"=>"banach","conceptid"=>1,"domain"=>"Planetmath","offset_end"=>85,"category"=>"46H05","concept"=>"banach algebra"}],
   message=>'No obvious problems.'},
 	'Basic Perl auto-link, ok.');
 # 2. Basic text input, embed links
