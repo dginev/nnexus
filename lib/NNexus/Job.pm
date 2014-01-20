@@ -75,6 +75,7 @@ sub _link_entry {
   my $concepts_refined = NNexus::Classification::disambiguate(
     $concepts_mined,
     text_length=>$text_length,
+    include_all=>$self->{include_all},
     verbosity=>$self->{verbosity});
   # III. Annotation
   $self->{annotation} //= 'html';

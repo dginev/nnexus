@@ -132,6 +132,8 @@ sub disambiguate {
   my %category_view = ();
   #print STDERR "\n Text length: ",($options{text_length}||0),"\n";
   # Algorithm:
+  if ($options{include_all}) {
+    return $candidates; }
   # 0. Dropping anything uncategorized:
   @$candidates = grep {$_->{scheme} eq 'msc'} @$candidates; # TODO: Map everything into MSC!
   @$candidates = grep {$_->{category} !~ /^XX/} @$candidates; # TODO: Can we do something with uncategorized concepts?
