@@ -33,6 +33,7 @@ sub candidate_links {
     my $dom = $self->current_dom;
     my @anchors = $dom->find('h2 > a')->each;
     my @category_pages = map {$mathhub_base . uri_unescape($_)} uniq(sort(grep {defined} map {$_->{'href'}} @anchors));
+    @category_pages = grep {/\.en\.tex$/} @category_pages; # Only English pages
     return \@category_pages; }
   else {return [];} # skip leaves
 }
@@ -41,8 +42,8 @@ sub candidate_links {
 sub index_page { 
   my ($self) = @_;
   my $url = uri_unescape($self->current_url);
-  # Nothing to do in top page
-  return [] if $url =~ /smglom\/source$/;
+  # Nothing to do in top page, or non-English pages
+  return [] if (($url =~ /smglom\/source$/) || ($url !~ /\.en\.tex$/));
   my $dom = $self->current_dom;
   my @spans = grep {$_->{'jobad:href'}} $dom->find('p[class="ltx_p"] u > i > span')->each;
   my %mmt_url = map {$_->text => $_->{'jobad:href'}} @spans;
