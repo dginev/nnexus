@@ -45,9 +45,10 @@ sub index_page {
   return [] if $url =~ /smglom\/source$/;
   my $dom = $self->current_dom;
   my @spans = grep {$_->{'jobad:href'}} $dom->find('p[class="ltx_p"] u > i > span')->each;
+  my %mmt_url = map {$_->text => $_->{'jobad:href'}} @spans;
   my @concepts = map {
     {
-      url => $url,
+      url => $mmt_url{$_},
       concept => $_,
       scheme => 'MSC',
       categories => ['XX-XX'], # No categorization available for now
