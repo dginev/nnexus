@@ -22,7 +22,7 @@ For **installation and deployment**, consult [the INSTALL file](INSTALL.md).
 
 These two lines of PHP illustrate how NNexus can be used via [Planetary](https://github.com/KWARC/planetary)'s curl:
 ```php
-  $data = 'function=linkentry&body=' . urlencode($text) . '&format='.$format.'&domain=Planetmath';
+  $data = 'body=' . urlencode($text) . '&format='.$format.'&domain=Planetmath';
   $content = planetary_webglue_do_post('http://127.0.0.1:3000/linkentry',$data);
 ```
 ## NNexus API
@@ -47,7 +47,7 @@ The NNexus legacy API has been redesigned, into a simple pair of indexing and li
 # Status
 
 This is a fork and rewrite of the original NNexus code by James Gardner (pebbler@gmail.com).
-The current refactoring is in **early beta** and is under active development. Watch this space for frequent updates.
+The current refactoring is in **beta** and is under active development. Watch this space for frequent updates.
 
 The next scheduled release for the "NNexus 2.3" milestone is January 2014.
 NNexus is already registered as a CPAN library and is used in production at [PlanetMath.org](http://www.planetmath.org)
