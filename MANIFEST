@@ -1,8 +1,6 @@
 bin/nnexus
 COPYING
 INSTALL.md
-pod/Cookbook.pod
-pod/Manual.pod
 lib/NNexus.pm
 lib/NNexus/Annotate.pm
 lib/NNexus/Classification.pm
@@ -12,7 +10,10 @@ lib/NNexus/DB/API.pm
 lib/NNexus/Discover.pm
 lib/NNexus/Index/Dispatcher.pm
 lib/NNexus/Index/Dlmf.pm
+lib/NNexus/Index/Encyclopediaofmath.pm
+lib/NNexus/Index/Mathhub.pm
 lib/NNexus/Index/Mathworld.pm
+lib/NNexus/Index/Nlab.pm
 lib/NNexus/Index/Planetmath.pm
 lib/NNexus/Index/Template.pm
 lib/NNexus/Index/Wikipedia.pm
@@ -25,6 +26,8 @@ lib/NNexus/StopWordList.pm
 LICENSE
 Makefile.PL
 MANIFEST			This list of files
+pod/Cookbook.pod
+pod/Manual.pod
 README.md
 t/01_basic.t
 t/020_config.t
