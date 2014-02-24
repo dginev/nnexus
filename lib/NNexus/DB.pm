@@ -84,16 +84,19 @@ sub done {
 sub disconnect { done(@_); } # Synonym for done
 sub do {
   my ($self,@args) = @_;
-  $self->safe->do(@args);
-}
+  $self->safe->do(@args); }
 sub execute {
   my ($self,@args) = @_;
-  $self->safe->execute(@args);
-}
+  $self->safe->execute(@args); }
 sub ping {
   my ($self,@args) = @_;
-  $self->safe->ping(@args);
-}
+  $self->safe->ping(@args); }
+sub selectrow_array {
+  my ($self,@args) = @_;
+  $self->safe->selectrow_array(@args); }
+sub selectall_arrayref {
+  my ($self,@args) = @_;
+  $self->safe->selectall_arrayref(@args); }
 
 sub prepare {
   # Performs an SQL statement prepare and returns, maintaining a cache of already
