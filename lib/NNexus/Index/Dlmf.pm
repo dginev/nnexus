@@ -45,7 +45,7 @@ sub index_page {
     my $def_spans = $dom->find('div > ul > li > span > span[class="ltx_text ltx_font_bold"]');
     @def_links = map {s/^(\.\.\/)?\.\///; $self->domain_base . $_; } map {$_->{href}} $def_spans->pluck('a')->each;
     @def_names = map {
-        my $t = $_->children->first->content_xml;
+        my $t = $_->children->first->content;
        $t =~ s/\(.+\)//g;
        $t =~ s/\:(.*)$//;
        $t;}
@@ -53,7 +53,7 @@ sub index_page {
   } elsif ($url =~ /\/not/) {
     my $def_anchors = $dom->find('a[class="ltx_ref"]');
     @def_links = map {s/^(.+)\.\///; $self->domain_base . $_; } map {$_->{href}} $def_anchors->each;
-    @def_names = $def_anchors->pluck('parent')->pluck('content_xml')->each;
+    @def_names = $def_anchors->pluck('parent')->pluck('content')->each;
     @def_names = map {my ($name) = split(';',$_); $name;} @def_names;
     # DLMF Notation page
   } else {
