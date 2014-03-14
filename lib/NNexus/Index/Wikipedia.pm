@@ -89,7 +89,7 @@ Bible_genealogy
 
 # EN.Wikipedia.org indexing template
 # 1. We want to start from the top-level math category
-sub domain_root { "http://en.wikipedia.org/wiki/Category:Mathematical_concepts"; }
+sub domain_root { "http://en.wikipedia.org/wiki/Category:Mathematics"; }
 our $category_test = qr/\/wiki\/Category:(.+)$/;
 our $english_category_test = qr/^\/wiki\/Category:/;
 our $english_concept_test = qr/^\/wiki\/[^\/\:]+$/;
@@ -104,10 +104,10 @@ sub candidate_links {
     return [] if $wiki_category_blacklist->{$category_name};
     my $dom = $self->current_dom;
     my $subcategories = $dom->find('#mw-subcategories')->[0];
-    return [] unless defined $subcategories;
-    my @category_links = $subcategories->find('a')->each;
-    @category_links = grep {defined && /$english_category_test/} map {$_->{href}} @category_links;
-
+    my @category_links = ();
+    if( defined $subcategories ) {
+      @category_links = $subcategories->find('a')->each;
+      @category_links = grep {defined && /$english_category_test/} map {$_->{href}} @category_links; }
     # Also add terminal links:
     my $concepts = $dom->find('#mw-pages')->[0];
     my @concept_links = $concepts->find('a')->each if defined $concepts;
@@ -152,7 +152,7 @@ sub candidate_categories {
 }
 
 # The subcategories trail into unrelated topics after the 4th level...
-sub depth_limit {10;} # But let's bite the bullet and manually strip away the ones that are pointless
+sub depth_limit {20;} # But let's bite the bullet and manually strip away the ones that are pointless
 sub leaf_test { $_[1] !~ /$category_test/ }
 # Utility:
 # Right trim function to remove trailing whitespace
