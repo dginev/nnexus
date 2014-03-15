@@ -1,5 +1,11 @@
 [![Build Status](https://secure.travis-ci.org/dginev/nnexus.png?branch=master)](http://travis-ci.org/dginev/nnexus)
 
+* * *
+**[NEW!]** NNexus is now published on [CPAN](https://metacpan.org/release/NNexus) and is easier to install than ever.
+
+Just execute ```cpan NNexus``` (or ```cpanm``` if you're a cpanminus lover) to obtain the full distribution.
+* * *
+
 NNexus provides an API and an engine for auto-linking of mathematical concepts.
  It supports the subtasks of concept indexing, concept discovery and flexible annotation (e.g. linking).
  
