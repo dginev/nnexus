@@ -17,7 +17,7 @@
 package NNexus::Job;
 use strict;
 use warnings;
-use feature qw(say switch);
+use feature qw(say);
 
 use Mojo::DOM;
 use NNexus::Discover qw(mine_candidates);
@@ -30,30 +30,27 @@ sub new {
   $opts{format} = lc($opts{format}||'html');
   $opts{result} = {};
   $opts{url} = canonicalize_url($opts{url}) if $opts{url};
-  bless \%opts, $class;
-}
+  bless \%opts, $class; }
 
 sub execute {
   my ($self) = @_;
-  given ($self->{function}) {
-    when('linkentry') {$self->_link_entry;}
-    when('indexentry') {$self->_index_entry;}
-    default {$self->_fail_with("Invalid action, aborting!"); }
-  }
-}
+  my $function = $self->{function};
+  if ($function eq 'linkentry') {$self->_link_entry;}
+  elsif ($function eq 'indexentry') {$self->_index_entry;}
+  else {$self->_fail_with("Invalid action, aborting!"); } }
 
 sub _fail_with {
   my ($self,$message)=@_;
   # TODO: Spec this out, maybe similar to LaTeXML?
   my $result = {payload=>q{},message=>$message,status=>'Failed!'};
-  $self->{result} = $result;
-}
+  $self->{result} = $result; }
+
 sub _ok_with {
   my ($self,$payload,$message)=@_;
   # TODO: Spec this out, maybe similar to LaTeXML?
   my $result = {payload=>$payload,message=>$message,status=>'OK'};
-  $self->{result} = $result;
-}
+  $self->{result} = $result; }
+
 sub response { $_[0]->{result};}
 sub result { $_[0]->{result}->{payload}; }
 sub message { $_[0]->{result}->{message}; }
@@ -89,8 +86,7 @@ sub _link_entry {
       domain=>$self->{domain},
       verbosity=>$self->{verbosity});
   $self->{result}={payload=>$serialized_result,message=>'No obvious problems.', status=>'OK'};
-  $serialized_result;
-}
+  $serialized_result; }
 
 sub _index_entry {
   my ($self)=@_;
@@ -109,8 +105,7 @@ sub _index_entry {
   while (my $payload = $dispatcher->index_step) {
     push @invalidation_suggestions, @{$payload}; }
   my $report_url = ($url ne 'default') ? "http://$url" : 'the default domain root';
-  $self->_ok_with(\@invalidation_suggestions,"IndexConcepts succeeded in domain $domain, on $report_url");
-}
+  $self->_ok_with(\@invalidation_suggestions,"IndexConcepts succeeded in domain $domain, on $report_url"); }
 
 1;
 

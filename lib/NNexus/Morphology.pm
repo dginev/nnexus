@@ -20,7 +20,6 @@ package NNexus::Morphology;
 ###########################################################################
 use strict;
 use warnings;
-use feature qw(switch);
 
 use Exporter;
 our @ISA = qw(Exporter);
@@ -67,73 +66,67 @@ sub get_possessive {
 sub is_plural { $_[0] ne depluralize_phrase($_[0]); }
 
 sub pluralize {
-  given ($_[0]) {
     # "root of unity" pluralizes as "roots of unity" for example
-    when (/($concept_word_rex)(\s+(of|by)\s+.+)/)	{ return pluralize($1).$2; }
+    if ($_[0] =~ /($concept_word_rex)(\s+(of|by)\s+.+)/)	{ return pluralize($1).$2; }
     # normal pluralization
-    when (/(.+ri)x$/) {	return "$1ces"; }
-    when (/(.+t)ex$/) { return "$1ices"; }
-    when(/(.+[aeiuo])x$/) { return "$1xes";	}
-    when(/(.+[^aeiou])y$/) { return "$1ies"; }
-    when(/(.+)ee$/) { return "$1ees"; }
-    when(/(.+)us$/) { return "$1i"; }
-    when(/(.+)ch$/) { return "$1ches"; }
-    when(/(.+)ss$/) { return "$1sses"; }
-    default { return $_[0].'s'; } } }
+    elsif($_[0] =~ /(.+ri)x$/) {	return "$1ces"; }
+    elsif($_[0] =~ /(.+t)ex$/) { return "$1ices"; }
+    elsif($_[0] =~ /(.+[aeiuo])x$/) { return "$1xes";	}
+    elsif($_[0] =~ /(.+[^aeiou])y$/) { return "$1ies"; }
+    elsif($_[0] =~ /(.+)ee$/) { return "$1ees"; }
+    elsif($_[0] =~ /(.+)us$/) { return "$1i"; }
+    elsif($_[0] =~ /(.+)ch$/) { return "$1ches"; }
+    elsif($_[0] =~ /(.+)ss$/) { return "$1sses"; }
+    else { return $_[0].'s'; } }
 
 # singularize a phrase... remove root and replace
 sub depluralize_phrase {
-  given ($_[0]) {
     # "spaces of functions" depluralizes as "space of functions" for example.
     # also "proofs by induction"
-    when (/(^\w[\w\s]+\w)(\s+(of|by)\s+.+)$/) {
+    if ($_[0] =~ /(^\w[\w\s]+\w)(\s+(of|by)\s+.+)$/) {
       my ($l,$r) = ($1,$2);
-      return depluralize_phrase($l).$r;
-    }
-    when(/(.+ri)ces$/) { return "$1x"; }
-    when(/(.+t)ices$/) { return "$1ex";	}
-    when(/(.+[aeiuo]x)es$/) { return $1; }
-    when(/(.+)ies$/) { return "$1y"; }
-    when(/(.+)ees$/) { return "$1ee"; }
-    when(/(.+)ches$/) {	return "$1ch"; }
-    when(/(.+o)ci$/) { return "$1cus"; }
-    when(/(.+)sses$/) {	return "$1ss"; }
-    when(/(.+ie)s$/) { return $1;	}
-    when(/(.+[^eiuos])s$/) { return $1; }
-    when(/(.+[^aeio])es$/) { return "$1e"; }
-    default { return $_[0]; } } }
+      return depluralize_phrase($l).$r; }
+    elsif($_[0] =~ /(.+ri)ces$/) { return "$1x"; }
+    elsif($_[0] =~ /(.+t)ices$/) { return "$1ex";	}
+    elsif($_[0] =~ /(.+[aeiuo]x)es$/) { return $1; }
+    elsif($_[0] =~ /(.+)ies$/) { return "$1y"; }
+    elsif($_[0] =~ /(.+)ees$/) { return "$1ee"; }
+    elsif($_[0] =~ /(.+)ches$/) {	return "$1ch"; }
+    elsif($_[0] =~ /(.+o)ci$/) { return "$1cus"; }
+    elsif($_[0] =~ /(.+)sses$/) {	return "$1ss"; }
+    elsif($_[0] =~ /(.+ie)s$/) { return $1;	}
+    elsif($_[0] =~ /(.+[^eiuos])s$/) { return $1; }
+    elsif($_[0] =~ /(.+[^aeio])es$/) { return "$1e"; }
+    else { return $_[0]; } }
 
 sub depluralize_word {
-  given ($_[0]) {
-    when(! /oci|s$/) { return $_[0]; }
-    when(/(.+ri)ces$/) { return "$1x"; }
-    when(/(.+t)ices$/) { return "$1ex";	}
-    when(/(.+[aeiuo]x)es$/) { return $1; }
-    when(/(.+)ies$/) { return "$1y"; }
-    when(/(.+)ees$/) { return "$1ee"; }
-    when(/(.+)ches$/) {	return "$1ch"; }
-    when(/(.+)sses$/) {	return "$1ss"; }
-    when(/(.+ie)s$/) { return $1;	}
-    when(/(.+[^eiuos])s$/) { return $1; }
-    when(/(.+[^aeio])es$/) { return "$1e"; }
-    when(/(.+o)ci$/) { return "$1cus"; }
-    default { return $_[0]; } }}
+    if($_[0] !~  /oci|s$/) { return $_[0]; }
+    elsif($_[0] =~ /(.+ri)ces$/) { return "$1x"; }
+    elsif($_[0] =~ /(.+t)ices$/) { return "$1ex";	}
+    elsif($_[0] =~ /(.+[aeiuo]x)es$/) { return $1; }
+    elsif($_[0] =~ /(.+)ies$/) { return "$1y"; }
+    elsif($_[0] =~ /(.+)ees$/) { return "$1ee"; }
+    elsif($_[0] =~ /(.+)ches$/) {	return "$1ch"; }
+    elsif($_[0] =~ /(.+)sses$/) {	return "$1ss"; }
+    elsif($_[0] =~ /(.+ie)s$/) { return $1;	}
+    elsif($_[0] =~ /(.+[^eiuos])s$/) { return $1; }
+    elsif($_[0] =~ /(.+[^aeio])es$/) { return "$1e"; }
+    elsif($_[0] =~ /(.+o)ci$/) { return "$1cus"; }
+    else { return $_[0]; } }
 
 # III. Stemming
 
 # get the non-plural root for a word
 sub root {
-  given ($_[0]) {
-    when(/(.+ri)ces$/) { return $1; }
-    when(/(.+[aeiuo]x)es$/) { return $1; }
-    when(/(.+)ies$/) { return $1;	}
-    when(/(.+)ches$/) {	return "$1ch"; }
-    when(/(.+o)ci$/) { return "$1c"; }
-    when(/(.+)sses$/) {	return "$1ss"; }
-    when(/(.+[^eiuos])s$/) { return $1;	}
-    when(/(.+[^aeio])es$/) { return "$1e"; }
-    default { return $_[0]; }
-  } }
+    if($_[0] =~ /(.+ri)ces$/) { return $1; }
+    elsif($_[0] =~ /(.+[aeiuo]x)es$/) { return $1; }
+    elsif($_[0] =~ /(.+)ies$/) { return $1;	}
+    elsif($_[0] =~ /(.+)ches$/) {	return "$1ch"; }
+    elsif($_[0] =~ /(.+o)ci$/) { return "$1c"; }
+    elsif($_[0] =~ /(.+)sses$/) {	return "$1ss"; }
+    elsif($_[0] =~ /(.+[^eiuos])s$/) { return $1;	}
+    elsif($_[0] =~ /(.+[^aeio])es$/) { return "$1e"; }
+    else { return $_[0]; } }
 
 # Remove determiners from a word:
 sub undetermine_word {

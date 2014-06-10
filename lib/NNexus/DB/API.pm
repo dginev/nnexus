@@ -17,7 +17,6 @@
 package NNexus::DB::API;
 use strict;
 use warnings;
-use feature 'switch';
 
 require Exporter;
 our @ISA = qw(Exporter);
@@ -204,17 +203,13 @@ sub invalidate_by {
 sub last_inserted_id {
   my ($db) = @_;
   my $objid;
-  given ($db->{dbms}) {
-    when ('mysql') {
-      $objid = $db->{handle}->{'mysql_insertid'};
-    }
-    when ('SQLite') {
-      $objid = $db->{handle}->sqlite_last_insert_rowid();
-    }
-    default { die 'No DBMS information provided! Failing...'; }
-  };
-  return $objid;
-}
+  my $dbms = $db->{dbms};
+  if ($dbms eq 'mysql') {
+    $objid = $db->{handle}->{'mysql_insertid'}; }
+  elsif ($dbms eq 'SQLite') {
+    $objid = $db->{handle}->sqlite_last_insert_rowid(); }
+  else { die 'No DBMS information provided! Failing...'; }
+  return $objid; }
 
 ### API for Initializing a SQLite Database:
 sub reset_db {

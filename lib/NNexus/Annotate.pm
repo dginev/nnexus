@@ -22,7 +22,6 @@ use Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT_OK = qw(serialize_concepts);
 
-use feature 'switch';
 use List::MoreUtils;
 use Data::Dumper;
 $Data::Dumper::Sortkeys =1;
@@ -104,14 +103,12 @@ sub serialize_concepts {
     }
   } else {
     # stand-off case:
-    given ($annotation) {
-      when ('json') { return $concepts; }
-      # when ('perl') { return Dumper($concepts); } #TODO: Why is this relevant? Testing?
-      # TODO: Think of Markdown annotations
-      # TODO: Stand-off HTML links
-      # TODO: Embedded JSON and RDFa
-      default { return $concepts; }
-    };
+    if ($annotation eq 'json') { return $concepts; }
+    # when ('perl') { return Dumper($concepts); } #TODO: Why is this relevant? Testing?
+    # TODO: Think of Markdown annotations
+    # TODO: Stand-off HTML links
+    # TODO: Embedded JSON and RDFa
+    else { return $concepts; }
   }
 }
 
