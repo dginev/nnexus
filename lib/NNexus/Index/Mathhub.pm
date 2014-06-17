@@ -22,19 +22,24 @@ use List::MoreUtils qw(uniq);
 use URI::Escape;
 
 # 1. We want to start from the All Pages entry point, containing the list of all categories
-sub domain_root { "http://mathhub.info/smglom/smglom/source"; }
+sub domain_root { "http://mathhub.info/mh/archives"; }
 our $mathhub_base = 'http://mathhub.info';
 
 sub candidate_links {
   my ($self)=@_;
   my $url = $self->current_url;
-  if ($url =~ /smglom\/source$/) {
-    # Top page, collect all leaf pages:
-    my $dom = $self->current_dom;
-    my @anchors = $dom->find('h2 > a')->each;
-    my @category_pages = map {$mathhub_base . uri_unescape($_)} uniq(sort(grep {defined} map {$_->{'href'}} @anchors));
-    @category_pages = grep {/\.en\.tex$/} @category_pages; # Only English pages
+  my $dom = $self->current_dom;
+  if ($url =~ /\/source$/) {
+    # List page, collect all leaf pages:
+    my @anchors = grep {$_->{'jobad:href'}} $dom->find('li.dref > span')->each;
+    my @category_pages = map {s/\/([^\/]+)$/\/source\/$1/; $_;} map {uri_unescape($_)} uniq(sort(grep {defined} map {$_->{'jobad:href'}} @anchors));
+    @category_pages = grep {/\.en\.omdoc$/} @category_pages; # Only English pages
     return \@category_pages; }
+  elsif ($url =~ /archives$/) { # top page
+    my @anchors = $dom->find('div.field-item.even > ul > li > a')->each;
+    print STDERR "\nAnchors found: ",scalar(@anchors),"\n";
+    my @content_pages = map {$mathhub_base . $_ . '/source'} map {uri_unescape($_)} uniq(sort(grep {defined} map {$_->{'href'}} @anchors));
+    return \@content_pages; }
   else {return [];} # skip leaves
 }
 
@@ -43,9 +48,9 @@ sub index_page {
   my ($self) = @_;
   my $url = uri_unescape($self->current_url);
   # Nothing to do in top page, or non-English pages
-  return [] if (($url =~ /smglom\/source$/) || ($url !~ /\.en\.tex$/));
+  return [] if (($url =~ /smglom\/source$/) || ($url !~ /\.en\.omdoc$/));
   my $dom = $self->current_dom;
-  my @spans = grep {$_->{'jobad:href'}} $dom->find('p[class="ltx_p"] u > i > span')->each;
+  my @spans = grep {$_->{'jobad:href'}} $dom->find('span.definiendum')->each;
   my %mmt_url = map {$_->text => $_->{'jobad:href'}} @spans;
   my @concepts = map {
     {
@@ -59,7 +64,7 @@ sub index_page {
 
 1;
 
-sub request_interval { 0.2; }
+sub request_interval { 1; }
 
 __END__
 

@@ -7,7 +7,7 @@ use strict;
 use NNexus::DB;
 
 # ON CHANGE: Update $stamp in Makefile.PL
-my $stamp = "1-2014";
+my $stamp = "6-2014";
 my $snapshot_name = "index-snapshot-$stamp.db";
 unlink($snapshot_name) if -e $snapshot_name;
 my $snapshotdb = NNexus::DB->new("dbms" => "SQLite",
@@ -19,14 +19,14 @@ my @databases = map {NNexus::DB->new("dbms" => "SQLite",
     "dbname" => "$_.db",
     "dbuser" => "nnexus",
     "dbpass" => "nnexus",
-    "dbhost" => "localhost");} qw/Planetmath Mathworld Wikipedia Dlmf Nlab Encyclopediaofmath/;
+    "dbhost" => "localhost");} qw/Planetmath Mathworld Wikipedia Dlmf Nlab Encyclopediaofmath Mathhub/;
 # Move individual snapshots into a common snapshot database.
 $snapshotdb->safe->begin_work;
 foreach my $db(@databases) {
 	my $sth = $db->prepare("select * from objects");
 	$sth->execute();
 	while (my $object = $sth->fetchrow_hashref) {
-		# Add the object to the Wiki snapshot
+		# Add the object to the full snapshot
 		my $new_objectid = $snapshotdb->add_object_by(%$object);
 		# Grab the defined concepts:
 		my $conch = $db->prepare("select * from concepts where objectid=?");

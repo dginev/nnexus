@@ -28,10 +28,14 @@ The class hierarchy is as follows:
      |- Index
          |- Dispatcher.pm
          |- Template.pm
+         |
          |- Planetmath.pm
          |- Wikipedia.pm
          |- Mathworld.pm
          |- Dlmf.pm
+         |- Nlab.pm
+         |- Encyclopediaofmath.pm
+         |- Mathhub.pm
      |- Concepts.pm
      |- Morphology.pm
      |- Discover.pm
@@ -122,16 +126,16 @@ With this framework in place, each domain indexer can be implemented in ~50 line
 
 =head3 Indexer Plug-ins
 
-Currently, NNexus sports four indexers - one for each of L<PlanetMath|NNexus::Index::Planetmath>, L<Wikipedia|NNexus::Index::Wikipedia>,
- L<MathWorld|NNexus::Index::Mathworld> and L<DLMF|NNexus::Index::Dlmf>.
+Currently, NNexus sports seven indexers - one for each of L<PlanetMath|NNexus::Index::Planetmath>, L<Wikipedia|NNexus::Index::Wikipedia>,
+ L<MathWorld|NNexus::Index::Mathworld>, L<DLMF|NNexus::Index::Dlmf>, L<nLab|NNexus::Index::Nlab>,
+ L<The Encyclopedia of Mathematics|NNexus::Index::Encyclopediaofmath> and L<MathHub|NNexus::Index::Mathhub>.
 
-Each domain provides a single Perl class C<NNexus::Index::Domain> inheriting from the template class L<NNexus::Index::Template>.
+Each domain provides a single Perl class C<NNexus::Index::Domainname> inheriting from the template class L<NNexus::Index::Template>.
  As each domain has different markup and arrangement for its concepts, the indexing logic varies in the different classes.
 
 However, the common API behind the plug-ins, as well as their common location at C<NNexus/Index/> is quite powerful.
  NNexus is able to automatically discover every domain for which a indexing plug-in is available, initialize the correct backend tables,
  and automatically recognize and support jobs that request services for these domains.
-
 
 =head3 Just-in-time Indexing
 

@@ -50,9 +50,9 @@ sub MY::postamble {
 
 
 sub compile_snapshot_db {
-  push(@EXCLUSIONS,'blib/lib/NNexus/resources/database/snapshot-1-2014.sqlite');
+  push(@EXCLUSIONS,'blib/lib/NNexus/resources/database/snapshot-6-2014.sqlite');
   $$MORE_MACROS{SNAPSHOT_FILE} = '$(INST_LIBDIR)/NNexus/resources/database/snapshot.db';
-  $$MORE_MACROS{DUMP_FILE} = 'lib/NNexus/resources/database/snapshot-1-2014.sqlite';
+  $$MORE_MACROS{DUMP_FILE} = 'lib/NNexus/resources/database/snapshot-6-2014.sqlite';
   $$MORE_MACROS{DBH} = '$$dbh';
   $$MORE_MACROS{IT} = '$$_';
   $$MORE_MACROS{SQLITE} = 'sqlite3';

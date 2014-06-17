@@ -21,27 +21,20 @@ use base qw(NNexus::Index::Template);
 use List::MoreUtils qw(uniq);
 use URI::Escape;
 
-# 1. We want to start from the All Pages entry point, containing the list of all categories
-sub domain_root { "http://ncatlab.org/nlab/show/All+Pages"; }
+# nLab has a pretty unfriendly organization of their pages,
+#   so we just ask politely for them to give us all of them at once
+sub domain_root { "ncatlab.org/nlab/search?query="; }
 our $nlab_base = 'http://ncatlab.org';
-# 2. Candidate links to subcategories and concept pages
-our $category_test = qr'^ncatlab\.org/nlab/list/(.+)$';
 
 sub candidate_links {
   my ($self)=@_;
   my $url = $self->current_url;
-  # Add links from subcategory pages
-  if ($url =~ /$category_test/ ) {
-    my $dom = $self->current_dom;
-    my @anchors = map {$_->find('a')->each} $dom->find('li[class="page"]')->each;
-    my @concept_pages = uniq(map {$nlab_base . uri_unescape($_)} grep {defined} map {$_->{'href'}} @anchors);
-    return \@concept_pages; }
-  elsif ($url =~ /All\+Pages$/) {
+  if ($url =~ /search\?query=$/) {
     # First page, collect all categories:
     my $dom = $self->current_dom;
     my @anchors = $dom->find('ul')->[0]->find('a')->each;
-    my @category_pages = uniq(map {$nlab_base . uri_unescape($_)} grep {defined} map {$_->{'href'}} @anchors);
-    return \@category_pages; }
+    my @pages = uniq(map {$nlab_base . uri_unescape($_)} grep {defined} map {$_->{'href'}} @anchors);
+    return \@pages; }
   else {return [];} # skip leaves
 }
 
@@ -50,28 +43,21 @@ sub index_page {
   my ($self) = @_;
   my $url = uri_unescape($self->current_url);
   # Nothing to do in category pages
-  return [] if ((! $self->leaf_test($url)) || ($url =~ /All\+Pages$/));
+  return [] if ((! $self->leaf_test($url)) || ($url =~ /search\?query=$/));
   my $dom = $self->current_dom;
   my $h1 = $dom->find('h1')->[0];
   my $concept = $h1 && lc($h1->text);
-  my $categories = $self->current_categories || ['XX-XX'];
+  my @categories = map {$_->text} $dom->find('a.category_link')->each;
+  push @categories, 'XX-XX' unless @categories;
 
   return [{ url => $url,
 	 concept => $concept,
    scheme => 'nlab',
-	 categories => $categories,
+	 categories => \@categories,
    }]; }
 
-sub candidate_categories {
-  my ($self) = @_;
-  if ($self->current_url =~ /$category_test/ ) {
-    my $category_name = $1;
-    $category_name =~ s/\+/ /g;
-    return [$category_name]; }
-  else {
-		return $self->current_categories; }}
-
-sub leaf_test { $_[1] !~ /$category_test/ }
+sub candidate_categories {}
+sub leaf_test { $_[1] =~ /^ncatlab\.org\/nlab\/show\/(?:.+)$/ }
 
 1;
 
