@@ -8,34 +8,37 @@
 // @include http://en.wikipedia.org/*
 // @include http://arxmliv.kwarc.info/files/*
 // @include http://search.mathweb.org/zbl-sandbox/*
+// @include http://www.bbc.co.uk/sport/0/*
+// @include https://zbmath.org/*
+// @include http://mmlquery.mizar.org/*
 // ==/UserScript==
 var body = document.getElementsByTagName("body")[0];
 if (! body) {body = document.documentElement;}
 var markup = body.innerHTML;
 // Prepare page for auto-linking at the showcase server
 var params = "body="+encodeURIComponent(markup);
-var url = "http://nnexus.mathweb.org/linkentry";
+var url = "//nnexus.mathweb.org/linkentry";
 req = new XMLHttpRequest();
 req.open("POST",url,true);
 req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 req.setRequestHeader("Content-length", params.length);
 req.onreadystatechange = function () {
-	if (req.readyState === 4) {
-		var response = JSON.parse(req.responseText);
-		// Rewrite the page with the now embedded NNexus links
-		body.innerHTML = response.payload;
-	}
+  if (req.readyState === 4) {
+    var response = JSON.parse(req.responseText);
+    // Rewrite the page with the now embedded NNexus links
+    body.innerHTML = response.payload;
+  }
 };
-req.send(params);	
+req.send(params); 
 
 // Style the links
 function addCss(cssString) {
-	var head = document.getElementsByTagName('head')[0];
-	if (!head) {return};
-	var newCss = document.createElement('style');
-	newCss.type = "text/css";
-	newCss.innerHTML = cssString;
-	head.appendChild(newCss);
+  var head = document.getElementsByTagName('head')[0];
+  if (!head) {return};
+  var newCss = document.createElement('style');
+  newCss.type = "text/css";
+  newCss.innerHTML = cssString;
+  head.appendChild(newCss);
 }
 addCss('a.nnexus_concept:link {color:#FFCC00 !important;}\
 a.nnexus_concept:visited {color:#995C00 !important;}\
