@@ -9,7 +9,6 @@
 // @include http://arxmliv.kwarc.info/files/*
 // @include http://search.mathweb.org/zbl-sandbox/*
 // @include http://www.bbc.co.uk/sport/0/*
-// @include https://zbmath.org/*
 // @include http://mmlquery.mizar.org/*
 // ==/UserScript==
 var body = document.getElementsByTagName("body")[0];
@@ -17,7 +16,7 @@ if (! body) {body = document.documentElement;}
 var markup = body.innerHTML;
 // Prepare page for auto-linking at the showcase server
 var params = "body="+encodeURIComponent(markup);
-var url = "//nnexus.mathweb.org/linkentry";
+var url = "http://nnexus.mathweb.org/linkentry";
 req = new XMLHttpRequest();
 req.open("POST",url,true);
 req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
