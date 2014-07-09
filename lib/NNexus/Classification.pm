@@ -220,7 +220,7 @@ sub maximize_clique {
       $similarity_score += $similarity;
     }
     next if (! $well_defined);
-    my $extended_score = $score + $next_weight + $similarity_score;
+    my $extended_score = $score + $next_weight - $similarity_score; # ?!
     my $extended_size = $size + $next_size;
     # DEPRECATED: Maximizing score
      next if $extended_score < $score; # No improvement, next
