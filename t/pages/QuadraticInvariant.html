@@ -1,104 +1,103 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
 <title>Quadratic Invariant -- from Wolfram MathWorld</title>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<meta name="DC.Creator" content="Weisstein, Eric W.">
-<meta name="DC.Description" content="Given the binary quadratic form  ax^2+2bxy+cy^2  (1)   with polynomial discriminant b^2-ac, let x = pX+qY (2)  y = rX+sY. (3)  Then  a(pX+qY)^2+2b(pX+qY)(rX+sY)+c(rX+sY)^2  =AX^2+2BXY+CY^2,    (4)   where A = ap^2+2bpr+cr^2 (5)  B = apq+b(ps+qr)+crs (6)  C = aq^2+2bqs+cs^2, (7)  so  B^2-AC=[a^2p^2q^2+b^2(ps+qr)^2+c^2r^2s^2  +2abpq(ps+qr)+2acpqrs+2bcrs(ps+qr)]  -(ap^2+2bpr+cr^2)(aq^2+2bqs+cs^2) =a^2p^2q^2+b^2p^2s^2+2b^2pqrs+b^2q^2r^2+c^2r^2s^2  +2abp^2qs+2abpq^2r+2acpqrs+2bcprs^2+2bcqr^2s ...">
-<meta name="DC.Subject" scheme="MathWorld" content="Mathematics:Algebra:Algebraic Invariants">
-<meta name="DC.Subject" scheme="MSC_2000" content="15A72">
-<meta name="DC.Rights" content="Copyright 1999-2013 Wolfram Research, Inc.  See http://mathworld.wolfram.com/about/terms.html for a full terms of use statement.">
-<meta name="DC.Format" scheme="IMT" content="text/html">
-<meta name="DC.Identifier" scheme="URI" content="http://mathworld.wolfram.com/QuadraticInvariant.html">
-<meta name="DC.Language" scheme="RFC3066" content="en">
-<meta name="DC.Publisher" content="Wolfram Research, Inc.">
-<meta name="DC.Relation.IsPartOf" scheme="URI" content="http://mathworld.wolfram.com/">
-<meta name="DC.Type" scheme="DCMIType" content="Text">
-<link rel="alternate" type="application/rss+xml" title="MathWorld Headline News" href="http://mathworld.wolfram.com/news/rss.xml">
-<link rel="stylesheet" type="text/css" href="Quadratic%20Invariant_files/mathworldv2.css">
-<link rel="shortcut icon" href="http://mathworld.wolfram.com/favicon_mathworld.png" type="image/png">
-<script src="Quadratic%20Invariant_files/ga.js" async="" type="text/javascript"></script><script language="JavaScript" type="text/javascript" src="Quadratic%20Invariant_files/menu.js"></script>
-<script language="JavaScript" type="text/javascript" src="Quadratic%20Invariant_files/mathworld.js"></script>
-<script language="JavaScript" type="text/javascript" src="Quadratic%20Invariant_files/downloadNotebook.js"></script>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta name="DC.Title" content="Quadratic Invariant" />
+<meta name="DC.Creator" content="Weisstein, Eric W." />
+<meta name="DC.Description" content="Given the binary quadratic form  ax^2+2bxy+cy^2  (1)   with polynomial discriminant b^2-ac, let x = pX+qY (2)  y = rX+sY. (3)  Then  a(pX+qY)^2+2b(pX+qY)(rX+sY)+c(rX+sY)^2  =AX^2+2BXY+CY^2,    (4)   where A = ap^2+2bpr+cr^2 (5)  B = apq+b(ps+qr)+crs (6)  C = aq^2+2bqs+cs^2, (7)  so  B^2-AC=[a^2p^2q^2+b^2(ps+qr)^2+c^2r^2s^2  +2abpq(ps+qr)+2acpqrs+2bcrs(ps+qr)]  -(ap^2+2bpr+cr^2)(aq^2+2bqs+cs^2) =a^2p^2q^2+b^2p^2s^2+2b^2pqrs+b^2q^2r^2+c^2r^2s^2  +2abp^2qs+2abpq^2r+2acpqrs+2bcprs^2+2bcqr^2s ..." />
+<meta name="DC.Subject" scheme="MathWorld" content="Mathematics:Algebra:Algebraic Invariants" />
+<meta name="DC.Subject" scheme="MSC_2000" content="15A72" />
+<meta name="DC.Rights" content="Copyright 1999-2014 Wolfram Research, Inc.  See http://mathworld.wolfram.com/about/terms.html for a full terms of use statement." />
+<meta name="DC.Format" scheme="IMT" content="text/html" />
+<meta name="DC.Identifier" scheme="URI" content="http://mathworld.wolfram.com/QuadraticInvariant.html" />
+<meta name="DC.Language" scheme="RFC3066" content="en" />
+<meta name="DC.Publisher" content="Wolfram Research, Inc." />
+<meta name="DC.Relation.IsPartOf" scheme="URI" content="http://mathworld.wolfram.com/" />
+<meta name="DC.Type" scheme="DCMIType" content="Text" />
+<link rel="alternate" type="application/rss+xml" title="MathWorld Headline News" href="/news/rss.xml" />
+<link rel="stylesheet" type="text/css" href="/css/mathworldv2.css" />
+<link rel="shortcut icon" href="/favicon_mathworld.png" type="image/png" />
+<script language="JavaScript" type="text/javascript" src="/common/javascript/menu.js"></script>
+<script language="JavaScript" type="text/javascript" src="/scripts/mathworld.js"></script>
+<script language="JavaScript" type="text/javascript" src="/scripts/downloadNotebook.js"></script>
 <script type="text/javascript">
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-5677369-3']);
-  _gaq.push(['_setDomainName', 'none']);
-  _gaq.push(['_setAllowLinker', true]);
-  _gaq.push(['_trackPageview']);
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-216407-21', 'mathworld.wolfram.com');
+  ga('send', 'pageview');
 </script>
 </head>
 <body>
-<table summary="" id="headerTable" border="0" cellpadding="0" cellspacing="0" width="100%">
-		<tbody><tr>
+<script type="text/javascript" src="/common/javascript/eu-cookie.js"></script>
+<table summary="" id="headerTable" width="100%" cellpadding="0" cellspacing="0" border="0">
+		<tr>
 			<td>
 				<div id="logo">
-<img src="Quadratic%20Invariant_files/logo.png" alt="" usemap="#mwlogomap">
+<img src="/images/topbar/logo.png" alt="" usemap="#mwlogomap" />
 
 <map name="mwlogomap" id="mwlogomap">
-  <area shape="rect" coords="0,30,200,47" href="http://www.wolfram.com/mathematica/" alt="Built with Mathematica Technology" title="Built with Mathematica Technology">
-  <area shape="rect" coords="0,0,617,30" href="http://mathworld.wolfram.com/" alt="Wolfram MathWorld" title="Wolfram MathWorld">
+  <area shape="rect" coords="0,30,200,47" href="http://www.wolfram.com/mathematica/" alt="Built with Mathematica Technology" title="Built with Mathematica Technology" />
+  <area shape="rect" coords="0,0,617,30" href="/" alt="Wolfram MathWorld" title="Wolfram MathWorld" />
 </map>
 </div>
 			</td>
 			<td>
 				<div id="searchWrapper">
 					<form name="NavBarSearch" action="/search/" method="get" accept-charset="UTF-8" onsubmit=" if (checkForDefaultInput('query_1', 'Search MathWorld')) { return false; }">
-						<input id="search" class="searchboxsub" name="query" value="Search MathWorld" onfocus="initTextInput(this,'clear','Search MathWorld')" onblur="initTextInput(this,'setDefault','Search MathWorld')" type="text">
-						<input src="Quadratic%20Invariant_files/search-icon.png" id="search-icon" alt="Search" onclick="if (checkForDefaultInput('query_1', 'Search MathWorld')) { return false;} else {document.NavBarSearch.submit(); }" type="image">
+						<input id="search" class="searchboxsub" name="query" type="text" value="Search MathWorld" onfocus="initTextInput(this,'clear','Search MathWorld')" onblur="initTextInput(this,'setDefault','Search MathWorld')" />
+						<input type="image" src="/images/topbar/search-icon.png" id="search-icon" alt="Search" onclick="if (checkForDefaultInput('query_1', 'Search MathWorld')) { return false;} else {document.NavBarSearch.submit(); }" />
 					</form>
 				</div>
 			</td>
 		</tr>
-	</tbody></table>
+	</table>
 	
-<table summary="" id="pageTable" border="0" cellpadding="0" cellspacing="0" width="100%">
-		<tbody><tr>
+<table summary="" id="pageTable" width="100%" cellpadding="0" cellspacing="0" border="0">
+		<tr>
 			<td class="leftcolumn">
 			<!--Start nav content -->
 <!-- Sidebar -->
 
 				<div id="navigation">
-					<div><a href="http://mathworld.wolfram.com/topics/Algebra.html">Algebra</a></div>
-					<div><a href="http://mathworld.wolfram.com/topics/AppliedMathematics.html">Applied Mathematics</a></div>
-					<div><a href="http://mathworld.wolfram.com/topics/CalculusandAnalysis.html">Calculus and Analysis</a></div>
-					<div><a href="http://mathworld.wolfram.com/topics/DiscreteMathematics.html">Discrete Mathematics</a></div>
-					<div><a href="http://mathworld.wolfram.com/topics/FoundationsofMathematics.html">Foundations of Mathematics</a></div>
-					<div><a href="http://mathworld.wolfram.com/topics/Geometry.html">Geometry</a></div>
-					<div><a href="http://mathworld.wolfram.com/topics/HistoryandTerminology.html">History and Terminology</a></div>
-					<div><a href="http://mathworld.wolfram.com/topics/NumberTheory.html">Number Theory</a></div>
-					<div><a href="http://mathworld.wolfram.com/topics/ProbabilityandStatistics.html">Probability and Statistics</a></div>
-					<div><a href="http://mathworld.wolfram.com/topics/RecreationalMathematics.html">Recreational Mathematics</a></div>
-					<div><a href="http://mathworld.wolfram.com/topics/Topology.html">Topology</a></div>
+					<div><a href="/topics/Algebra.html">Algebra</a></div>
+					<div><a href="/topics/AppliedMathematics.html">Applied Mathematics</a></div>
+					<div><a href="/topics/CalculusandAnalysis.html">Calculus and Analysis</a></div>
+					<div><a href="/topics/DiscreteMathematics.html">Discrete Mathematics</a></div>
+					<div><a href="/topics/FoundationsofMathematics.html">Foundations of Mathematics</a></div>
+					<div><a href="/topics/Geometry.html">Geometry</a></div>
+					<div><a href="/topics/HistoryandTerminology.html">History and Terminology</a></div>
+					<div><a href="/topics/NumberTheory.html">Number Theory</a></div>
+					<div><a href="/topics/ProbabilityandStatistics.html">Probability and Statistics</a></div>
+					<div><a href="/topics/RecreationalMathematics.html">Recreational Mathematics</a></div>
+					<div><a href="/topics/Topology.html">Topology</a></div>
 					<div class="subnav">
 						<div class="subnav-item">
-							<a href="http://mathworld.wolfram.com/letters/">Alphabetical Index</a><br>
-							<a href="http://mathworld.wolfram.com/topics/InteractiveEntries.html">Interactive Entries</a><br>
-							<a href="http://mathworld.wolfram.com/cgi-bin/random.cgi">Random Entry</a><br>
-							<a href="http://mathworld.wolfram.com/whatsnew/">New in <em>MathWorld</em></a>
+							<a href="/letters/">Alphabetical Index</a><br />
+							<a href="/topics/InteractiveEntries.html">Interactive Entries</a><br />
+							<a href="/cgi-bin/random.cgi">Random Entry</a><br />
+							<a href="/whatsnew/">New in <em>MathWorld</em></a>
 						</div>
 						<div class="subnav-item">
-							<a href="http://mathworld.wolfram.com/classroom/"><em>MathWorld</em> Classroom</a>
+							<a href="/classroom/"><em>MathWorld</em> Classroom</a>
 						</div>			
 						<div class="subnav-item">
-							<a href="http://mathworld.wolfram.com/about/">About <em>MathWorld</em></a><br>
-							<a href="http://mathworld.wolfram.com/contact/contribute.html">Contribute to <em>MathWorld</em></a><br>
-							<a href="http://mathworld.wolfram.com/contact/">Send a Message to the Team</a>
+							<a href="/about/">About <em>MathWorld</em></a><br />
+							<a href="/contact/contribute.html">Contribute to <em>MathWorld</em></a><br />
+							<a href="/contact/">Send a Message to the Team</a>
 						</div>
 						<div class="subnav-item last">
-							<a href="http://www.amazon.com/exec/obidos/ASIN/1584883472/ref=nosim/weisstein-20" target="_blank"><em>MathWorld</em> Book</a>
+							<a href="http://www.amazon.com/exec/obidos/ASIN/1420072218/ref=nosim/weisstein-20" target="_blank"><em>MathWorld</em> Book</a>
 						</div>
 					</div>
 				</div>
 				<div id="credits">
-					<div class="links"><a href="http://www.wolfram.com/webresources.html" target="_blank" title="Wolfram Web Resources">Wolfram Web Resources&nbsp;»</a></div>
+					<div class="links"><a href="http://www.wolfram.com/webresources.html" target="_blank" title="Wolfram Web Resources">Wolfram Web Resources&nbsp;&raquo;</a></div>
 					<div class="lastupdated">
-						<a href="http://mathworld.wolfram.com/whatsnew/">13,145 entries</a><br>
-						<a href="http://mathworld.wolfram.com/whatsnew/">Last updated: Wed Mar 20 2013</a>
+						<a href="/whatsnew/">13,454 entries</a><br />
+						<a href="/whatsnew/">Last updated: Fri Jul 18 2014</a>
 					</div>
 					<div class="author">Created, developed, and nurtured&nbsp;by&nbsp;<a href="http://mathworld.wolfram.com/about/author.html" class="authorlink" title="Created, developed, and nurtured by Eric Weisstein">Eric&nbsp;Weisstein</a> at <a href="http://www.wolfram.com/" target="_blank" class="companylink" title="Wolfram Research">Wolfram&nbsp;Research</a></div>
 				</div>
@@ -113,79 +112,105 @@
 <!-- Begin Body -->
 <!-- Begin Subject -->
 <div class="linktrail">
-<a href="http://mathworld.wolfram.com/topics/Algebra.html">Algebra</a>&nbsp;&gt;&nbsp;<a href="http://mathworld.wolfram.com/topics/AlgebraicInvariants.html">Algebraic
-Invariants</a>&nbsp;&gt;<br>
+<a href="/topics/Algebra.html">Algebra</a>&nbsp;&gt;&nbsp;<a href="/topics/AlgebraicInvariants.html">Algebraic
+Invariants</a>&nbsp;&gt;<br />
 </div>
 <!-- End Subject -->
-<br>
+<br />
 <!-- Begin Title -->
 <h1>Quadratic Invariant</h1>
 <!-- End Title -->
 <!-- Begin Total Content -->
 <!-- Begin Content -->
 <p>
-Given the <a href="http://mathworld.wolfram.com/BinaryQuadraticForm.html">binary quadratic form</a>
+Given the <a href="/BinaryQuadraticForm.html">binary quadratic form</a>
 </p>
 <div>
-<table summary="" style="padding-left: 50px" align="center" cellpadding="0" cellspacing="0" width="100%">
-<tbody><tr><td align="left"><img src="Quadratic%20Invariant_files/NumberedEquation1.gif" class="numberedequation" alt=" ax^2+2bxy+cy^2 " height="17" border="0" width="112"></td><td align="right" width="3">
+<table summary="" width="100%" align="center" cellspacing="0" cellpadding="0" style="padding-left: 50px">
+<tr><td align="left"><img src="/images/equations/QuadraticInvariant/NumberedEquation1.gif" class="numberedequation" width="112" height="17" border="0" alt=" ax^2+2bxy+cy^2 " /></td><td
+ align="right" width="3">
 <div id="eqn1" class="eqnum">
 (1)
 </div>
 </td></tr>
-</tbody></table>
+</table>
 </div>
 <p>
-with <a href="http://mathworld.wolfram.com/PolynomialDiscriminant.html">polynomial discriminant</a> <img src="Quadratic%20Invariant_files/Inline1.gif" class="inlineformula" alt="b^2-ac" height="17" border="0" width="44">, let
+with <a href="/PolynomialDiscriminant.html">polynomial discriminant</a> <img src="/images/equations/QuadraticInvariant/Inline1.gif"
+ class="inlineformula" width="44" height="17" border="0" alt="b^2-ac" />, let
 </p>
-<table summary="" style="padding-left: 50px" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
-<tbody><tr style="Text"><td align="right" width="1"><img src="Quadratic%20Invariant_files/Inline2.gif" class="displayformula" alt="x" height="14" border="0" width="7"></td><td align="center" width="14"><img src="Quadratic%20Invariant_files/Inline3.gif" class="displayformula" alt="=" height="14" border="0" width="9"></td><td align="left"><img src="Quadratic%20Invariant_files/Inline4.gif" class="displayformula" alt="pX+qY" height="14" border="0" width="55"></td><td align="right" width="10">
+<table summary="" align="center" width="100%" cellpadding="0" cellspacing="0" style="padding-left: 50px"
+ border="0">
+<tr style="Text"><td align="right" width="1"><img src="/images/equations/QuadraticInvariant/Inline2.gif" class="displayformula" width="7" height="14" border="0" alt="x" /></td><td align="center"
+ width="14"><img src="/images/equations/QuadraticInvariant/Inline3.gif" class="displayformula"
+ width="9" height="14" border="0" alt="=" /></td><td align="left"><img src="/images/equations/QuadraticInvariant/Inline4.gif"
+ class="displayformula" width="55" height="14" border="0" alt="pX+qY" /></td><td align="right"
+ width="10">
 <div id="eqn2" class="eqnum">
 (2)
 </div>
-</td></tr><tr style="Text"><td align="right" width="1"><img src="Quadratic%20Invariant_files/Inline5.gif" class="displayformula" alt="y" height="14" border="0" width="7"></td><td align="center" width="14"><img src="Quadratic%20Invariant_files/Inline6.gif" class="displayformula" alt="=" height="14" border="0" width="9"></td><td align="left"><img src="Quadratic%20Invariant_files/Inline7.gif" class="displayformula" alt="rX+sY." height="14" border="0" width="54"></td><td align="right" width="10">
+</td></tr><tr style="Text"><td align="right" width="1"><img src="/images/equations/QuadraticInvariant/Inline5.gif" class="displayformula" width="7" height="14" border="0" alt="y" /></td><td align="center"
+ width="14"><img src="/images/equations/QuadraticInvariant/Inline6.gif" class="displayformula"
+ width="9" height="14" border="0" alt="=" /></td><td align="left"><img src="/images/equations/QuadraticInvariant/Inline7.gif"
+ class="displayformula" width="54" height="14" border="0" alt="rX+sY." /></td><td
+ align="right" width="10">
 <div id="eqn3" class="eqnum">
 (3)
 </div>
 </td></tr>
-</tbody></table>
+</table>
 <p>
 Then
 </p>
 <div>
-<table summary="" style="padding-left: 50px" align="center" cellpadding="0" cellspacing="0" width="100%">
-<tbody><tr><td align="left"><img src="Quadratic%20Invariant_files/NumberedEquation2.gif" class="numberedequation" alt=" a(pX+qY)^2+2b(pX+qY)(rX+sY)+c(rX+sY)^2 
- =AX^2+2BXY+CY^2,   " height="38" border="0" width="329"></td><td align="right" width="3">
+<table summary="" width="100%" align="center" cellspacing="0" cellpadding="0" style="padding-left: 50px">
+<tr><td align="left"><img src="/images/equations/QuadraticInvariant/NumberedEquation2.gif"
+ class="numberedequation" width="329" height="38" border="0" alt=" a(pX+qY)^2+2b(pX+qY)(rX+sY)+c(rX+sY)^2 
+ =AX^2+2BXY+CY^2,   " /></td><td align="right" width="3">
 <div id="eqn4" class="eqnum">
 (4)
 </div>
 </td></tr>
-</tbody></table>
+</table>
 </div>
 <p>
 where
 </p>
-<table summary="" style="padding-left: 50px" align="center" border="0" cellpadding="0" cellspacing="0" width="100%">
-<tbody><tr style="Text"><td align="right" width="1"><img src="Quadratic%20Invariant_files/Inline8.gif" class="displayformula" alt="A" height="14" border="0" width="9"></td><td align="center" width="14"><img src="Quadratic%20Invariant_files/Inline9.gif" class="displayformula" alt="=" height="14" border="0" width="9"></td><td align="left"><img src="Quadratic%20Invariant_files/Inline10.gif" class="displayformula" alt="ap^2+2bpr+cr^2" height="17" border="0" width="110"></td><td align="right" width="10">
+<table summary="" align="center" width="100%" cellpadding="0" cellspacing="0" style="padding-left: 50px"
+ border="0">
+<tr style="Text"><td align="right" width="1"><img src="/images/equations/QuadraticInvariant/Inline8.gif" class="displayformula" width="9" height="14" border="0" alt="A" /></td><td align="center"
+ width="14"><img src="/images/equations/QuadraticInvariant/Inline9.gif" class="displayformula"
+ width="9" height="14" border="0" alt="=" /></td><td align="left"><img src="/images/equations/QuadraticInvariant/Inline10.gif"
+ class="displayformula" width="110" height="17" border="0" alt="ap^2+2bpr+cr^2" /></td><td
+ align="right" width="10">
 <div id="eqn5" class="eqnum">
 (5)
 </div>
-</td></tr><tr style="Text"><td align="right" width="1"><img src="Quadratic%20Invariant_files/Inline11.gif" class="displayformula" alt="B" height="14" border="0" width="9"></td><td align="center" width="14"><img src="Quadratic%20Invariant_files/Inline12.gif" class="displayformula" alt="=" height="14" border="0" width="9"></td><td align="left"><img src="Quadratic%20Invariant_files/Inline13.gif" class="displayformula" alt="apq+b(ps+qr)+crs" height="14" border="0" width="144"></td><td align="right" width="10">
+</td></tr><tr style="Text"><td align="right" width="1"><img src="/images/equations/QuadraticInvariant/Inline11.gif" class="displayformula" width="9" height="14" border="0" alt="B" /></td><td align="center"
+ width="14"><img src="/images/equations/QuadraticInvariant/Inline12.gif" class="displayformula"
+ width="9" height="14" border="0" alt="=" /></td><td align="left"><img src="/images/equations/QuadraticInvariant/Inline13.gif"
+ class="displayformula" width="144" height="14" border="0" alt="apq+b(ps+qr)+crs" /></td><td
+ align="right" width="10">
 <div id="eqn6" class="eqnum">
 (6)
 </div>
-</td></tr><tr style="Text"><td align="right" width="1"><img src="Quadratic%20Invariant_files/Inline14.gif" class="displayformula" alt="C" height="14" border="0" width="9"></td><td align="center" width="14"><img src="Quadratic%20Invariant_files/Inline15.gif" class="displayformula" alt="=" height="14" border="0" width="9"></td><td align="left"><img src="Quadratic%20Invariant_files/Inline16.gif" class="displayformula" alt="aq^2+2bqs+cs^2," height="17" border="0" width="112"></td><td align="right" width="10">
+</td></tr><tr style="Text"><td align="right" width="1"><img src="/images/equations/QuadraticInvariant/Inline14.gif" class="displayformula" width="9" height="14" border="0" alt="C" /></td><td align="center"
+ width="14"><img src="/images/equations/QuadraticInvariant/Inline15.gif" class="displayformula"
+ width="9" height="14" border="0" alt="=" /></td><td align="left"><img src="/images/equations/QuadraticInvariant/Inline16.gif"
+ class="displayformula" width="112" height="17" border="0" alt="aq^2+2bqs+cs^2," /></td><td
+ align="right" width="10">
 <div id="eqn7" class="eqnum">
 (7)
 </div>
 </td></tr>
-</tbody></table>
+</table>
 <p>
 so
 </p>
 <div>
-<table summary="" style="padding-left: 50px" align="center" cellpadding="0" cellspacing="0" width="100%">
-<tbody><tr><td align="left"><img src="Quadratic%20Invariant_files/NumberedEquation3.gif" class="numberedequation" alt=" B^2-AC=[a^2p^2q^2+b^2(ps+qr)^2+c^2r^2s^2 
+<table summary="" width="100%" align="center" cellspacing="0" cellpadding="0" style="padding-left: 50px">
+<tr><td align="left"><img src="/images/equations/QuadraticInvariant/NumberedEquation3.gif"
+ class="numberedequation" width="380" height="257" border="0" alt=" B^2-AC=[a^2p^2q^2+b^2(ps+qr)^2+c^2r^2s^2 
  +2abpq(ps+qr)+2acpqrs+2bcrs(ps+qr)] 
  -(ap^2+2bpr+cr^2)(aq^2+2bqs+cs^2) 
 =a^2p^2q^2+b^2p^2s^2+2b^2pqrs+b^2q^2r^2+c^2r^2s^2 
@@ -196,22 +221,24 @@ so
  -acq^2r^2 
 =p^2s^2(b^2-ac)+q^2r^2(b^2-ac)-2pqrs(b^2-ac) 
 =(b^2-ac)(p^2s^2-2pqrs+q^2r^2) 
-=(ps-rq)^2(b^2-ac).  " height="257" border="0" width="380"></td><td align="right" width="3">
+=(ps-rq)^2(b^2-ac).  " /></td><td align="right" width="3">
 <div id="eqn8" class="eqnum">
 (8)
 </div>
 </td></tr>
-</tbody></table>
+</table>
 </div>
 <p>
-Surprisingly, this is the same discriminant as before, but multiplied by the factor <img src="Quadratic%20Invariant_files/Inline17.gif" class="inlineformula" alt="(ps-rq)^2" height="17" border="0" width="60">. The quantity <img src="Quadratic%20Invariant_files/Inline18.gif" class="inlineformula" alt="ps-rq" height="14" border="0" width="46"> is called
- the <a href="http://mathworld.wolfram.com/QuadraticInvariantModulus.html">quadratic invariant modulus</a>.
+Surprisingly, this is the same discriminant as before, but multiplied by the factor <img src="/images/equations/QuadraticInvariant/Inline17.gif" class="inlineformula"
+ width="60" height="17" border="0" alt="(ps-rq)^2" />. The quantity <img src="/images/equations/QuadraticInvariant/Inline18.gif"
+ class="inlineformula" width="46" height="14" border="0" alt="ps-rq" /> is called
+ the <a href="/QuadraticInvariantModulus.html">quadratic invariant modulus</a>.
 </p>
 <!-- End Content -->
 <div id="related">
 <!-- Begin See Also -->
-<span>SEE ALSO:</span> <a href="http://mathworld.wolfram.com/AlgebraicInvariant.html">Algebraic Invariant</a>,
-<a href="http://mathworld.wolfram.com/Quadratic.html">Quadratic</a>
+<span>SEE ALSO:</span> <a href="/AlgebraicInvariant.html">Algebraic Invariant</a>,
+<a href="/Quadratic.html">Quadratic</a>
 <!-- End See Also -->
 <!-- Begin CrossURL -->
 <!-- End CrossURL -->
@@ -225,8 +252,8 @@ Surprisingly, this is the same discriminant as before, but multiplied by the fac
 </div>
 <span>CITE THIS AS:</span>
 <p class="small">
-<a href="http://mathworld.wolfram.com/about/author.html">Weisstein, Eric W.</a> "Quadratic Invariant."
-From <a href="http://mathworld.wolfram.com/"><i>MathWorld</i></a>--A Wolfram Web Resource. <a href="http://mathworld.wolfram.com/QuadraticInvariant.html">http://mathworld.wolfram.com/QuadraticInvariant.html</a>
+<a href="/about/author.html">Weisstein, Eric W.</a> &quot;Quadratic Invariant.&quot;
+From <a href="/"><i>MathWorld</i></a>--A Wolfram Web Resource. <a href="http://mathworld.wolfram.com/QuadraticInvariant.html">http://mathworld.wolfram.com/QuadraticInvariant.html</a>
 </p>
 <!-- End CiteAs -->
 </div>
@@ -238,50 +265,63 @@ From <a href="http://mathworld.wolfram.com/"><i>MathWorld</i></a>--A Wolfram Web
 <!--Start resources content -->
 				<div id="resourcesContent">
 					<h1>Wolfram Web Resources</h1>
-					<table summary="" border="0" cellpadding="0" cellspacing="0" width="100%">
-						<tbody><tr>
+					<table summary="" width="100%" cellpadding="0" cellspacing="0" border="0">
+						<tr>
 							<td>
-								<span class="title"><a href="http://www.wolfram.com/mathematica/" target="_blank"><em>Mathematica</em>&nbsp;»</a></span>
+								<span class="title"><a href="http://www.wolfram.com/mathematica/" target="_blank"><em>Mathematica</em>&nbsp;&raquo;</a></span>
 								<p>The #1 tool for creating Demonstrations and anything technical.</p>
 							</td>
 							<td>
-								<span class="title"><a href="http://www.wolframalpha.com/" target="_blank">Wolfram|Alpha&nbsp;»</a></span>
+								<span class="title"><a href="http://www.wolframalpha.com/" target="_blank">Wolfram|Alpha&nbsp;&raquo;</a></span>
 								<p>Explore anything with the first computational knowledge engine.</p>
 							</td>
 							<td class="last">
-								<span class="title"><a href="http://demonstrations.wolfram.com/" target="_blank">Wolfram Demonstrations Project&nbsp;»</a></span>
-								<p>Explore thousands of free applications across science, 
-mathematics, engineering, technology, business, art, finance, social 
-sciences, and more.</p>
+								<span class="title"><a href="http://demonstrations.wolfram.com/" target="_blank">Wolfram Demonstrations Project&nbsp;&raquo;</a></span>
+								<p>Explore thousands of free applications across science, mathematics, engineering, technology, business, art, finance, social sciences, and more.</p>
+							</td>
+						</tr>
+						<tr>
+							<td class="last">
+								<span class="title"><a href="http://www.computerbasedmath.org/" target="_blank">Computerbasedmath.org&nbsp;&raquo;</a></span>
+								<p>Join the initiative for modernizing math education.</p>
+							</td>
+							<td>
+								<span class="title"><a href="http://www.wolframalpha.com/calculators/integral-calculator/" target="_blank">Online Integral Calculator&nbsp;&raquo;</a></span>
+								<p>Solve integrals with Wolfram|Alpha.</p>
+							</td>
+							<td class="last">
+								<span class="title"><a href="https://www.wolframalpha.com/pro/step-by-step-math-solver.html" target="_blank">Step-by-step Solutions&nbsp;&raquo;</a></span>
+								<p>Walk through homework problems step-by-step from beginning to end. Hints help you try the next step on your own.</p>
 							</td>
 						</tr>
 						<tr>
 							<td>
-								<span class="title"><a href="http://www.wolfram.com/cdf" target="_blank">Computable Document Format&nbsp;»</a></span>
-								<p>The format that makes Demonstrations (and any information) easy to share and interact with.</p>
+								<span class="title"><a href="http://www.wolframalpha.com/pro/problem-generator/" target="_blank">Wolfram Problem Generator&nbsp;&raquo;</a></span>
+								<p>Unlimited random practice problems and answers with built-in Step-by-step solutions. Practice online or make a printable study sheet.</p>
 							</td>
 							<td>
-								<span class="title"><a href="http://www.wolfram.com/solutions/stem/" target="_blank">STEM initiative&nbsp;»</a></span>
-								<p>Programs &amp; resources for educators, schools &amp; students.</p>
+								<span class="title"><a href="http://education.wolfram.com/" target="_blank">Wolfram Education Portal&nbsp;&raquo;</a></span>
+								<p>Collection of teaching and learning tools built by Wolfram education experts: dynamic textbook, lesson plans, widgets, interactive Demonstrations, and more.</p>
 							</td>
 							<td class="last">
-								<span class="title"><a href="http://www.computerbasedmath.org/" target="_blank">Computerbasedmath.org&nbsp;»</a></span>
-								<p>Join the initiative for modernizing math education. </p>
+								<span class="title"><a href="http://www.wolfram.com/language/" target="_blank">Wolfram Language&nbsp;&raquo;</a></span>
+								<p>Knowledge-based programming for everyone.</p>
 							</td>
 						</tr>
-					</tbody></table>
+					</table>
 				</div>	
 <!--End resources content -->
 				
 <!--Start footer content -->
 				<div id="footer">
-					<table summary="" border="0" cellpadding="0" cellspacing="0" width="100%">
-						<tbody><tr>	
-							<td><a href="http://mathworld.wolfram.com/contact/"><img src="Quadratic%20Invariant_files/contact-icon.gif" alt="" title="" border="0"> Contact the <em>MathWorld</em> Team</a></td>
-							<td class="copyright">© 1999-2013 <a href="http://www.wolfram.com/" target="_blank">Wolfram Research, Inc.</a> | <a href="http://mathworld.wolfram.com/about/terms.html">Terms of Use</a></td>
+					<table summary="" width="100%" cellpadding="0" cellspacing="0" border="0">
+						<tr>	
+							<td><a href="/contact/"><img src="/images/footer/contact-icon.gif" alt="" title="" border="0" /> Contact the <em>MathWorld</em> Team</a></td>
+							<td class="copyright">&copy; 1999-2014 <a href="http://www.wolfram.com/" target="_blank">Wolfram Research, Inc.</a> | <a href="/about/terms.html">Terms of Use</a></td>
 						</tr>
-					</tbody></table>
+					</table>
 				</div>
+
 <!--End footer content -->
 </td>
 <td>
@@ -290,10 +330,10 @@ sciences, and more.</p>
 <div class="wawidgetWrapper">
        
 <div class="wawidget">
-       <a href="http://www.wolframalpha.com/" class="walogolink" target="_blank" title="Wolfram|Alpha"></a>
+       <a href="http://www.wolframalpha.com" class="walogolink" target="_blank" title="Wolfram|Alpha"></a>
        <form target="_blank" action="http://www.wolframalpha.com/input/" name="wolframalpha">
-       <input name="i" id="i" type="text">
-       <input src="Quadratic%20Invariant_files/WA-equals.gif" id="calculate" type="image">
+       <input type="text" value="" name="i" id="i" />
+       <input type="image" src="/images/wolframalpha/WA-equals.gif" id="calculate" />
        </form>
        
 <div class="clear">
@@ -303,11 +343,11 @@ sciences, and more.</p>
        <span>THINGS TO TRY:</span>
        
        
-<div><a target="_blank" href="http://www.wolframalpha.com/input/?i=1200+-+450"><img src="Quadratic%20Invariant_files/WA-try-equals.gif" alt="" title="">1200 - 450</a></div>
+<div><a target="_blank" href="http://www.wolframalpha.com/input/?i=%281%2C1%2C-3%29+in+spherical+coordinates"><img src="/images/wolframalpha/WA-try-equals.gif" alt="" title="" />(1,1,-3) in spherical coordinates</a></div>
 
-<div><a target="_blank" href="http://www.wolframalpha.com/input/?i=diagonalize+%7B%7B1%2C2%7D%2C%7B3%2C4%7D%7D"><img src="Quadratic%20Invariant_files/WA-try-equals.gif" alt="" title="">diagonalize {{1,2},{3,4}}</a></div>
+<div><a target="_blank" href="http://www.wolframalpha.com/input/?i=div+%28x%5E3+y%2C+y%5E3+z%2C+z%5E3+x%29"><img src="/images/wolframalpha/WA-try-equals.gif" alt="" title="" />div (x^3 y, y^3 z, z^3 x)</a></div>
 
-<div><a target="_blank" href="http://www.wolframalpha.com/input/?i=more+than+5+sixes+with+10+dice"><img src="Quadratic%20Invariant_files/WA-try-equals.gif" alt="" title="">more than 5 sixes with 10 dice</a></div>
+<div><a target="_blank" href="http://www.wolframalpha.com/input/?i=int+e%5Et+sin%285t%29+dt"><img src="/images/wolframalpha/WA-try-equals.gif" alt="" title="" />int e^t sin(5t) dt</a></div>
 
        
 </div>
@@ -316,13 +356,12 @@ sciences, and more.</p>
        
 </div>
 <div class="alphaWrapper">
-<a href="http://www.wolfram.com/mathematica-home-edition/" target="_blank"><img class="ldkuxqvukmhhwdkksndb" src="Quadratic%20Invariant_files/fall-in-love.png" alt="Fall in love with math all over again...with Mathematica Home Edition" title="Fall in love with math all over again...with Mathematica Home Edition"></a>
+<a href="http://products.wolframalpha.com/courseassistants/?source=mw-sidebar" target="_blank"><img src="http://www.wolframcdn.com/sponsor-ads/everycourse.png" alt="An app for every course-Wolfram Course Assistants-Get ready for class" title="An app for every course-Wolfram Course Assistants-Get ready for class" /></a>
 </div>
 
 </div>
 </td>
 </tr>
-</tbody></table>
-
-
-</body></html>
+</table>
+</body>
+</html>

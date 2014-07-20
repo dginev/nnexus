@@ -36,23 +36,24 @@ sub candidate_links {
 sub index_page {
   my ($self) = @_;
   my $url = $self->current_url;
+  return [] unless $self->leaf_test($url);
   my $dom = $self->current_dom;
-  return [] if $dom->find('#directory')->[0];
   # TODO: Support multiple MSC categories in the same page, not only [0]
-  my $msc = $dom->find('meta[scheme="MSC_2000"]')->[0];
-  my $category = $msc->attr('content') if $msc;
-  my $h1 = $dom->find('h1')->[0];
-  my $name = $h1->all_text if $h1;
-  $name ?
-    return [{
+  my $msc = $dom->find(':root > head > meta[scheme="MSC_2000"]');
+  my @categories = $msc->attr('content')->each if $msc;
+  @categories = ('XX-XX') unless @categories;
+
+  my $title = $dom->find(':root > head > meta[name="DC.Title"]')->[0];
+  my $name = $title && $title->attr('content');
+  return $name ?
+     [{
       url=>$url,
       concept=>$name,
-      categories=>[$category ? ($category) : 'XX-XX'],
-      }] :
-    return []; }
+      categories=>\@categories,
+      }] : []; }
 
 sub depth_limit {10;}
-sub request_interval { 15; }
+sub request_interval { 12; } # We'll sleep manually extra for the GET requests on the letters index
 sub leaf_test { $_[1] !~ /letters/ }
 1;
 __END__

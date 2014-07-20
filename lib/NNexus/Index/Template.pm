@@ -82,8 +82,8 @@ sub index_step {
     $self->current_dom($next_step->{dom});
     delete $next_step->{dom};
   } else {
-    $self->current_dom($self->ua->get($current_url)->res->dom);
     sleep($self->request_interval()); # Don't overload the server
+    $self->current_dom($self->ua->get($current_url)->res->dom);
   }
   # Obtain the indexer payload
   my $payload = $self->index_page;
@@ -253,7 +253,7 @@ Getter, provides the current L<Mojo::DOM> of the page being indexed.
   Dually acts as a setter when an argument is provided,
   mainly set from the F<index_step> method.
 
-=item C<< $dom = $self->current_categories >>
+=item C<< $categories = $self->current_categories >>
 
 Getter, provides the current categories of the page being indexed. 
   Dually acts as a setter when an argument is provided,
