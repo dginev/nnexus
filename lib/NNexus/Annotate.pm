@@ -26,6 +26,7 @@ use List::MoreUtils;
 use Data::Dumper;
 $Data::Dumper::Sortkeys =1;
 use NNexus::Concepts qw(links_from_concept);
+use Mojo::JSON;
 
 sub serialize_concepts {
   my (%options) = @_;
@@ -103,7 +104,9 @@ sub serialize_concepts {
     }
   } else {
     # stand-off case:
-    if ($annotation eq 'json') { return $concepts; }
+    if ($annotation eq 'json') {
+     my $json = Mojo::JSON->new;
+     return $json->encode($concepts); }
     # when ('perl') { return Dumper($concepts); } #TODO: Why is this relevant? Testing?
     # TODO: Think of Markdown annotations
     # TODO: Stand-off HTML links

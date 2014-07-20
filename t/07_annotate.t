@@ -4,7 +4,7 @@ use warnings;
 use Test::More tests => 4;
 use NNexus::Annotate qw(serialize_concepts);
 use Mojo::JSON;
-my $json  = Mojo::JSON->new;
+my $json = Mojo::JSON->new();
 my $body = "Simple testing sentence. We want Banach's algebra linked, \nalso Abelian groups.";
 my $text_concepts = [
 	{	concept=>'Banach\'s algebra',
@@ -141,10 +141,10 @@ my $standoff_json = [{
 	}];
 
 is_deeply(
-		serialize_concepts(
+		$json->decode(serialize_concepts(
 			domain=>"all",
 			embed=>0,
 			annotation=>"json",
-			concepts=>$html_concepts),
+			concepts=>$html_concepts)),
 	$standoff_json,
 	'Stand-off JSON annotation');
