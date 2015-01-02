@@ -17,10 +17,11 @@ lib/NNexus/Index/Nlab.pm
 lib/NNexus/Index/Planetmath.pm
 lib/NNexus/Index/Template.pm
 lib/NNexus/Index/Wikipedia.pm
+lib/NNexus/Index/Wikipedia/Lists.pm
 lib/NNexus/Job.pm
 lib/NNexus/Morphology.pm
 lib/NNexus/resources/database/schema.sqlite
-lib/NNexus/resources/database/snapshot-1-2014.sqlite
+lib/NNexus/resources/database/snapshot-6-2014.sqlite
 lib/NNexus/resources/README.txt
 lib/NNexus/StopWordList.pm
 LICENSE
