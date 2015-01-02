@@ -24,7 +24,7 @@ our @EXPORT = qw(linkentry indexentry);
 our ($INSTALLDIR) = grep(-d $_, map("$_/NNexus", @INC));
 
 use vars qw($VERSION);
-$VERSION  = "2.0.1";
+$VERSION  = "2.0.2";
 
 use Mojo::JSON 'j';
 use NNexus::DB;

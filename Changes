@@ -1,0 +1,4 @@
+2.0.2 2015-01-02
+     - First changes log
+     - use strict; everywhere
+     - compatibility and dependency to Mojolicious 5.0

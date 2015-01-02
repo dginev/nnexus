@@ -15,6 +15,9 @@
 # | http://kwarc.info/people/dginev                            (o o)    | #
 # \=========================================================ooo==U==ooo=/ #
 package NNexus::StopWordList;
+use strict;
+use warnings;
+
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(stop_words_ref);

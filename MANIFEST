@@ -1,5 +1,6 @@
 bin/nnexus
 COPYING
+Changes
 INSTALL.md
 lib/NNexus.pm
 lib/NNexus/Annotate.pm
