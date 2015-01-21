@@ -1,6 +1,6 @@
 # /=====================================================================\ #
 # | NNexus Autolinker                                                   | #
-# | Indexing Plug-in, nCatLab.org domain                                | #
+# | Indexing Plug-in, MathHub.info domain                               | #
 # |=====================================================================| #
 # | Part of the Planetary project: http://trac.mathweb.org/planetary    | #
 # |  Research software, produced as part of work done by:               | #
