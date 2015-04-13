@@ -65,11 +65,11 @@ sub index_page {
   my $dom = $self->current_dom;
   # We might want to index a leaf page when descending from different categories, so keep them marked as "not visited"
   delete $self->{visited}->{$url};
-  my ($concept) = map {/([^\(]+)/; lc(rtrim($1));} $dom->find('span[dir="auto"]')->pluck('all_text')->each;
+  my ($concept) = map {/([^\(]+)/; lc(rtrim($1));} $dom->find('span[dir="auto"]')->map('all_text')->each;
   my @synonyms;
   # Bold entries in the first paragraph are typically synonyms.
   my $first_p = $dom->find('p')->[0];  
-  @synonyms = (grep {(length($_)>4) && ($_ ne $concept)} map {lc $_} $first_p->children('b')->pluck('all_text')->each) if $first_p;
+  @synonyms = (grep {(length($_)>4) && ($_ ne $concept)} map {lc $_} $first_p->children('b')->map('all_text')->each) if $first_p;
   my $categories = $self->current_categories || ['XX-XX'];
 
   return [{ url => $url,

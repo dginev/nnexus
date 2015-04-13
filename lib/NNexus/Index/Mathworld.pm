@@ -40,7 +40,7 @@ sub index_page {
   my $dom = $self->current_dom;
   # TODO: Support multiple MSC categories in the same page, not only [0]
   my $msc = $dom->find(':root > head > meta[scheme="MSC_2000"]');
-  my @categories = $msc->attr('content')->each if $msc;
+  my @categories = $msc->map(sub{ $_->attr('content')})->each if $msc;
   @categories = ('XX-XX') unless @categories;
 
   my $title = $dom->find(':root > head > meta[name="DC.Title"]')->[0];

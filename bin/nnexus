@@ -53,8 +53,8 @@ app->secrets(['NNexus auto-linking for the win!']);
 
 helper prepare_job => sub {
   my ($self,%override) = @_;
-  my $get_params = $self->req->url->query->params || [];
-  my $post_params = $self->req->body_params->params || [];
+  my $get_params = $self->req->url->query->pairs || [];
+  my $post_params = $self->req->body_params->pairs || [];
   if (scalar(@$post_params) == 1) {
     $post_params = ['body' , $post_params->[0]];
   } elsif (scalar(@$post_params) == 2 && ($post_params->[0] ne 'body')) {

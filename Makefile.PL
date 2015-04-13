@@ -21,7 +21,7 @@ WriteMakefile(
   ABSTRACT => "NNexus autolinker",
   VERSION_FROM => 'lib/NNexus.pm',
   PREREQ_PM => { 
-    'Mojolicious'=>5.0,
+    'Mojolicious'=>6.0,
     'Mojo::JSON'=>0,
     'Mojo::DOM'=>0,
     'DBI'=>0,
