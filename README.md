@@ -1,15 +1,23 @@
-[![Build Status](https://secure.travis-ci.org/dginev/nnexus.png?branch=master)](http://travis-ci.org/dginev/nnexus)
+# NNexus
 
-* * *
-NNexus is published on [CPAN](https://metacpan.org/release/NNexus).
+[![Build Status](https://secure.travis-ci.org/dginev/nnexus.png?branch=master)](http://travis-ci.org/dginev/nnexus)
+[![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/dginev/nnexus/master/LICENSE)
+[![CPAN version](https://badge.fury.io/pl/NNexus.svg)](https://badge.fury.io/pl/NNexus)
+
+## Installation
 
 Just execute ```cpan NNexus``` (or ```cpanm``` if you're a cpanminus lover) to obtain the full distribution.
-* * *
+
+## Description 
 
 NNexus provides an API and an engine for auto-linking of mathematical concepts.
  It supports the subtasks of concept indexing, concept discovery and flexible annotation (e.g. linking).
- 
-NNexus is free, libre, open-source software.
+
+## License
+
+NNexus is free, libre, open-source software, under the MIT license.
+
+## Example use
 
 The library comes with a pre-packaged snapshot of over 10,000 concepts from PlanetMath,
  Wikipedia, Wolfram Mathworld and DLMF. You can jump right in with a perl one-liner:
@@ -19,6 +27,8 @@ perl -MNNexus -e 'print linkentry(join("",<>))' < example.html > linked_example.
 ```
 
 ... or read the rest of this README for installation instructions and further use cases.
+
+## Documentation
 
 The [Manual](pod/Manual.pod) draft contains a **technical overview** of the NNexus system.
 
@@ -53,13 +63,13 @@ see [Planetary](https://github.com/KWARC/planetary) for more details.
 The NNexus legacy API has been redesigned, into a simple pair of indexing and linking workflows,
  detailed in the "[Indexing Framework](pod/Manual.pod#indexing-framework)" and "[Annotation Schemes](pod/Manual.pod#annotation-schemes)" chapters in the manual.
 
-# Status
+## Status
 
 This is a fork and rewrite of the original NNexus code by James Gardner (pebbler@gmail.com).  Watch this space for frequent updates.
 
 The current development emphasis falls on improving linking accuracy as well as maintenance patches.
 
-# Contact
+## Contact
 
 For any questions and support requests, contact the current package maintainer:
 Deyan Ginev (d.ginev@jacobs-university.de)
