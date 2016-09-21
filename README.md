@@ -1,7 +1,7 @@
 # NNexus
 
 [![Build Status](https://secure.travis-ci.org/dginev/nnexus.png?branch=master)](http://travis-ci.org/dginev/nnexus)
-[![license](http://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/dginev/nnexus/master/LICENSE)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/dginev/nnexus/master/LICENSE)
 [![CPAN version](https://badge.fury.io/pl/NNexus.svg)](https://badge.fury.io/pl/NNexus)
 
 ## Installation
