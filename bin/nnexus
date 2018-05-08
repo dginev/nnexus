@@ -108,7 +108,7 @@ post '/indexentry' => sub {
 };
 
 
-
+app->plugin('Config');
 app->start;
 
 __END__
