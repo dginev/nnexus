@@ -30,7 +30,7 @@ WriteMakefile(
     'List::MoreUtils'=>0,
     'Text::Unidecode'=>0,
   },
-  EXE_FILES => ['bin/nnexus'],
+  EXE_FILES => ['bin/nnexus','bin/nnexus.conf'],
   macro => $MORE_MACROS,
   (eval { ExtUtils::MakeMaker->VERSION(6.46) } ? (META_MERGE => {
     'meta-spec' => { version => 2 },
