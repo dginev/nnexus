@@ -40,11 +40,13 @@ For **installation and deployment**, consult [the INSTALL file](INSTALL.md).
 [Userscript](http://userscripts.org/about/installing) that you can use
 to add links to math terms in any web page!
 
-NNexus deployed on [PlanetMath.org](http://planetmath.org).
+A showcase web service is maintained under https://nnexus.mathweb.org
+
+All NNexus demos follow the [KWARC privacy policy](https://privacy.kwarc.info/).
 
 ## Using NNexus as a Web Service
 
-`curl -d "An abelian group example." nnexus.mathweb.org`
+`curl -d "An abelian group example." https://nnexus.mathweb.org`
 
 Returns:
 
