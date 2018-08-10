@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name NNexus Glasses
-// @namespace http://nnexus.mathweb.org
+// @namespace https://nnexus.mathweb.org
 // @description Enables a NNexus auto-link pass over each page in the namespace
 // @include http://dlmf.nist.gov/*
 // @include http://www.zentralblatt-math.org/zbmath/*
@@ -12,13 +12,13 @@
 // @include http://mmlquery.mizar.org/*
 // ==/UserScript==
 var body = document.getElementsByTagName("body")[0];
-if (! body) {body = document.documentElement;}
+if (!body) { body = document.documentElement; }
 var markup = body.innerHTML;
 // Prepare page for auto-linking at the showcase server
-var params = "body="+encodeURIComponent(markup);
-var url = "http://nnexus.mathweb.org/linkentry";
+var params = "body=" + encodeURIComponent(markup);
+var url = "https://nnexus.mathweb.org/linkentry";
 req = new XMLHttpRequest();
-req.open("POST",url,true);
+req.open("POST", url, true);
 req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 req.setRequestHeader("Content-length", params.length);
 req.onreadystatechange = function () {
@@ -28,12 +28,12 @@ req.onreadystatechange = function () {
     body.innerHTML = response.payload;
   }
 };
-req.send(params); 
+req.send(params);
 
 // Style the links
 function addCss(cssString) {
   var head = document.getElementsByTagName('head')[0];
-  if (!head) {return};
+  if (!head) { return };
   var newCss = document.createElement('style');
   newCss.type = "text/css";
   newCss.innerHTML = cssString;

@@ -120,9 +120,9 @@ our $tooltip_images = {
  Wikipedia=>'http://bits.wikimedia.org/favicon/wikipedia.ico',
  Dlmf=>'http://dlmf.nist.gov/style/DLMF-16.png',
  Mathworld=>'http://mathworld.wolfram.com/favicon_mathworld.png',
- Mathhub=>'http://kwarc.info/kohlhase/varia/mathHubLogo.png',
+ Mathhub=>'https://kwarc.info/kohlhase/varia/mathHubLogo.png',
  Encyclopediaofmath=>'http://www.euro-math-soc.eu/sites/all/themes/custom/ems/images/ems_logo.png',
- Nlab=>'http://nnexus.mathweb.org/nlab_logo.png'
+ Nlab=>'https://nnexus.mathweb.org/nlab_logo.png'
 };
 sub domain_tooltip {
   my ($domain_name) = @_;
